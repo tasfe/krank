@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project>
+	<parent>
+		<artifactId>crank-base</artifactId>
+		<groupId>org.crank</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.crank</groupId>
+	<artifactId>crank-jsf-validation-sample</artifactId>
+	<packaging>war</packaging>
+	<name>crank-jsf-validation-sample Maven Webapp</name>
+	<version>1.0-SNAPSHOT</version>
+	<url>http://maven.apache.org</url>
+	<build>
+		<finalName>crank-jsf-validation-sample</finalName>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.crank</groupId>
+			<artifactId>crank-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.crank</groupId>
+			<artifactId>crank-jsf-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.crank</groupId>
+			<artifactId>crank-test-support</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+</project>

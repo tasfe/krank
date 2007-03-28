@@ -1,7 +1,11 @@
 <projectDescription>
   <name>crank-jsf-validation</name>
   <comment/>
-  <projects/>
+  <projects>
+    <project>crank-core</project>
+    <project>crank-validation</project>
+    <project>crank-test-support</project>
+  </projects>
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>

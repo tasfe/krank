@@ -56,6 +56,7 @@
 	      class="org.crank.validation.validators.RequiredValidator"  
 	      scope="prototype"/>
 	      
+	 <!-- 
      <bean name="crank/validator/commonEmail" 
 	       parent="crank/validator"
            class="org.crank.validation.validators.CommonBridgeValidator"
@@ -65,7 +66,7 @@
     	</property>
     	<property name="noMessages" value="true"></property>
      </bean>
-	      
+	  -->
 
 	 <bean name="crank/validator/range,crank/validator/longRange" 
 		  parent="crank/validator" init-method="init"

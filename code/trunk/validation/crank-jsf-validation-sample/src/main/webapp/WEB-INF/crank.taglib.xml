@@ -15,7 +15,7 @@
     <tag>
         <tag-name>clientValidator</tag-name>
         <component>
-            <component-type>org.crank.ValidationScriptGenerator</component-type>
+            <component-type>ValidationScriptGeneratorTag</component-type>
         </component>
     </tag>
 	  

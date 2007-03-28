@@ -3,6 +3,7 @@ package org.crank.web.validation;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,6 +120,11 @@ public class ValidationScriptReaper {
      */
     public void outputFieldValidation(Writer writer, Class clazz, 
             String[] propertyNames, String formName) throws IOException {
+    	System.out.println("HERE");
+    	System.out.println(Arrays.asList(propertyNames));
+    	System.out.println(formName);
+    	System.out.println(clazz);
+    	System.out.println("DONE");
         /* Get the meta data from the class and property names. */
         Map<String, List<ValidatorMetaData>> validatorMetaData = 
             collectMetaDataFromClass(clazz, propertyNames);
@@ -282,6 +288,7 @@ public class ValidationScriptReaper {
     }
 
     private void writeValidatorTemplatesForProperties(String suffix, String[] propertyNames, Map<String, List<ValidatorMetaData>> validationMetaData, String form, StringWriter swriter) {
+    	System.out.println(Arrays.asList(propertyNames));
         for (String propertyName : propertyNames) {
             List<ValidatorMetaData> propertyValidationMetaData = 
                 validationMetaData.get(propertyName);
@@ -289,6 +296,7 @@ public class ValidationScriptReaper {
                 
                 String template = lookupValidatorAndEncodeIt(form, suffix, propertyName,
                         validatorMetaData);
+                System.out.println("HERE is a tempalte" + template);
                 swriter.write(template);
             }
         }
@@ -469,27 +477,27 @@ public class ValidationScriptReaper {
         this.objectRegistry = registry;
     }
 
-    protected String getPropertyPostfix() {
+    public String getPropertyPostfix() {
         return propertyPostfix;
     }
 
-    protected void setPropertyPostfix(String propertyPostfix) {
+    public void setPropertyPostfix(String propertyPostfix) {
         this.propertyPostfix = propertyPostfix;
     }
 
-    protected String getPropertyPrefix() {
+    public String getPropertyPrefix() {
         return propertyPrefix;
     }
 
-    protected void setPropertyPrefix(String propertyPrefix) {
+    public void setPropertyPrefix(String propertyPrefix) {
         this.propertyPrefix = propertyPrefix;
     }
 
-    protected boolean isAppendFormNameToProperty() {
+    public boolean isAppendFormNameToProperty() {
         return appendFormNameToProperty;
     }
 
-    protected void setAppendFormNameToProperty(boolean appendFormNameToProperty) {
+    public void setAppendFormNameToProperty(boolean appendFormNameToProperty) {
         this.appendFormNameToProperty = appendFormNameToProperty;
     }
 

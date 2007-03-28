@@ -34,7 +34,7 @@ public class ClientValidatorConstants {
 	}
 	
     /** Specifies the validator resource id. */
-	public static final String VALIDATOR_RESOURCE_VIEW_ID = props.getProperty("VALIDATOR_RESOURCE_VIEW_ID", "validatorResource");
+	public static final String VALIDATOR_RESOURCE_VIEW_ID = props.getProperty("VALIDATOR_RESOURCE_VIEW_ID", "CRANK_validatorResource");
 	/** Specifies that the resource will be using an extention called .faces. */
     public static final String EXTENTION = props.getProperty("EXTENTION", ".faces");
 	

@@ -1,0 +1,2 @@
+call mvn install:install-file -DgroupId=javax.faces -DartifactId=el-api -Dversion=1.0 -Dpackaging=jar -Dfile=el-api.jar
+call mvn install:install-file -DgroupId=javax.faces -DartifactId=el-ri -Dversion=1.0 -Dpackaging=jar -Dfile=el-ri.jar

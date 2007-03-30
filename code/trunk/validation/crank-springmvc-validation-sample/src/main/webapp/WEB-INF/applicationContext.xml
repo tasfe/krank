@@ -717,7 +717,8 @@ function validateRegExp(field, error, pattern, detailMessage) {
 
 
 function validateRequiredField(field, error, detailMessage) {
-	var value=document.getElementById(field).value;
+	var inputField = document.getElementById(field)
+	var value=inputField.value;
 	if(value == null || value == '') {
 		showValidationError(field, error, detailMessage);
 		return false;

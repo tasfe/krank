@@ -7,17 +7,18 @@
 	<!-- xmlns:crank="http://www.crankframework.com/crank" -->
 
 	<jsp:output doctype-root-element="html"
-		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
-		doctype-system="http://www.w3c.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
+		doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
+		doctype-system="http://www.w3c.org/TR/xhtml1/DTD/xhtml1-strict.dtd" />
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 
 	<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 	<title>User Registration</title>
+	<av:clientValidator beanName="user" propertyNames="firstName"/>
 	</head>
 
 	<body>
-	<h1>User Registration</h1>
+	<h1>User Registration House of Pain</h1>
 	<br />
 	<br />
 	<spring:bind path="user.*">
@@ -31,9 +32,10 @@
 			</ol>
 		</c:if>
 	</spring:bind>
-
+	<div id="clientValidationSummary">&#160;</div>
+	
 	<form:form id="userForm" name="user">
-				<div id="clientValidationSummary" />
+				
 	
 		<spring:bind path="user.firstName">
 			<label for="${status.expression}">First Name</label>
@@ -42,10 +44,13 @@
 			<c:forEach var="error" items="${status.errorMessage}">
 						${error} 
 				</c:forEach>
+				<span id="firstNameError">&#160;</span> 
 		</spring:bind>
-		<input value="Continue" type="submit" onclick="return validate();"/>
+		<div>
+		<input id="submit" value="Continue" type="submit" onclick="return validate();"/>
+		</div>
 	</form:form>
-	<av:clientValidator beanName="user" propertyNames="firstName"/>
+	
 	</body>
 	</html>
 

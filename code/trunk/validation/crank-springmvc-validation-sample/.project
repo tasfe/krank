@@ -2,8 +2,8 @@
   <name>crank-springmvc-validation-sample</name>
   <comment/>
   <projects>
-    <project>crank-validation</project>
     <project>crank-core</project>
+    <project>crank-validation</project>
     <project>crank-springmvc-validation</project>
   </projects>
   <buildSpec>

@@ -14,7 +14,7 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 	<title>User Registration</title>
-	<av:clientValidator beanName="user" propertyNames="firstName"/>
+	<avclientValidator beanName="user" propertyNames="firstName"/>
 	</head>
 
 	<body>

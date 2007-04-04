@@ -22,7 +22,10 @@ public class LongRangeValidator extends AbstractRangeValidator {
     @Implements (interfaceClass=FieldValidator.class)
 	public ValidatorMessageHolder validate(Object fieldValue, String fieldLabel) {
 		ValidatorMessage validatorMessage = new ValidatorMessage();
-		
+        if (fieldValue == null) {
+        	return validatorMessage;
+        }
+
 		dynamicallyInitIfNeeded(fieldValue);
 		
 		if (!super.isValueGreaterThanMin((Comparable)fieldValue)){

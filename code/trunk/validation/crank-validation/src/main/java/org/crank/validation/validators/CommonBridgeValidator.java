@@ -27,6 +27,9 @@ public class CommonBridgeValidator extends AbstractValidator {
 
     public ValidatorMessageHolder validate(Object object, String fieldLabel) {
         ValidatorMessage message = new ValidatorMessage();
+        if (object == null) {
+        	return message;
+        }
         boolean valid = false;
         try {
             initValidatorIfNeeded();

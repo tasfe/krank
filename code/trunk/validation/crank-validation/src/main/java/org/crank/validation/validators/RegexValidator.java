@@ -43,6 +43,9 @@ public class RegexValidator extends AbstractValidator {
 
     public ValidatorMessageHolder validate(Object object, String fieldLabel) {
         ValidatorMessage message = new ValidatorMessage();
+        if (object == null) {
+        	return message;
+        }
         String string = object.toString();
         Pattern pattern = compileRegex();
         boolean valid;

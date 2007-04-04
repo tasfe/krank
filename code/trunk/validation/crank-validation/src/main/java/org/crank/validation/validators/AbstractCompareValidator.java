@@ -38,6 +38,10 @@ public abstract class AbstractCompareValidator extends AbstractValidator {
         
         /* Create the validator message. */
         ValidatorMessage message = new ValidatorMessage();
+
+    	if (value == null) {
+    		return message;
+    	}
         
         /* Get the comparison value. */
         Object compareToPropertyValue = lookupCompareToPropertyValue();

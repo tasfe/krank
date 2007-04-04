@@ -39,19 +39,21 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
 
 	public void validate(final Object object, final Errors errors) {
 
-		String [] fieldsToValidate = getFieldsToValidate(object);
-		for (String field : fieldsToValidate){
-			validateProperty(object, field, errors);
+		List<PropertyDescriptor> fieldsToValidate = getFieldsToValidate(object);
+		Map<String, Object> objectPropertiesAsMap = validatorPropertiesUtil.getObjectPropertiesAsMap(object);
+		
+		for (PropertyDescriptor field : fieldsToValidate){
+			validateProperty(objectPropertiesAsMap, object, field.getName(), errors);
 		}
 	}
 
 	
-	private void validateProperty(final Object object, final String property,
+	private void validateProperty(final Map objectPropertiesAsMap, final Object object, final String property,
 			final Errors errors) {
 		List<ValidatorMetaData> metaDataList = readMetaData(object.getClass(), 
 				property);
 		CompositeValidator cv = createValidator(metaDataList);
-		ValidatorMessageHolder holder = cv.validate(object, property);
+		ValidatorMessageHolder holder = cv.validate(objectPropertiesAsMap.get(property), property);
 		extractMessages(property, errors, holder);
 	}
 
@@ -63,12 +65,12 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
 		}
 	}
 	
-	private String[] getFieldsToValidate(Object object) {
+	private List<PropertyDescriptor> getFieldsToValidate(Object object) {
 		/** TODO read validate field list from request param. 
 		 * TODO create a request context simliar to JSF facesContext to easily
 		 * get params.
 		 */
-		List<String> properties;
+		List<PropertyDescriptor> properties;
 		//IF PARAM NOT FOUND... GET ALL PROPERTIES 
 		BeanInfo beanInfo = null;
 		try {
@@ -78,12 +80,13 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
 			throw new RuntimeException(e);
 		}
 		PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-		properties = new ArrayList<String>(propertyDescriptors.length);
+		properties = new ArrayList<PropertyDescriptor>(propertyDescriptors.length);
 		for (PropertyDescriptor pd : propertyDescriptors) {
-			properties.add(pd.getName());
+			if (!pd.getName().equals("class")) {
+				properties.add(pd);
+			}
 		}
-		properties.remove("class");
-		return (String[]) properties.toArray(new String[properties.size()]);
+		return properties;
 	}
 
 	protected List<ValidatorMetaData> readMetaData(Class clazz,

@@ -54,7 +54,7 @@ public class SpringMVCBridgeMetaDataDrivenValidatorTest extends AbstractDependen
 		String filename = null;
 		try {
 			File srcDir = new File(
-			"./src/test/java");
+			"./src/test/resources");
 			
 			assert srcDir.isDirectory();
 			

@@ -4,7 +4,9 @@ package org.crank.web.validation.spring.support;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -13,6 +15,7 @@ import static org.testng.AssertJUnit.*;
 import org.crank.core.CrankContext;
 import org.crank.core.ObjectRegistry;
 import org.crank.core.spring.support.SpringApplicationContextObjectRegistry;
+import org.crank.web.CrankWebContext;
 import org.crank.web.validation.spring.support.SpringMVCBridgeMetaDataDrivenValidator;
 import org.springframework.testng.AbstractDependencyInjectionSpringContextTests;
 import org.springframework.validation.BindException;
@@ -29,12 +32,18 @@ public class SpringMVCBridgeMetaDataDrivenValidatorTest extends AbstractDependen
 	
 	@BeforeMethod
 	public void setup() {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("firstName", "");
+		map.put("lastName", "");
+		CrankWebContext crankWebContext = new CrankWebContext(map, null, null, null);
+		crankWebContext.getCookieMap();
 		validator = new SpringMVCBridgeMetaDataDrivenValidator();
 		employee = new EmployeeMock();
 		ObjectRegistry objectRegistry = CrankContext.getObjectRegistry();
 		SpringApplicationContextObjectRegistry sacObjectRegistry = (SpringApplicationContextObjectRegistry) objectRegistry;
 		sacObjectRegistry.setApplicationContext(this.applicationContext);
 		errors = new BindException(employee, "employee");
+		//CrankWebContext.clearCrankWebContext();
 		
 	}
 	@Test()

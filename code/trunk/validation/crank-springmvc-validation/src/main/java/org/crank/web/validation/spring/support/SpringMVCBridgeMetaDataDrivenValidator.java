@@ -7,6 +7,7 @@ import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.crank.core.CrankConstants;
 import org.crank.core.CrankContext;
@@ -21,6 +22,7 @@ import org.crank.validation.ValidatorMetaData;
 import org.crank.validation.ValidatorMetaDataReader;
 import org.crank.validation.readers.AnnotationValidatorMetaDataReader;
 import org.crank.validation.validators.CompositeValidator;
+import org.crank.web.CrankWebContext;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
@@ -41,9 +43,12 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
 
 		List<PropertyDescriptor> fieldsToValidate = getFieldsToValidate(object);
 		Map<String, Object> objectPropertiesAsMap = validatorPropertiesUtil.getObjectPropertiesAsMap(object);
-		
+		CrankWebContext crankWebContext = CrankWebContext.getInstance();
+		Set paramSet = crankWebContext.getRequestParameters().keySet();
 		for (PropertyDescriptor field : fieldsToValidate){
-			validateProperty(objectPropertiesAsMap, object, field.getName(), errors);
+			if (paramSet.contains(field.getName())) {
+				validateProperty(objectPropertiesAsMap, object, field.getName(), errors);
+			}
 		}
 	}
 

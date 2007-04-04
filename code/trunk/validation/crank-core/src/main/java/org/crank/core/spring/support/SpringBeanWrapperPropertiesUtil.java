@@ -1,5 +1,7 @@
 package org.crank.core.spring.support;
 
+import java.beans.PropertyDescriptor;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -18,6 +20,17 @@ public class SpringBeanWrapperPropertiesUtil implements PropertiesUtil {
 					wrapper.setPropertyValue(entry.getKey(), entry.getValue());
 				}
 		}
+	}
+	
+	public Map<String, Object> getObjectPropertiesAsMap(Object object) {
+		BeanWrapper wrapper = new BeanWrapperImpl(object);
+		Map<String, Object> properties = new HashMap<String, Object>();
+		PropertyDescriptor[] propertyDescriptors = wrapper.getPropertyDescriptors();
+		for (PropertyDescriptor pd : propertyDescriptors) {
+			String name = pd.getName();
+			properties.put(name, wrapper.getPropertyValue(name));
+		}
+		return properties;
 	}
 
 }

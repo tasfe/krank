@@ -14,6 +14,12 @@
   <url>http://maven.apache.org</url>
   <build>
     <finalName>crank-jsf-validation-sample</finalName>
+	<plugins>
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+			</plugin>
+	</plugins>
   </build>
   <dependencies>
     <dependency>

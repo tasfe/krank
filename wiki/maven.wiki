@@ -15,7 +15,7 @@ Check the version of the root POM file.  Make a mental note...
 
 The first step is to 'prepare' the release, in maven lingo.  This performs a number of functions:
 
-`mvn release:prepare -Dresume=false -Dusername=[svnuser] -Dpassword=[svnpwd] -DtagBase=https://krank.googlecode.com/svn/code/tags/`
+`mvn release:prepare -Dresume=false -Dusername=[[svnuser]] -Dpassword=[[svnpwd]] -DtagBase=https://krank.googlecode.com/svn/code/tags/`
 
 Carefully answer the prompts, you will be asked for 
   * A release version number
@@ -35,7 +35,7 @@ When you complete this step successfully, run `mvn release:clean`
 
 Finally, we are ready to do the ACTUAL release :) This step will pull the sources down from the tag, build the artifacts, and install them to the repository.  Here goes...
  
-`mvn release:perform -Dusername=[svnuser] -Dpassword=[svnpwd] -DtagBase=https://krank.googlecode.com/svn/code/tags/ -DconnectionUrl=scm:svn:https://krank.googlecode.com/svn/ -Dtag="Initial Release 0.1"`
+`mvn release:perform -Dusername=[[svnuser]] -Dpassword=[[svnpwd]] -DtagBase=https://krank.googlecode.com/svn/code/tags/ -DconnectionUrl=scm:svn:https://krank.googlecode.com/svn/ -Dtag="Initial Release 0.1"`
 
 *TODO* _Fill in the distribution management section of the POM so this command actually does something_
 

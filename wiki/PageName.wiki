@@ -1,0 +1,16 @@
+#summary The home page for the Krank project.
+
+= Introduction =
+
+Organic growth is so...well...natural!
+
+Krank is an open source project providing both a generic validation framework, and code generation facilities for the JSF/Spring/Hibernate stack, which is very popular in corporate America today.
+
+
+= Details =
+
+*TODO* 
+describe goals and status of krank.
+
+
+[maven release]

@@ -3,7 +3,7 @@
 	<groupId>org.crank</groupId>
 	<artifactId>crank-base</artifactId>
 	<packaging>pom</packaging>
-	<version>0.1</version>
+	<version>0.1-SNAPSHOT</version>
 	<name>Crank :: ROOT</name>
 	<url>http://maven.apache.org</url>
 	<prerequisites>

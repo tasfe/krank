@@ -1,9 +1,9 @@
 #summary Short how-to describing building out a release of Krank.  This document is primarily for project developers.
 
 *Preconditions:*
-    #You must have run a mvn install before attempting the release.
-    #You may also want to run `mvn scm:validate` and `mvn scm:changelog` to make sure your subversion connection is happy or else the release attempt may fail.  
-    If you get _[ERROR] svn: Can't connect to host 'krank.googlecode.com': A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond._
+    # You must have run a mvn install before attempting the release.
+    # You may also want to run `mvn scm:validate` and `mvn scm:changelog` to make sure your subversion connection is happy or else the release attempt may fail.  
+    If you get _ERROR svn: Can't connect to host 'krank.googlecode.com': A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond._
     then you need to run `svn log -v https://krank.googlecode.com/svn/` manually, and accept the server certificate (p for permanently).  You should not need to repeat this step.  Rerun `mvn scm:changelog` and it should work out this time.
 
 See:

@@ -6,6 +6,7 @@ public class EmployeeMock {
 	
 	private String firstName;
 	private String lastName;
+	private AddressMock address = new AddressMock();
 	
 	
 	public String getFirstName() {
@@ -23,6 +24,14 @@ public class EmployeeMock {
 	@Required (summaryMessage="Last name is required", detailMessage="last required")
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public AddressMock getAddress() {
+		return address;
+	}
+
+	public void setAddress(AddressMock address) {
+		this.address = address;
 	}
 
 }

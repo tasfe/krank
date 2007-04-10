@@ -35,7 +35,7 @@ When you complete this step successfully, run `mvn release:clean`
 
 Finally, we are ready to do the ACTUAL release :) This step will pull the sources down from the tag, build the artifacts, and install them to the repository.  Here goes...
  
-`mvn release:perform -Dusername=chrismathiaster -Dpassword=d3f4a6p7 -DtagBase=https://krank.googlecode.com/svn/code/tags/ -DconnectionUrl=scm:svn:https://krank.googlecode.com/svn/ -Dtag="Initial Release 0.1"`
+`mvn release:perform -Dusername=[svnuser] -Dpassword=[svnpwd] -DtagBase=https://krank.googlecode.com/svn/code/tags/ -DconnectionUrl=scm:svn:https://krank.googlecode.com/svn/ -Dtag="Initial Release 0.1"`
 
 *TODO* _Fill in the distribution management section of the POM so this command actually does something_
 
@@ -49,5 +49,4 @@ mvn install:install-file -DgroupId=org.crank -DartifactId=crank-validation -Dver
 
 
 Once the release is complete and you have the artifacts you desire, you may want to go back and alter the root POM to point back to trunk (or whatever branch you are working out of).
-
 

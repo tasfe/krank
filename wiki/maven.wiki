@@ -42,9 +42,13 @@ Finally, we are ready to do the ACTUAL release :) This step will pull the source
 Until the above TODO is completed (I.E. we have a repository to scp or ftp to) you can manually install the jars into a repo using the following commands.
 
 mvn install:install-file -DgroupId=org.crank -DartifactId=crank-core -Dversion=0.1 -Dpackaging=jar -Dfile=crank-core-0.1.jar
+
 mvn install:install-file -DgroupId=org.crank -DartifactId=crank-jsf-validation -Dversion=0.1 -Dpackaging=jar -Dfile=crank-jsf-validation-0.1.jar
+
 mvn install:install-file -DgroupId=org.crank -DartifactId=crank-springmvc-validation -Dversion=0.1 -Dpackaging=jar -Dfile=crank-springmvc-validation-0.1.jar
+
 mvn install:install-file -DgroupId=org.crank -DartifactId=crank-test-support -Dversion=0.1 -Dpackaging=jar -Dfile=crank-test-support-0.1.jar
+
 mvn install:install-file -DgroupId=org.crank -DartifactId=crank-validation -Dversion=0.1 -Dpackaging=jar -Dfile=crank-validation-0.1.jar
 
 

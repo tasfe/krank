@@ -1,4 +1,4 @@
-#summary The home page for the Krank project.
+#summary The home page for the Crank project
 
 = Introduction =
 

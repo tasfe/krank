@@ -3,8 +3,8 @@
   <comment/>
   <projects>
     <project>crank-core</project>
-    <project>crank-validation</project>
     <project>crank-springmvc-validation</project>
+    <project>crank-validation</project>
   </projects>
   <buildSpec>
     <buildCommand>

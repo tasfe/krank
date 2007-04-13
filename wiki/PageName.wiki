@@ -4,8 +4,21 @@
 
 Organic growth is so...well...natural!
 
-Krank is an open source project providing both a generic validation framework, and code generation facilities for the JSF/Spring/Hibernate stack, which is very popular in corporate America today.
+Crank is an open source project providing both a generic validation framework, and code generation facilities for the JSF/Spring/Hibernate stack, which is very popular in corporate America today.
 
+= Working Features =
+
+Mostly what works is the annotation driven validation.
+
+* Java 5 annotations
+* Allows for multiple sources of Validation meta-data (Annotation, Property files)
+** You can pick one or use more than one at a time
+** Annotation and Property file is supported
+* JSF Integration via JSF Validation integrtation
+* Spring MVC/Spring Webflow Integration via Spring Validator
+* Can Generate JavaScript based on Validation metadata
+* Can make Ajax calls based on Validation metadata
+* Easy to integrate with existing annotation driven frameworks
 
 = Details =
 

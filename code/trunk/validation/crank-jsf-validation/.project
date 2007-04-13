@@ -2,8 +2,8 @@
   <name>crank-jsf-validation</name>
   <comment/>
   <projects>
-    <project>crank-test-support</project>
     <project>crank-core</project>
+    <project>crank-test-support</project>
     <project>crank-validation</project>
   </projects>
   <buildSpec>

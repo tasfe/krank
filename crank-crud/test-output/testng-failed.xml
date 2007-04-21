@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite thread-count="5" verbose="1" name="Failed suite [crank-crud]" annotations="JDK">
+  <test name="org.crank.crud.criteria.GroupTest(failed)" junit="false" annotations="JDK">
+    <classes>
+      <class name="org.crank.crud.criteria.GroupTest">
+        <methods>
+          <include name="nested"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

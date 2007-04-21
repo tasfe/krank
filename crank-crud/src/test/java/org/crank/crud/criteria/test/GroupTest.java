@@ -18,7 +18,12 @@ public class GroupTest {
 
 	@Test
 	public void nestedPrime () {
-		Group group = and(eq("firstName", "Rick"), eq("lastName", "Hightower"), or(eq("foo", "bar"), eq("baz", "foo")));
+		Group group = and(
+						eq("firstName", "Rick"), eq("lastName", "Hightower"), 
+						or(
+							eq("foo", "bar"), eq("baz", "foo")
+						)
+					  );
 		assertEquals("(AND [firstName_EQ_Rick, lastName_EQ_Hightower, (OR [foo_EQ_bar, baz_EQ_foo])])", group.toString());
 	}
 	

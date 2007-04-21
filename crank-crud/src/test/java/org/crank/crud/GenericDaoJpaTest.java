@@ -1,9 +1,14 @@
 package org.crank.crud;
 
+import static org.crank.crud.criteria.Comparison.eq;
+import static org.crank.crud.criteria.Group.and;
+import static org.crank.crud.criteria.Group.or;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.crank.crud.criteria.Group;
 import org.crank.crud.test.DbUnitTestBase;
 import org.crank.crud.test.dao.EmployeeDAO;
 import org.crank.crud.test.model.Employee;
@@ -30,7 +35,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         Map<String, Object> florp = new HashMap<String, Object>();
         florp.put("foo.bar", "bar");
         String gimp = localDao.constructQueryString( "Glorp", florp, null );
-        AssertJUnit.assertEquals( "SELECT o FROM Glorp o WHERE o.foo.bar = :foo_bar", gimp );
+        AssertJUnit.assertEquals( "SELECT o FROM Glorp o  WHERE o.foo.bar = :foo_bar", gimp );
     }
 
     @Test
@@ -38,7 +43,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         GenericDaoJpa<Employee, Long> localDao = new GenericDaoJpa<Employee, Long>();
         Map<String, Object> florp = new HashMap<String, Object>();
         String gimp = localDao.constructQueryString( "Glorp", florp, null );
-        AssertJUnit.assertEquals( "SELECT o FROM Glorp o", gimp );
+        AssertJUnit.assertEquals( "SELECT o FROM Glorp o ", gimp );
     }
 
     @Test
@@ -47,7 +52,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         Map<String, Object> florp = new HashMap<String, Object>();
         florp.put( "gimp", new Integer( 14 ) );
         String gimp = localDao.constructQueryString( "Glorp", florp, null );
-        AssertJUnit.assertEquals( "SELECT o FROM Glorp o WHERE o.gimp = :gimp", gimp );
+        AssertJUnit.assertEquals( "SELECT o FROM Glorp o  WHERE o.gimp = :gimp", gimp );
     }
 
     @Test
@@ -166,7 +171,54 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     	List<Employee> employees = employeeDAO.find("department.name", "Engineering");
     	AssertJUnit.assertTrue(employees.size() > 0);
     }
+
+    @Test 
+    public void constructQueryString () {
+    	GenericDaoJpa<Employee, Long> dao = new GenericDaoJpa<Employee, Long>();
+		Group group = and(
+				eq("firstName", "Rick"), eq("lastName", "Hightower"), 
+				or(
+					eq("foo", "bar"), eq("baz", "foo")
+				)
+			  );    	
+    	String string = dao.constructQueryString(group, false);
+    	AssertJUnit.assertEquals(" WHERE  o.firstName=:firstName  AND  o.lastName=:lastName  AND  (  o.foo=:foo  OR  o.baz=:baz  ) ", string);
+
+		group = and(
+				eq("firstName", "Rick"), eq("lastName", "Hightower"), 
+				or(
+					eq("foo", "bar")
+				)
+			  );    	
+    	string = dao.constructQueryString(group, false);
+    	AssertJUnit.assertEquals(" WHERE  o.firstName=:firstName  AND  o.lastName=:lastName  AND  (  o.foo=:foo  ) ", string);
+
+		group = and( eq("firstName", "Rick") );    	
+    	string = dao.constructQueryString(group, false);
+    	AssertJUnit.assertEquals(" WHERE  o.firstName=:firstName ", string);
+    	
+    }
     
+    @Test 
+    public void testFindByCriteria () {
+    	
+
+    	List<Employee> employees = genericDao.find(eq("department.name", "Engineering"));
+    	AssertJUnit.assertTrue(employees.size() > 0);
+
+    	employees = genericDao.find(
+    			eq("department.name", "Engineering"),
+    			or(eq("firstName", "Rick")));
+    	AssertJUnit.assertTrue(employees.size() > 0);
+    	
+    	//This one is not working.... Need this for or.
+//		Group group = or (
+//				eq("department.name", "Engineering"), eq("firstName", "Rick")
+//		);    	
+//    	employees = genericDao.find(group);
+//    	AssertJUnit.assertTrue(employees.size() > 0);
+
+    }
     public void setGenericDao( final GenericDao<Employee, Long> baseJpaDao ) {
         this.genericDao = baseJpaDao;
     }

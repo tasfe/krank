@@ -2,9 +2,10 @@ package org.crank.crud.criteria;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
-public class Group extends Criterion {
+public class Group extends Criterion implements Iterable<Criterion>{
 	private List<Criterion> criteria = new ArrayList<Criterion>();
 	private Junction junction = Junction.AND;
 	
@@ -72,6 +73,22 @@ public class Group extends Criterion {
 	
 	public String toString () {
 		return "(" + junction + " " + criteria + ")";
+	}
+
+	public Iterator<Criterion> iterator() {
+		return criteria.iterator();
+	}
+	
+	public int size () {
+		return criteria.size();
+	}
+
+	public Junction getJunction() {
+		return junction;
+	}
+
+	public void setJunction(Junction junction) {
+		this.junction = junction;
 	}
 	
 }

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import org.crank.crud.criteria.Criterion;
+
 /**
 *  @param <T> DAO class
 *  @param <PK> id class
@@ -80,5 +82,7 @@ public interface GenericDao<T, PK extends Serializable> {
      * @return List of populated objects
      */
     List<T> find();
+    
+    List<T> find (Criterion... criteria);
 
 }

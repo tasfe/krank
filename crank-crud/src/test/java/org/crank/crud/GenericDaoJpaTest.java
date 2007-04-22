@@ -12,6 +12,7 @@ import java.util.Map;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.test.DbUnitTestBase;
 import org.crank.crud.test.dao.EmployeeDAO;
+import org.crank.crud.test.model.Department;
 import org.crank.crud.test.model.Employee;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
@@ -198,6 +199,18 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     	string = dao.constructQueryString(group, false);
     	AssertJUnit.assertEquals(" WHERE  o.firstName = :firstName ", string);
     	
+    	Employee employee = new Employee();
+    	employee.setFirstName("Ric");
+    	employee.setAge(0);
+    	Department department = new Department();
+    	department.setName("Eng");
+    	employee.setDepartment(department);
+    	group = like(employee);
+    	string = dao.constructQueryString(group, false);
+    	AssertJUnit.assertEquals(
+    			" WHERE  o.active = :active  AND  (  o.department.name like :department_name  )  AND  o.firstName like :firstName ", 
+    			string);
+    	
     }
     
     @Test 
@@ -240,6 +253,17 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     							   );
     	AssertJUnit.assertTrue(employees.size() > 0);
 
+    	
+    	employee = new Employee();
+    	employee.setFirstName("Ric");
+    	employee.setAge(0);
+    	employee.setActive(true);
+    	Department department = new Department();
+    	department.setName("Eng");
+    	employee.setDepartment(department);
+    	employees = genericDao.find(like(employee));
+    	AssertJUnit.assertTrue(employees.size() > 0);
+    	
     }
     
     public void setGenericDao( final GenericDao<Employee, Long> baseJpaDao ) {

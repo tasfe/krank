@@ -17,10 +17,16 @@ public class Example extends Group {
 	private boolean excludeNulls = true;
 	private Operator operator = Operator.EQ;
 	private boolean excludeZeroes = false;
+	private String qualifier = "";
 
 	private Example (Object object) {
 		this.example = object;
 	}
+	private Example (Object object, String name) {
+		this.example = object;
+		this.qualifier  = name + ".";
+	}
+
 	public Object getExample() {
 		return example;
 	}
@@ -95,38 +101,66 @@ public class Example extends Group {
 				boolean isNull = value == null;
 				boolean isString = value instanceof String;
 				if (!primitive) {
-					if (!isNull && !isString) {
-						this.eq(name, value);
-					} else if (isString && !isNull) {
-						this.add(name, this.operator, value);
-					} else {
-						if (!this.excludeNulls) {
-							if (isString) {
-								this.add(name, this.operator, value);
-							} else {
-								this.eq(name, value);
-							}
-						}
-					}
+					handleNonPrimitives(qualifier + name, value, className, isNull, isString);
 				} else {
-					if (!"boolean".equals(className)) {
-						if (excludeZeroes) {
-							Number number = (Number) value;
-							if (number.intValue()!=0) {
-								this.eq(name, value);	
-							} else {
-								//ystem.out.println("EXCLUDED");
-							}
-						} else {
-							this.eq(name, value);
-						}
-					} else {
-						this.eq(name, value);
-					}
+					handlePrimitives(qualifier + name, value, className);
 				}
 			}
 		} catch (Exception ex) {
 			throw new RuntimeException ("Unable to use example object " + example, ex);
+		}
+	}
+	private void handlePrimitives(String name, Object value, String className) {
+		if (!"boolean".equals(className)) {
+			if (excludeZeroes) {
+				Number number = (Number) value;
+				if (number.intValue()!=0) {
+					this.eq(name, value);	
+				} else {
+					//ystem.out.println("EXCLUDED");
+				}
+			} else {
+				this.eq(name, value);
+			}
+		} else {
+			this.eq(name, value);
+		}
+	}
+	private void handleNonPrimitives(String name, Object value, String className, boolean isNull, boolean isString) {
+		if (className.startsWith("java")) {
+			handleBasicJavaTypes(name, value, isNull, isString);
+		} else {
+			handleCustomJavaBeans(name, value, isNull);
+		}
+	}
+	private void handleCustomJavaBeans(String name, Object value, boolean isNull) {
+		if (!isNull) {
+			Example example = new Example(value, name);
+			example.excludedProperties = this.excludedProperties;
+			example.excludeNulls = this.excludeNulls;
+			example.junction = this.junction;
+			example.excludeZeroes = this.excludeZeroes;
+			example.operator = this.operator;
+			this.criteria.add(example);
+		} else {
+			if (!excludeNulls) {
+				this.eq(name, value);
+			}
+		}
+	}
+	private void handleBasicJavaTypes(String name, Object value, boolean isNull, boolean isString) {
+		if (!isNull && !isString) {
+			this.eq(name, value);
+		} else if (isString && !isNull) {
+			this.add(name, this.operator, value);
+		} else {
+			if (!this.excludeNulls) {
+				if (isString) {
+					this.add(name, this.operator, value);
+				} else {
+					this.eq(name, value);
+				}
+			}
 		}
 	}
 	@Override
@@ -144,7 +178,5 @@ public class Example extends Group {
 			generate();
 		}
 		return super.size();
-	}
-	
-	
+	}	
 }

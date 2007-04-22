@@ -137,7 +137,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
     	if (group.size() == 1) {
     		Criterion criterion = group.iterator().next();
 			if (criterion instanceof Group){
-				constructQueryString((Group) criterion, true);
+				constructQueryString(builder, (Group) criterion, true);
 			} else if (criterion instanceof Comparison) {
 				addComparisonToQueryString((Comparison)criterion, builder);
 			}

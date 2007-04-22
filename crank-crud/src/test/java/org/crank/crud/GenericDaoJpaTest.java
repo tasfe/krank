@@ -202,7 +202,6 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     @Test 
     public void testFindByCriteria () {
     	
-
     	List<Employee> employees = genericDao.find(eq("department.name", "Engineering"));
     	AssertJUnit.assertTrue(employees.size() > 0);
 
@@ -212,11 +211,11 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     	AssertJUnit.assertTrue(employees.size() > 0);
     	
     	//This one is not working.... Need this for or.
-//		Group group = or (
-//				eq("department.name", "Engineering"), eq("firstName", "Rick")
-//		);    	
-//    	employees = genericDao.find(group);
-//    	AssertJUnit.assertTrue(employees.size() > 0);
+		Group group = or (
+				eq("department.name", "Engineering"), eq("firstName", "Rick")
+		);    	
+    	employees = genericDao.find(group);
+    	AssertJUnit.assertTrue(employees.size() > 0);
 
     }
     public void setGenericDao( final GenericDao<Employee, Long> baseJpaDao ) {

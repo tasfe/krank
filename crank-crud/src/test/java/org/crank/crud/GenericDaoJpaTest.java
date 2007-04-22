@@ -1,6 +1,6 @@
 package org.crank.crud;
 
-import static org.crank.crud.criteria.Comparison.eq;
+import static org.crank.crud.criteria.Comparison.*;
 import static org.crank.crud.criteria.Group.and;
 import static org.crank.crud.criteria.Group.or;
 
@@ -182,7 +182,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 				)
 			  );    	
     	String string = dao.constructQueryString(group, false);
-    	AssertJUnit.assertEquals(" WHERE  o.firstName=:firstName  AND  o.lastName=:lastName  AND  (  o.foo=:foo  OR  o.baz=:baz  ) ", string);
+    	AssertJUnit.assertEquals(" WHERE  o.firstName = :firstName  AND  o.lastName = :lastName  AND  (  o.foo = :foo  OR  o.baz = :baz  ) ", string);
 
 		group = and(
 				eq("firstName", "Rick"), eq("lastName", "Hightower"), 
@@ -191,11 +191,11 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 				)
 			  );    	
     	string = dao.constructQueryString(group, false);
-    	AssertJUnit.assertEquals(" WHERE  o.firstName=:firstName  AND  o.lastName=:lastName  AND  (  o.foo=:foo  ) ", string);
+    	AssertJUnit.assertEquals(" WHERE  o.firstName = :firstName  AND  o.lastName = :lastName  AND  (  o.foo = :foo  ) ", string);
 
 		group = and( eq("firstName", "Rick") );    	
     	string = dao.constructQueryString(group, false);
-    	AssertJUnit.assertEquals(" WHERE  o.firstName=:firstName ", string);
+    	AssertJUnit.assertEquals(" WHERE  o.firstName = :firstName ", string);
     	
     }
     
@@ -211,10 +211,9 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     	AssertJUnit.assertTrue(employees.size() > 0);
     	
     	//This one is not working.... Need this for or.
-		Group group = or (
-				eq("department.name", "Engineering"), eq("firstName", "Rick")
-		);    	
-    	employees = genericDao.find(group);
+    	employees = genericDao.find(or (
+				eq("department.name", "Engineering"), like("firstName", "Rick")
+		));
     	AssertJUnit.assertTrue(employees.size() > 0);
 
     }

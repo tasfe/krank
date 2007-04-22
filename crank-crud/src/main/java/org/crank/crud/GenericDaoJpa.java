@@ -114,12 +114,29 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
     }
 
 	private void addGroupParams(Query query, Group group) {
+		
 		for (Criterion criterion : group) {
 			if (criterion instanceof Group) {
 				addGroupParams(query, (Group) criterion);
 			} else {
 				Comparison comparison = (Comparison) criterion;
-				query.setParameter(ditchDot(comparison.getName()), comparison.getValue());
+				final String sOperator = comparison.getOperator().getOperator();
+				if (!"like".equals(sOperator)) {
+					query.setParameter(ditchDot(comparison.getName()), comparison.getValue());
+				}else {
+					Operator operator = comparison.getOperator();
+					StringBuilder value = new StringBuilder(50);
+					if (operator == Operator.LIKE) {
+						value.append(comparison.getValue());
+					} else if (operator == Operator.LIKE_CONTAINS) {
+						value.append("%").append(comparison.getValue()).append("%");
+					} else if (operator == Operator.LIKE_END) {
+						value.append("%").append(comparison.getValue());						
+					} else if (operator == Operator.LIKE_START) {
+						value.append(comparison.getValue()).append("%");
+					} 
+					query.setParameter(ditchDot(comparison.getName()), value.toString());
+				}
 			}
 		}
 	}
@@ -166,9 +183,12 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
 	private void addComparisonToQueryString(Comparison comparison, StringBuilder builder ) {
 		builder.append(" o.");
 		builder.append(comparison.getName());
-		builder.append(comparison.getOperator().getOperator());
-		builder.append(":" + ditchDot(comparison.getName()));
+		final String sOperator = comparison.getOperator().getOperator();
 		builder.append(" ");
+		builder.append(sOperator);
+		builder.append(" ");
+		builder.append(":" + ditchDot(comparison.getName()));
+		builder.append(" ");			
 
 	}
 

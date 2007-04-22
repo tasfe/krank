@@ -23,6 +23,18 @@ public class Comparison extends Criterion {
 	public static Comparison le (final String name, final Object value ) {
 		return new Comparison (name, Operator.LE, value);
 	}
+	public static Comparison like (final String name, final String value ) {
+		return new Comparison (name, Operator.LIKE, value);
+	}
+	public static Comparison startsLike (final String name, final String value ) {
+		return new Comparison (name, Operator.LIKE_START, value);
+	}
+	public static Comparison endsLike (final String name, final String value ) {
+		return new Comparison (name, Operator.LIKE_END, value);
+	}
+	public static Comparison containsLike (final String name, final String value ) {
+		return new Comparison (name, Operator.LIKE_CONTAINS, value);
+	}
 
 	public Comparison () {
 		

@@ -112,8 +112,10 @@ public class Example extends Group {
 					if (!"boolean".equals(className)) {
 						if (excludeZeroes) {
 							Number number = (Number) value;
-							if (!(number.floatValue()==0.0f)) {
+							if (number.intValue()!=0) {
 								this.eq(name, value);	
+							} else {
+								//ystem.out.println("EXCLUDED");
 							}
 						} else {
 							this.eq(name, value);
@@ -134,6 +136,14 @@ public class Example extends Group {
 			generate();
 		}
 		return super.toString();
+	}
+	@Override
+	public int size() {
+		if (!generated) {
+			generated = true;
+			generate();
+		}
+		return super.size();
 	}
 	
 	

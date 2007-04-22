@@ -63,21 +63,24 @@ public class GroupTest {
 		Example example = Example.like(employee).excludeProperty("lastName");
 		assertEquals("(AND [active_EQ_true, age_EQ_40, firstName_LIKE_CONTAINS_Rick])", example.toString());
 
-//		example = Example.createExample(employee).excludeZeroes().excludeNone();
-//		employee.setAge(0);
-//		employee.setLastName(null);
-//		assertEquals("(AND [active_EQ_true, age_EQ_0, department_EQ_null, firstName_EQ_Rick, id_EQ_null, lastName_EQ_null, numberOfPromotions_EQ_null])", 
-//				example.toString());		
-//
-//		example = Example.createExample(employee);
-//		employee.setAge(0);
-//		employee.setLastName(null);
-//		assertEquals("(AND [active_EQ_true, age_EQ_0, firstName_EQ_Rick])", example.toString());	
-//
-//		example = Example.createExample(employee).excludeZeroes();
-//		employee.setAge(0);
-//		employee.setLastName(null);
-//		assertEquals("(AND [active_EQ_true, firstName_EQ_Rick])", example.toString());	
+		example = Example.createExample(employee).excludeZeroes();
+		employee.setAge(0);
+		employee.setLastName(null);
+		assertEquals("(AND [active_EQ_true, firstName_EQ_Rick])", 
+				example.toString());		
+
+		example = Example.createExample(employee).excludeZeroes();
+		employee.setAge(40);
+		employee.setLastName(null);
+		assertEquals("(AND [active_EQ_true, age_EQ_40, firstName_EQ_Rick])", 
+				example.toString());		
+
+		example = Example.createExample(employee).excludeZeroes().excludeNone();
+		employee.setAge(0);
+		employee.setLastName(null);
+		assertEquals("(AND [active_EQ_true, department_EQ_null, firstName_EQ_Rick, id_EQ_null, lastName_EQ_null, numberOfPromotions_EQ_null])", 
+				example.toString());		
+		
 		
 	}	
 }

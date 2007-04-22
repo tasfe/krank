@@ -1,12 +1,13 @@
 package org.crank.crud;
 
+import static org.crank.crud.criteria.Example.*;
 import static org.crank.crud.criteria.Comparison.*;
-import static org.crank.crud.criteria.Group.and;
-import static org.crank.crud.criteria.Group.or;
+//import static org.crank.crud.criteria.Group.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 import org.crank.crud.criteria.Group;
 import org.crank.crud.test.DbUnitTestBase;
@@ -223,6 +224,24 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     	AssertJUnit.assertTrue(employees.size() > 0);
 
     }
+
+    @Test 
+    public void testQBE () {
+
+		Employee employee = new Employee();
+		employee.setActive(true);
+		employee.setAge(40);
+		employee.setFirstName("Rick");
+		employee.setLastName("Rick");
+		
+    	
+    	List<Employee> employees = genericDao.find(
+    			like(employee).excludeProperty("lastName")
+    							   );
+    	AssertJUnit.assertTrue(employees.size() > 0);
+
+    }
+    
     public void setGenericDao( final GenericDao<Employee, Long> baseJpaDao ) {
         this.genericDao = baseJpaDao;
     }

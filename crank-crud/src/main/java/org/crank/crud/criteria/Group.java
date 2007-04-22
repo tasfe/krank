@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Group extends Criterion implements Iterable<Criterion>{
-	private List<Criterion> criteria = new ArrayList<Criterion>();
-	private Junction junction = Junction.AND;
+	protected List<Criterion> criteria = new ArrayList<Criterion>();
+	protected Junction junction = Junction.AND;
 	
 	public Group () {
 		

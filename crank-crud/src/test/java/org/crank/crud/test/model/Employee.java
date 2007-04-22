@@ -20,6 +20,14 @@ public class Employee {
 
 	private String firstName;
 	
+	private String lastName;
+	
+	private boolean active;
+	
+	private int age;
+	
+	private Integer numberOfPromotions;
+	
 	@ManyToOne
 	private Department department;
     
@@ -45,5 +53,37 @@ public class Employee {
 
 	public void setDepartment(Department department) {
 		this.department = department;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public Integer getNumberOfPromotions() {
+		return numberOfPromotions;
+	}
+
+	public void setNumberOfPromotions(Integer numberOfPromotions) {
+		this.numberOfPromotions = numberOfPromotions;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 }

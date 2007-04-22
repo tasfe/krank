@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
 	<DEPARTMENT ID="1" NAME="Engineering"/>
-    <EMPLOYEE ID="1" FIRSTNAME="Rick"   DEPARTMENT_ID="1"/>
-    <EMPLOYEE ID="2" FIRSTNAME="Chris"  DEPARTMENT_ID="1"/>
-    <EMPLOYEE ID="3" FIRSTNAME="Scott"  DEPARTMENT_ID="1"/>
+    <EMPLOYEE ID="1" FIRSTNAME="Rick"   DEPARTMENT_ID="1" ACTIVE="1" AGE="40"/>
+    <EMPLOYEE ID="2" FIRSTNAME="Chris"  DEPARTMENT_ID="1" ACTIVE="1" AGE="40"/>
+    <EMPLOYEE ID="3" FIRSTNAME="Scott"  DEPARTMENT_ID="1" ACTIVE="1" AGE="40"/>
 </dataset>

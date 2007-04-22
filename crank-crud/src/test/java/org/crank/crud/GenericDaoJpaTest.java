@@ -202,18 +202,24 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     @Test 
     public void testFindByCriteria () {
     	
-    	List<Employee> employees = genericDao.find(eq("department.name", "Engineering"));
+    	List<Employee> employees = genericDao.find(
+    								eq("department.name", "Engineering")
+    							   );
     	AssertJUnit.assertTrue(employees.size() > 0);
 
     	employees = genericDao.find(
-    			eq("department.name", "Engineering"),
-    			or(eq("firstName", "Rick")));
+    					eq("department.name", "Engineering"),
+    					or(
+    							startsLike("firstName", "Rick")
+    					)
+    				);
     	AssertJUnit.assertTrue(employees.size() > 0);
     	
-    	//This one is not working.... Need this for or.
-    	employees = genericDao.find(or (
-				eq("department.name", "Engineering"), like("firstName", "Rick")
-		));
+    	employees = genericDao.find(
+    				or (
+    					eq("department.name", "Engineering"), like("firstName", "Ri")
+    				)
+    			);
     	AssertJUnit.assertTrue(employees.size() > 0);
 
     }

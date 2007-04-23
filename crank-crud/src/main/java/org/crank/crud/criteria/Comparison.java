@@ -5,6 +5,9 @@ public class Comparison extends Criterion {
 	private Operator operator;
 	private Object value;
 	
+	public static Comparison between (final String name, final Object value1, final Object value2 ) {
+		return new Between (name, value1, value2);
+	}
 	public static Comparison eq (final String name, final Object value ) {
 		return new Comparison (name, Operator.EQ, value);
 	}

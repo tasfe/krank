@@ -82,5 +82,12 @@ public class GroupTest {
 				example.toString());		
 		
 		
-	}	
+	}
+	
+	@Test
+	public void testBetween () {
+		Group group = and(between("age", new Integer(1), new Integer(2)));
+		assertEquals("1", "(AND [age_BETWEEN_1_2])", group.toString());
+	}
+
 }

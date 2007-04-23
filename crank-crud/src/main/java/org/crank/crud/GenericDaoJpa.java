@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import org.crank.crud.criteria.Between;
 import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Group;
@@ -122,7 +123,14 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
 				Comparison comparison = (Comparison) criterion;
 				final String sOperator = comparison.getOperator().getOperator();
 				if (!"like".equals(sOperator)) {
-					query.setParameter(ditchDot(comparison.getName()), comparison.getValue());
+					if (comparison instanceof Between) {
+						Between between = (Between) comparison;
+						query.setParameter(ditchDot(comparison.getName()) + "1", comparison.getValue());
+						query.setParameter(ditchDot(comparison.getName()) + "2", between.getValue2());
+					} else {
+						query.setParameter(ditchDot(comparison.getName()), comparison.getValue());
+					}
+					
 				}else {
 					Operator operator = comparison.getOperator();
 					StringBuilder value = new StringBuilder(50);
@@ -181,14 +189,23 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
 	}
 
 	private void addComparisonToQueryString(Comparison comparison, StringBuilder builder ) {
+		final String sOperator = comparison.getOperator().getOperator();
+		String var = ":" +ditchDot(comparison.getName());
+
 		builder.append(" o.");
 		builder.append(comparison.getName());
-		final String sOperator = comparison.getOperator().getOperator();
 		builder.append(" ");
 		builder.append(sOperator);
 		builder.append(" ");
-		builder.append(":" + ditchDot(comparison.getName()));
-		builder.append(" ");			
+
+		if (comparison instanceof Between) {
+			builder.append(var + "1");
+			builder.append(" ");
+			builder.append("and " + var + "2");
+		} else {
+			builder.append(var);
+		}
+		builder.append(" ");						
 
 	}
 

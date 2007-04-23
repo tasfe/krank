@@ -199,6 +199,10 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     	string = dao.constructQueryString(group, false);
     	AssertJUnit.assertEquals(" WHERE  o.firstName = :firstName ", string);
     	
+		group = and( between("age", 1, 100) );    	
+    	string = dao.constructQueryString(group, false);
+    	AssertJUnit.assertEquals(" WHERE  o.age between :age1 and :age2 ", string);
+
     	Employee employee = new Employee();
     	employee.setFirstName("Ric");
     	employee.setAge(0);
@@ -238,6 +242,15 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
     }
 
+    @Test 
+    public void testBetween () {
+    	
+    	List<Employee> employees = genericDao.find(
+    								between("age", 1, 100)
+    							   );
+    	AssertJUnit.assertTrue(employees.size() > 0);
+    }
+    
     @Test 
     public void testQBE () {
 

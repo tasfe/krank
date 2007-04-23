@@ -28,6 +28,11 @@ public class Group extends Criterion implements Iterable<Criterion>{
 		return this;
 	}
 
+	public Group between (String name, Object value1, Object value2) {
+		criteria.add(new Between(name, value1, value2));
+		return this;
+	}
+
 	public Group eq (String name, Object value) {
 		criteria.add(new Comparison(name, Operator.EQ, value));
 		return this;

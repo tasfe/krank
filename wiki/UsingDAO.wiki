@@ -116,6 +116,19 @@ DAO Beans context file
 	</bean>
 }}}
 
+Next inject the genericDao through a setter method as follows (using normal Spring injections):
+
+{{{
+    private GenericDao<Employee, Long> genericDao;
+
+    public void setGenericDao( final GenericDao<Employee, Long> baseJpaDao ) {
+        this.genericDao = baseJpaDao;
+    }
+
+}}}
+
+Notice that we define the genericDao as a DAO that works with Employees who have a PK that is a Long. 
+
 Add your content here.  Format your content with:
   * Text in *bold* or _italic_
   * Headings, paragraphs, and lists

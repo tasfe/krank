@@ -66,11 +66,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
 
     @SuppressWarnings( "unchecked" )
     public List<T> find( Map<String, Object> propertyValues, String[] orderBy ) {
-        String entityName = getEntityName();
-        String queryString = constructQueryString( entityName, propertyValues, orderBy );
-        EntityManager entityManager = getEntityManager();
-        Query query = constructQuery( propertyValues, queryString, entityManager );
-        return (List<T>) query.getResultList();
+    	return find (orderBy, Group.and(propertyValues));
     }
 
     public List<T> find( String property, Object value ) {
@@ -92,13 +88,33 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
     
     @SuppressWarnings("unchecked")
 	public List<T> find (Criterion... criteria) {
+    	return find((String [])null, criteria);
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public List<T> find( String[] propertyNames, Object[] values, String[] orderBy ) {
+        if (propertyNames.length != values.length) {
+            throw new RuntimeException(
+                    "You are not using this API correctly. The propertynames length should always match values length." );
+        }
+        Map<String, Object> propertyValues = new HashMap<String, Object>( propertyNames.length );
+        int index = 0;
+        for (String propertyName : propertyNames) {
+            propertyValues.put( propertyName, values[index] );
+            index++;
+        }
+        return find(propertyValues, orderBy);
+	}
+
+    @SuppressWarnings("unchecked")
+	public List<T> find (String [] orderBy, Criterion... criteria) {
     	String select = createSelect(getEntityName(), "o");
     	final Group group = Group.and(criteria);
     	String whereClause = "";
     	if (group.size() > 0) {
-    		whereClause = constructQueryString(group, false);
+    		whereClause = constructWhereClauseString(group, false);
     	}
-    	final String sQuery = select + whereClause;
+    	final String sQuery = select + whereClause + constructOrderBy(orderBy);
     	try {
 	    	return (List<T>) this.getJpaTemplate().execute(
 	    			new JpaCallback () {
@@ -149,20 +165,31 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
 		}
 	}
     
-    protected String constructQueryString(Group group, boolean parens) {
+    protected String constructWhereClauseString(Group group, boolean parens) {
     	StringBuilder builder = new StringBuilder(255);
+    	if ( group.size() == 0) {
+    		return "";
+    	} else if (group.size() == 1) {
+    		Criterion criterion = group.iterator().next();
+    		if (criterion instanceof Group) {
+    			Group innerGroup = (Group) criterion;
+    			if (innerGroup.size()==0) {
+    				return "";
+    			}
+    		}
+    	}
     	builder.append(" WHERE ");
-    	constructQueryString(builder, group, false);
+    	constructWhereClauseString(builder, group, false);
 		return builder.toString();
 	}
-    protected void constructQueryString(StringBuilder builder, Group group, boolean parens) {
+    protected void constructWhereClauseString(StringBuilder builder, Group group, boolean parens) {
     	if (parens) {
     		builder.append(" ( ");
     	}
     	if (group.size() == 1) {
     		Criterion criterion = group.iterator().next();
 			if (criterion instanceof Group){
-				constructQueryString(builder, (Group) criterion, true);
+				constructWhereClauseString(builder, (Group) criterion, true);
 			} else if (criterion instanceof Comparison) {
 				addComparisonToQueryString((Comparison)criterion, builder);
 			}
@@ -172,7 +199,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
 			for (Criterion criterion : group) {
 				index++;
 				if (criterion instanceof Group){
-					constructQueryString(builder, (Group) criterion, true);
+					constructWhereClauseString(builder, (Group) criterion, true);
 				} else if (criterion instanceof Comparison) {
 					addComparisonToQueryString((Comparison)criterion, builder);
 				}
@@ -213,39 +240,6 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
 
 	}
 
-	@SuppressWarnings( "unchecked" )
-    public List<T> find( String[] propertyNames, Object[] values, String[] orderBy ) {
-        String entityName = getEntityName();
-        String queryString = constructQueryString( entityName, propertyNames, values, orderBy );
-        EntityManager entityManager = getEntityManager();
-        Query query = entityManager.createQuery( queryString );
-        constructQueryParams( propertyNames, values, query );
-        return (List<T>) query.getResultList();
-    }
-
-    private EntityManager getEntityManager() {
-        EntityManager entityManager = getJpaTemplate().getEntityManager();
-        if (null == entityManager) {
-            entityManager = getJpaTemplate().getEntityManagerFactory().createEntityManager();
-        }
-        return entityManager;
-        
-    }
-
-    private Query constructQuery( Map<String, Object> propertyValues, String queryString, EntityManager entityManager ) {
-    	try {
-	        Query query = entityManager.createQuery( queryString );
-	        for (String propName : propertyValues.keySet()) {
-	            if (propertyValues.get( propName ) != null) {
-	                query.setParameter( ditchDot(propName), propertyValues.get( propName ) );
-	            }
-	        }
-	        return query;
-    	} catch (Exception ex) {
-    		throw new RuntimeException("Unable to create query :" + queryString, ex);
-    	}
-    }
-
     protected String getEntityName( Class<T> clazz ) {
         Entity entity = (Entity) type.getAnnotation( Entity.class );
         if (entity == null) {
@@ -285,7 +279,14 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
                 }
             }
         }
-        if (null != orderBy && orderBy.length > 0) {
+        query.append(constructOrderBy(orderBy));
+        
+        return query.toString();
+    }
+
+	private String constructOrderBy(String[] orderBy) {
+		StringBuilder query = new StringBuilder(100);
+		if (null != orderBy && orderBy.length > 0) {
             query.append( " ORDER BY " );
             for (int i = 0; i < orderBy.length; i++) {
                 query.append( orderBy[i] );
@@ -294,8 +295,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
                 }
             }
         }
-        return query.toString();
-    }
+		return query.toString();
+	}
 
 	private String createSelect(String entityName, String instanceName) {
 		StringBuilder query = new StringBuilder( "SELECT " + instanceName + " FROM " );
@@ -325,13 +326,6 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
 		return propName;
 	}
 
-    private void constructQueryParams( String[] propertyNames, Object[] values, Query query ) {
-        int index = 0;
-        for (String propName : propertyNames) {
-            query.setParameter( ditchDot(propName), values[index] );
-            index++;
-        }
-    }
 
     String constructQueryString( String entityName, String[] propertyNames, Object[] values, String[] orderBy ) {
         if (propertyNames.length != values.length) {

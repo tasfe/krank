@@ -119,14 +119,14 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     public void testGetObjects() {
         List employees = genericDao.find( );
         AssertJUnit.assertNotNull( employees );
-        AssertJUnit.assertTrue( employees.size() == 3 );
+        AssertJUnit.assertEquals(3, employees.size() );
     }
 
     @Test
     public void testGetUpdateObjects() throws Exception {
         List<Employee> employees = genericDao.find(  );
         AssertJUnit.assertNotNull( employees );
-        AssertJUnit.assertTrue( employees.size() == 3 );
+        AssertJUnit.assertEquals(3, employees.size() );
         for (Employee employee : employees) {
             employee.setFirstName( employee.getFirstName() + "Gak" );
         }
@@ -183,7 +183,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 					eq("foo", "bar"), eq("baz", "foo")
 				)
 			  );    	
-    	String string = dao.constructQueryString(group, false);
+    	String string = dao.constructWhereClauseString(group, false);
     	AssertJUnit.assertEquals(" WHERE  o.firstName = :firstName  AND  o.lastName = :lastName  AND  (  o.foo = :foo  OR  o.baz = :baz  ) ", string);
 
 		group = and(
@@ -192,15 +192,15 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 					eq("foo", "bar")
 				)
 			  );    	
-    	string = dao.constructQueryString(group, false);
+    	string = dao.constructWhereClauseString(group, false);
     	AssertJUnit.assertEquals(" WHERE  o.firstName = :firstName  AND  o.lastName = :lastName  AND  (  o.foo = :foo  ) ", string);
 
 		group = and( eq("firstName", "Rick") );    	
-    	string = dao.constructQueryString(group, false);
+    	string = dao.constructWhereClauseString(group, false);
     	AssertJUnit.assertEquals(" WHERE  o.firstName = :firstName ", string);
     	
 		group = and( between("age", 1, 100) );    	
-    	string = dao.constructQueryString(group, false);
+    	string = dao.constructWhereClauseString(group, false);
     	AssertJUnit.assertEquals(" WHERE  o.age between :age1 and :age2 ", string);
 
     	Employee employee = new Employee();
@@ -210,7 +210,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     	department.setName("Eng");
     	employee.setDepartment(department);
     	group = like(employee);
-    	string = dao.constructQueryString(group, false);
+    	string = dao.constructWhereClauseString(group, false);
     	AssertJUnit.assertEquals(
     			" WHERE  o.active = :active  AND  (  o.department.name like :department_name  )  AND  o.firstName like :firstName ", 
     			string);

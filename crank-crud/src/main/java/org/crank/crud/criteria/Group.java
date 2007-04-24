@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class Group extends Criterion implements Iterable<Criterion>{
 	protected List<Criterion> criteria = new ArrayList<Criterion>();
@@ -70,6 +71,38 @@ public class Group extends Criterion implements Iterable<Criterion>{
 	
 	public static Group and (final Criterion... criteria) {
 		return  new Group(Junction.AND, criteria);
+	}
+
+	public static Group and (final Map <String, Object> map) {
+		Group group = new Group(); group.setJunction(Junction.AND);
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			group.add(Comparison.eq(entry.getKey(), entry.getValue()));
+		}
+		return group;
+	}
+
+	public static Group or (final Map <String, Object> map) {
+		Group group = new Group(); group.setJunction(Junction.OR);
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			group.add(Comparison.eq(entry.getKey(), entry.getValue()));
+		}
+		return group;
+	}
+
+	public static Group and (final Map <String, Object> map, Operator operator) {
+		Group group = new Group(); group.setJunction(Junction.AND);
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			group.add(new Comparison(entry.getKey(), operator, entry.getValue()));
+		}
+		return group;
+	}
+
+	public static Group or (final Map <String, Object> map, Operator operator) {
+		Group group = new Group(); group.setJunction(Junction.OR);
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			group.add(new Comparison(entry.getKey(), operator, entry.getValue()));
+		}
+		return group;
 	}
 
 	public static Group or (final Criterion... criteria) {

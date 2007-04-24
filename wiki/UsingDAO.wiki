@@ -164,8 +164,14 @@ You can delete an object as well:
 
 There are helper methods for finding objects as follows:
 
+{{{
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("firstName", "Rick");
+        List employees = genericDao.find( params, new String[] { "firstName" });
 
+}}}
 
+The above finds and employee with the first name of Rick. If there are more than one employees named Rick, the list will be ordered by firstName.
 Add your content here.  Format your content with:
   * Text in *bold* or _italic_
   * Headings, paragraphs, and lists

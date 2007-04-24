@@ -167,11 +167,84 @@ There are helper methods for finding objects as follows:
 {{{
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("firstName", "Rick");
-        List employees = genericDao.find( params, new String[] { "firstName" });
+        List <Employee> employees = genericDao.find( params, new String[] { "firstName" });
 
 }}}
 
 The above finds and employee with the first name of Rick. If there are more than one employees named Rick, the list will be ordered by firstName.
+
+You can also search by related objects. Below we search for employees who are in the department named Engineering (where Employee has an related entity called Department).
+{{{
+List<Employee> employees = genericDao.find("department.name", "Engineering");
+}}}
+
+The above is shorthand for the following:
+
+{{{
+import static org.crank.crud.criteria.Example.*;
+import static org.crank.crud.criteria.Comparison.*;
+import static org.crank.crud.criteria.Group.*;
+...
+...
+    	List<Employee> employees = genericDao.find(eq("department.name", "Engineering"));
+
+}}}
+
+Notice the use of the `eq` method. We provided a Criteria DSL where you can any number of criterion.
+
+Here are some examples of using the Criteria DSL
+{{{
+    	employees = genericDao.find(
+                                  eq("department.name", "Engineering"),
+                                  or( startsLike("firstName", "Rick"),like("firstName", "Ri"))
+    				);
+    	
+    	employees = genericDao.find(
+                                or (
+                                      eq("department.name", "Engineering"), 
+                                      like("firstName", "Ri")
+                                )
+                     );
+
+    	employees = genericDao.find( in("age", 1, 2, 3, 4, 5, 6, 40) );
+
+}}}
+
+The Criteria DSL has all of the operators that you expect, e.g., and, or, eq, ne, gt, ge, etc.
+
+
+The Criteria DSL even has support for Query by Example (QBE):
+
+{{{
+       Employee employee = new Employee();
+       employee.setActive(true);
+       employee.setAge(40);
+       employee.setFirstName("Rick");
+       employee.setLastName("Rick");
+		
+       List<Employee> employees = genericDao.find(
+                       like(employee).excludeProperty("lastName"));
+
+    	
+}}}
+
+You can even refer to nested QBE objects:
+
+{{{
+    employee = new Employee();
+    employee.setFirstName("Ric");
+    employee.setAge(0);
+    employee.setActive(true);
+    Department department = new Department();
+    department.setName("Eng");
+    employee.setDepartment(department);
+
+    employees = genericDao.find(like(employee));
+
+}}}
+
+See that the above uses an Employee that has a Department. Both the Employee data and the Department data will be used in the geneated query.
+
 Add your content here.  Format your content with:
   * Text in *bold* or _italic_
   * Headings, paragraphs, and lists

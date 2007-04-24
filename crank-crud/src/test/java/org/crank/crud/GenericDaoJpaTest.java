@@ -245,7 +245,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 					in("age", 1, 2, 3, 4, 5, 6, 40)
 				)
 			);
-	AssertJUnit.assertTrue(employees.size() > 0);
+    	AssertJUnit.assertTrue(employees.size() > 0);
     	
     }
 

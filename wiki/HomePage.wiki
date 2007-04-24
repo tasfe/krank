@@ -1,0 +1,35 @@
+#summary The home page for the Crank project
+
+= Introduction =
+
+Organic growth is so...well...natural!
+
+Crank is an open source project providing both a generic validation framework, and code generation facilities for the JSF/Spring/Hibernate stack, which is very popular in corporate America today.
+
+= Working Features Of Validation Framework =
+
+Mostly what works is the annotation driven validation.
+
+  * Java 5 annotations
+  * Allows for multiple sources of Validation meta-data (Annotation, Property files)
+  ** You can pick one or use more than one at a time
+  ** Annotation and Property file is supported
+  * JSF Integration via JSF Validation integrtation
+  * Spring MVC/Spring Webflow Integration via Spring Validator
+  * Can Generate JavaScript based on Validation metadata
+  * Can make Ajax calls based on Validation metadata
+  * Easy to integrate with existing annotation driven frameworks
+
+= Working Features Of CRUD Framework =
+ * JPA DAO object
+ * You can define finder methods using no Java code (AOP enabled)
+ * A lightweight Detached Criteria API that uses POJOs
+ * An easy to use Detached Criteria DSL (domain specific language) that makes using the Criteria API a breeze.
+
+= Details =
+
+*TODO* 
+describe goals and status of krank.
+
+
+[maven release]

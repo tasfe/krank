@@ -18,9 +18,9 @@ The DAO support is based on the [http://www.springframework.org/docs/reference/o
 Everything that applies to `org.springframework.orm.jpa.support.JpaDaoSupport` also applies to Cranks DAO support (`org.crank.crud.GenericDaoJpa`) as it subclasses `JpaDaoSupport` from Spring. Note that all of our DAO objects implement `org.crank.crud.GenericDao`.
 
 Steps to using Crank JPA DAO support
-  * Setup Spring environment
-  * Configure DAO object
-  * Automatic links to other wiki pages
+  # Setup Spring environment
+  # Configure DAO object
+  # Start using the DAO
 
 == Step 1 Setup Spring environment ==
 
@@ -128,6 +128,43 @@ Next inject the genericDao through a setter method as follows (using normal Spri
 }}}
 
 Notice that we define the genericDao as a DAO that works with Employees who have a PK that is a Long. 
+
+== Step 3 Start using the DAO ==
+
+Once you have the DAO defined and injected, you can start using it.
+
+You can read objects by id:
+{{{
+        Employee employee = (Employee) genericDao.read( 1L );
+
+}}}
+
+You can create new objects:
+{{{
+      genericDao.create(new Employee("Rick", "Hightower"));
+}}}
+
+You can update objects (not needed if in same transaction):
+{{{
+        Employee employee = (Employee) genericDao.read( 1L );
+        ... //Present to user
+        employee.setFirstName("Rick");
+        genericDao.update( employee );
+}}}
+
+JPA does dirty checking so the update is not needed if run in the same transaction.
+
+You can also delete objects as follows:
+
+You can delete an object as well:
+{{{
+        Employee employee = (Employee) genericDao.read( 1L );
+        genericDao.delete( employee.getId() );
+}}}
+
+There are helper methods for finding objects as follows:
+
+
 
 Add your content here.  Format your content with:
   * Text in *bold* or _italic_

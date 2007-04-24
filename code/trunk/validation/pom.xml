@@ -28,8 +28,8 @@
 	</developers>
 
 	<scm>
-		<connection>scm:svn:https://krank.googlecode.com/svn/code/tags/0.2 With CRUD</connection>
-		<developerConnection>scm:svn:https://krank.googlecode.com/svn/code/tags/0.2 With CRUD</developerConnection>
+		<connection>scm:svn:https://krank.googlecode.com/svn/code/tags/0.2 Release With CRUD</connection>
+		<developerConnection>scm:svn:https://krank.googlecode.com/svn/code/tags/0.2 Release With CRUD</developerConnection>
 	</scm>
 
 	<issueManagement>

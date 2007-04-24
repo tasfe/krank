@@ -108,13 +108,14 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
 
     @SuppressWarnings("unchecked")
 	public List<T> find (String [] orderBy, Criterion... criteria) {
+    	StringBuilder sbQuery = new StringBuilder(255);
     	String select = createSelect(getEntityName(), "o");
     	final Group group = Group.and(criteria);
     	String whereClause = "";
     	if (group.size() > 0) {
     		whereClause = constructWhereClauseString(group, false);
     	}
-    	final String sQuery = select + whereClause + constructOrderBy(orderBy);
+    	final String sQuery = sbQuery.append(select).append(whereClause).append(constructOrderBy(orderBy)).toString();
     	try {
 	    	return (List<T>) this.getJpaTemplate().execute(
 	    			new JpaCallback () {

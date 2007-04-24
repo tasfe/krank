@@ -30,57 +30,6 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         return "data/Employee.xml";
     }
 
-    @Test
-    public void testQueryRelatedField() {
-        GenericDaoJpa<Employee, Long> localDao = new GenericDaoJpa<Employee, Long>();
-        Map<String, Object> florp = new HashMap<String, Object>();
-        florp.put("foo.bar", "bar");
-        String gimp = localDao.constructQueryString( "Glorp", florp, null );
-        AssertJUnit.assertEquals( "SELECT o FROM Glorp o  WHERE o.foo.bar = :foo_bar", gimp );
-    }
-
-    @Test
-    public void testQueryBuildingEmptyParam() {
-        GenericDaoJpa<Employee, Long> localDao = new GenericDaoJpa<Employee, Long>();
-        Map<String, Object> florp = new HashMap<String, Object>();
-        String gimp = localDao.constructQueryString( "Glorp", florp, null );
-        AssertJUnit.assertEquals( "SELECT o FROM Glorp o ", gimp );
-    }
-
-    @Test
-    public void testQueryBuildingSingleParam() {
-        GenericDaoJpa<Employee, Long> localDao = new GenericDaoJpa<Employee, Long>();
-        Map<String, Object> florp = new HashMap<String, Object>();
-        florp.put( "gimp", new Integer( 14 ) );
-        String gimp = localDao.constructQueryString( "Glorp", florp, null );
-        AssertJUnit.assertEquals( "SELECT o FROM Glorp o  WHERE o.gimp = :gimp", gimp );
-    }
-
-    @Test
-    public void testQueryBuildingDoubleParam() {
-        Map<String, Object> florp = new HashMap<String, Object>();
-        GenericDaoJpa<Employee, Long> localDao = new GenericDaoJpa<Employee, Long>();
-        florp.put( "gimp", new Integer( 14 ) );
-        florp.put( "gomp", new Integer( 14 ) );
-        String gimp = localDao.constructQueryString( "Glorp", florp, null );
-        AssertJUnit.assertEquals( 0, gimp.indexOf( "SELECT" ) );
-        AssertJUnit.assertTrue( gimp.contains( ":gimp" ) );
-        AssertJUnit.assertTrue( gimp.contains( ":gomp" ) );
-    }
-
-    @Test
-    public void testQueryBuildingDoubleParamOrderBy() {
-        Map<String, Object> florp = new HashMap<String, Object>();
-        GenericDaoJpa<Employee, Long> localDao = new GenericDaoJpa<Employee, Long>();
-        florp.put( "gimp", new Integer( 14 ) );
-        florp.put( "gomp", new Integer( 14 ) );
-        String orderBy[] = new String[] { "gimp" };
-        String gimp = localDao.constructQueryString( "Glorp", florp, orderBy );
-        AssertJUnit.assertEquals( 0, gimp.indexOf( "SELECT" ) );
-        AssertJUnit.assertTrue( gimp.contains( ":gimp" ) );
-        AssertJUnit.assertTrue( gimp.contains( ":gomp" ) );
-        AssertJUnit.assertTrue( gimp.contains( "ORDER BY gimp" ) );
-    }
 
     @Test
     public void testDeleteObject() throws Exception {

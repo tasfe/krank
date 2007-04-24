@@ -3,7 +3,6 @@ package org.crank.crud;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -262,28 +261,6 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
         return getEntityName( type );
     }
 
-    String constructQueryString( String entityName, Map<String, Object> propertyValues, String[] orderBy ) {
-        String instanceName = "o";
-        StringBuilder query = new StringBuilder(createSelect(entityName, instanceName));
-        if (propertyValues.size() > 0) {
-            query.append( " WHERE " );
-            // keep the property names in a list to make sure we get them out in
-            // the right order
-            Iterator<String> propItr = propertyValues.keySet().iterator();
-            if (propItr.hasNext()) {
-                String propName = propItr.next();
-                appendValueRepresentation( query, propName, propertyValues );
-                for (; propItr.hasNext();) {
-                    propName = propItr.next();
-                    query.append( " AND " );
-                    appendValueRepresentation( query, propName, propertyValues );
-                }
-            }
-        }
-        query.append(constructOrderBy(orderBy));
-        
-        return query.toString();
-    }
 
 	private String constructOrderBy(String[] orderBy) {
 		StringBuilder query = new StringBuilder(100);
@@ -307,40 +284,12 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
 		return query.toString();
 	}
 
-    private void appendValueRepresentation( StringBuilder query, String propName, Map<String, Object> propertyValues ) {
-        Object value = propertyValues.get( propName );
-        if (value == null) {
-            query.append( propName );
-            query.append( " is null " );
-        } else {
-            query.append( "o." + propName );
-            query.append( " = :" );
-            if (propName.contains(".")) {
-            	propName = ditchDot(propName);
-            }
-            query.append( propName );
-        }
-    }
 
 	private String ditchDot(String propName) {
 		propName = propName.replace('.', '_');
 		return propName;
 	}
 
-
-    String constructQueryString( String entityName, String[] propertyNames, Object[] values, String[] orderBy ) {
-        if (propertyNames.length != values.length) {
-            throw new RuntimeException(
-                    "You are not using this API correctly. The propertynames length should always match values length." );
-        }
-        Map<String, Object> propertyValues = new HashMap<String, Object>( propertyNames.length );
-        int index = 0;
-        for (String propertyName : propertyNames) {
-            propertyValues.put( propertyName, values[index] );
-            index++;
-        }
-        return constructQueryString( entityName, propertyValues, orderBy );
-    }
 
     public Object executeFinder( final Method method, final Object[] queryArgs ) {
         final String queryName = queryNameFromMethod( method );

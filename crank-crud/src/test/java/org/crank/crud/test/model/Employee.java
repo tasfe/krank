@@ -11,6 +11,7 @@ import javax.persistence.NamedQuery;
 @Entity
 @NamedQueries( {
 	@NamedQuery(name="Employee.findEmployeesByDepartment", query="from Employee employee where employee.department.name=?")
+	
 })
 public class Employee {
 

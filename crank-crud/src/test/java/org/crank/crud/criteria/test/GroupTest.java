@@ -90,4 +90,10 @@ public class GroupTest {
 		assertEquals("1", "(AND [age_BETWEEN_1_2])", group.toString());
 	}
 
+	@Test
+	public void testIn () {
+		Group group = and(in("age", 1, 2, 3, 4, 5, 40));
+		assertEquals("1", "(AND [age_IN_[1, 2, 3, 4, 5, 40]])", group.toString());
+	}
+	
 }

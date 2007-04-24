@@ -2,7 +2,6 @@ package org.crank.crud;
 
 import static org.crank.crud.criteria.Example.*;
 import static org.crank.crud.criteria.Comparison.*;
-//import static org.crank.crud.criteria.Group.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -165,6 +164,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     	EmployeeDAO employeeDAO = (EmployeeDAO) this.genericDao;
     	List<Employee> employees = employeeDAO.findEmployeesByDepartment("Engineering");
     	AssertJUnit.assertTrue(employees.size() > 0);
+    	
     }
 
     @Test
@@ -240,6 +240,13 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     			);
     	AssertJUnit.assertTrue(employees.size() > 0);
 
+    	employees = genericDao.find(
+				or (
+					in("age", 1, 2, 3, 4, 5, 6, 40)
+				)
+			);
+	AssertJUnit.assertTrue(employees.size() > 0);
+    	
     }
 
     @Test 

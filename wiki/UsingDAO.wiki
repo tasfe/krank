@@ -15,12 +15,14 @@ This document describes how to use Crank's JPA DAO support.
 
 The DAO support is based on the [http://www.springframework.org/docs/reference/orm.html Spring JPA support]. There is some talk on the Crank team for supporting similar features for non-Spring developers, but for now both of you will have to use Spring to use this DAO support.
 
+Everything that applies to `org.springframework.orm.jpa.support.JpaDaoSupport` also applies to Cranks DAO support (`org.crank.crud.GenericDaoJpa`) as it subclasses `JpaDaoSupport` from Spring. Note that all of our DAO objects implement `org.crank.crud.GenericDao`.
+
 Steps to using Crank JPA DAO support
   * Setup Spring environment
-  * Headings, paragraphs, and lists
+  * Configure DAO object
   * Automatic links to other wiki pages
 
-== Setup Spring environment ==
+== Step 1 Setup Spring environment ==
 
 
 Here is how the example projects sets up the Spring environment:
@@ -100,6 +102,18 @@ Of course you will have to setup a persistence.xml file as well refer to JPA doc
     </persistence-unit>
 
 </persistence>
+}}}
+
+== Step 2 Configure DAO object ==
+
+In order to use the DAO object, you must configure it. The DAO object needs to know which entity it is managing; thus, you need to pass it an Entity class as follows:
+
+DAO Beans context file
+{{{
+	<bean id="genericDao" class="org.crank.crud.GenericDaoJpa">
+		<property name="type" value="org.crank.crud.test.model.Employee"/>
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
 }}}
 
 Add your content here.  Format your content with:

@@ -1,0 +1,22 @@
+#Using the JPA DAO
+
+= Introduction =
+
+This document describes how to use Crank's JPA DAO support.
+
+= Features of JPA DAO covered in this document =
+
+  * JPA support for CRUD operations Create, Read, Update, Delete
+  * Support for defining no-code finder methods
+  * Support for Criteria API/DSL
+  * Support for easy to use finder methods
+
+= Getting Started with DAO =
+
+The DAO support is based on the [http://www.springframework.org/docs/reference/orm.html Spring JPA support]. 
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
+

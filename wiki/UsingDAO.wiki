@@ -13,7 +13,94 @@ This document describes how to use Crank's JPA DAO support.
 
 == Getting Started with DAO ==
 
-The DAO support is based on the [http://www.springframework.org/docs/reference/orm.html Spring JPA support]. 
+The DAO support is based on the [http://www.springframework.org/docs/reference/orm.html Spring JPA support]. There is some talk on the Crank team for supporting similar features for non-Spring developers, but for now both of you will have to use Spring to use this DAO support.
+
+Steps to using Crank JPA DAO support
+  * Setup Spring environment
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
+
+== Setup Spring environment ==
+
+
+Here is how the example projects sets up the Spring environment:
+
+Main context
+{{{
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+
+    <import resource="classpath:spring/dao-beans.xml" />
+    <import resource="classpath:spring/resource-defs.xml" />
+
+</beans>
+}}}
+
+Resource context
+{{{
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="crank-crud-test" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+
+</beans>
+}}}
+
+See [http://www.springframework.org/docs/reference/orm.html Spring JPA support] for more details.
+
+Of course you will have to setup a persistence.xml file as well refer to JPA documents for how to setup a persistence.xml file. For this project, the persistence.xml file is as follows:
+
+/META-INF/persistence.xml
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
+			http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+    version="1.0">
+
+    <persistence-unit name="crank-crud-test" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+
+        <class>org.crank.crud.test.model.Employee</class>
+
+        <properties>
+            <!-- Hibernate settings -->
+            <property name="hibernate.connection.driver_class"
+                      value="com.mysql.jdbc.Driver" />
+            <property name="hibernate.connection.url"
+                      value="jdbc:mysql://localhost:3306/crank-crud?autoReconnect=true" />
+            <property name="hibernate.connection.username"
+                      value="crank" />
+            <property name="hibernate.connection.password"
+                      value="sleeplessintucson" />
+            <property name="hibernate.dialect"
+                      value="org.hibernate.dialect.MySQLDialect" />
+	    
+	        <!-- you may want to change this provider in production -->
+            <property name="hibernate.cache.provider_class"
+                      value="org.hibernate.cache.HashtableCacheProvider" />
+	    
+            <!-- Print SQL to stdout -->
+            <property name="hibernate.show_sql" value="true" />
+            <!--  create non-existing tables automatically  -->
+            <property name="hibernate.hbm2ddl.auto" value="update" />
+        </properties>
+    </persistence-unit>
+
+</persistence>
+}}}
 
 Add your content here.  Format your content with:
   * Text in *bold* or _italic_

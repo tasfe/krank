@@ -245,7 +245,97 @@ You can even refer to nested QBE objects:
 
 See that the above uses an Employee that has a Department. Both the Employee data and the Department data will be used in the geneated query.
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+== Using DAO methods to Named Queries mapping ==
+
+
+In addition to using the API provided you can extend the API with your own custom Named Queries.
+
+To this you need to:
+ # Define an interface with finder methods that start with "find"
+ # Define named queries that match the name of your finder methods
+ # Use the DaoFactory to configure a Generic DAO
+ # Use the new finder methods
+
+===  Define an interface with finder methods that start with "find" ===
+{{{
+package org.crank.crud.test.dao;
+
+import java.util.List;
+
+import org.crank.crud.GenericDao;
+import org.crank.crud.test.model.Employee;
+
+public interface EmployeeDAO extends GenericDao<Employee, Long>{
+	List<Employee> findEmployeesByDepartment(String deptName);
+}
+}}}
+
+Notice that this interface extends GenericDao.
+
+=== Define named queries that match the name of your finder methods ===
+{{{
+package org.crank.crud.test.model;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+
+@Entity
+@NamedQueries( {
+	@NamedQuery(name="Employee.findEmployeesByDepartment", query="from Employee employee where employee.department.name=?")
+	
+})
+public class Employee {
+
+    @Id
+    @GeneratedValue( strategy = GenerationType.AUTO )	
+	private Long id;
+    ...
+}}}
+
+Notice the name of the named query is findEmployeesByDepartment and this matches the name in the EmployeeDAO interface.
+
+=== Use the DaoFactory to configure a Generic DAO ===
+{{{
+	<bean id="daoFactory"
+		class="org.crank.crud.GenericDaoFactory"
+		abstract="true">
+		<constructor-arg ref="transactionInterceptor"></constructor-arg>
+		<property name="entityManagerFactory"
+			ref="entityManagerFactory" />
+	</bean>
+
+	<bean id="genericDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.test.dao.EmployeeDAO</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.Employee</value>
+		</property>
+	</bean>	
+
+    <bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <constructor-arg index="0" ref="transactionManager" />
+        <constructor-arg index="1">
+            <bean class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource"></bean>
+        </constructor-arg>
+    </bean>
+        
+}}}
+
+Notice that the daoFactory only has to be defined once per project while the genericDao is defined per DAO object (per entity) (perhaps a better name for this example would be employeeDao instead of genericDao).
+
+
+
+=== Use the new finder methods ===
+{{{
+    	EmployeeDAO employeeDAO = (EmployeeDAO) this.genericDao;
+    	List<Employee> employees = employeeDAO.findEmployeesByDepartment("Engineering");
+
+}}}
+
+The first one may be somewhat difficult to setup, but your next finder method is a mere matter of adding it to the DAO interface and then creating the named query.

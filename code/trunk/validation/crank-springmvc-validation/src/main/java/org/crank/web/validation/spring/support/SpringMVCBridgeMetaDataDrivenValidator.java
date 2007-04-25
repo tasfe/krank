@@ -24,7 +24,6 @@ import org.crank.validation.readers.AnnotationValidatorMetaDataReader;
 import org.crank.validation.validators.CompositeValidator;
 import org.crank.web.CrankWebContext;
 import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 
 public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
@@ -40,31 +39,60 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
 	}
 
 	public void validate(final Object object, final Errors errors) {
+		SpringValidatorContext.create();
+		
+		validateObject(object, errors);
+		
+	}
 
+	private void validateObject(final Object object, final Errors errors) {
 		List<PropertyDescriptor> fieldsToValidate = getFieldsToValidate(object);
 		Map<String, Object> objectPropertiesAsMap = validatorPropertiesUtil.getObjectPropertiesAsMap(object);
 		CrankWebContext crankWebContext = CrankWebContext.getInstance();
 		Set paramSet = crankWebContext.getRequestParameters().keySet();
 		for (PropertyDescriptor field : fieldsToValidate){
-			if (paramSet.contains(field.getName())) {
+			SpringValidatorContext.get().pushProperty(field.getName());
+			if (shouldFieldBeValidated(paramSet)) {
 				Object propertyObject = objectPropertiesAsMap.get(field.getName());
 				validateProperty(object, propertyObject, field.getName(), errors);
 				if (propertyObject!=null) {
-					validate(propertyObject, errors);
+					validateObject(propertyObject, errors);
 				}
 			}
+			SpringValidatorContext.get().pop();
 		}
-		
 	}
 
+
 	
+	@SuppressWarnings("unchecked")
+	private boolean shouldFieldBeValidated(final Set paramSet) {
+		String bindingPath = SpringValidatorContext.getBindingPath();
+		return paramSet.contains(bindingPath) ? true : shouldNestedFieldBeValidated(bindingPath, paramSet); 
+	}
+
+	private boolean shouldNestedFieldBeValidated(String bindingPath, Set<String> paramSet) {
+		
+		//bp department 			param department.address.line1
+		//bp adress		 			param department.address.line1
+		//bp firstName		 		param department.address.line1
+
+		for (String param : paramSet) {
+			if (param.startsWith(bindingPath)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private void validateProperty(final Object object, final Object objectProperty, final String property,
 			final Errors errors) {
+		System.out.println(SpringValidatorContext.getBindingPath());
 		List<ValidatorMetaData> metaDataList = readMetaData(object.getClass(), 
 				property);
 		CompositeValidator cv = createValidator(metaDataList);
 		ValidatorMessageHolder holder = cv.validate(objectProperty, property);
-		extractMessages(property, errors, holder);
+		extractMessages(SpringValidatorContext.getBindingPath(), errors, holder);
 	}
 
 	@SuppressWarnings("unchecked")

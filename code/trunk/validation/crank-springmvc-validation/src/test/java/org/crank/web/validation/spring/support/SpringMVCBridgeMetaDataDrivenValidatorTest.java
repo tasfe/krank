@@ -35,10 +35,18 @@ public class SpringMVCBridgeMetaDataDrivenValidatorTest extends AbstractDependen
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("firstName", "");
 		map.put("lastName", "");
+		map.put("adrress.line1", "");
+		map.put("department.name", "");
+		map.put("department.address.line1", "");
+
 		CrankWebContext crankWebContext = new CrankWebContext(map, null, null, null);
 		crankWebContext.getCookieMap();
 		validator = new SpringMVCBridgeMetaDataDrivenValidator();
 		employee = new EmployeeMock();
+		employee.setAddress(new AddressMock());
+		employee.setDepartment(new DepartmentMock());
+		employee.getDepartment().setAddress(new AddressMock());
+		employee.getDepartment().getAddress().setLine1("foo bar");
 		ObjectRegistry objectRegistry = CrankContext.getObjectRegistry();
 		SpringApplicationContextObjectRegistry sacObjectRegistry = (SpringApplicationContextObjectRegistry) objectRegistry;
 		sacObjectRegistry.setApplicationContext(this.applicationContext);
@@ -49,13 +57,14 @@ public class SpringMVCBridgeMetaDataDrivenValidatorTest extends AbstractDependen
 	@Test()
 	public void testValidate() {
 		validator.validate(employee, errors);
-		assertEquals(2, errors.getFieldErrors().size());
+		assertEquals(3, errors.getFieldErrors().size());
 		
 		List allErrors = errors.getAllErrors();
 		
 		for (Object oError : allErrors) {
 			ObjectError error = (ObjectError) oError;
 			System.out.println("The message is here " + error.getDefaultMessage());
+			System.out.println(error.getObjectName());
 		}
 	}
 	@Override

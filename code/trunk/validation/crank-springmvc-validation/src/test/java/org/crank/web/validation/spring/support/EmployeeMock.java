@@ -7,8 +7,17 @@ public class EmployeeMock {
 	private String firstName;
 	private String lastName;
 	private AddressMock address = new AddressMock();
+	private DepartmentMock department;
 	
 	
+	public DepartmentMock getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(DepartmentMock department) {
+		this.department = department;
+	}
+
 	public String getFirstName() {
 		return firstName;
 	}

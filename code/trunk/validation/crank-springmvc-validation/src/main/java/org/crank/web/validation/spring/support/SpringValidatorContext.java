@@ -10,16 +10,16 @@ public class SpringValidatorContext {
 		
 	}
 	
-	static SpringValidatorContext create() {
+	public static SpringValidatorContext create() {
 		validatorContext.set(new SpringValidatorContext());
 		return get();
 	}
 	
-	static SpringValidatorContext get () {
+	public static SpringValidatorContext get () {
 		return validatorContext.get();
 	}
 
-	static void destroy() {
+	public static void destroy() {
 		validatorContext.set(null);
 	}
 	
@@ -44,14 +44,14 @@ public class SpringValidatorContext {
 		return builder.toString();
 	}
 
-	void pop () {
+	public void pop () {
 		bindingPath.pop();
 	}
 
-	void pushProperty (final String component) {
+	public void pushProperty (final String component) {
 		bindingPath.push(component);
 	}
-	void pushObject (final Object object) {
+	public void pushObject (final Object object) {
 		String simpleName = object.getClass().getSimpleName();
 		simpleName = simpleName.substring(0,1).toLowerCase() + simpleName.substring(1,simpleName.length());
 		bindingPath.push(simpleName);

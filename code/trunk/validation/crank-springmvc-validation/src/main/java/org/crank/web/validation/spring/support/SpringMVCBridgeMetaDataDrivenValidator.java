@@ -42,6 +42,7 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
 		SpringValidatorContext.create();
 		
 		validateObject(object, errors);
+		SpringValidatorContext.destroy();
 		
 	}
 

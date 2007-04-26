@@ -19,7 +19,7 @@ public class Group extends Criterion implements Iterable<Criterion>{
 		this.criteria.addAll(Arrays.asList(aCriteria));
 	}
 
-	public String [] orderBy (String... orderBy) {
+	public static String [] orderBy (String... orderBy) {
 		return orderBy;
 	}
 

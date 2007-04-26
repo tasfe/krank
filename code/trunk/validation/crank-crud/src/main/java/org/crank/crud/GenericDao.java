@@ -86,5 +86,9 @@ public interface GenericDao<T, PK extends Serializable> {
     List<T> find (Criterion... criteria);
     
     List<T> find (String[] orderBy, Criterion... criteria);
+    
+    List<T> searchOrdered (Criterion criteria, String... orderBy);
+    
+    List<T> find (List<Criterion> criteria, List<String> orderBy);
 
 }

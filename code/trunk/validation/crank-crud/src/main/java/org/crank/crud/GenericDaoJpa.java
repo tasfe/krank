@@ -59,6 +59,17 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
         this.type = aType;
     }
 
+	public List<T> searchOrdered(Criterion criteria, String... orderBy) {
+		return this.find(orderBy, criteria);
+	}
+
+	public List<T> find(List<Criterion> criteria, List<String> orderBy) {
+		
+		return find((String[])orderBy.toArray(new String[orderBy.size()]), 
+				(Criterion[])criteria.toArray(new Criterion[criteria.size()]));
+	
+	}
+
     public List<T> find( Map<String, Object> propertyValues ) {
         return find( propertyValues, null );
     }
@@ -314,5 +325,6 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
     public String queryNameFromMethod( Method finderMethod ) {
         return type.getSimpleName() + "." + finderMethod.getName();
     }
+
 
 }

@@ -21,13 +21,17 @@
 		</dependency>
 		<dependency>
 			<groupId>javax.faces</groupId>
-			<artifactId>el-ri</artifactId>
+			<artifactId>jsf-api</artifactId>
 		</dependency>
 
 
 		<dependency>
-			<groupId>javax.faces</groupId>
+			<groupId>javax.el</groupId>
 			<artifactId>el-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>el-impl</groupId>
+			<artifactId>el-impl</artifactId>
 		</dependency>
 
 

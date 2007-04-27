@@ -50,7 +50,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
     	if (type == null) {
     		throw new UnsupportedOperationException("The type must be set to use this method.");
     	}
-        return getJpaTemplate().find( type, id );
+        return read(type, id);
+    }
+    public T read( Class clazz, PK id ) {
+        return (T) getJpaTemplate().find( clazz, id );
     }
 
     
@@ -66,47 +69,75 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
 	public List<T> searchOrdered(Criterion criteria, String... orderBy) {
 		return this.find(orderBy, criteria);
 	}
-
-	public List<T> find(List<Criterion> criteria, List<String> orderBy) {
-		
-		return find((String[])orderBy.toArray(new String[orderBy.size()]), 
-				(Criterion[])criteria.toArray(new Criterion[criteria.size()]));
-	
+	public List<T> searchOrdered(Class clazz, Criterion criteria, String... orderBy) {
+		return this.find(clazz, orderBy, criteria);
 	}
 
-    public List<T> find( Map<String, Object> propertyValues ) {
+	public List<T> find(List<Criterion> criteria, List<String> orderBy) {
+		return find( type, criteria, orderBy);
+	}
+	public List<T> find(Class clazz, List<Criterion> criteria, List<String> orderBy) {
+		return find( clazz, (String[])orderBy.toArray(new String[orderBy.size()]), 
+				(Criterion[])criteria.toArray(new Criterion[criteria.size()]));	
+	}
+
+	public List<T> find( Map<String, Object> propertyValues ) {
         return find( propertyValues, null );
     }
-
-    @SuppressWarnings( "unchecked" )
-    public List<T> find( Map<String, Object> propertyValues, String[] orderBy ) {
-    	return find (orderBy, Group.and(propertyValues));
+	public List<T> find(Class clazz, Map<String, Object> propertyValues ) {
+        return find( clazz, propertyValues, null );
     }
 
-    public List<T> find( String property, Object value ) {
+	@SuppressWarnings( "unchecked" )
+    public List<T> find( Map<String, Object> propertyValues, String[] orderBy ) {
+    	return find ( orderBy, Group.and(propertyValues));
+    }
+	@SuppressWarnings( "unchecked" )
+    public List<T> find(Class clazz, Map<String, Object> propertyValues, String[] orderBy ) {
+    	return find ( clazz, orderBy, Group.and(propertyValues));
+    }
+
+	public List<T> find( String property, Object value ) {
+		return find( type, property, value );
+	}
+	public List<T> find(Class clazz, String property, Object value ) {
         HashMap<String, Object> propertyValues = new HashMap<String, Object>();
         propertyValues.put( property, value );
-        return find( propertyValues );
+        return find( clazz, propertyValues );
     }
 
-    @SuppressWarnings( "unchecked" )
+	@SuppressWarnings( "unchecked" )
     public List<T> find() {
-        String entityName = getEntityName();
+        
+        return find( type );
+    }
+	@SuppressWarnings( "unchecked" )
+    public List<T> find(Class clazz) {
+        String entityName = getEntityName(clazz);
         return (List<T>) getJpaTemplate().find( "SELECT instance FROM " + entityName + " instance" );
     }
 
-    @SuppressWarnings( "unchecked" )
+	@SuppressWarnings( "unchecked" )
     public List<T> find( String[] propertyNames, Object[] values ) {
         return find( propertyNames, values, null );
+    }
+	@SuppressWarnings( "unchecked" )
+    public List<T> find( Class clazz, String[] propertyNames, Object[] values ) {
+        return find( clazz, propertyNames, values, null );
     }
     
     @SuppressWarnings("unchecked")
 	public List<T> find (Criterion... criteria) {
     	return find((String [])null, criteria);
     }
+    @SuppressWarnings("unchecked")
+	public List<T> find (Class clazz, Criterion... criteria) {
+    	return find(clazz, (String [])null, criteria);
+    }
+    
 
     @SuppressWarnings( "unchecked" )
-    public List<T> find( String[] propertyNames, Object[] values, String[] orderBy ) {
+    public List<T> find( Class clazz, String[] propertyNames, Object[] values, String[] orderBy ) {
         if (propertyNames.length != values.length) {
             throw new RuntimeException(
                     "You are not using this API correctly. The propertynames length should always match values length." );
@@ -117,13 +148,17 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
             propertyValues.put( propertyName, values[index] );
             index++;
         }
-        return find(propertyValues, orderBy);
+        return find( clazz, propertyValues, orderBy);
+	}
+    @SuppressWarnings( "unchecked" )
+    public List<T> find( String[] propertyNames, Object[] values, String[] orderBy ) {
+    	return find( type, propertyNames, values, orderBy );
 	}
 
     @SuppressWarnings("unchecked")
-	public List<T> find (String [] orderBy, Criterion... criteria) {
+	public List<T> find (Class clazz, String [] orderBy, Criterion... criteria) {
     	StringBuilder sbQuery = new StringBuilder(255);
-    	String select = createSelect(getEntityName(), "o");
+    	String select = createSelect(getEntityName(clazz), "o");
     	final Group group = Group.and(criteria);
     	String whereClause = "";
     	if (group.size() > 0) {
@@ -144,8 +179,12 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
     		throw new RuntimeException("Unable to run query : " + sQuery, ex);
     	}
     }
+    @SuppressWarnings("unchecked")
+	public List<T> find (String [] orderBy, Criterion... criteria) {
+    	return find(type, orderBy, criteria);
+    }
 
-	private void addGroupParams(Query query, Group group) {
+    private void addGroupParams(Query query, Group group) {
 		
 		for (Criterion criterion : group) {
 			if (criterion instanceof Group) {

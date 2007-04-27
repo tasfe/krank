@@ -47,9 +47,13 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
     }
 
     public T read( PK id ) {
+    	if (type == null) {
+    		throw new UnsupportedOperationException("The type must be set to use this method.");
+    	}
         return getJpaTemplate().find( type, id );
     }
 
+    
     @Transactional
     public void update( final T transientObject ) {
         getJpaTemplate().merge( transientObject );
@@ -251,17 +255,17 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
 
 	}
 
-    protected String getEntityName( Class<T> clazz ) {
-        Entity entity = (Entity) type.getAnnotation( Entity.class );
+    protected String getEntityName( Class<T> aType ) {
+        Entity entity = (Entity) aType.getAnnotation( Entity.class );
         if (entity == null) {
-            return type.getSimpleName();
+            return aType.getSimpleName();
         }
         String entityName = entity.name();
 
         if (entityName == null) {
-            return type.getSimpleName();
+            return aType.getSimpleName();
         } else if (!( entityName.length() > 0 )) {
-            return type.getSimpleName();
+            return aType.getSimpleName();
         } else {
             return entityName;
         }
@@ -269,7 +273,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
     }
 
     protected String getEntityName() {
-        return getEntityName( type );
+    	if (type == null) {
+    		throw new UnsupportedOperationException("The type must be set to use this method.");
+    	}
+    	return getEntityName( this.type );
     }
 
 

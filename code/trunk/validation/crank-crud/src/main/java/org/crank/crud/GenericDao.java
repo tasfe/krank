@@ -90,5 +90,5 @@ public interface GenericDao<T, PK extends Serializable> {
     List<T> searchOrdered (Criterion criteria, String... orderBy);
     
     List<T> find (List<Criterion> criteria, List<String> orderBy);
-
+        
 }

@@ -293,6 +293,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
             }
         } else {
             if (comparison.getOperator() == Operator.EQ) {
+                builder.append(" o.");
                 builder.append( comparison.getName() );
                 builder.append( " is null" );
             } else if (comparison.getOperator() == Operator.NE) {

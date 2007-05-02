@@ -270,27 +270,37 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
 	}
 
 	private void addComparisonToQueryString(Comparison comparison, StringBuilder builder ) {
-		final String sOperator = comparison.getOperator().getOperator();
-		String var = ":" +ditchDot(comparison.getName());
-
-		builder.append(" o.");
-		builder.append(comparison.getName());
-		builder.append(" ");
-		builder.append(sOperator);
-		builder.append(" ");
-
-		if (comparison instanceof Between) {
-			builder.append(var + "1");
-			builder.append(" ");
-			builder.append("and " + var + "2");
-		} else if (comparison.getOperator() == Operator.IN) {
-			builder.append(" (");
-			builder.append(var);
-			builder.append(") ");
-		} else {
-			builder.append(var);
-		}
-		builder.append(" ");						
+        if( comparison.getValue() != null ) {
+            final String sOperator = comparison.getOperator().getOperator();
+            String var = ":" +ditchDot(comparison.getName());
+    
+            builder.append(" o.");
+            builder.append(comparison.getName());
+            builder.append(" ");
+            builder.append(sOperator);
+            builder.append(" ");
+    
+            if (comparison instanceof Between) {
+                builder.append(var + "1");
+                builder.append(" ");
+                builder.append("and " + var + "2");
+            } else if (comparison.getOperator() == Operator.IN) {
+                builder.append(" (");
+                builder.append(var);
+                builder.append(") ");
+            } else {
+                builder.append(var);
+            }
+        } else {
+            if (comparison.getOperator() == Operator.EQ) {
+                builder.append( comparison.getName() );
+                builder.append( " is null" );
+            } else if (comparison.getOperator() == Operator.NE) {
+                builder.append( comparison.getName() );
+                builder.append( " is not null" );
+            }
+        }
+        builder.append(" ");                        
 
 	}
 

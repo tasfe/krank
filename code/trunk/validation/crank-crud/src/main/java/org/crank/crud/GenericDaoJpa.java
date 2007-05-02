@@ -192,29 +192,31 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
 			} else {
 				Comparison comparison = (Comparison) criterion;
 				final String sOperator = comparison.getOperator().getOperator();
-				if (!"like".equals(sOperator)) {
-					if (comparison instanceof Between) {
-						Between between = (Between) comparison;
-						query.setParameter(ditchDot(comparison.getName()) + "1", comparison.getValue());
-						query.setParameter(ditchDot(comparison.getName()) + "2", between.getValue2());
-					} else {
-						query.setParameter(ditchDot(comparison.getName()), comparison.getValue());
-					}
-					
-				}else {
-					Operator operator = comparison.getOperator();
-					StringBuilder value = new StringBuilder(50);
-					if (operator == Operator.LIKE) {
-						value.append(comparison.getValue());
-					} else if (operator == Operator.LIKE_CONTAINS) {
-						value.append("%").append(comparison.getValue()).append("%");
-					} else if (operator == Operator.LIKE_END) {
-						value.append("%").append(comparison.getValue());						
-					} else if (operator == Operator.LIKE_START) {
-						value.append(comparison.getValue()).append("%");
-					} 
-					query.setParameter(ditchDot(comparison.getName()), value.toString());
-				}
+                if (comparison.getValue() != null) {
+    				if (!"like".equals(sOperator)) {
+    					if (comparison instanceof Between) {
+    						Between between = (Between) comparison;
+    						query.setParameter(ditchDot(comparison.getName()) + "1", comparison.getValue());
+    						query.setParameter(ditchDot(comparison.getName()) + "2", between.getValue2());
+    					} else {
+    						query.setParameter(ditchDot(comparison.getName()), comparison.getValue());
+    					}
+    					
+    				}else {
+    					Operator operator = comparison.getOperator();
+    					StringBuilder value = new StringBuilder(50);
+    					if (operator == Operator.LIKE) {
+    						value.append(comparison.getValue());
+    					} else if (operator == Operator.LIKE_CONTAINS) {
+    						value.append("%").append(comparison.getValue()).append("%");
+    					} else if (operator == Operator.LIKE_END) {
+    						value.append("%").append(comparison.getValue());						
+    					} else if (operator == Operator.LIKE_START) {
+    						value.append(comparison.getValue()).append("%");
+    					} 
+    					query.setParameter(ditchDot(comparison.getName()), value.toString());
+    				}
+                }
 			}
 		}
 	}
@@ -270,9 +272,9 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
 	}
 
 	private void addComparisonToQueryString(Comparison comparison, StringBuilder builder ) {
+        String var = ":" +ditchDot(comparison.getName());
         if( comparison.getValue() != null ) {
             final String sOperator = comparison.getOperator().getOperator();
-            String var = ":" +ditchDot(comparison.getName());
     
             builder.append(" o.");
             builder.append(comparison.getName());
@@ -291,16 +293,16 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport imp
             } else {
                 builder.append(var);
             }
+            builder.append(" ");                        
         } else {
             builder.append(" o.");
             builder.append( comparison.getName() );
             if (comparison.getOperator() == Operator.EQ) {
-                builder.append( " is null" );
+                builder.append( " is null " );
             } else if (comparison.getOperator() == Operator.NE) {
-                builder.append( " is not null" );
+                builder.append( " is not null " );
             }
         }
-        builder.append(" ");                        
 
 	}
 

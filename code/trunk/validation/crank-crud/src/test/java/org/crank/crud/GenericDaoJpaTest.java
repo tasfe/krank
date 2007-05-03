@@ -152,6 +152,10 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     	string = dao.constructWhereClauseString(group, false);
     	AssertJUnit.assertEquals(" WHERE  o.age between :age1 and :age2 ", string);
 
+		group = and(Employee.class, between("age", 1, 100) );    	
+    	string = dao.constructWhereClauseString(group, false);
+    	AssertJUnit.assertEquals(" WHERE  o.age between :age1 and :age2 ", string);
+
     	Employee employee = new Employee();
     	employee.setFirstName("Ric");
     	employee.setAge(0);
@@ -250,7 +254,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         GenericDaoJpa<Employee, Long> localDao = new GenericDaoJpa<Employee, Long>();
         
         String gimp = localDao.constructWhereClauseString(and(eq("gimp", null)), true);
-        AssertJUnit.assertTrue( gimp.contains( "gimp is null" ) );
+        AssertJUnit.assertEquals(" WHERE  o.gimp = :gimp ", gimp);
     }
 
     public void setGenericDao( final GenericDao<Employee, Long> baseJpaDao ) {

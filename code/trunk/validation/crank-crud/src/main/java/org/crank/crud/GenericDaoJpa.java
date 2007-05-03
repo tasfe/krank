@@ -214,9 +214,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 			} else {
 				Comparison comparison = (Comparison) criterion;
 				final String sOperator = comparison.getOperator().getOperator();
-//<<<<<<< .mine
 				if (!"like".equals(sOperator)) {
-					if (comparison instanceof Between) {
+					if (comparison instanceof Between || comparison instanceof VerifiedBetween) {
 						Between between = (Between) comparison;
 						query.setParameter(
 								ditchDot(comparison.getName()) + "1",
@@ -224,17 +223,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 						query.setParameter(
 								ditchDot(comparison.getName()) + "2", between
 										.getValue2());
-					} else if (comparison instanceof VerifiedBetween) {
-						VerifiedBetween between = (VerifiedBetween) comparison;
-						query.setParameter(
-								ditchDot(comparison.getName()) + "1",
-								comparison.getValue());
-						query.setParameter(
-								ditchDot(comparison.getName()) + "2", between
-										.getValue2());
-						
-					}
-					else {
+					} else {
 						query.setParameter(ditchDot(comparison.getName()),
 								comparison.getValue());
 					}
@@ -255,33 +244,6 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 					query.setParameter(ditchDot(comparison.getName()), value
 							.toString());
 				}
-//=======
-//                if (comparison.getValue() != null) {
-//    				if (!"like".equals(sOperator)) {
-//    					if (comparison instanceof Between) {
-//    						Between between = (Between) comparison;
-//    						query.setParameter(ditchDot(comparison.getName()) + "1", comparison.getValue());
-//    						query.setParameter(ditchDot(comparison.getName()) + "2", between.getValue2());
-//    					} else {
-//    						query.setParameter(ditchDot(comparison.getName()), comparison.getValue());
-//    					}
-//    					
-//    				}else {
-//    					Operator operator = comparison.getOperator();
-//    					StringBuilder value = new StringBuilder(50);
-//    					if (operator == Operator.LIKE) {
-//    						value.append(comparison.getValue());
-//    					} else if (operator == Operator.LIKE_CONTAINS) {
-//    						value.append("%").append(comparison.getValue()).append("%");
-//    					} else if (operator == Operator.LIKE_END) {
-//    						value.append("%").append(comparison.getValue());						
-//    					} else if (operator == Operator.LIKE_START) {
-//    						value.append(comparison.getValue()).append("%");
-//    					} 
-//    					query.setParameter(ditchDot(comparison.getName()), value.toString());
-//    				}
-//                }
-//>>>>>>> .r156
 			}
 		}
 	}
@@ -340,11 +302,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	private void addComparisonToQueryString(Comparison comparison,
 			StringBuilder builder) {
-//<<<<<<< .mine
-//		final String sOperator = comparison.getOperator().getOperator();
-//		String var = ":" + ditchDot(comparison.getName());
-//=======
-        String var = ":" +ditchDot(comparison.getName());
+
+		String var = ":" +ditchDot(comparison.getName());
         if( comparison.getValue() != null ) {
             final String sOperator = comparison.getOperator().getOperator();
     
@@ -375,30 +334,6 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
                 builder.append( " is not null " );
             }
         }
-//>>>>>>> .r156
-
-//<<<<<<< .mine
-//		builder.append(" o.");
-//		builder.append(comparison.getName());
-//		builder.append(" ");
-//		builder.append(sOperator);
-//		builder.append(" ");
-//
-//		if (comparison instanceof Between || comparison instanceof VerifiedBetween) {
-//			builder.append(var + "1");
-//			builder.append(" ");
-//			builder.append("and " + var + "2");
-//		} else if (comparison.getOperator() == Operator.IN) {
-//			builder.append(" (");
-//			builder.append(var);
-//			builder.append(") ");
-//		} else {
-//			builder.append(var);
-//		}
-//		builder.append(" ");
-//
-//=======
-//>>>>>>> .r156
 	}
 
 	protected String getEntityName(Class<T> aType) {

@@ -254,7 +254,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         GenericDaoJpa<Employee, Long> localDao = new GenericDaoJpa<Employee, Long>();
         
         String gimp = localDao.constructWhereClauseString(and(eq("gimp", null)), true);
-        AssertJUnit.assertEquals(" WHERE  o.gimp = :gimp ", gimp);
+        AssertJUnit.assertEquals(" WHERE  o.gimp is null ", gimp);
     }
 
     public void setGenericDao( final GenericDao<Employee, Long> baseJpaDao ) {

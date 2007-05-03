@@ -12,6 +12,13 @@ public class VerifiedComparison extends Comparison {
 	public VerifiedComparison () {
 	}
 
+	public VerifiedComparison (final Class aBaseType, Comparison comparison) {
+		super(comparison.getName(), comparison.getOperator(), comparison.getValue());
+		this.baseType = aBaseType;
+		verify();
+		
+	}
+	
 
 	public VerifiedComparison (final Class baseType, final String aName, final Operator aOperator, final Object aValue) {
 		super(aName, aOperator, aValue);
@@ -74,6 +81,10 @@ public class VerifiedComparison extends Comparison {
 	public void setName(String name) {
 		super.setName(name);
 		verify();
+	}
+	
+	public String toString () {
+		return "V_" + super.toString();
 	}
 
 }

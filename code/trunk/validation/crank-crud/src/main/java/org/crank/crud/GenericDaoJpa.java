@@ -213,37 +213,39 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 				addGroupParams(query, (Group) criterion);
 			} else {
 				Comparison comparison = (Comparison) criterion;
-				final String sOperator = comparison.getOperator().getOperator();
-				if (!"like".equals(sOperator)) {
-					if (comparison instanceof Between || comparison instanceof VerifiedBetween) {
-						Between between = (Between) comparison;
-						query.setParameter(
-								ditchDot(comparison.getName()) + "1",
-								comparison.getValue());
-						query.setParameter(
-								ditchDot(comparison.getName()) + "2", between
-										.getValue2());
-					} else {
-						query.setParameter(ditchDot(comparison.getName()),
-								comparison.getValue());
-					}
-
-				} else {
-					Operator operator = comparison.getOperator();
-					StringBuilder value = new StringBuilder(50);
-					if (operator == Operator.LIKE) {
-						value.append(comparison.getValue());
-					} else if (operator == Operator.LIKE_CONTAINS) {
-						value.append("%").append(comparison.getValue()).append(
-								"%");
-					} else if (operator == Operator.LIKE_END) {
-						value.append("%").append(comparison.getValue());
-					} else if (operator == Operator.LIKE_START) {
-						value.append(comparison.getValue()).append("%");
-					}
-					query.setParameter(ditchDot(comparison.getName()), value
-							.toString());
-				}
+                if (comparison.getValue() != null) {
+    				final String sOperator = comparison.getOperator().getOperator();
+    				if (!"like".equals(sOperator)) {
+    					if (comparison instanceof Between || comparison instanceof VerifiedBetween) {
+    						Between between = (Between) comparison;
+    						query.setParameter(
+    								ditchDot(comparison.getName()) + "1",
+    								comparison.getValue());
+    						query.setParameter(
+    								ditchDot(comparison.getName()) + "2", between
+    										.getValue2());
+    					} else {
+    						query.setParameter(ditchDot(comparison.getName()),
+    								comparison.getValue());
+    					}
+    
+    				} else {
+    					Operator operator = comparison.getOperator();
+    					StringBuilder value = new StringBuilder(50);
+    					if (operator == Operator.LIKE) {
+    						value.append(comparison.getValue());
+    					} else if (operator == Operator.LIKE_CONTAINS) {
+    						value.append("%").append(comparison.getValue()).append(
+    								"%");
+    					} else if (operator == Operator.LIKE_END) {
+    						value.append("%").append(comparison.getValue());
+    					} else if (operator == Operator.LIKE_START) {
+    						value.append(comparison.getValue()).append("%");
+    					}
+    					query.setParameter(ditchDot(comparison.getName()), value
+    							.toString());
+    				}
+                }
 			}
 		}
 	}

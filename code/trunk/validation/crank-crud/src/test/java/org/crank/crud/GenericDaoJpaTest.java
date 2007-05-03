@@ -256,6 +256,14 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         String gimp = localDao.constructWhereClauseString(and(eq("gimp", null)), true);
         AssertJUnit.assertEquals(" WHERE  o.gimp is null ", gimp);
     }
+    
+    @Test
+    public void testNullParameterQueryExecution() {
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        attributes.put( "lastName", null );
+        List<Employee> result = genericDao.find( attributes );
+        AssertJUnit.assertEquals( result.size(), 2 );
+    }
 
     public void setGenericDao( final GenericDao<Employee, Long> baseJpaDao ) {
         this.genericDao = baseJpaDao;

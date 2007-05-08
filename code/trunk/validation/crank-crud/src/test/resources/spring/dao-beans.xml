@@ -28,12 +28,21 @@
 	</bean>
  	-->
  	
-	<bean id="genericDao" parent="daoFactory">
+	<bean id="employeeDao" parent="daoFactory">
 		<property name="interface">
 			<value>org.crank.crud.test.dao.EmployeeDAO</value>
 		</property>
 		<property name="bo" >
 			<value>org.crank.crud.test.model.Employee</value>
+		</property>
+	</bean>	
+
+	<bean id="departmentDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.test.dao.DepartmentDAO</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.Department</value>
 		</property>
 	</bean>	
 

@@ -20,6 +20,7 @@ import org.crank.crud.criteria.VerifiedBetween;
 import org.crank.crud.join.Fetch;
 import org.crank.crud.join.Join;
 import org.springframework.orm.jpa.JpaCallback;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.orm.jpa.support.JpaDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -430,6 +431,29 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 				}
 			}
 		});
+	}
+
+	public T readPopulated(Class clazz, final PK id) {
+		try {
+			return doReadPopulated(id);
+		} catch (JpaSystemException jpaSystemException) {
+			return read(id);
+		}
+	}
+
+	private T doReadPopulated(final PK id) {
+		final String queryName = type.getSimpleName() + ".readPopulated";
+		return (T) getJpaTemplate().execute(new JpaCallback() {
+			public Object doInJpa(EntityManager em) throws PersistenceException {
+				Query query = em.createNamedQuery(queryName);
+				query.setParameter(1, id);
+				return query.getSingleResult();
+			}
+		});
+	}
+
+	public T readPopulated(final PK id) {
+		return readPopulated(type, id);
 	}
 
 	public String queryNameFromMethod(Method finderMethod) {

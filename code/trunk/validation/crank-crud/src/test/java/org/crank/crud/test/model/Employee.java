@@ -10,7 +10,10 @@ import javax.persistence.NamedQuery;
 
 @Entity
 @NamedQueries( {
-	@NamedQuery(name="Employee.findEmployeesByDepartment", query="from Employee employee where employee.department.name=?")
+	@NamedQuery(name="Employee.findEmployeesByDepartment",
+			query="from Employee employee where employee.department.name=?"),
+	@NamedQuery(name="Employee.readPopulated",
+					query="from Employee employee join fetch employee.department where employee.id=?")
 	
 })
 public class Employee {

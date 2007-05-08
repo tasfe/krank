@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.crank.crud.criteria.Criterion;
+import org.crank.crud.join.Fetch;
 
 /**
 *  @param <T> DAO class
@@ -90,5 +91,6 @@ public interface GenericDao<T, PK extends Serializable> {
     List<T> searchOrdered (Criterion criteria, String... orderBy);
     
     List<T> find (List<Criterion> criteria, List<String> orderBy);
-        
+    
+    List<T> find(Fetch[] fetches, String[] orderBy, Criterion... criteria);
 }

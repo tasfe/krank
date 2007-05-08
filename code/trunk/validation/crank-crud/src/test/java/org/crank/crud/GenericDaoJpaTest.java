@@ -2,7 +2,8 @@ package org.crank.crud;
 
 import static org.crank.crud.criteria.Example.*;
 import static org.crank.crud.criteria.Comparison.*;
-//import static org.crank.crud.criteria.Group.*;
+import static org.crank.crud.criteria.Group.*;
+import static org.crank.crud.join.Fetch.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -262,7 +263,15 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put( "lastName", null );
         List<Employee> result = genericDao.find( attributes );
-        AssertJUnit.assertEquals( result.size(), 2 );
+        AssertJUnit.assertEquals( 2, result.size() );
+    }
+
+    @Test
+    public void testFetch() {
+        List<Employee> result = genericDao.find( join(joinFetch("department")), orderBy("firstName"), and() );
+        AssertJUnit.assertEquals( 3, result.size());
+        result = genericDao.find( join(leftJoinFetch("department")), orderBy("firstName"), and() );
+        AssertJUnit.assertEquals( 3, result.size());
     }
 
     public void setGenericDao( final GenericDao<Employee, Long> baseJpaDao ) {

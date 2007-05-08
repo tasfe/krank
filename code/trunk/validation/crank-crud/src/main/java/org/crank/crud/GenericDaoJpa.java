@@ -17,6 +17,8 @@ import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.Operator;
 import org.crank.crud.criteria.VerifiedBetween;
+import org.crank.crud.join.Fetch;
+import org.crank.crud.join.Join;
 import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.orm.jpa.support.JpaDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
@@ -178,6 +180,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	@SuppressWarnings("unchecked")
 	public List<T> find(Class clazz, String[] orderBy, Criterion... criteria) {
+		return doFind(clazz, orderBy, criteria, null);
+	}
+	@SuppressWarnings("unchecked")
+	private List<T> doFind(Class clazz, String[] orderBy, Criterion[] criteria, Fetch[] fetches) {
 		StringBuilder sbQuery = new StringBuilder(255);
 		String select = createSelect(getEntityName(clazz), "o");
 		final Group group = Group.and(criteria);
@@ -185,7 +191,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		if (group.size() > 0) {
 			whereClause = constructWhereClauseString(group, false);
 		}
-		final String sQuery = sbQuery.append(select).append(whereClause)
+		final String sQuery = sbQuery.append(select).append(processJoins(fetches)).append(whereClause)
 				.append(constructOrderBy(orderBy)).toString();
 		try {
 			return (List<T>) this.getJpaTemplate().execute(new JpaCallback() {
@@ -199,6 +205,21 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		} catch (Exception ex) {
 			throw new RuntimeException("Unable to run query : " + sQuery, ex);
 		}
+	}
+
+	private String processJoins(Fetch[] fetches) {
+		if (fetches==null || fetches.length == 0) {
+			return "";
+		}
+		StringBuilder builder = new StringBuilder(255);
+		for (Fetch fetch : fetches) {
+			if (fetch.getJoin() == Join.LEFT) {
+				builder.append(" left ");
+			}
+			builder.append(" join fetch ")
+			.append("o.").append(fetch.getRelationshipProperty());
+		}
+		return builder.toString();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -413,6 +434,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	public String queryNameFromMethod(Method finderMethod) {
 		return type.getSimpleName() + "." + finderMethod.getName();
+	}
+
+	public List<T> find(Fetch[] fetches, String[] orderBy, Criterion... criteria) {
+		return doFind(this.type, orderBy, criteria, fetches);
 	}
 
 }

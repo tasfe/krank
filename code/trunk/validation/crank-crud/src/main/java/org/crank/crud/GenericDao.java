@@ -94,5 +94,13 @@ public interface GenericDao<T, PK extends Serializable> {
     
     List<T> find(Fetch[] fetches, String[] orderBy, Criterion... criteria);
     
+	public List<T> find(Fetch[] fetches, String[] orderBy, int startPosition, int maxResults, Criterion... criteria);
+
+	public List<T> find(String[] orderBy, int startPosition, int maxResults, Criterion... criteria);
+
+	public List<T> find(int startPosition, int maxResults, Criterion... criteria);
+	
+	public List<T> find(int startPosition, int maxResults);
+    
     public T readPopulated(final PK id);
 }

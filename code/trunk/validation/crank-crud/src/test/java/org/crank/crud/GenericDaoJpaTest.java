@@ -284,6 +284,16 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     	AssertJUnit.assertNotNull( dept );
     }
 
+    @Test
+    public void testPaginate() {
+    	int startPosition = 1;
+    	int maxResults = 2;
+    	List<Employee> employees = employeeDao.find(startPosition, maxResults);
+    	AssertJUnit.assertNotNull( employees );
+    	AssertJUnit.assertEquals(2, employees.size());
+    	
+    }
+
     public void setEmployeeDao( final GenericDao<Employee, Long> baseJpaDao ) {
         this.employeeDao = baseJpaDao;
     }

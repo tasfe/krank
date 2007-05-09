@@ -179,27 +179,62 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return find(type, propertyNames, values, orderBy);
 	}
 
+	public List<T> find(Fetch[] fetches, String[] orderBy, Criterion... criteria) {
+		return doFind(this.type, orderBy, criteria, fetches);
+	}
+
+	public List<T> find(Fetch[] fetches, String[] orderBy, int startPosition, int maxResults, Criterion... criteria) {
+		return doFind(this.type, orderBy, criteria, fetches, startPosition, maxResults);
+	}
+
+	public List<T> find(String[] orderBy, int startPosition, int maxResults, Criterion... criteria) {
+		return doFind(this.type, orderBy, criteria, null, startPosition, maxResults);
+	}
+
+	public List<T> find(int startPosition, int maxResults, Criterion... criteria) {
+		return doFind(this.type, null, criteria, null, startPosition, maxResults);
+	}
+
+	public List<T> find(int startPosition, int maxResults) {
+		return doFind(this.type, null, null, null, startPosition, maxResults);
+	}
+	
+
 	@SuppressWarnings("unchecked")
 	public List<T> find(Class clazz, String[] orderBy, Criterion... criteria) {
 		return doFind(clazz, orderBy, criteria, null);
 	}
-	@SuppressWarnings("unchecked")
-	private List<T> doFind(Class clazz, String[] orderBy, Criterion[] criteria, Fetch[] fetches) {
-		StringBuilder sbQuery = new StringBuilder(255);
-		String select = createSelect(getEntityName(clazz), "o");
-		final Group group = Group.and(criteria);
+
+	private String constuctWhereClause (final Group group) {
 		String whereClause = "";
-		if (group.size() > 0) {
+		if (group == null || group.size() > 0) {
 			whereClause = constructWhereClauseString(group, false);
-		}
-		final String sQuery = sbQuery.append(select).append(processJoins(fetches)).append(whereClause)
-				.append(constructOrderBy(orderBy)).toString();
+		}		
+		return whereClause;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<T> doFind(Class clazz, String[] orderBy, final Criterion[] criteria, Fetch[] fetches,
+			final int startPosition, final int maxResult) {
+		StringBuilder sbQuery = new StringBuilder(255);
+		final Group group = criteria!=null ? Group.and(criteria) : null;
+
+		final String sQuery = sbQuery.append(constructSelect(getEntityName(clazz), "o"))
+								     .append(constructJoins(fetches))
+								     .append(constuctWhereClause(group))
+								     .append(constructOrderBy(orderBy)).toString();
 		try {
 			return (List<T>) this.getJpaTemplate().execute(new JpaCallback() {
 				public Object doInJpa(EntityManager em)
 						throws PersistenceException {
 					Query query = em.createQuery(sQuery);
-					addGroupParams(query, group);
+					if (criteria != null) {
+						addGroupParams(query, group);
+					}
+					if (startPosition != -1 && maxResult != -1) {
+						query.setFirstResult(startPosition);
+						query.setMaxResults(maxResult);
+					}
 					return query.getResultList();
 				}
 			});
@@ -208,7 +243,12 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		}
 	}
 
-	private String processJoins(Fetch[] fetches) {
+	@SuppressWarnings("unchecked")
+	private List<T> doFind(Class clazz, String[] orderBy, Criterion[] criteria, Fetch[] fetches) {
+		return doFind(clazz, orderBy, criteria, fetches, -1, -1);
+	}
+
+	private String constructJoins(Fetch[] fetches) {
 		if (fetches==null || fetches.length == 0) {
 			return "";
 		}
@@ -274,7 +314,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	protected String constructWhereClauseString(Group group, boolean parens) {
 		StringBuilder builder = new StringBuilder(255);
-		if (group.size() == 0) {
+		if (group==null || group.size() == 0) {
 			return "";
 		} else if (group.size() == 1) {
 			Criterion criterion = group.iterator().next();
@@ -399,7 +439,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return query.toString();
 	}
 
-	private String createSelect(String entityName, String instanceName) {
+	private String constructSelect(String entityName, String instanceName) {
 		StringBuilder query = new StringBuilder("SELECT " + instanceName
 				+ " FROM ");
 		query.append(entityName);
@@ -460,8 +500,5 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return type.getSimpleName() + "." + finderMethod.getName();
 	}
 
-	public List<T> find(Fetch[] fetches, String[] orderBy, Criterion... criteria) {
-		return doFind(this.type, orderBy, criteria, fetches);
-	}
 
 }

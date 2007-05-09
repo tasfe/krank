@@ -4,6 +4,7 @@ import static org.crank.crud.criteria.Example.*;
 import static org.crank.crud.criteria.Comparison.*;
 import static org.crank.crud.criteria.Group.*;
 import static org.crank.crud.join.Fetch.*;
+import static org.crank.crud.criteria.OrderBy.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -292,6 +293,18 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     	AssertJUnit.assertNotNull( employees );
     	AssertJUnit.assertEquals(2, employees.size());
     	
+    }
+
+    @Test
+    public void testOrderBy() {
+    	List<Employee> employees = employeeDao.find(orderBy(asc("firstName")));
+    	AssertJUnit.assertNotNull(employees);
+    	AssertJUnit.assertEquals("Chris", employees.get(0).getFirstName());
+
+    	employees = employeeDao.find(orderBy(desc("firstName")));
+    	AssertJUnit.assertNotNull(employees);
+    	AssertJUnit.assertEquals("Scott", employees.get(0).getFirstName());
+
     }
 
     public void setEmployeeDao( final GenericDao<Employee, Long> baseJpaDao ) {

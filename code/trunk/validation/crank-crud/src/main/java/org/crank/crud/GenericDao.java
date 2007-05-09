@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.crank.crud.criteria.Criterion;
+import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.join.Fetch;
 
 /**
@@ -101,6 +102,10 @@ public interface GenericDao<T, PK extends Serializable> {
 	public List<T> find(int startPosition, int maxResults, Criterion... criteria);
 	
 	public List<T> find(int startPosition, int maxResults);
-    
-    public T readPopulated(final PK id);
+	
+	List<T> find(OrderBy[] orderBy, int startPosition, int maxResults, Criterion... criteria);
+	
+	List<T> find(OrderBy[] orderBy, Criterion... criteria);
+
+	public T readPopulated(final PK id);
 }

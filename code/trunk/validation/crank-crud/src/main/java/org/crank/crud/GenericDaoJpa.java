@@ -2,6 +2,7 @@ package org.crank.crud;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,8 @@ import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.Operator;
+import org.crank.crud.criteria.OrderBy;
+import org.crank.crud.criteria.OrderDirection;
 import org.crank.crud.criteria.VerifiedBetween;
 import org.crank.crud.join.Fetch;
 import org.crank.crud.join.Join;
@@ -192,13 +195,24 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	public List<T> find(int startPosition, int maxResults, Criterion... criteria) {
-		return doFind(this.type, null, criteria, null, startPosition, maxResults);
+		return doFind(this.type, (OrderBy[]) null, criteria, null, startPosition, maxResults);
 	}
 
 	public List<T> find(int startPosition, int maxResults) {
-		return doFind(this.type, null, null, null, startPosition, maxResults);
+		return doFind(this.type, (OrderBy[]) null, null, null, startPosition, maxResults);
 	}
 	
+	public List<T> find(Fetch[] fetches, OrderBy[] orderBy, int startPosition, int maxResults, Criterion... criteria) {
+		return doFind(this.type, orderBy, criteria, fetches, startPosition, maxResults);
+	}
+
+	public List<T> find(OrderBy[] orderBy, int startPosition, int maxResults, Criterion... criteria) {
+		return doFind(this.type, orderBy, criteria, null, startPosition, maxResults);
+	}
+	
+	public List<T> find(OrderBy[] orderBy, Criterion... criteria) {
+		return doFind(this.type, orderBy, criteria, null, -1, -1);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<T> find(Class clazz, String[] orderBy, Criterion... criteria) {
@@ -214,7 +228,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<T> doFind(Class clazz, String[] orderBy, final Criterion[] criteria, Fetch[] fetches,
+	private List<T> doFind(Class clazz, OrderBy[] orderBy, final Criterion[] criteria, Fetch[] fetches,
 			final int startPosition, final int maxResult) {
 		StringBuilder sbQuery = new StringBuilder(255);
 		final Group group = criteria!=null ? Group.and(criteria) : null;
@@ -241,6 +255,26 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		} catch (Exception ex) {
 			throw new RuntimeException("Unable to run query : " + sQuery, ex);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<T> doFind(Class clazz, String[] orderBy, final Criterion[] criteria, Fetch[] fetches,
+			final int startPosition, final int maxResult) {
+		
+		if (orderBy!=null) {
+			List<OrderBy> list = new ArrayList<OrderBy>();
+			for (String order : orderBy) {
+				list.add(new OrderBy(order, OrderDirection.ASC));
+			}
+			return doFind(clazz, (OrderBy[]) list.toArray(new OrderBy[orderBy.length]),
+					criteria, fetches, startPosition, maxResult);
+
+		} else {
+			return doFind(clazz, (OrderBy[]) null,
+					criteria, fetches, startPosition, maxResult);
+		}
+		
+		
 	}
 
 	@SuppressWarnings("unchecked")
@@ -425,13 +459,15 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return getEntityName(this.type);
 	}
 
-	private String constructOrderBy(String[] orderBy) {
+	private String constructOrderBy(OrderBy[] orderBy) {
 		StringBuilder query = new StringBuilder(100);
 		if (null != orderBy && orderBy.length > 0) {
 			query.append(" ORDER BY ");
-			for (int i = 0; i < orderBy.length; i++) {
-				query.append(orderBy[i]);
-				if (i + 1 < orderBy.length) {
+			for (int index = 0; index < orderBy.length; index++) {
+				query.append(orderBy[index].getName());
+				query.append(" ");
+				query.append(orderBy[index].getDirection().toString());
+				if (index + 1 < orderBy.length) {
 					query.append(", ");
 				}
 			}

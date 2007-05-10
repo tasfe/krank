@@ -536,5 +536,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return type.getSimpleName() + "." + finderMethod.getName();
 	}
 
+    public T merge( T detachedEntity ) {
+        return getJpaTemplate().merge( detachedEntity );
+    }
 
 }

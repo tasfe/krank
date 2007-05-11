@@ -237,6 +237,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 								     .append(constructJoins(fetches))
 								     .append(constuctWhereClause(group))
 								     .append(constructOrderBy(orderBy)).toString();
+
 		try {
 			return (List<T>) this.getJpaTemplate().execute(new JpaCallback() {
 				public Object doInJpa(EntityManager em)

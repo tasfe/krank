@@ -7,4 +7,5 @@ import org.crank.crud.test.model.Employee;
 
 public interface EmployeeDAO extends GenericDao<Employee, Long>{
 	List<Employee> findEmployeesByDepartment(String deptName);
+	List<Employee> findInEmployeeIds (List ids);
 }

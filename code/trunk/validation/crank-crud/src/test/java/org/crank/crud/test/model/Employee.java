@@ -13,7 +13,15 @@ import javax.persistence.NamedQuery;
 	@NamedQuery(name="Employee.findEmployeesByDepartment",
 			query="from Employee employee where employee.department.name=?"),
 	@NamedQuery(name="Employee.readPopulated",
-					query="from Employee employee join fetch employee.department where employee.id=?")
+					query="from Employee employee join fetch employee.department where employee.id=?"),
+	@NamedQuery(name="Employee.findInEmployeeIds",
+							query="SELECT o FROM Employee o  WHERE  o.id in  ( ? )"),
+    @NamedQuery(name="Employee.findSalaryEmployees",
+				query="SELECT o FROM Employee o  WHERE  o.status = org.crank.crud.test.model.EmployeeStatus.SALARY")
+				,
+	@NamedQuery(name="Employee.findExcellentEmployees",
+						query="SELECT o FROM Employee o  WHERE  o.rank = org.crank.crud.test.model.EmployeeRank.EXCELLENT"
+	)
 	
 })
 public class Employee {
@@ -31,6 +39,10 @@ public class Employee {
 	private int age;
 	
 	private Integer numberOfPromotions;
+	
+	private EmployeeStatus status;
+	
+	private Integer rank;
 	
 	@ManyToOne
 	private Department department;
@@ -89,5 +101,21 @@ public class Employee {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public EmployeeStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(EmployeeStatus status) {
+		this.status = status;
+	}
+
+	public Integer getRank() {
+		return rank;
+	}
+
+	public void setRank(Integer rank) {
+		this.rank = rank;
 	}
 }

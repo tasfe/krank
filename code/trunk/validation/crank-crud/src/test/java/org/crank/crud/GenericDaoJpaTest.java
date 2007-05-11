@@ -5,11 +5,14 @@ import static org.crank.crud.criteria.Comparison.*;
 import static org.crank.crud.criteria.Group.*;
 import static org.crank.crud.join.Fetch.*;
 import static org.crank.crud.criteria.OrderBy.*;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
+import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.test.DbUnitTestBase;
 import org.crank.crud.test.dao.EmployeeDAO;
@@ -305,6 +308,20 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     	AssertJUnit.assertNotNull(employees);
     	AssertJUnit.assertEquals("Scott", employees.get(0).getFirstName());
 
+    }
+    
+    @Test 
+    public void testIn () {
+    	//EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
+    	List<Long> ids = new ArrayList<Long>();
+    	ids.add(1L);
+    	ids.add(2L);
+    	//List<Employee> employees = employeeDAO.findInEmployeeIds(ids);
+    	//List<Employee> employees = employeeDAO.findInEmployeeIds(new Long[] {1L, 2L});
+    	//List<Employee> employees = employeeDao.find(Comparison.in("id", (Object) new Long [] {1L,2L}));
+    	//Seems like named param works but positional does not.
+    	List<Employee> employees = employeeDao.find(Comparison.in("id", ids));
+    	AssertJUnit.assertNotNull(employees);
     }
 
     public void setEmployeeDao( final GenericDao<Employee, Long> baseJpaDao ) {

@@ -26,7 +26,7 @@ public interface GenericDao<T, PK extends Serializable> {
     T read( PK id );
 
     /** Save changes made to a persistent object. */
-    void update( T transientObject );
+    T update( T transientObject );
 
     /** Remove an object from persistent storage in the database */
     void delete( PK id );
@@ -108,6 +108,4 @@ public interface GenericDao<T, PK extends Serializable> {
 	List<T> find(OrderBy[] orderBy, Criterion... criteria);
 
 	public T readPopulated(final PK id);
-    
-    T merge(final T detachedEntity);
 }

@@ -69,8 +69,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	@Transactional
-	public void update(final T transientObject) {
-		getJpaTemplate().merge(transientObject);
+	public T update(final T transientObject) {
+		return getJpaTemplate().merge(transientObject);
 	}
 
 	public void setType(final Class<T> aType) {
@@ -536,9 +536,5 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public String queryNameFromMethod(Method finderMethod) {
 		return type.getSimpleName() + "." + finderMethod.getName();
 	}
-
-    public T merge( T detachedEntity ) {
-        return getJpaTemplate().merge( detachedEntity );
-    }
 
 }

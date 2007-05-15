@@ -46,7 +46,7 @@ public class CalculatorControllerTest extends AbstractDependencyInjectionSpringC
 		String filename = null;
 		try {
 			filename = new File(
-					".\\src\\main\\webapp\\WEB-INF\\applicationContext.xml")
+					"./src/main/webapp/WEB-INF/applicationContext.xml")
 					.getCanonicalPath();
 		} catch (IOException ex) {
 			throw new RuntimeException("Unable to get file", ex);

@@ -64,7 +64,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return read(type, id);
 	}
 
-	public T read(Class clazz, PK id) {
+	@SuppressWarnings("unchecked")
+    public T read(Class clazz, PK id) {
 		return (T) getJpaTemplate().find(clazz, id);
 	}
 
@@ -518,7 +519,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		}
 	}
 
-	private T doReadPopulated(final PK id) {
+	@SuppressWarnings("unchecked")
+    private T doReadPopulated(final PK id) {
 		final String queryName = type.getSimpleName() + ".readPopulated";
 		return (T) getJpaTemplate().execute(new JpaCallback() {
 			public Object doInJpa(EntityManager em) throws PersistenceException {

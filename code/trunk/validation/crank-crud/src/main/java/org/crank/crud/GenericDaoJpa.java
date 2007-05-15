@@ -186,6 +186,15 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public List<T> find(Fetch[] fetches, String[] orderBy, Criterion... criteria) {
 		return doFind(this.type, orderBy, criteria, fetches);
 	}
+	
+	public List<T> find(Fetch[] fetches, Criterion... criteria) {
+		return doFind(this.type, null, criteria, fetches);
+	}
+
+	public List<T> find(Fetch... fetches) {
+		return doFind(this.type, null, null, fetches);
+	}
+	
 
 	public List<T> find(Fetch[] fetches, String[] orderBy, int startPosition, int maxResults, Criterion... criteria) {
 		return doFind(this.type, orderBy, criteria, fetches, startPosition, maxResults);
@@ -239,6 +248,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 								     .append(constuctWhereClause(group))
 								     .append(constructOrderBy(orderBy)).toString();
 
+		//ystem.out.println(sQuery);
 		try {
 			return (List<T>) this.getJpaTemplate().execute(new JpaCallback() {
 				public Object doInJpa(EntityManager em)
@@ -538,5 +548,6 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public String queryNameFromMethod(Method finderMethod) {
 		return type.getSimpleName() + "." + finderMethod.getName();
 	}
+
 
 }

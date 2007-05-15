@@ -26,15 +26,17 @@
 	        <!-- you may want to change this provider in production -->
             <property name="hibernate.cache.provider_class"
                       value="org.hibernate.cache.HashtableCacheProvider" />
-	    
-            <!-- Print SQL to stdout -->
-            <property name="hibernate.show_sql" value="true" />
+
             <!--  create non-existing tables automatically  -->
             <property name="hibernate.hbm2ddl.auto" value="update" />
             
+	    
+            <!-- Print SQL to stdout -->
+            <property name="hibernate.show_sql" value="true" />
 	        <property name="hibernate.format_sql" value="true"/>
     	    <property name="hibernate.use_sql_comments" value="true"/>
         	<property name="hibernate.query.substitutions" value="true 1, false 0"/>
+        	<property name="hibernate.max_fetch_depth" value="5"/>
             
         </properties>
     </persistence-unit>

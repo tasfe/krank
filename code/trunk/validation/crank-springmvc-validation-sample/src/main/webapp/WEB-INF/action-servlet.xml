@@ -11,7 +11,7 @@
 	    <property name="sessionForm"><value>true</value></property>
 	    <property name="validator">
 	        <!--  <bean class="com.arcmind.springmvc.validation.example.UserValidator"/> -->
-	        <bean class="org.crank.web.validation.spring.support.SpringMVCBridgeMetaDataDrivenValidator"/>	        
+	        <bean class="org.crank.web.validation.spring.support.SpringMVCBridgeMetaDataDrivenValidator"/>
 	    </property>	    
 	</bean>
 

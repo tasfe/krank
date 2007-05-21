@@ -120,11 +120,6 @@ public class ValidationScriptReaper {
      */
     public void outputFieldValidation(Writer writer, Class clazz, 
             String[] propertyNames, String formName) throws IOException {
-    	System.out.println("HERE");
-    	System.out.println(Arrays.asList(propertyNames));
-    	System.out.println(formName);
-    	System.out.println(clazz);
-    	System.out.println("DONE");
         /* Get the meta data from the class and property names. */
         Map<String, List<ValidatorMetaData>> validatorMetaData = 
             collectMetaDataFromClass(clazz, propertyNames);

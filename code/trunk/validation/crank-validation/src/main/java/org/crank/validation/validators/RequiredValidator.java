@@ -15,12 +15,11 @@ import org.crank.validation.ValidatorMessageHolder;
  * @author Rick Hightower
  */
 public class RequiredValidator extends AbstractValidator {
-
-	public void init() {
-		this.setDetailMessage("{validator.required.detail}");
-		this.setSummaryMessage("{validator.required.detail}");
-	}
-
+    
+    public void init () {
+        this.setDetailMessage( "{validator.required.detail}" );
+        this.setSummaryMessage( "{validator.required.summary}" );
+    }
 
     public ValidatorMessageHolder validate(Object object, String fieldLabel) {
         ValidatorMessage message = new ValidatorMessage();

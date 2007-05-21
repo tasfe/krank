@@ -32,7 +32,10 @@ public class CompositeValidator implements FieldValidator {
         ValidatorMessages messages = new ValidatorMessages();
         for (FieldValidator validator : list) {
             putArgs(validator);
-            messages.add((ValidatorMessage) validator.validate(object, fieldLabel));
+            ValidatorMessage message = (ValidatorMessage) validator.validate(object, fieldLabel);
+            if (message.hasError()) {
+                messages.add(message);
+            }
         }
 
         return messages;

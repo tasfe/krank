@@ -57,7 +57,7 @@ public class SpringMVCBridgeMetaDataDrivenValidatorTest extends AbstractDependen
 	@Test()
 	public void testValidate() {
 		validator.validate(employee, errors);
-		assertEquals(3, errors.getFieldErrors().size());
+		assertEquals(2, errors.getFieldErrors().size());
 		
 		List allErrors = errors.getAllErrors();
 		

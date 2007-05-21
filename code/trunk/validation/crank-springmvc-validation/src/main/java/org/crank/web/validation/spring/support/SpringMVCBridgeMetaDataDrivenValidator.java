@@ -88,7 +88,7 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
 
 	private void validateProperty(final Object object, final Object objectProperty, final String property,
 			final Errors errors) {
-		System.out.println(SpringValidatorContext.getBindingPath());
+		
 		List<ValidatorMetaData> metaDataList = readMetaData(object.getClass(), 
 				property);
 		CompositeValidator cv = createValidator(metaDataList);

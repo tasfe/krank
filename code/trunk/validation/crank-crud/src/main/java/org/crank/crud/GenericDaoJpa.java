@@ -304,7 +304,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 				builder.append(" left ");
 			}
 			builder.append(" join fetch ")
-			.append("o.").append(fetch.getRelationshipProperty())
+			.append(fetch.isAliasedRelationship() ? "" : "o.").append(fetch.getRelationshipProperty())
 			.append(" ").append(
 				fetch.getAlias().equals("") ? fetch.getDefaultAlias() : fetch.getAlias() 
 			);

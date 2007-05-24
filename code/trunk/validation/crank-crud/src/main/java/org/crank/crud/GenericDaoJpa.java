@@ -420,8 +420,13 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
         if( comparison.getValue() != null ) {
             final String sOperator = comparison.getOperator().getOperator();
     
-            builder.append(" o.");
+            if(!comparison.isAlias()){
+            	builder.append(" o.");
+            }else{
+            	builder.append(" ");
+            }
             builder.append(comparison.getName());
+            
             builder.append(" ");
             builder.append(sOperator);
             builder.append(" ");
@@ -439,7 +444,11 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
             }
             builder.append(" ");                        
         } else {
-            builder.append(" o.");
+        	if(!comparison.isAlias()){
+        		builder.append(" o.");	
+        	}else{
+        		builder.append(" ");
+        	}
             builder.append( comparison.getName() );
             if (comparison.getOperator() == Operator.EQ) {
                 builder.append( " is null " );

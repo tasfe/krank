@@ -277,6 +277,13 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         AssertJUnit.assertEquals( 9, result.size());
         result = employeeDao.find( join(leftJoinFetch("department")), orderBy("firstName"), and() );
         AssertJUnit.assertEquals( 9, result.size());
+        
+    }
+    
+    @Test
+    public void testFetchWithCriteria(){
+    	List<Employee> result = employeeDao.find( join(joinFetch("department","dpt")), orderBy("firstName"), and(eq("dpt.name",true,"Engineering")) );
+        AssertJUnit.assertEquals( 3, result.size());
     }
 
     @Test

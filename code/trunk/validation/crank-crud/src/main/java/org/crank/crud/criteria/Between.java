@@ -12,6 +12,11 @@ public class Between extends Comparison{
 		this.value2 = aValue2;
 	}
 	
+	public Between(String aName, Object aValue, Object aValue2, boolean alias) {
+		super(aName, Operator.BETWEEN, aValue, alias);
+		this.value2 = aValue2;
+	}
+	
 	public Object getValue2() {
 		return value2;
 	}

@@ -246,9 +246,9 @@ By default we allow annotations in the org.crank.annotations.validation package.
 
 h4. Creating different meta-data sources. By default Crank validation comes with three meta-data sources as follows:
 
-* AnnotationValidatorMetaDataReader Reads annotations for validation meta-data
-* PropertiesFileValidatorMetaDataReader Reads properties files for validation meta-data
-* ChainValidatorMetaDataReader Allows you to nest validation meta-data
+ * AnnotationValidatorMetaDataReader Reads annotations for validation meta-data
+ * PropertiesFileValidatorMetaDataReader Reads properties files for validation meta-data
+ * ChainValidatorMetaDataReader Allows you to nest validation meta-data
 
 It is easy to write your own meta-data reader, you just have to define it to implement this interface:
 {{{

@@ -53,6 +53,7 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
 		Set paramSet = crankWebContext.getRequestParameters().keySet();
 		for (PropertyDescriptor field : fieldsToValidate){
 			SpringValidatorContext.get().pushProperty(field.getName());
+            SpringValidatorContext.get().setParentObject(object);
 			if (shouldFieldBeValidated(paramSet)) {
 				Object propertyObject = objectPropertiesAsMap.get(field.getName());
 				validateProperty(object, propertyObject, field.getName(), errors);

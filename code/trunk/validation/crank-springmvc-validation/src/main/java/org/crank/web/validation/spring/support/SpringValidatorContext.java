@@ -4,6 +4,7 @@ import java.util.Stack;
 
 public class SpringValidatorContext {
 	private Stack<String> bindingPath = new Stack<String>();
+    private Object parentObject;
 	private static ThreadLocal<SpringValidatorContext> validatorContext = new ThreadLocal<SpringValidatorContext>();
 
 	private SpringValidatorContext () {
@@ -56,5 +57,14 @@ public class SpringValidatorContext {
 		simpleName = simpleName.substring(0,1).toLowerCase() + simpleName.substring(1,simpleName.length());
 		bindingPath.push(simpleName);
 	}
+
+    public void setParentObject( Object object ) {
+        this.parentObject = object;
+        
+    }
+
+    public Object getParentObject() {
+        return parentObject;
+    }
 
 }

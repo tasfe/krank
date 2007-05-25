@@ -22,7 +22,7 @@ Notice that the property zip-Code takes three different validation rules. @Requi
 
 That is it. You add the annotations. Whether you are using Spring or JSF, it picks up the annotations and validates. Now let's cover something more advanced.
 
-h4. Writing custom validations
+===Writing custom validations===
 
 In this example we want to override the built in Required support to do some special Required support.
 

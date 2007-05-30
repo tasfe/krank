@@ -141,7 +141,7 @@ public class JSFBridgeMetaDataDrivenValidator extends
 		List<FieldValidator> validatorsList = 
 			lookupTheListOfValidatorsAndInitializeThemWithMetaDataProperties(validationMetaDataList);
 
-		compositeValidator.setList(validatorsList);
+		compositeValidator.setValidatorList( validatorsList);
 
 		return compositeValidator;
 	}

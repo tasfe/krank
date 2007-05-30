@@ -135,7 +135,7 @@
                 <value>validator.areaCode.label</value>
             </list>
         </property>             
-    	<property name="list">
+    	<property name="validatorList">
     		<list>
 	    		<ref local="mustBeThreeDigitNumericValidator" />
 	    		<ref local="noIdenticalThreeDigitsValidator" />
@@ -180,7 +180,7 @@
                 <value>validator.prefix.label</value>
             </list>
         </property>             
-    	<property name="list">
+    	<property name="validatorList">
     		<list>
 	    		<ref local="mustBeThreeDigitNumericValidator"/>
 	    		<ref local="mustNotBeginWithZeroOrOne"/>
@@ -199,7 +199,7 @@
                 <value>validator.station.label</value>
             </list>
         </property>             
-    	<property name="list">
+    	<property name="validatorList">
     		<list>
 	    		<ref local="mustBeFourDigitNumericValidator"/>
     		</list>

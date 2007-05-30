@@ -42,7 +42,7 @@ public class CompositeValidatorTest {
         validatorList = new ArrayList<FieldValidator>();
         validatorList.add(pass1);
         validatorList.add(pass1);
-        validator.setList(validatorList);
+        validator.setValidatorList(validatorList);
     }
 
     @Test()

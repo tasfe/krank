@@ -19,22 +19,51 @@ import org.crank.validation.ValidatorMessages;
  * @author Rick Hightower
  */
 public class CompositeValidator implements FieldValidator {
-    private List<FieldValidator> list = new ArrayList<FieldValidator>();
+    private List<FieldValidator> validatorList = new ArrayList<FieldValidator>();
+    private RequiredValidator requiredValidator = null;
     private List <String> detailArgs;
     private List <String> summaryArgs;
 
 
-    public void setList(List<FieldValidator> list) {
-        this.list = list;
+    public void setValidatorList(List<FieldValidator> list) {
+        this.validatorList = list;
+        for (FieldValidator validator : list) {
+            if (validator instanceof RequiredValidator) {
+                requiredValidator =  (RequiredValidator) validator;
+                break;
+            }
+        }
+        if (requiredValidator != null) {
+            validatorList.remove( requiredValidator );
+        }
     }
 
     public ValidatorMessageHolder validate(Object object, String fieldLabel) {
-        ValidatorMessages messages = new ValidatorMessages();
-        for (FieldValidator validator : list) {
-            putArgs(validator);
-            ValidatorMessage message = (ValidatorMessage) validator.validate(object, fieldLabel);
-            if (message.hasError()) {
-                messages.add(message);
+        
+        ValidatorMessages messages = new ValidatorMessages(); //holds error messages.
+        
+        /* Validate with the requiredValidator if it is present. */
+        ValidatorMessage requiredMessage = null;
+        if (requiredValidator != null) {
+            putArgs(requiredValidator);
+            requiredMessage = (ValidatorMessage) requiredValidator.validate(object, fieldLabel);
+            if (requiredMessage.hasError()) {
+                messages.add( requiredMessage );
+            }
+        }
+
+        
+        
+        /* If the requiredMessage from the requiredValidator is null, then there was not a required validator present. */
+        /* If the requiredMessage is present then check to see if it has errors, only validate further if
+         * the requiredMessage has no error. */
+        if (requiredMessage == null || !requiredMessage.hasError()) {
+            for (FieldValidator validator : validatorList) {
+                putArgs(validator);
+                ValidatorMessage message = (ValidatorMessage) validator.validate(object, fieldLabel);
+                if (message.hasError()) {
+                    messages.add(message);
+                }
             }
         }
 

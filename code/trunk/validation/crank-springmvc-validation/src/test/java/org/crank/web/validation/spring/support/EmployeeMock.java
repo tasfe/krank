@@ -1,5 +1,6 @@
 package org.crank.web.validation.spring.support;
 
+import org.crank.annotations.validation.Regex;
 import org.crank.annotations.validation.Required;
 
 public class EmployeeMock {
@@ -23,6 +24,7 @@ public class EmployeeMock {
 	}
 	
 	@Required (summaryMessage="First name is required", detailMessage="required")
+    @Regex (match="Rick", summaryMessage="Hello", detailMessage="world")
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}

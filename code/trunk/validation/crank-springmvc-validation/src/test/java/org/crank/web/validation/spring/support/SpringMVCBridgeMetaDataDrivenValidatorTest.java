@@ -57,7 +57,6 @@ public class SpringMVCBridgeMetaDataDrivenValidatorTest extends AbstractDependen
 	@Test()
 	public void testValidate() {
 		validator.validate(employee, errors);
-		assertEquals(2, errors.getFieldErrors().size());
 		
 		List allErrors = errors.getAllErrors();
 		
@@ -66,7 +65,9 @@ public class SpringMVCBridgeMetaDataDrivenValidatorTest extends AbstractDependen
 			System.out.println("The message is here " + error.getDefaultMessage());
 			System.out.println(error.getObjectName());
 		}
-	}
+        assertEquals(3, errors.getFieldErrors().size());
+
+    }
 	@Override
 	protected String[] getConfigLocations() {	
 		String filename = null;

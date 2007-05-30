@@ -168,7 +168,7 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
 		List<FieldValidator> validatorsList = 
 			lookupTheListOfValidatorsAndInitializeThemWithMetaDataProperties(validationMetaDataList);
 
-		compositeValidator.setList(validatorsList);
+		compositeValidator.setValidatorList(validatorsList);
 
 		return compositeValidator;
 	}

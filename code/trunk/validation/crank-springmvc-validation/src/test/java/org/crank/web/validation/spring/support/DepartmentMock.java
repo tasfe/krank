@@ -1,5 +1,7 @@
 package org.crank.web.validation.spring.support;
 
+import org.crank.annotations.validation.Required;
+
 public class DepartmentMock {
 	
 	private String name;
@@ -17,7 +19,8 @@ public class DepartmentMock {
 		return name;
 	}
 
-	public void setName(String name) {
+    @Required (summaryMessage="name is required", detailMessage="required")
+    public void setName(String name) {
 		this.name = name;
 	}
 

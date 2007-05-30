@@ -9,7 +9,7 @@ public class AddressMock {
 	public String getLine1() {
 		return line1;
 	}
-	@Required
+    @Required (summaryMessage="line 1 is required", detailMessage="required")
 	public void setLine1(String line1) {
 		this.line1 = line1;
 	}

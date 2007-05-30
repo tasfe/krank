@@ -23,6 +23,12 @@
 	      <property name="max" value="100"/>
 	</bean>
 	
+	 <bean name="crank/validator/regex" 
+	      class="org.crank.validation.validators.RegexValidator"
+	      singleton="false">
+	      <property name="match" value="this gets set by the annotations you could set a default here, but why?"/>
+	 </bean>
+	
 	<bean id="dontMatchValidator" class="org.crank.validation.validators.RegexValidator">
 		<property name="negate"><value>true</value></property>
 	</bean>
@@ -135,7 +141,7 @@
                 <value>validator.areaCode.label</value>
             </list>
         </property>             
-    	<property name="list">
+    	<property name="validatorList">
     		<list>
 	    		<ref local="mustBeThreeDigitNumericValidator" />
 	    		<ref local="noIdenticalThreeDigitsValidator" />
@@ -168,7 +174,7 @@
 	</bean>
 	
 	<bean name="propertyZipCode" parent="zipCode"/>
-
+	
     <bean name="prefix" class="org.crank.validation.validators.CompositeValidator">
         <property name="summaryArgs">
             <list>
@@ -180,7 +186,7 @@
                 <value>validator.prefix.label</value>
             </list>
         </property>             
-    	<property name="list">
+    	<property name="validatorList">
     		<list>
 	    		<ref local="mustBeThreeDigitNumericValidator"/>
 	    		<ref local="mustNotBeginWithZeroOrOne"/>
@@ -199,7 +205,7 @@
                 <value>validator.station.label</value>
             </list>
         </property>             
-    	<property name="list">
+    	<property name="validatorList">
     		<list>
 	    		<ref local="mustBeFourDigitNumericValidator"/>
     		</list>

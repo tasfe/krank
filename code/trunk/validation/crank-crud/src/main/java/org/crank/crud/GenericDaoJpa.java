@@ -69,7 +69,11 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return (T) getJpaTemplate().find(clazz, id);
 	}
 
-	@Transactional
+    public void refresh(final T transientObject) {
+		getJpaTemplate().refresh(transientObject);
+	}
+
+    @Transactional
 	public T update(final T transientObject) {
 		return getJpaTemplate().merge(transientObject);
 	}
@@ -93,7 +97,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	public List<T> find(Class clazz, List<Criterion> criteria,
 			List<String> orderBy) {
-		return find(clazz, (String[]) orderBy
+		return find(clazz, orderBy
 				.toArray(new String[orderBy.size()]), (Criterion[]) criteria
 				.toArray(new Criterion[criteria.size()]));
 	}
@@ -278,7 +282,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 			for (String order : orderBy) {
 				list.add(new OrderBy(order, OrderDirection.ASC));
 			}
-			return doFind(clazz, (OrderBy[]) list.toArray(new OrderBy[orderBy.length]),
+			return doFind(clazz, list.toArray(new OrderBy[orderBy.length]),
 					criteria, fetches, startPosition, maxResult);
 
 		} else {
@@ -327,7 +331,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
                 if (comparison.getValue() != null) {
     				final String sOperator = comparison.getOperator().getOperator();
     				if (!"like".equals(sOperator)) {
-    					if (comparison instanceof Between || comparison instanceof VerifiedBetween) {
+    					if (comparison instanceof Between) {
     						Between between = (Between) comparison;
     						query.setParameter(
     								ditchDot(comparison.getName()) + "1",
@@ -335,7 +339,15 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
     						query.setParameter(
     								ditchDot(comparison.getName()) + "2", between
     										.getValue2());
-    					} else {
+    					} else if (comparison instanceof VerifiedBetween) {
+                            VerifiedBetween between = (VerifiedBetween) comparison;
+    						query.setParameter(
+    								ditchDot(comparison.getName()) + "1",
+    								comparison.getValue());
+    						query.setParameter(
+    								ditchDot(comparison.getName()) + "2", between
+    										.getValue2());
+                        } else {
     						query.setParameter(ditchDot(comparison.getName()),
     								comparison.getValue());
     					}
@@ -432,9 +444,9 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
             builder.append(" ");
     
             if (comparison instanceof Between || comparison instanceof VerifiedBetween) {
-                builder.append(var + "1");
+                builder.append(var).append("1");
                 builder.append(" ");
-                builder.append("and " + var + "2");
+                builder.append("and ").append(var).append("2");
             } else if (comparison.getOperator() == Operator.IN) {
                 builder.append(" (");
                 builder.append(var);
@@ -459,7 +471,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	protected String getEntityName(Class<T> aType) {
-		Entity entity = (Entity) aType.getAnnotation(Entity.class);
+		Entity entity = aType.getAnnotation(Entity.class);
 		if (entity == null) {
 			return aType.getSimpleName();
 		}
@@ -504,7 +516,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 				+ " FROM ");
 		query.append(entityName);
 		query.append(" ");
-		query.append(instanceName + " ");
+        query.append(instanceName).append(" ");
 		return query.toString();
 	}
 

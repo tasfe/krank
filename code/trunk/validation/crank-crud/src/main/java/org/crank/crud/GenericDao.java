@@ -16,19 +16,41 @@ import org.crank.crud.join.Fetch;
 */
 public interface GenericDao<T, PK extends Serializable> {
 
-    /** Persist the newInstance object into database */
+    /** Persist the newInstance object into database
+     * @param newInstance
+     *          The new object
+     */
     void create( T newInstance );
 
     /**
      * Retrieve an object that was previously persisted to the database using
      * the indicated id as primary key
+     * @param id
+     *          The Primary Key of the object to get.
+     * @return Type
      */
     T read( PK id );
 
-    /** Save changes made to a persistent object. */
+    /**
+     * Save changes made to a persistent object.
+     * @param transientObject
+     *          The Object to update.
+     * @return Type
+     */
     T update( T transientObject );
 
-    /** Remove an object from persistent storage in the database */
+    /**
+     * Refresh a persistant object that may have changed in another thread/transaction.
+     * @param transientObject
+     *          The Object to refresh.
+     */
+    void refresh( T transientObject );
+
+    /**
+     * Remove an object from persistent storage in the database.
+     * @param id
+     *          The Primary Key of the object to delete.
+     */
     void delete( PK id );
 
     /**
@@ -36,21 +58,31 @@ public interface GenericDao<T, PK extends Serializable> {
      * 
      * @param propertyValues
      *            properties of VO to use as filters, values matching properties
+     * @return List of requested objects.
      */
     List<T> find( Map<String, Object> propertyValues );
 
     /**
      * Allows geting an object using a map of the field and values
-     * 
+     * @param propertyNames
+     *          Names of the fields on which to search.
+     * @param values
+     *          Values of the fields on which this is searching.
+     * @return List of requested objects.
      */
     List<T> find( String[] propertyNames, Object[] values );
 
     /**
      * Does a query such as select yada from [yourclass] where field=value
      * orderby field.
-     * 
+     *
+     * @param propertyNames
+     *          Names of the fields on which to search.
+     * @param values
+     *          Values of the fields on which this is searching.
      * @param orderBy
-     *            fields to order by in descending order
+     *          fields to order by in descending order
+     * @return List of requested objects.
      */
     List<T> find( String[] propertyNames, Object[] values, String[] orderBy );
 
@@ -62,6 +94,7 @@ public interface GenericDao<T, PK extends Serializable> {
      *            properties of VO to use as filters
      * @param orderBy
      *            fields to order by in descending order
+     * @return List of requested objects.
      */
     List<T> find( Map<String, Object> propertyValues, String[] orderBy );
 

@@ -25,9 +25,8 @@ public class CompositeValidator implements FieldValidator {
     private List <String> summaryArgs;
     private String stopOnRule = "";
     private boolean stopOnFirstRule = false;
+    private boolean stopOnBlank = true;
     
-
-
     public void setValidatorList(List<FieldValidator> list) {
         this.validatorList = list;
         StopOnRuleValidator stopOnRuleValidator = null;
@@ -61,16 +60,16 @@ public class CompositeValidator implements FieldValidator {
         
         /* Validate with the requiredValidator if it is present. */
         ValidatorMessage requiredMessage = validateWithRequriedIfPresent( object, fieldLabel, messages );
-        
-        
 
-        
-        
+        boolean proceed = !(stopOnBlank && (object == null || object.toString().trim().length() == 0));
+
         /* If the requiredMessage from the requiredValidator is null, then there was not a required validator present. */
         /* If the requiredMessage is present then check to see if it has errors, only validate further if
          * the requiredMessage has no error. */
-        if (requiredMessage == null || !requiredMessage.hasError()) {
-            runValidationRules( object, fieldLabel, messages );
+        if (requiredMessage == null || !requiredMessage.hasError() ) {
+            if (proceed ) {
+                runValidationRules( object, fieldLabel, messages );
+            }
         }
 
         return messages;
@@ -121,5 +120,8 @@ public class CompositeValidator implements FieldValidator {
         this.summaryArgs = summaryArgKeys;
     }
 
+    public void setStopOnBlank( boolean stopOnBlank ) {
+        this.stopOnBlank = stopOnBlank;
+    }
 
 }

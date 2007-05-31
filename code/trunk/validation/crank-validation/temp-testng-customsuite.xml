@@ -1,8 +1,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Custom suite">
-  <test verbose="2" name="crank-validation" annotations="JDK">
-    <packages>
-      <package name="org.crank.web.validation"/>
-    </packages>
+<suite name="crank-validation">
+  <test verbose="2" name="org.crank.validation.validators.CompositeValidatorTest" annotations="JDK">
+    <classes>
+      <class name="org.crank.validation.validators.CompositeValidatorTest"/>
+    </classes>
   </test>
 </suite>

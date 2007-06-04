@@ -73,6 +73,18 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		getJpaTemplate().refresh(transientObject);
 	}
 
+    public void flushAndClear() {
+        getJpaTemplate().execute(
+                new JpaCallback() {
+                    public Object doInJpa(EntityManager entityManager) throws PersistenceException {
+                        entityManager.flush();
+                        entityManager.clear();
+                        return null;
+                    }
+                }
+        );
+    }
+
     @Transactional
 	public T update(final T transientObject) {
 		return getJpaTemplate().merge(transientObject);

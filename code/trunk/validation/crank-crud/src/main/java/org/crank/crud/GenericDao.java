@@ -47,6 +47,11 @@ public interface GenericDao<T, PK extends Serializable> {
     void refresh( T transientObject );
 
     /**
+     * Write anything to db that is pending oporation and clear it.
+     */
+    void flushAndClear();
+
+    /**
      * Remove an object from persistent storage in the database.
      * @param id
      *          The Primary Key of the object to delete.

@@ -38,12 +38,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		implements GenericDao<T, PK>, Finder<T> {
 	protected Class<T> type = null;
+	
+	protected boolean distinct = true;
 
 	public GenericDaoJpa(final Class<T> aType) {
 		this.type = aType;
 	}
 
 	public GenericDaoJpa() {
+	}
+	
+	public void setIsDistinct(boolean isDistinct){
+		this.distinct = isDistinct;
+	}
+	
+	public boolean isDistinct(){
+		return this.distinct;
 	}
 
 	@Transactional
@@ -522,9 +532,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		}
 		return query.toString();
 	}
-
-	private String constructSelect(String entityName, String instanceName) {
-		StringBuilder query = new StringBuilder("SELECT " + instanceName
+	
+	private String constructSelect(String entityName, String instanceName){
+		StringBuilder query = new StringBuilder("SELECT " +
+				(this.distinct ? "DISTINCT " : "") + instanceName
 				+ " FROM ");
 		query.append(entityName);
 		query.append(" ");

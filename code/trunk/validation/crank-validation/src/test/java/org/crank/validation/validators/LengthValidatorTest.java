@@ -5,7 +5,6 @@ import java.util.ResourceBundle;
 
 import org.crank.core.ResourceBundleLocator;
 import org.crank.validation.ValidatorMessage;
-import org.crank.validation.validators.RegexValidator;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

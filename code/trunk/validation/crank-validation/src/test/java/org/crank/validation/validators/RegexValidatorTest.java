@@ -89,4 +89,20 @@ public class RegexValidatorTest {
 
     }
 
+    @Test
+    public void testOurAddress() {
+        validator.setMatch("\\d+");
+        ValidatorMessage message = (ValidatorMessage) validator.validate("123", "");
+        assertFalse(message.hasError());
+        
+        validator.setMatch( "([a-zA-Z]|\\d+)+" );
+        message = (ValidatorMessage) validator.validate("abc", "");
+        assertFalse(message.hasError());
+
+//        validator.setMatch( "([a-zA-Z]|\\d+)+" );
+//        message = (ValidatorMessage) validator.validate("123 Main St", "");
+//        assertFalse(message.hasError());
+        
+    }
+
 }

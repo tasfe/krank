@@ -36,7 +36,7 @@ public class MatchAllRegexValidator extends AbstractValidator {
         
         for (String match : matches) {
             Pattern pattern = compileRegex(match);
-            if (pattern.matcher(string).matches()) {
+            if (pattern.matcher(string).find()) {
                 validCount++;
             }
         }

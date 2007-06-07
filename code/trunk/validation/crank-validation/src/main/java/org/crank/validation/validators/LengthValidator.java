@@ -1,8 +1,6 @@
 package org.crank.validation.validators;
 
-import org.crank.annotations.design.AllowsConfigurationInjection;
 import org.crank.annotations.design.Implements;
-import org.crank.message.MessageSpecification;
 import org.crank.validation.FieldValidator;
 import org.crank.validation.ValidatorMessage;
 import org.crank.validation.ValidatorMessageHolder;
@@ -29,7 +27,7 @@ public class LengthValidator extends AbstractValidator {
         String value = fieldValue.toString();
         
         if (!(value.length() >= min && value.length() <= max)) {
-            populateMessage(validatorMessage, fieldLabel);
+            populateMessage(validatorMessage, fieldLabel, min, max);
         }
 
 		

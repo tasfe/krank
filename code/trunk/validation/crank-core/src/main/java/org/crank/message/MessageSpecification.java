@@ -162,14 +162,19 @@ public class MessageSpecification implements Serializable {
     	}
     }
 
-    /** The getMessage does a bit of magic. If the message starts with {
+    private String getMessage(String key) {
+        return doGetMessage( key );
+    }
+    
+    /** The doGetMessage does a bit of magic. If the message starts with {
      * than it assumes it is an i18N message and looks it up in the 
      * resource bundle. If it starts with #{ it assumes it is an expression
      * and uses OGNL, JSF EL, or the Universal EL to look up the expression
      * in the context. */
-	private String getMessage(String key) {
+	private String doGetMessage(String key) {
 		/* Find the resourceBundle. */
 		ResourceBundle bundle = this.resourceBundleLocator.getBundle();
+        
 		
     	String message = null; //holds the message
     	
@@ -179,7 +184,13 @@ public class MessageSpecification implements Serializable {
     	if (key.startsWith(this.i18nMarker)) {
     		try {
     			key = key.substring(1, key.length()-1);
-    			message = bundle.getString(key);
+                if (getSubject()!=null) {
+                    try {
+                        message = bundle.getString(key + "." + getSubject());
+                    } catch (MissingResourceException mre) {
+                        message = bundle.getString(key);                        
+                    }
+                }
     		} catch (MissingResourceException mre) {
     			message = key;
     		}
@@ -195,11 +206,18 @@ public class MessageSpecification implements Serializable {
     		 * If it is not found then just return the key as the message.
     		 */
     		if (key.contains(".")) {
-    			try {
-    				message = bundle.getString(key);
-    			} catch (MissingResourceException mre){
-    				message = key;
-    			}
+                try {
+                    key = key.substring(1, key.length()-1);
+                    if (getSubject()!=null) {
+                        try {
+                            message = bundle.getString(key + "." + getSubject());
+                        } catch (MissingResourceException mre) {
+                            message = bundle.getString(key);                        
+                        }
+                    }
+                } catch (MissingResourceException mre) {
+                    message = key;
+                }
     		} else {
     			message = key;
     		}

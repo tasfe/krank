@@ -54,7 +54,9 @@ public final class MessageUtils {
 			char cchar = chars[index];
 
 			if (Character.isUpperCase(cchar)) {
-				buffer.append(' ');
+                if (index!=0) {
+                    buffer.append(' ');
+                }
 				buffer.append(cchar);
 
 				continue;

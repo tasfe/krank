@@ -24,6 +24,8 @@ import org.crank.validation.ValidatorMetaDataReader;;
  *
  */
 public class ChainValidatorMetaDataReader implements ValidatorMetaDataReader {
+    
+    public static final String OVERRIDE_NAME = "validator.override.name";
 
 	private List <ValidatorMetaDataReader> chain;
 
@@ -46,7 +48,12 @@ public class ChainValidatorMetaDataReader implements ValidatorMetaDataReader {
 			 * the previous reader. 
 			 */
 			for (ValidatorMetaData data : list){
-				overrideMap.put(data.getName(), data);
+                String overrideName = data.getName();
+                if ((data.getProperties() != null) && (data.getProperties().get( OVERRIDE_NAME ) != null)) {
+                    overrideName = (String) data.getProperties().get( OVERRIDE_NAME );
+                    data.getProperties().remove( OVERRIDE_NAME );
+                }
+				overrideMap.put(overrideName, data);
 			}
 		}
 		/* Turn the map into a list. */

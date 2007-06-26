@@ -342,6 +342,11 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     	List<Department> depts = departmentDao.find(leftJoinFetch("employees"));
     	AssertJUnit.assertNotNull(depts);
     }
+    
+    @Test
+    public void testEmployees() {
+        employeeDao.find();
+    }
 
     public void setEmployeeDao( final GenericDao<Employee, Long> baseJpaDao ) {
         this.employeeDao = baseJpaDao;

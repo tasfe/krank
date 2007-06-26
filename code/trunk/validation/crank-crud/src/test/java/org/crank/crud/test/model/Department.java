@@ -3,13 +3,15 @@ package org.crank.crud.test.model;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+//import org.hibernate.annotations.Proxy;
+
 @Entity
+//@Proxy (lazy=true)
 public class Department {
 
     @Id
@@ -19,10 +21,11 @@ public class Department {
     
     
     //@org.hibernate.annotations.BatchSize(size = 20)
-    @OneToMany (mappedBy="department", fetch=FetchType.EAGER)
-    @org.hibernate.annotations.Fetch (
-    		org.hibernate.annotations.FetchMode.JOIN
-    )
+    @OneToMany (mappedBy="department")
+//    , fetch=FetchType.EAGER)
+//    @org.hibernate.annotations.Fetch (
+//    		org.hibernate.annotations.FetchMode.JOIN
+//    )
     private List<Employee> employees;
 
 	public List<Employee> getEmployees() {

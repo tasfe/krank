@@ -36,8 +36,7 @@
 	        <property name="hibernate.format_sql" value="true"/>
     	    <property name="hibernate.use_sql_comments" value="true"/>
         	<property name="hibernate.query.substitutions" value="true 1, false 0"/>
-        	<property name="hibernate.max_fetch_depth" value="5"/>
-            
+        	<!--  <property name="hibernate.max_fetch_depth" value="0"/>             -->
         </properties>
     </persistence-unit>
 

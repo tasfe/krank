@@ -45,5 +45,9 @@
 			<value>org.crank.crud.test.model.Department</value>
 		</property>
 	</bean>	
+	
+	<bean id="paginatableDataSource" class="org.crank.controller.JPAPaginatableDataSource">
+		<property name="dao" ref="employeeDao"/>
+	</bean>
 
 </beans>

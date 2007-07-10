@@ -116,6 +116,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public List<T> find(List<Criterion> criteria, List<String> orderBy) {
 		return find(type, criteria, orderBy);
 	}
+    
+    
 
 	public List<T> find(Class clazz, List<Criterion> criteria,
 			List<String> orderBy) {
@@ -158,6 +160,15 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 		return find(type);
 	}
+    
+    public int count() {
+        String entityName = getEntityName(type);
+        List list = getJpaTemplate().find(
+                "SELECT count(*) FROM " + entityName + " instance");
+        Long count = (Long) list.get( 0 );
+        return count.intValue();
+    }
+    
 
 	@SuppressWarnings("unchecked")
 	public List<T> find(Class clazz) {
@@ -595,6 +606,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public String queryNameFromMethod(Method finderMethod) {
 		return type.getSimpleName() + "." + finderMethod.getName();
 	}
+
 
 
 }

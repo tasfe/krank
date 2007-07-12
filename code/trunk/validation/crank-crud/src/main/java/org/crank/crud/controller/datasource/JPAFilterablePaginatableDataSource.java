@@ -30,7 +30,11 @@ public class JPAFilterablePaginatableDataSource<T, PK extends Serializable> impl
     }
 
     public List list( int startItem, int numItems ) {
-        return dao.find( startItem, numItems, group );
+        if (orderBy!=null) {
+            return dao.find( orderBy, startItem, numItems, group );
+        } else {
+            return dao.find( startItem, numItems, group );
+        }
     }
 
     public void setDao( GenericDao<T, PK> dao ) {

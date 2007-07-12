@@ -12,6 +12,10 @@ public class Group extends Criterion implements Iterable<Criterion>{
 	public Group () {
 		
 	}
+    
+    public void clear () {
+        criteria.clear();
+    }
 	
 	public Group (final Junction aJunction, final Criterion... aCriteria) {
 		this.junction = aJunction;

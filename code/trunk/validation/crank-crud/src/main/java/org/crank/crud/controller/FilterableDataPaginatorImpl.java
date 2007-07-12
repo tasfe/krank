@@ -72,6 +72,43 @@ public class FilterableDataPaginatorImpl extends DataPaginatorImpl implements Fi
         filterablePaginatableDataSource().setOrderBy( orderBy.toArray(new OrderBy[orderBy.size()]) );
         reset();
     }
+    
+    public void clearAll() {
+        filterableProperties.clear();
+    }
+    public boolean isSorting() {
+        Collection<FilterableProperty> values = filterableProperties.values();
+        for (FilterableProperty fp : values) {
+            if (fp.getOrderBy().isEnabled()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isFiltering() {
+        Collection<FilterableProperty> values = filterableProperties.values();
+        for (FilterableProperty fp : values) {
+            if (fp.getComparison().isEnabled()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void disableSorts() {
+        Collection<FilterableProperty> values = filterableProperties.values();
+        for (FilterableProperty fp : values) {
+            fp.getOrderBy().setEnabled( false );
+        }
+    }
+
+    public void disableFilters() {
+        Collection<FilterableProperty> values = filterableProperties.values();
+        for (FilterableProperty fp : values) {
+            fp.getComparison().setEnabled( false );
+        }
+    }
 
     public Map<String, FilterableProperty> getFilterableProperties() {
         return filterableProperties;

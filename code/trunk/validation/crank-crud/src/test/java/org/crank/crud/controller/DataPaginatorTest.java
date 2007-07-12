@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.crank.crud.controller.DataPaginatorImpl;
-import org.crank.crud.controller.PaginatableDataSource;
-import org.crank.crud.controller.SimplePaginatableDataSource;
+import org.crank.crud.controller.datasource.PaginatableDataSource;
+import org.crank.crud.controller.datasource.SimplePaginatableDataSource;
 
 import junit.framework.TestCase;
 

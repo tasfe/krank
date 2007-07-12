@@ -1,9 +1,7 @@
 package org.crank.crud.controller;
 
 import org.crank.crud.GenericDao;
-import org.crank.crud.controller.JPAFilterablePaginatableDataSource;
-import org.crank.crud.criteria.Comparison;
-import org.crank.crud.criteria.Operator;
+import org.crank.crud.controller.datasource.JPAFilterablePaginatableDataSource;
 import org.crank.crud.test.DbUnitTestBase;
 import org.crank.crud.test.model.Employee;
 import org.testng.annotations.Test;
@@ -22,21 +20,23 @@ public class JPAFilterableDataPaginatorTest extends DbUnitTestBase {
 
     @Test
     public void test2() {
-        FilterableDataPaginatorImpl paginator = new FilterableDataPaginatorImpl(paginatableDataSource );
+        FilterableDataPaginatorImpl paginator = new FilterableDataPaginatorImpl(paginatableDataSource, Employee.class );
         
         for (int index = 0; index < 100; index++) {
             Employee employee = new Employee();
             employee.setFirstName( "FOO" + index);
             employeeDao.create(employee);
         }
-        paginator.group().add( new Comparison("firstName", Operator.LIKE, "FOO%") );
-        paginator.reset();
+        
+        paginator.getFilterableProperties().get( "firstName" ).getComparison().setValue("FOO");
+        paginator.getFilterableProperties().get( "firstName" ).getComparison().setEnabled( true );
+        paginator.filter();
         Employee employee = (Employee)paginator.getPage().get( 0 );
         AssertJUnit.assertEquals("FOO0", employee.getFirstName());
         AssertJUnit.assertEquals(10, paginator.getPageCount());
 
-        paginator.group().add( new Comparison("firstName", Operator.LIKE_START, "R") );
-        paginator.reset();
+        paginator.getFilterableProperties().get( "firstName" ).getComparison().setValue("R");
+        paginator.filter();
         employee = (Employee)paginator.getPage().get( 0 );
         AssertJUnit.assertEquals("Rick", employee.getFirstName());
         AssertJUnit.assertEquals(1, paginator.getPageCount());

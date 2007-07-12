@@ -3,6 +3,8 @@ package org.crank.crud.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.crank.crud.controller.datasource.PaginatableDataSource;
+
 public class DataPaginatorImpl implements DataPaginator {
 
     protected int currentPage=0;

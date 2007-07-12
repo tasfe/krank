@@ -1,7 +1,9 @@
 package org.crank.crud.controller;
 
-import org.crank.crud.criteria.Group;
+import java.util.Map;
+
 
 public interface FilterableDataPaginator extends DataPaginator {
-    Group group();
+    Map<String, FilterableProperty> getFilterableProperties();
+    void filter();
 }

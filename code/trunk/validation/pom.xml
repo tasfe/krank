@@ -45,8 +45,8 @@
 	</developers>
 
 	<scm>
-		<connection>scm:svn:https://krank.googlecode.com/svn/code/tags/0.2 Release With CRUD</connection>
-		<developerConnection>scm:svn:https://krank.googlecode.com/svn/code/tags/0.2 Release With CRUD</developerConnection>
+		<connection>scm:svn:http://krank.googlecode.com/svn/code/trunk/validation</connection>
+		<developerConnection>scm:svn:https://krank.googlecode.com/svn/code/trunk/validation</developerConnection>
 	</scm>
 
 	<issueManagement>
@@ -127,15 +127,6 @@
 
 	<reporting>
 		<plugins>
-
-			<plugin>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<configuration>
-					<configLocation>
-						crank-checkstyle.xml
-					</configLocation>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
@@ -169,9 +160,6 @@
 	</modules>
 
 	<repositories>
-
-
-
 		<repository>
 			<id>central</id>
 			<url>http://repo1.maven.org/maven2</url>
@@ -186,7 +174,6 @@
 	</repositories>
 
 	<pluginRepositories>
-
 
 		<pluginRepository>
 			<id>central</id>

@@ -1,8 +1,0 @@
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="crank-validation">
-  <test verbose="2" name="org.crank.validation.validators.CompositeValidatorTest" annotations="JDK">
-    <classes>
-      <class name="org.crank.validation.validators.CompositeValidatorTest"/>
-    </classes>
-  </test>
-</suite>

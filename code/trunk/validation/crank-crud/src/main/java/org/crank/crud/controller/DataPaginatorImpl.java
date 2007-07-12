@@ -1,11 +1,12 @@
 package org.crank.crud.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.crank.crud.controller.datasource.PaginatableDataSource;
 
-public class DataPaginatorImpl implements DataPaginator {
+public class DataPaginatorImpl implements DataPaginator, Serializable {
 
     protected int currentPage=0;
     protected int itemsPerPage=10;

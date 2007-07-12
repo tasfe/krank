@@ -44,6 +44,14 @@ public class FilterableDataPaginatorImpl extends DataPaginatorImpl implements Fi
         for (PropertyDescriptor propertyDescriptor: propertyDescriptors) {
             FilterableProperty filterableProperty = new FilterableProperty(propertyDescriptor.getName(), propertyDescriptor.getPropertyType());
             filterableProperties.put( propertyDescriptor.getName(), filterableProperty );
+            filterableProperty.getOrderBy().addToggleListener( new ToggleListener() {
+                public void toggle( ToggleEvent event ) {
+                    filter();
+                }} );
+            filterableProperty.getComparison().addToggleListener( new ToggleListener() {
+                public void toggle( ToggleEvent event ) {
+                    filter();
+                }} );
         }
     }
 
@@ -58,7 +66,7 @@ public class FilterableDataPaginatorImpl extends DataPaginatorImpl implements Fi
         Collection<FilterableProperty> values = filterableProperties.values();
         for (FilterableProperty fp : values) {
             /* Add the comparison to the group. */
-            if (fp.getComparison().isEnabled()) {
+            if (fp.getComparison().isEnabled() && fp.getComparison().getValue()!=null) {
                 filterablePaginatableDataSource().group().add( fp.getComparison() );
             }
             
@@ -75,6 +83,8 @@ public class FilterableDataPaginatorImpl extends DataPaginatorImpl implements Fi
     
     public void clearAll() {
         filterableProperties.clear();
+        createFilterProperties(  );
+        filter();
     }
     public boolean isSorting() {
         Collection<FilterableProperty> values = filterableProperties.values();
@@ -101,6 +111,7 @@ public class FilterableDataPaginatorImpl extends DataPaginatorImpl implements Fi
         for (FilterableProperty fp : values) {
             fp.getOrderBy().setEnabled( false );
         }
+        filter();
     }
 
     public void disableFilters() {
@@ -108,6 +119,7 @@ public class FilterableDataPaginatorImpl extends DataPaginatorImpl implements Fi
         for (FilterableProperty fp : values) {
             fp.getComparison().setEnabled( false );
         }
+        filter();
     }
 
     public Map<String, FilterableProperty> getFilterableProperties() {

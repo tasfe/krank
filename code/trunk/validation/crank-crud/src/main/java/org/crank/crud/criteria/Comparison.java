@@ -7,6 +7,8 @@ public class Comparison extends Criterion {
 	private Operator operator;
 	private Object value;
 	private boolean alias = false;
+    private boolean enabled = false;
+
 	
 	public static Comparison between (final String name, final Object value1, final Object value2 ) {
 		return new Between (name, value1, value2);
@@ -130,4 +132,19 @@ public class Comparison extends Criterion {
 	public String toString () {
 		return name + "_" + operator + "_" + value;
 	}
+    public boolean isEnabled() {
+        return enabled;
+    }
+    public void setEnabled( boolean enabled ) {
+        this.enabled = enabled;
+    }
+    
+    public void enable() {
+        this.enabled = true;
+    }
+    
+    public void disable() {
+        this.enabled = false;
+    }
+    
 }

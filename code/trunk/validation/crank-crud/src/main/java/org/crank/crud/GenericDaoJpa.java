@@ -191,6 +191,33 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public List<T> find(Criterion... criteria) {
 		return find((String[]) null, criteria);
 	}
+    
+    public int count( final Criterion ... criteria ) {
+        final Group group = criteria!=null ? Group.and(criteria) : null;
+
+        final StringBuilder sbquery = new StringBuilder("SELECT count(" +
+                (this.distinct ? "DISTINCT " : "") + "o )"
+                + " FROM ");
+        sbquery.append(getEntityName(type));
+        sbquery.append(" ");
+        sbquery.append("o").append(" ").append( constuctWhereClause(group) );
+        
+        try {
+            return (Integer) this.getJpaTemplate().execute(new JpaCallback() {
+                public Object doInJpa(EntityManager em)
+                        throws PersistenceException {
+                    Query query = em.createQuery(sbquery.toString());
+                    if (criteria != null) {
+                        addGroupParams(query, group);
+                    }
+                    return ((Long)query.getResultList().get(0)).intValue();
+                }
+            });
+        } catch (Exception ex) {
+            throw new RuntimeException("Unable to run query : " + sbquery, ex);
+        }
+    }
+    
 
 	@SuppressWarnings("unchecked")
 	public List<T> find(Class clazz, Criterion... criteria) {
@@ -606,7 +633,6 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public String queryNameFromMethod(Method finderMethod) {
 		return type.getSimpleName() + "." + finderMethod.getName();
 	}
-
 
 
 }

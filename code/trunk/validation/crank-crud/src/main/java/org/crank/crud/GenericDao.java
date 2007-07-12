@@ -125,6 +125,8 @@ public interface GenericDao<T, PK extends Serializable> {
     
     int count();
     
+    int count (Criterion... criteria);
+    
     List<T> find (Criterion... criteria);
     
     List<T> find (String[] orderBy, Criterion... criteria);

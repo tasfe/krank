@@ -42,6 +42,18 @@ public class OrderBy implements Serializable{
     public void setEnabled( boolean enabled ) {
         this.enabled = enabled;
     }
+    public boolean isDesc() {
+        return direction == OrderDirection.DESC;
+    }
+    
+    public void setDesc( boolean desc ) {
+        if (desc) {
+            direction = OrderDirection.DESC;
+        } else {
+            direction = OrderDirection.ASC;
+        }
+    }
+
     public boolean isAsc() {
         return direction == OrderDirection.ASC;
     }

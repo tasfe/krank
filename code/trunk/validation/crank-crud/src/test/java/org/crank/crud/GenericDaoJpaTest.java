@@ -2,7 +2,6 @@ package org.crank.crud;
 
 import static org.crank.crud.criteria.Example.*;
 import static org.crank.crud.criteria.Comparison.*;
-import static org.crank.crud.criteria.Group.*;
 import static org.crank.crud.join.Fetch.*;
 import static org.crank.crud.criteria.OrderBy.*;
 
@@ -13,6 +12,7 @@ import java.util.Map;
 
 
 import org.crank.crud.criteria.Comparison;
+import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.test.DbUnitTestBase;
 import org.crank.crud.test.dao.EmployeeDAO;
@@ -216,6 +216,10 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 			);
     	AssertJUnit.assertTrue(employees.size() > 0);
     	
+        List<Criterion> criteria = new ArrayList<Criterion>();
+        criteria.add( eq("department.name", "Engineering") );
+        employees = employeeDao.find( criteria, orderBy("firstName") );
+        AssertJUnit.assertTrue( employees.size() > 0 );
     }
 
     @Test 

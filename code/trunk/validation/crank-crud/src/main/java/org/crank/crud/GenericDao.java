@@ -135,6 +135,8 @@ public interface GenericDao<T, PK extends Serializable> {
     
     List<T> find (List<Criterion> criteria, List<String> orderBy);
     
+    List<T> find (List<Criterion> criteria, String[] orderBy);
+    
     List<T> find(Fetch[] fetches, String[] orderBy, Criterion... criteria);
     
     List<T> find(Fetch[] fetches, Criterion... criteria);

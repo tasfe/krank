@@ -1,7 +1,9 @@
 package org.crank.crud.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.crank.crud.controller.Paginator;
 import org.crank.crud.controller.datasource.PagingDataSource;
@@ -148,24 +150,28 @@ public class PaginatorTest extends TestCase {
 
         advanceByPages( 50 );
         list = paginator.getPageNumberList();
+        assertUniqueList(list);
         paginator.getPage();
         assertEquals((int)56, (int)list.get( 0 ));
         assertEquals((int)65, (int)list.get( 9 ));
         
         advanceByPages( 20 );
         list = paginator.getPageNumberList();
+        assertUniqueList(list);
         paginator.getPage();
         assertEquals((int)76, (int)list.get( 0 ));
         assertEquals((int)85, (int)list.get( 9 ));
         
         advanceByPages( 20 );
         list = paginator.getPageNumberList();
+        assertUniqueList(list);        
         paginator.getPage();
         assertEquals((int)96, (int)list.get( 0 ));
         assertEquals((int)100, (int)list.get( 4 ));
         
         advanceByPages( 20 );
         list = paginator.getPageNumberList();
+        assertUniqueList(list);        
         paginator.getPage();
         assertEquals((int)96, (int)list.get( 0 ));
         assertEquals((int)100, (int)list.get( 4 ));
@@ -173,6 +179,7 @@ public class PaginatorTest extends TestCase {
         
         rewindPageBy( 25 );
         list = paginator.getPageNumberList();
+        assertUniqueList(list);        
         paginator.getPage();
         assertEquals((int)71, (int)list.get( 0 ));
         assertEquals((int)80, (int)list.get( 9 ));
@@ -180,48 +187,80 @@ public class PaginatorTest extends TestCase {
         
         rewindPageBy( 25 );
         list = paginator.getPageNumberList();
+        assertUniqueList(list);        
         paginator.getPage();
         assertEquals((int)46, (int)list.get( 0 ));
         assertEquals((int)55, (int)list.get( 9 ));
 
         rewindPageBy( 25 );
-        list = paginator.getPageNumberList();        
+        list = paginator.getPageNumberList();
+        assertUniqueList(list);        
         paginator.getPage();
         assertEquals((int)21, (int)list.get( 0 ));
         assertEquals((int)30, (int)list.get( 9 ));
 
         rewindPageBy( 25 );
         list = paginator.getPageNumberList();
+        assertUniqueList(list);        
         paginator.getPage();        
         assertEquals((int)1, (int)list.get( 0 ));
         assertEquals((int)10, (int)list.get( 9 ));
 
         rewindPageBy( 25 );
         list = paginator.getPageNumberList();
+        assertUniqueList(list);       
         paginator.getPage();        
         assertEquals((int)1, (int)list.get( 0 ));
         assertEquals((int)10, (int)list.get( 9 ));
 
         rewindPageBy( 25 );
         list = paginator.getPageNumberList();
+        assertUniqueList(list);        
         paginator.getPage();        
         assertEquals((int)1, (int)list.get( 0 ));
         assertEquals((int)10, (int)list.get( 9 ));
         
         paginator.moveToPage( 50 );
         list = paginator.getPageNumberList();
+        assertUniqueList(list);        
         paginator.getPage();        
         assertEquals((int)46, (int)list.get( 0 ));
         assertEquals((int)55, (int)list.get( 9 ));
         
         paginator.moveToPage( 69 );
         list = paginator.getPageNumberList();
+        assertUniqueList(list);        
         paginator.getPage();        
         assertEquals((int)65, (int)list.get( 0 ));
         assertEquals((int)74, (int)list.get( 9 ));
+        
+        paginator.moveToEndPage();
+        paginator.moveToStartPage();
+        paginator.moveToEndPage();
+        paginator.moveToPreviousPage();
+        assertUniqueList(paginator.getPageNumberList());        
+        paginator.moveToPreviousPage();
+        assertUniqueList(paginator.getPageNumberList());        
+        paginator.moveToPreviousPage();
+        assertUniqueList(paginator.getPageNumberList());        
+        paginator.moveToPreviousPage();
+        assertUniqueList(paginator.getPageNumberList());        
+        paginator.moveToPreviousPage();
+        assertUniqueList(paginator.getPageNumberList());        
+        paginator.moveToPreviousPage();
+        assertUniqueList(paginator.getPageNumberList());        
+        paginator.moveToPreviousPage();
+        assertUniqueList(paginator.getPageNumberList());        
 
     }
     
+    private void assertUniqueList( List<Integer> list ) {
+        Set<Integer> set = new HashSet<Integer>(list);
+        if (list.size() != set.size()) {
+            throw new RuntimeException("Items not unique");
+        }
+    }
+
     private void advanceByPages(int pageNum) {
         for (int index = 0; index < pageNum; index++) {
             paginator.moveToNextPage();

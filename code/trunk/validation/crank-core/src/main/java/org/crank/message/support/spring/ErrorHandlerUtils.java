@@ -19,7 +19,8 @@ public class ErrorHandlerUtils {
 	 * @param targetMethod The method of interest. The one that has the annotations.
 	 * @return list of ErrorHanlders.
 	 */
-	public static List<ErrorHandlerData> buildErrorHandlerDataListFromAnnotations(Method targetMethod) {
+	@SuppressWarnings("unchecked")
+    public static List<ErrorHandlerData> buildErrorHandlerDataListFromAnnotations(Method targetMethod) {
 
 		/* Holds a list of errorHandlers */
 		List<ErrorHandlerData> errorHandlerList = new ArrayList<ErrorHandlerData>();

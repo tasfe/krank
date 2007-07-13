@@ -139,6 +139,7 @@ public class MessageSpecification implements Serializable {
      * @param actualArgs Arguments to the message.
      * @return
      */
+    @SuppressWarnings("unchecked")
     private String doCreateMessage(String message, Object [] actualArgs) {
     	
     	List argumentList = new ArrayList(Arrays.asList(actualArgs));
@@ -249,7 +250,8 @@ public class MessageSpecification implements Serializable {
 	
 	/** Allows client objects to set the subject for the current thread
 	 * per instance of the MessageSpecification. */
-	public void setCurrentSubject(String subject) {
+	@SuppressWarnings("unchecked")
+    public void setCurrentSubject(String subject) {
 		subjectHolder.set(subject);
 	}
 

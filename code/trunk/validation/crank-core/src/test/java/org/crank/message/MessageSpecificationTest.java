@@ -1,8 +1,5 @@
 package org.crank.message;
 
-import java.util.ResourceBundle;
-
-import org.crank.core.ResourceBundleLocator;
 
 import junit.framework.TestCase;
 

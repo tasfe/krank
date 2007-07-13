@@ -261,7 +261,8 @@ public class TemplateUtils {
 		}
 	}
 
-	public static ArrayList loadTemplate(String sFile)
+	@SuppressWarnings("unchecked")
+    public static ArrayList loadTemplate(String sFile)
 			throws FileNotFoundException, IOException {
 		ArrayList l = new ArrayList();
 

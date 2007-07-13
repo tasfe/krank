@@ -3,15 +3,15 @@ package org.crank.crud.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.crank.crud.controller.DataPaginatorImpl;
-import org.crank.crud.controller.datasource.PaginatableDataSource;
-import org.crank.crud.controller.datasource.SimplePaginatableDataSource;
+import org.crank.crud.controller.Paginator;
+import org.crank.crud.controller.datasource.PagingDataSource;
+import org.crank.crud.controller.datasource.SimplePagingDataSource;
 
 import junit.framework.TestCase;
 
 @SuppressWarnings("unchecked")
-public class DataPaginatorTest extends TestCase {
-    DataPaginatorImpl paginator ;
+public class PaginatorTest extends TestCase {
+    Paginator paginator ;
 
     protected void setUp() throws Exception {
         setupPaginator(107);
@@ -23,8 +23,8 @@ public class DataPaginatorTest extends TestCase {
             String string = "" + index;
             list.add( string );
         }
-        PaginatableDataSource dataSource = new SimplePaginatableDataSource(list);
-        DataPaginatorImpl paginatorImpl = new DataPaginatorImpl(dataSource);
+        PagingDataSource dataSource = new SimplePagingDataSource(list);
+        Paginator paginatorImpl = new Paginator(dataSource);
         //paginatorImpl.setDataSource( dataSource );
         paginator = paginatorImpl;
     }

@@ -4,21 +4,21 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.crank.crud.controller.datasource.PaginatableDataSource;
+import org.crank.crud.controller.datasource.PagingDataSource;
 
-public class DataPaginatorImpl implements DataPaginator, Serializable {
+public class Paginator implements Pageable, Serializable {
 
     protected int currentPage=0;
     protected int itemsPerPage=10;
     protected int startItemIndexCurrentPage=0;
     protected int numberOfPages;
-    protected PaginatableDataSource dataSource;
+    protected PagingDataSource dataSource;
     protected int count;
     
-    public DataPaginatorImpl () {
+    public Paginator () {
     }
     
-    public DataPaginatorImpl (PaginatableDataSource dataSource) {
+    public Paginator (PagingDataSource dataSource) {
         this.dataSource = dataSource;
         reset();
     }
@@ -31,7 +31,7 @@ public class DataPaginatorImpl implements DataPaginator, Serializable {
         return startItemIndexCurrentPage;
     }
 
-    public void setDataSource( PaginatableDataSource dataSource ) {
+    public void setDataSource( PagingDataSource dataSource ) {
         this.dataSource = dataSource;
     }
 

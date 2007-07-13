@@ -11,23 +11,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.crank.crud.controller.datasource.FilterablePaginatableDataSource;
-import org.crank.crud.controller.datasource.PaginatableDataSource;
+import org.crank.crud.controller.datasource.FilteringPagingDataSource;
+import org.crank.crud.controller.datasource.PagingDataSource;
 import org.crank.crud.criteria.OrderBy;
 
-public class FilterableDataPaginatorImpl extends DataPaginatorImpl implements FilterableDataPaginator, Serializable {
+public class FilteringPaginator extends Paginator implements FilterablePageable, Serializable {
     private Map<String, FilterableProperty> filterableProperties = null;
     private Class type;
     
-    public FilterableDataPaginatorImpl() {
+    public FilteringPaginator() {
         super();
     }
 
-    private FilterablePaginatableDataSource filterablePaginatableDataSource() {
-        return (FilterablePaginatableDataSource) this.dataSource;
+    private FilteringPagingDataSource filterablePaginatableDataSource() {
+        return (FilteringPagingDataSource) this.dataSource;
     }
-    public FilterableDataPaginatorImpl( FilterablePaginatableDataSource dataSource, Class type) {
-        super( (PaginatableDataSource) dataSource );
+    public FilteringPaginator( FilteringPagingDataSource dataSource, Class type) {
+        super( (PagingDataSource) dataSource );
         this.type = type;
         createFilterProperties(  );
     }

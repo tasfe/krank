@@ -2,10 +2,10 @@ package org.crank.crud.controller.datasource;
 
 import java.util.List;
 
-public class SimplePaginatableDataSource implements PaginatableDataSource {
+public class SimplePagingDataSource implements PagingDataSource {
     private List list;
     
-    public SimplePaginatableDataSource(final List list) {
+    public SimplePagingDataSource(final List list) {
         this.list = list;
     }
     

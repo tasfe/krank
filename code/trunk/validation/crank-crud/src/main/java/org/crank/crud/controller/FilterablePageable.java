@@ -3,7 +3,7 @@ package org.crank.crud.controller;
 import java.util.Map;
 
 
-public interface FilterableDataPaginator extends DataPaginator {
+public interface FilterablePageable extends Pageable {
     Map<String, FilterableProperty> getFilterableProperties();
     void filter();
     void clearAll();

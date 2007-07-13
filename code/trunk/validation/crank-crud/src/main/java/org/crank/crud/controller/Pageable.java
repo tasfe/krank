@@ -6,7 +6,7 @@ import java.util.List;
  *  This interface is not tied to JSF, Spring MVC, or Swing but could be used with any GUI framework.
  *  @author Rick Hightower
  */
-public interface DataPaginator {
+public interface Pageable {
     /** Advance to the next page. */
     void moveToNextPage();
     /** Rewind by one page. */

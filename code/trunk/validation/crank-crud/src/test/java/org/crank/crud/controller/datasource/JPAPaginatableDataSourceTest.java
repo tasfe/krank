@@ -1,6 +1,6 @@
 package org.crank.crud.controller.datasource;
 
-import org.crank.crud.controller.datasource.JPAPaginatableDataSource;
+import org.crank.crud.controller.datasource.JpaPagingDataSource;
 import org.crank.crud.test.DbUnitTestBase;
 import org.crank.crud.test.model.Employee;
 import org.testng.annotations.Test;
@@ -9,7 +9,7 @@ import org.testng.AssertJUnit;
 
 public class JPAPaginatableDataSourceTest extends DbUnitTestBase {
     
-    private JPAPaginatableDataSource paginatableDataSource;
+    private JpaPagingDataSource paginatableDataSource;
     
     public String getDataSetXml() {
         return "data/Employee.xml";
@@ -29,7 +29,7 @@ public class JPAPaginatableDataSourceTest extends DbUnitTestBase {
     }
 
 
-    public void setPaginatableDataSource( JPAPaginatableDataSource paginatableDataSource ) {
+    public void setPaginatableDataSource( JpaPagingDataSource paginatableDataSource ) {
         this.paginatableDataSource = paginatableDataSource;
     }
 

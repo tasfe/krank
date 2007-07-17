@@ -7,7 +7,7 @@ import java.util.List;
 import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.criteria.OrderDirection;
 
-public class OrderByWithEvents extends OrderBy implements Serializable {
+public class OrderByWithEvents extends OrderBy implements Serializable, Toggleable {
 
     private List<ToggleListener> list = new ArrayList<ToggleListener>();
 

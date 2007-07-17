@@ -1,12 +1,14 @@
 package org.crank.crud.controller;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Operator;
 import org.crank.crud.criteria.OrderDirection;
 
-public class FilterableProperty implements Serializable {
-    public ComparisonWithEvents comparison;
+public class FilterableProperty implements Serializable, Toggleable {
+    public Comparison comparison;
     public OrderByWithEvents orderBy;
     private Class type;
     
@@ -19,6 +21,8 @@ public class FilterableProperty implements Serializable {
         this.type = type;
         if (this.type.isAssignableFrom( String.class )) {
             comparison = new ComparisonWithEvents(name, Operator.LIKE_START, null);
+        } else if (this.type.isAssignableFrom( Date.class )) {
+            comparison = new BetweenWithEvents(name, new Date(), new Date());
         } else {
             comparison = new ComparisonWithEvents(name, Operator.EQ, null);
         }
@@ -26,7 +30,7 @@ public class FilterableProperty implements Serializable {
         this.type = type;
     }
 
-    public ComparisonWithEvents getComparison() {
+    public Comparison getComparison() {
         return comparison;
     }
 
@@ -36,5 +40,16 @@ public class FilterableProperty implements Serializable {
 
     public Class getType() {
         return type;
+    }
+
+    public void addToggleListener( ToggleListener listener ) {
+        this.orderBy.addToggleListener( listener );
+        ((Toggleable)comparison).addToggleListener( listener );
+    }
+
+    public void removeToggleListener( ToggleListener listener ) {
+        this.orderBy.removeToggleListener( listener );
+        ((Toggleable)comparison).removeToggleListener( listener );
+        
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Operator;
 
-public class ComparisonWithEvents extends Comparison implements Serializable {
+public class ComparisonWithEvents extends Comparison implements Serializable, Toggleable {
     private List<ToggleListener> list = new ArrayList<ToggleListener>();
     
     public ComparisonWithEvents() {

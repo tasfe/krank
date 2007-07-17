@@ -44,11 +44,8 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         for (PropertyDescriptor propertyDescriptor: propertyDescriptors) {
             FilterableProperty filterableProperty = new FilterableProperty(propertyDescriptor.getName(), propertyDescriptor.getPropertyType());
             filterableProperties.put( propertyDescriptor.getName(), filterableProperty );
-            filterableProperty.getOrderBy().addToggleListener( new ToggleListener() {
-                public void toggle( ToggleEvent event ) {
-                    filter();
-                }} );
-            filterableProperty.getComparison().addToggleListener( new ToggleListener() {
+            
+            filterableProperty.addToggleListener( new ToggleListener() {
                 public void toggle( ToggleEvent event ) {
                     filter();
                 }} );

@@ -14,7 +14,7 @@ public class TypeUtils {
     public static boolean isDate( Class type, String propertyName ) {
         PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
         Class propertyType = pd.getPropertyType();
-        if (propertyType.isAssignableFrom( Date.class )) {
+        if (Date.class.isAssignableFrom( propertyType )) {
             return true;
         }
         return false;

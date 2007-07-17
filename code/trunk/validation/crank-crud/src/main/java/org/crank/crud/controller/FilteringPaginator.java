@@ -29,7 +29,7 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
     public FilteringPaginator( FilteringPagingDataSource dataSource, Class type) {
         super( (PagingDataSource) dataSource );
         this.type = type;
-        createFilterProperties(  );
+        createFilterProperties();
     }
 
     private void createFilterProperties(  ) {

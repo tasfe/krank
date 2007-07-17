@@ -21,7 +21,7 @@ public class FilterableProperty implements Serializable, Toggleable {
         this.type = type;
         if (this.type.isAssignableFrom( String.class )) {
             comparison = new ComparisonWithEvents(name, Operator.LIKE_START, null);
-        } else if (this.type.isAssignableFrom( Date.class )) {
+        } else if (Date.class.isAssignableFrom( type )) {
             comparison = new BetweenWithEvents(name, new Date(), new Date());
         } else {
             comparison = new ComparisonWithEvents(name, Operator.EQ, null);

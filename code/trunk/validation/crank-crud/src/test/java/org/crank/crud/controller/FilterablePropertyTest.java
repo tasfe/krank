@@ -1,6 +1,9 @@
 package org.crank.crud.controller;
 
 
+import java.util.Date;
+
+import org.crank.crud.criteria.Between;
 import org.crank.crud.criteria.Operator;
 
 import junit.framework.TestCase;
@@ -18,6 +21,9 @@ public class FilterablePropertyTest extends TestCase {
         
         fp = new FilterableProperty("check", Boolean.class);
         assertEquals( fp.getComparison().getOperator(), Operator.EQ );
+
+        fp = new FilterableProperty("foo", Date.class);
+        assertTrue( fp.getComparison() instanceof Between);
         
     }
 

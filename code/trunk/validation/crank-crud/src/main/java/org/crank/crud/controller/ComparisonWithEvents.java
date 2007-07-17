@@ -25,6 +25,9 @@ public class ComparisonWithEvents extends Comparison implements Serializable {
             } else {
                 this.setOperator( Operator.LIKE_START );
             }
+        } else if (value instanceof Boolean || value.getClass().isPrimitive() 
+                || value.getClass().isInstance( Number.class )) {
+            this.setOperator( Operator.EQ );            
         }
         super.setValue( value );
     }

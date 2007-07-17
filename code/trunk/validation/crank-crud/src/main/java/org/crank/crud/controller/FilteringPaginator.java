@@ -126,4 +126,12 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         return filterableProperties;
     }
 
+    public Class getType() {
+        return type;
+    }
+
+    public void setType( Class type ) {
+        this.type = type;
+    }
+
 }

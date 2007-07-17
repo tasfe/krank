@@ -11,4 +11,5 @@ public interface FilterablePageable extends Pageable {
     boolean isFiltering();
     void disableSorts();
     void disableFilters();
+    Class getType();
 }

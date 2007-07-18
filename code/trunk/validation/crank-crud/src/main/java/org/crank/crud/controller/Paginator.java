@@ -104,7 +104,7 @@ public class Paginator implements Pageable, Serializable {
 
     public boolean isMoveToStartPageEnabled() {
         
-        return numberOfPages == 1 || currentPage != 0;
+        return currentPage != 0;
     }
 
     public boolean isMoveToNextPageEnabled() {

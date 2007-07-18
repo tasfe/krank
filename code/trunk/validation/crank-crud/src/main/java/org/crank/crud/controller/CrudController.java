@@ -21,20 +21,41 @@ import org.crank.crud.GenericDao;
  */
 public class CrudController<T, PK extends Serializable> implements CrudOperations, Toggleable {
     private GenericDao<T, PK> dao;
-    private List<ToggleListener> list = new ArrayList<ToggleListener>();
     private EntityLocator entityLocator;
     private PropertiesUtil propertyUtil;
     private String idPropertyName = "id";
     private boolean readPopulated;
     private Class<T> entityClass;
-    private CrudState state;
-    
+    private CrudState state;    
     private T entity;
+
+    private ToggleSupport toggleSupport = new ToggleSupport();
+
+    /**
+     * @see Toggleable#addToggleListener(ToggleListener)
+     */
+    public void addToggleListener(ToggleListener listener) {
+        toggleSupport.addToggleListener( listener );
+    }
+    /**
+     * @see Toggleable#addToggleListener(ToggleListener)
+     */    
+    public void removeToggleListener(ToggleListener listener) {
+        toggleSupport.removeToggleListener( listener );
+    }
+
+    /**
+     * Fire and event to the listeners.
+     *
+     */
+    private void fireToggle() {
+        toggleSupport.fireToggle();
+    }
 
     public CrudController () {
         
     }
-
+    
     /**
      * Creates a new instance of the entity class and sets the entity to this new instance.
      * @see CrudOperations#loadCreate()
@@ -115,29 +136,7 @@ public class CrudController<T, PK extends Serializable> implements CrudOperation
         return (Serializable) entity;
     }
 
-    /**
-     * @see Toggleable#addToggleListener(ToggleListener)
-     */
-    public void addToggleListener(ToggleListener listener) {
-        list.add( listener );
-    }
-    /**
-     * @see Toggleable#addToggleListener(ToggleListener)
-     */    
-    public void removeToggleListener(ToggleListener listener) {
-        list.remove( listener );
-    }
 
-    /**
-     * Fire and event to the listeners.
-     *
-     */
-    private void fireToggle() {
-        ToggleEvent te = new ToggleEvent(this);
-        for (ToggleListener tl : list) {
-            tl.toggle( te );
-        }
-    }
 
     public void setDao( GenericDao<T, PK> dao ) {
         this.dao = dao;

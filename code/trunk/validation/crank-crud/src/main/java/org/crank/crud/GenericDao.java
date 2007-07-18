@@ -59,6 +59,13 @@ public interface GenericDao<T, PK extends Serializable> {
     void delete( PK id );
 
     /**
+     * Remove an object from persistent storage in the database.
+     * @param id
+     *          The Primary Key of the object to delete.
+     */
+    void delete( T entity );
+    
+    /**
      * Allows geting an object using a map of the field and values
      * 
      * @param propertyValues

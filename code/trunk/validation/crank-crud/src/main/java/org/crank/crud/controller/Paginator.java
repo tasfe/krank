@@ -171,8 +171,10 @@ public class Paginator implements Pageable, Serializable {
      */
 	public boolean isShowLastPageDelimiter() {
 		if (pageNumberList != null) {
-			if (pageNumberList.get(pageNumberList.size()-1) + 1 < numberOfPages) {
-				return true;
+			if (pageNumberList.size() > 0) {
+				if (pageNumberList.get(pageNumberList.size()-1) + 1 < numberOfPages) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -183,8 +185,10 @@ public class Paginator implements Pageable, Serializable {
      */
 	public boolean isShowLastPageLink() {
 		if (pageNumberList != null) {
-			if (pageNumberList.get(pageNumberList.size()-1) < numberOfPages) {
-				return true;
+			if (pageNumberList.size() > 0) {
+				if (pageNumberList.get(pageNumberList.size()-1) < numberOfPages) {
+					return true;
+				}
 			}
 		}
 		return false;

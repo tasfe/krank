@@ -170,7 +170,6 @@ public class Paginator implements Pageable, Serializable {
      * Used to evaluate whether or not to display the fancy last page link delimiter
      */
 	public boolean isShowLastPageDelimiter() {
-		if (pageNumberList == null) calcPageNumberList();
 		if (pageNumberList != null) {
 			if (pageNumberList.get(pageNumberList.size()-1) + 1 < numberOfPages) {
 				return true;
@@ -183,7 +182,6 @@ public class Paginator implements Pageable, Serializable {
      * Used to evaluate whether or not to display the fancy last page link to the last page
      */
 	public boolean isShowLastPageLink() {
-		if (pageNumberList == null) calcPageNumberList();
 		if (pageNumberList != null) {
 			if (pageNumberList.get(pageNumberList.size()-1) < numberOfPages) {
 				return true;

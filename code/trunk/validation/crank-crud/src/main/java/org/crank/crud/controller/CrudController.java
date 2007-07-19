@@ -89,8 +89,10 @@ public class CrudController<T, PK extends Serializable> implements CrudOperation
      * @see CrudOperations#delete()
      * @retrun outcome
      */
+    @SuppressWarnings("unchecked")
     public CrudOutcome delete() {
-        dao.delete(entity);
+        entity = (T)getCurrentEntity();
+        dao.delete( (PK) propertyUtil.getPropertyValue( idPropertyName, entity ));        
         fireToggle();
         return CrudOutcome.LISTING;
     }

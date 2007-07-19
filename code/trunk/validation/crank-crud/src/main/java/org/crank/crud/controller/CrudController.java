@@ -1,7 +1,6 @@
 package org.crank.crud.controller;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.crank.annotations.design.AllowsConfigurationInjection;
@@ -89,12 +88,26 @@ public class CrudController<T, PK extends Serializable> implements CrudOperation
      * @see CrudOperations#delete()
      * @retrun outcome
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")    
     public CrudOutcome delete() {
-        entity = (T)getCurrentEntity();
-        dao.delete( (PK) propertyUtil.getPropertyValue( idPropertyName, entity ));        
+        doDelete((T)getCurrentEntity());        
         fireToggle();
         return CrudOutcome.LISTING;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void doDelete(Object entity) {
+        dao.delete( (PK) propertyUtil.getPropertyValue( idPropertyName, entity ));
+    }
+    
+    public CrudOutcome deleteSelected() {
+        List listToDelete = this.getSelectedEntities();
+        /* You could change this to delete a list of ids. */
+        for (Object entity : listToDelete) {
+            doDelete( entity );
+        }
+        fireToggle();        
+        return CrudOutcome.LISTING;        
     }
 
     /**
@@ -116,6 +129,10 @@ public class CrudController<T, PK extends Serializable> implements CrudOperation
 
     private Object getCurrentEntity() {
         return entityLocator.getEntity();
+    }
+
+    private List getSelectedEntities() {
+        return entityLocator.getSelectedEntities();
     }
 
     /**

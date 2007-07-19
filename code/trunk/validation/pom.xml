@@ -151,6 +151,7 @@
 	<modules>		
 		<module>crank-core</module>
 		<module>crank-crud</module>
+		<module>crank-jsf-support</module>
 		<module>crank-jsf-validation</module>
 		<module>crank-jsf-validation-sample</module>
 		<module>crank-springmvc-validation</module>
@@ -191,6 +192,11 @@
 			</dependency>
 			<dependency>
 				<groupId>org.crank</groupId>
+				<artifactId>crank-crud</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.crank</groupId>
 				<artifactId>crank-validation</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -201,13 +207,14 @@
 			</dependency>
 			<dependency>
 				<groupId>org.crank</groupId>
+				<artifactId>crank-jsf-support</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.crank</groupId>
 				<artifactId>crank-jsf-validation-sample</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-
-
-
-
 			<dependency>
 				<groupId>org.crank</groupId>
 				<artifactId>crank-test-support</artifactId>

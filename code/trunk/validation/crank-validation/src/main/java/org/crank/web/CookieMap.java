@@ -59,7 +59,7 @@ public class CookieMap implements Map {
     }
 
     public Set entrySet() {
-        throw new UnsupportedOperationException();
+        return cookies.entrySet();
     }
 
     public Object get( Object key ) {
@@ -67,11 +67,11 @@ public class CookieMap implements Map {
     }
 
     public boolean isEmpty() {
-        throw new UnsupportedOperationException();
+        return cookies.isEmpty();
     }
 
     public Set keySet() {
-        throw new UnsupportedOperationException();
+        return cookies.keySet();
     }
 
     public Object put( Object key, Object value ) {
@@ -80,7 +80,7 @@ public class CookieMap implements Map {
         Cookie cookie = new Cookie( sKey, sValue );
         cookie.setMaxAge( Integer.MAX_VALUE );
         response.addCookie( cookie );
-        return null;
+        return cookies.put( (String) key, (String) value );
     }
 
     public void putAll( Map t ) {
@@ -92,11 +92,11 @@ public class CookieMap implements Map {
     }
 
     public int size() {
-        throw new UnsupportedOperationException();
+        return cookies.size();
     }
 
     public Collection values() {
-        throw new UnsupportedOperationException();
+        return cookies.values();
     }
 
 }

@@ -32,6 +32,10 @@ public interface Pageable {
     boolean isMoveToStartPageEnabled();
     /** Is the moveTo end page control enabled? */
     boolean isMoveToEndPageEnabled();
+    /** Is the show last page delimiter allowed? */
+    boolean isShowLastPageDelimiter();
+    /** Is the show last page link allowed? */
+    boolean isShowLastPageLink();
     /** Returns the current page number. */
     int getCurrentPageNumber();
     /** Return the page count. */

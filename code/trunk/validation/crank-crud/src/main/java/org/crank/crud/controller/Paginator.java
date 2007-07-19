@@ -14,6 +14,7 @@ public class Paginator implements Pageable, Serializable {
     protected int numberOfPages;
     protected PagingDataSource dataSource;
     protected int count;
+    protected List<Integer> pageNumberList;
     
     public Paginator () {
     }
@@ -142,18 +143,55 @@ public class Paginator implements Pageable, Serializable {
     }
 
     public List<Integer> getPageNumberList() {
+    	calcPageNumberList();
+        return pageNumberList;
+    }
+
+    /**
+     * Utility function to initialize the page number list
+     */
+    private void calcPageNumberList(){
         int start = currentPage - 5;
         if (start < 0) {
             start = 0;
         }
-        List<Integer> list = new ArrayList<Integer>(10);
+        pageNumberList = new ArrayList<Integer>(10);
         for (int index = 0; index < numberOfPages && index < 10; index++) {
-            list.add((start + index + 1));
+        	pageNumberList.add((start + index + 1));
             if ((start + index + 2) > numberOfPages) {
                 break;
             }
         }
-        return list;
+    	
     }
+    
+    
+    /**
+     * Used to evaluate whether or not to display the fancy last page link delimiter
+     */
+	public boolean isShowLastPageDelimiter() {
+		if (pageNumberList == null) calcPageNumberList();
+		if (pageNumberList != null) {
+			if (pageNumberList.get(pageNumberList.size()-1) + 1 < numberOfPages) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+    /**
+     * Used to evaluate whether or not to display the fancy last page link to the last page
+     */
+	public boolean isShowLastPageLink() {
+		if (pageNumberList == null) calcPageNumberList();
+		if (pageNumberList != null) {
+			if (pageNumberList.get(pageNumberList.size()-1) < numberOfPages) {
+				return true;
+			}
+		}
+		return false;
+	}
+    
+    
 
 }

@@ -17,6 +17,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.crank</groupId>
+			<artifactId>crank-jsf-support</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.crank</groupId>
 			<artifactId>crank-test-support</artifactId>
 		</dependency>
 		<dependency>

@@ -49,4 +49,7 @@ public interface Pageable {
     List<Integer> getPageNumberList();
     /** Move to the the current page. */
     void moveToPage(int pageNumber);
+    /** Move to the the current page. Can only be used with CrankListener. */
+    void moveToPage();
+
 }

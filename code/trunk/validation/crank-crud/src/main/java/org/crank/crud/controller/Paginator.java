@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.crank.core.RequestParameterMapFinder;
 import org.crank.crud.controller.datasource.PagingDataSource;
 
 public class Paginator implements Pageable, Serializable {
@@ -15,7 +16,13 @@ public class Paginator implements Pageable, Serializable {
     protected PagingDataSource dataSource;
     protected int count;
     protected List<Integer> pageNumberList;
+    protected RequestParameterMapFinder requestParameterMapFinder;
+    protected String currentPageParamName = "currentPage";
     
+    public void setCurrentPageParamName( String currentPageParamName ) {
+        this.currentPageParamName = currentPageParamName;
+    }
+
     public Paginator () {
     }
     
@@ -133,6 +140,18 @@ public class Paginator implements Pageable, Serializable {
         return dataSource.list( currentPage * itemsPerPage, itemsPerPage );
     }
 
+    public void moveToPage() {
+        String sCurrentPage = "0";
+        Object oCurrentPage = requestParameterMapFinder.getMap().get( this.currentPageParamName );
+        if (oCurrentPage instanceof String) {
+            sCurrentPage = (String) oCurrentPage;
+        } else if (oCurrentPage instanceof String[]) {
+            sCurrentPage = ((String[])oCurrentPage)[0];
+        }
+        int currentPage = Integer.parseInt( sCurrentPage );
+        moveToPage(currentPage-1);
+    }
+    
     public void moveToPage( int pageNumber ) {
         currentPage = pageNumber;
         if (currentPage > numberOfPages) {
@@ -193,7 +212,8 @@ public class Paginator implements Pageable, Serializable {
 		}
 		return false;
 	}
-    
-    
 
+    public void setRequestParameterMapFinder( RequestParameterMapFinder requestParameterMapFinder ) {
+        this.requestParameterMapFinder = requestParameterMapFinder;
+    }
 }

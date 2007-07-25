@@ -1,8 +1,12 @@
 package org.crank.crud.jsf.support;
 
 import java.io.Serializable;
+import java.util.Map;
 
+import org.crank.core.CrankContext;
+import org.crank.core.ObjectRegistry;
 import org.crank.crud.GenericDao;
+import org.crank.crud.controller.CrudManagedObject;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -17,7 +21,7 @@ import javax.faces.convert.Converter;
  *
  * @author Rick Hightower
  */
-public class EntityConverter implements Converter {
+public class EntityConverter implements Converter, Serializable {
     /**
      * DAO crud to look up Entity based on id.
      */
@@ -32,6 +36,11 @@ public class EntityConverter implements Converter {
      * Class of id. Defaults to java.lang.Long.
      */
     private Class idType = Long.class;
+    
+    /**
+     *
+     */
+    private CrudManagedObject managedObject;
 
     /**
      * Is the id primitive. Defaults to false.
@@ -53,7 +62,12 @@ public class EntityConverter implements Converter {
     @SuppressWarnings("unchecked")
     public Object getAsObject(final FacesContext facesContext, final UIComponent component, final String value) {
         Serializable entityId = CrudUtils.getIdObject(value, this.idType);
-        return dao.read(entityId);
+        if (dao == null) {
+            ObjectRegistry objectRegistry = CrankContext.getObjectRegistry();
+            Map<String, GenericDao> maps = (Map<String, GenericDao>) objectRegistry.getObject( "converters" );
+            dao = maps.get( managedObject.getName() );
+        }
+        return dao.read(entityId);            
     }
 
     /**
@@ -119,6 +133,14 @@ public class EntityConverter implements Converter {
      */
     public void setIdType(final Class aClassTypeOfId) {
         idType = aClassTypeOfId;
+    }
+
+    public CrudManagedObject getManagedObject() {
+        return managedObject;
+    }
+
+    public void setManagedObject( CrudManagedObject managedObject ) {
+        this.managedObject = managedObject;
     }
 
 }

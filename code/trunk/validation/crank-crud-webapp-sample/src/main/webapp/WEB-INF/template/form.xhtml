@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:arc="http://www.arc-mind.com/jsf/core" 
+      xmlns:c="http://java.sun.com/jstl/core"
+	  xmlns:fn="http://java.sun.com/jsp/jstl/functions"   
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+	  xmlns:crank="http://www.googlecode.com/crank"	
+      >
+
+  <ui:composition>
+  	
+  	<c:if test="${empty formButtonClass}">
+  		<c:set var="formButtonClass" value="paginationGroupButton"/>
+  	</c:if>
+  	
+	<c:set var="pNames"
+			value="${fn:split(propertyNames, ',')}" />
+
+	<h:form>	
+	  <h:panelGrid columns="3" rowClasses="formRowClass1, formRowClass2">
+			<c:forEach items="${pNames}" var="property">
+				<crank:field entity="${crud.entity}" crud="${crud}" fieldName="${property}"/>
+			</c:forEach>			
+	  </h:panelGrid>
+	  <ui:insert/>
+	  <h:panelGroup>	  
+			<h:commandButton 
+				rendered="${crud.state=='ADD'}"
+				styleClass="${formButtonClass}" 
+				value="Create" 
+				action="${crud.create}"/>			
+			<h:commandButton 
+				rendered="${crud.state=='EDIT'}" 
+				styleClass="${formButtonClass}" 
+				value="Update" 
+				action="${crud.update}"/>			
+			<h:commandButton 
+				value="Reset"
+				styleClass="${formButtonClass}" 
+				type="reset"/>
+			<h:commandButton 
+				value="Return"
+				styleClass="${formButtonClass}" 
+				type="button"
+				immediate="true" 
+				action="LISTING"/>
+	  </h:panelGroup>
+	</h:form>
+
+</ui:composition>
+
+</html>
+

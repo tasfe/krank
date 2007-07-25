@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:arc="http://www.arc-mind.com/jsf/core" 
+      xmlns:c="http://java.sun.com/jstl/core"
+	  xmlns:fn="http://java.sun.com/jsp/jstl/functions"   
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+	  xmlns:crank="http://www.googlecode.com/crank"	
+      >
+
+  <ui:composition>
+
+	<c:if test="${empty formLabelStyleClasses}">
+	    <c:set var="formLabelStyleClasses" value="fieldLabel" />
+	</c:if>
+
+	<c:if test="${empty formFieldStyleClasses}">
+	    <c:set var="formFieldStyleClasses" value="fieldField" />
+	</c:if>
+
+    <!--  The label is optional. Generate it if it is missing. -->
+	<c:if test="${empty label}">
+	    <c:set var="label" value="${crank:createLabel(fieldName)}" />
+	</c:if>
+
+    <!-- The required attribute is optional, 
+         initialize it to true if not found. -->
+    <c:if test="${empty required}">
+        <c:set var="required" value="true" />
+    </c:if>
+
+   <h:outputLabel value="${label}" for="#{fieldName}" styleClass="${formLabelStyleClasses}"/>
+
+   <c:if test="${crank:isText(crud.entityClass,fieldName)}">
+	   <h:inputText id="#{fieldName}" 
+	                     value="#{entity[fieldName]}" 
+	                     required="${required}" 
+	                     styleClass="${formFieldStyleClasses}">
+	            <ui:insert />
+	   </h:inputText>
+   </c:if>
+
+
+    <!--  If the value binding is a boolean, display a
+           selectBooleanCheckbox field. -->
+    <c:if test="${crank:isBoolean(crud.entityClass,fieldName)}">
+	   <h:selectBooleanCheckbox  id="#{fieldName}" 
+						 value="#{entity[fieldName]}" 
+						 required="${required}" 
+						 styleClass="fieldSelectBooleanCheckbox"
+						 />
+	</c:if>
+
+    <!--  If the value binding is a date, 
+          display a t:inputDate field. -->
+    <c:if test="${crank:isDate(crud.entityClass,fieldName)}">
+		<t:calendar id="#{fieldName}" renderPopupButtonAsImage="true" 
+	                   renderAsPopup="true" value="#{entity[fieldName]}" 
+	                   required="${required}"
+	                   styleClass="${formFieldStyleClasses}"
+>	              <ui:insert />
+		</t:calendar>
+	</c:if>
+
+    <!--  Display any error messages that are found -->
+    <h:message styleClass="fieldMessage"
+    		   style="color: red; text-decoration: underline" 
+               for="#{fieldName}" />
+
+</ui:composition>
+
+</html>
+

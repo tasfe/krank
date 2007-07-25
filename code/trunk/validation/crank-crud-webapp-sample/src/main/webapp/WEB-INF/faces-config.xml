@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd"
+    version="1.2">
+
+  <application>
+    <variable-resolver>
+    	org.springframework.web.jsf.DelegatingVariableResolver
+    </variable-resolver>    
+  </application>
+  
+  <component>
+    <component-type>org.crank.javax.faces.SelectOne</component-type>
+    <component-class>org.crank.javax.faces.component.UISelectOne</component-class>
+  </component>
+  
+  <render-kit>
+      <renderer>
+      <component-family>javax.faces.SelectOne</component-family>
+      <renderer-type>org.crank.javax.faces.Listbox</renderer-type>
+      <renderer-class>
+			org.crank.javax.faces.component.ListboxRenderer
+  	  </renderer-class>
+    </renderer>
+  
+  </render-kit>
+  <!-- 
+  <converter>
+  	<converter-for-class>org.crank.crud.model.Department</converter-for-class>
+	<converter-class>org.crank.crud.dao.DepartmentConverter</converter-class>
+  </converter>
+   -->
+   <!-- 
+   <factory>
+   		<application-factory>org.crank.core.spring.support.ApplicationFactory</application-factory>
+   </factory>
+    -->
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>LISTING</from-outcome>
+  		<to-view-id>/pages/employeeListing.xhtml</to-view-id>
+  	</navigation-case>
+  	<navigation-case>
+  		<from-outcome>FORM</from-outcome>
+  		<to-view-id>/pages/employeeForm.xhtml</to-view-id>
+  	</navigation-case>  	
+  </navigation-rule>
+</faces-config>

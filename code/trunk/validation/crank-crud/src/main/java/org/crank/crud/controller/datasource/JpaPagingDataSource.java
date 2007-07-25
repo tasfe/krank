@@ -21,4 +21,8 @@ public class JpaPagingDataSource<T, PK extends Serializable> implements PagingDa
         this.dao = dao;
     }
 
+    public List list() {
+        return dao.find();
+    }
+
 }

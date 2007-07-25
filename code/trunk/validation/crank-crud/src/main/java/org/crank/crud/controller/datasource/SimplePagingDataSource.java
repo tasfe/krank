@@ -21,4 +21,8 @@ public class SimplePagingDataSource implements PagingDataSource {
         return list.subList( startItem, end );
     }
 
+    public List list() {
+        return list;
+    }
+
 }

@@ -12,15 +12,7 @@
 	<ui:define name="content">
 		<h:form id="pagForm">
 			<crank:form crud="${cruds['Employee'].controller}"
-						propertyNames="firstName,lastName,active,dob">
-					<crank:select id="department" 
-						value="${cruds['Employee'].controller.entity.department}">
-						<f:selectItems value="${selectItemGenerators['Department'].list}" />
-						<f:converter converterId="" binding="${converters['Department']}"/>
-					</crank:select>
-					<h:message styleClass="fieldMessage"
-    		   			style="color: red; text-decoration: underline" 
-               			for="department" />
+						propertyNames="firstName,lastName,active,dob,department">
 			</crank:form>
 		</h:form>
 	</ui:define>

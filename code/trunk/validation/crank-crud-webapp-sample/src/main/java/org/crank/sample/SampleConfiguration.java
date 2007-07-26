@@ -53,7 +53,6 @@ public class SampleConfiguration {
         DataTableScrollerBean bean = new DataTableScrollerBean();
         bean.setEmployeeDataPaginator(paginators().get("Employee"));
         bean.setEmployeeDAO(repositories().get("Employee"));
-        bean.setCrud(cruds().get( "Employee" ));
         return bean;
     }
     

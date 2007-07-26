@@ -5,7 +5,8 @@
 <head></head>
 
 <body>
-<jsp:forward page="/pages/employeeListing.jsf" />
+<a href="./pages/crud/Employee/Listing.jsf">Employee Listing</a>
+<a href="./pages/crud/Department/Listing.jsf">Department Listing</a>
 </body>
 
 </html>

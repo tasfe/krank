@@ -66,6 +66,14 @@
 		</t:calendar>
 	</c:if>
 
+    <c:if test="${crank:isManyToOne(crud.entityClass,fieldName)}">
+        <c:set var="propEntityName" value="${crank:getPropertyEntityName(crud.entityClass,fieldName)}" />
+		<crank:select id="#{fieldName}" value="#{entity[fieldName]}">
+			<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
+			<f:converter converterId="" binding="${converters[propEntityName]}"/>
+		</crank:select>    	
+    </c:if>
+
     <!--  Display any error messages that are found -->
     <h:message styleClass="fieldMessage"
     		   style="color: red; text-decoration: underline" 

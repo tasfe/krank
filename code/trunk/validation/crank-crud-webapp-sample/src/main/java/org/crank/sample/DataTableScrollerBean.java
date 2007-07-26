@@ -14,7 +14,6 @@ import org.crank.crud.GenericDao;
  */
 public class DataTableScrollerBean {
     private FilterablePageable employeeDataPaginator;
-    private JsfCrudAdapter adapter;
     
     
     @SuppressWarnings("unchecked")
@@ -38,17 +37,11 @@ public class DataTableScrollerBean {
     public Pageable getEmployeeDataPaginator() {
         return employeeDataPaginator;
     }
+
     private GenericDao employeeDao;
     public void setEmployeeDAO( GenericDao employeeDao ) {
         this.employeeDao = employeeDao;
     }
 
-    public void setCrud( JsfCrudAdapter adapter ) {
-        this.adapter = adapter;
-    }
-
-    public JsfCrudAdapter getCrud() {
-        return adapter;
-    }
 
 }

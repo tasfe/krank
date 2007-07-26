@@ -37,13 +37,27 @@
    </factory>
     -->
   <navigation-rule>
+  	<from-view-id>/pages/crud/Employee/*</from-view-id>
   	<navigation-case>
   		<from-outcome>LISTING</from-outcome>
-  		<to-view-id>/pages/employeeListing.xhtml</to-view-id>
+  		<to-view-id>/pages/crud/Employee/Listing.xhtml</to-view-id>
   	</navigation-case>
   	<navigation-case>
   		<from-outcome>FORM</from-outcome>
-  		<to-view-id>/pages/employeeForm.xhtml</to-view-id>
+  		<to-view-id>/pages/crud/Employee/Form.xhtml</to-view-id>
   	</navigation-case>  	
   </navigation-rule>
+  <navigation-rule>
+  	<from-view-id>/pages/crud/Department/*</from-view-id>
+  	<navigation-case>
+  		<from-outcome>LISTING</from-outcome>
+  		<to-view-id>/pages/crud/Department/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  	<navigation-case>
+  		<from-outcome>FORM</from-outcome>
+  		<to-view-id>/pages/crud/Department/Form.xhtml</to-view-id>
+  	</navigation-case>  	
+  </navigation-rule>
+
+
 </faces-config>

@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE facelet-taglib PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
+  "facelet-taglib_1_0.dtd">
+<facelet-taglib>
+    <namespace>http://www.googlecode.com/crank</namespace>
+
+	<tag>
+		<tag-name>form</tag-name>
+		<source>template/form.xhtml</source>
+	</tag>
+	<tag>
+		<tag-name>field</tag-name>
+		<source>template/field.xhtml</source>
+	</tag>
+	<tag>
+		<tag-name>header</tag-name>
+		<source>template/header.xhtml</source>
+	</tag>
+	<tag>
+		<tag-name>paginator</tag-name>
+		<source>template/paginator.xhtml</source>
+	</tag>
+	<tag>
+		<tag-name>listing</tag-name>
+		<source>template/listing.xhtml</source>
+	</tag>
+	<tag>
+		<tag-name>commandLink</tag-name>
+		<source>template/commandLink.xhtml</source>
+	</tag>
+
+	<function>
+		  <function-name>createLabel</function-name>
+		  <function-class>org.crank.message.MessageUtils</function-class>
+		  <function-signature>java.lang.String generateLabelValue(java.lang.String)</function-signature>
+	</function>	
+	<function>
+		  <function-name>isText</function-name>
+		  <function-class>org.crank.core.TypeUtils</function-class>
+		  <function-signature>boolean isText(java.lang.Class, java.lang.String)</function-signature>
+	</function>	
+	<function>
+		  <function-name>isBoolean</function-name>
+		  <function-class>org.crank.core.TypeUtils</function-class>
+		  <function-signature>boolean isBoolean(java.lang.Class, java.lang.String)</function-signature>
+	</function>	
+	<function>
+		  <function-name>isDate</function-name>
+		  <function-class>org.crank.core.TypeUtils</function-class>
+		  <function-signature>boolean isDate(java.lang.Class, java.lang.String)</function-signature>
+	</function>	
+	<function>
+		  <function-name>split</function-name>
+		  <function-class>org.crank.core.StringUtils</function-class>
+		  <function-signature>java.util.List split(java.lang.String)</function-signature>
+	</function>
+	
+<tag>
+  <tag-name>select</tag-name>
+	<component>
+    	<component-type>org.crank.javax.faces.SelectOne</component-type>
+    	<renderer-type>org.crank.javax.faces.Listbox</renderer-type>
+  	</component>
+</tag>		
+</facelet-taglib>

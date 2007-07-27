@@ -28,6 +28,11 @@
 		<tag-name>commandLink</tag-name>
 		<source>template/commandLink.xhtml</source>
 	</tag>
+	<tag>
+		<tag-name>node</tag-name>
+		<source>template/node.xhtml</source>
+	</tag>
+	
 
 	<function>
 		<function-name>createLabel</function-name>

@@ -6,26 +6,50 @@
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 	xmlns:c="http://java.sun.com/jstl/core"
-	xmlns:crank="http://www.googlecode.com/crank"
-	>
+	xmlns:crank="http://www.googlecode.com/crank">
+	
+	
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
-		<a4j:outputPanel>
-			<h:form id="employeeForm">
+
+		<crank:node
+			id="addNewEmployee"
+			entity="#{controllerBean}"
+			expandAction="toggleShowForm"
+			closeAction="toggleShowForm"
+			expandRendered="#{not controllerBean.showForm}"
+			closeRendered="#{controllerBean.showForm}"
+			expandToolTip="Click to show Add / Create New Employees Form"
+			closeToolTip="Click to hide Add / Create New Employees Form" >
+			<h:form id="expForm">
+				<h:panelGroup id="createForm" rendered="#{controllerBean.showForm}">			
+					<crank:form crud="${cruds['Employee'].controller}"
+							  propertyNames="firstName,lastName,active,dob,department">
+					</crank:form>
+				</h:panelGroup>
+			</h:form>
+		</crank:node>
+	
+		<crank:node
+			id="EmployeeListing"
+			entity="#{controllerBean}"
+			expandAction="toggleShowListing"
+			closeAction="toggleShowListing"
+			expandRendered="#{not controllerBean.showListing}"
+			closeRendered="#{controllerBean.showListing}"
+			expandToolTip="Click to show Employees Listing"
+			closeToolTip="Click to hide Employees Listing" >
+			<h:form id="expListForm" rendered="#{controllerBean.showListing}">
 				<crank:listing paginator="${paginators['Employee']}" 
 							   jsfCrudAdapter="${cruds['Employee']}" 
-							   propertyNames="firstName,lastName,active,dob"
-							   parentForm="employeeForm"
+							   propertyNames="firstName,lastName,active,dob,department"
+							   pageTitle="Employees"
+							   parentForm="expListForm"
 							   reRender="${reRender}"
 							   crud="${cruds['Employee'].controller}"/>
-							   
-				<br/><br/><br/><br/><br/><br/><br/><br/><br/>
-				<a4j:commandButton 
-					styleClass="${paginatorCommandButtonClass}"						
-					value="Fake Data" reRender="${reRender}"
-					action="#{dataTableScrollerBean.populate}" />
 			</h:form>
-		</a4j:outputPanel>
+		</crank:node>
+	
 	</ui:define>
 </ui:composition>
 </html>

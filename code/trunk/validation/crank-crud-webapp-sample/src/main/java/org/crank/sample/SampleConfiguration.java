@@ -19,6 +19,7 @@ import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
+import org.crank.controller.ControllerBean;
 import org.crank.core.spring.support.SpringBeanWrapperPropertiesUtil;
 import org.crank.crud.controller.CrudController;
 import org.crank.crud.controller.CrudManagedObject;
@@ -35,6 +36,7 @@ import org.crank.crud.model.Employee;
 import org.crank.crud.GenericDao;
 import org.crank.crud.GenericDaoFactory;
 import org.crank.web.RequestParameterMapFinderImpl;
+
 
 @Configuration (defaultLazy=Lazy.TRUE)
 public class SampleConfiguration {
@@ -174,4 +176,12 @@ public class SampleConfiguration {
         list.add( Department.class );
         return list;
     }
+    
+    @Bean (scope = DefaultScopes.SESSION)
+    @ScopedProxy
+    public ControllerBean controllerBean() throws Exception {
+      ControllerBean bean = new ControllerBean();
+        return bean;
+    }
+    
 }

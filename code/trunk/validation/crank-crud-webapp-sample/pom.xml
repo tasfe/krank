@@ -10,7 +10,7 @@
 	<artifactId>crank-crud-webapp-sample</artifactId>
 	<name>crank-crud-webapp-sample</name>
 	<version>0.6-SNAPSHOT</version>
-	<packaging>war</packaging>	
+	<packaging>war</packaging>
 	<url>http://maven.apache.org</url>
 
     <dependencies>

@@ -32,6 +32,10 @@
 		<tag-name>node</tag-name>
 		<source>template/node.xhtml</source>
 	</tag>
+	<tag>
+		<tag-name>detailListing</tag-name>
+		<source>template/detailListing.xhtml</source>
+	</tag>
 	
 
 	<function>
@@ -67,6 +71,13 @@
 		<function-class>org.crank.core.StringUtils</function-class>
 		<function-signature>
 			java.util.List split(java.lang.String)
+		</function-signature>
+	</function>	
+	<function>
+		<function-name>getObjectId</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			java.lang.String getObjectId(org.crank.crud.controller.DetailController, java.lang.Object) 
 		</function-signature>
 	</function>
 	<function>

@@ -30,6 +30,7 @@ import org.crank.crud.dao.DepartmentDAO;
 import org.crank.crud.dao.EmployeeDAO;
 import org.crank.crud.jsf.support.EntityConverter;
 import org.crank.crud.jsf.support.JsfCrudAdapter;
+import org.crank.crud.jsf.support.JsfDetailController;
 import org.crank.crud.jsf.support.SelectItemGenerator;
 import org.crank.crud.model.Department;
 import org.crank.crud.model.Employee;
@@ -73,6 +74,15 @@ public class SampleConfiguration {
         return cruds;
     }
 
+    @SuppressWarnings("unchecked")
+    @Bean (scope = DefaultScopes.SESSION) 
+    public JsfCrudAdapter deptCrud() throws Exception {
+        JsfCrudAdapter adapter = cruds().get( "Department");
+        adapter.getController().addChild( "employees", new JsfDetailController(Employee.class));
+        return adapter;
+    }
+    
+    
     @SuppressWarnings("unchecked")
     @Bean (scope = DefaultScopes.SINGLETON) 
     public Map<String, GenericDao> repositories() throws Exception {

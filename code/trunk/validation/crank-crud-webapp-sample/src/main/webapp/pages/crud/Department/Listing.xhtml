@@ -13,11 +13,11 @@
 		<a4j:outputPanel>
 			<h:form id="departmentForm">
 				<crank:listing paginator="${paginators['Department']}" 
-							   jsfCrudAdapter="${cruds['Department']}" 
+							   jsfCrudAdapter="${deptCrud}" 
 							   propertyNames="name"
 							   parentForm="departmentForm"
 							   reRender="${reRender}"
-							   crud="${cruds['Department'].controller}"/>							   
+							   crud="${deptCrud.controller}"/>							   
 			</h:form>
 		</a4j:outputPanel>
 	</ui:define>

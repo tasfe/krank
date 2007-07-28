@@ -6,13 +6,19 @@
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 	xmlns:c="http://java.sun.com/jstl/core"
-	xmlns:crank="http://www.googlecode.com/crank"
-	>
+	xmlns:crank="http://www.googlecode.com/crank">
+	
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
 		<h:form id="pagForm">
-			<crank:form crud="${cruds['Department'].controller}"
+			<crank:form crud="${deptCrud.controller}"
 						propertyNames="name">
+				<c:set var="employeeDetailController" 
+					value="${deptCrud.controller.children.employees}" />
+				<crank:detailListing detailController="${employeeDetailController}" 
+									 propertyNames="firstName,lastName,active,dob"
+									 relationshipCollection="#{deptCrud.controller.entity.employees}"
+									 />
 			</crank:form>
 		</h:form>
 	</ui:define>

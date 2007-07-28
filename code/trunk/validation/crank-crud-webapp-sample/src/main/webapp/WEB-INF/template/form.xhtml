@@ -8,10 +8,16 @@
       xmlns:c="http://java.sun.com/jstl/core"
 	  xmlns:fn="http://java.sun.com/jsp/jstl/functions"   
       xmlns:t="http://myfaces.apache.org/tomahawk"
-	  xmlns:crank="http://www.googlecode.com/crank">
+	  xmlns:crank="http://www.googlecode.com/crank"
+	  xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"	  
+	  >
 
   <ui:composition>
   	
+  	<c:if test="${empty ajax}">
+  		<c:set var="ajax" value="false"/>
+  	</c:if>
+
   	<c:if test="${empty formButtonClass}">
   		<c:set var="formButtonClass" value="paginationGroupButton"/>
   	</c:if>
@@ -30,7 +36,7 @@
 			</c:forEach>			
 	    </h:panelGrid>
 	    <ui:insert/>
-	    <h:panelGroup>	  
+	    <h:panelGroup rendered="${not ajax}">	  
 			<h:commandButton 
 				rendered="${crud.state=='ADD'}"
 				styleClass="${formButtonClass}" 
@@ -46,12 +52,35 @@
 				styleClass="${formButtonClass}" 
 				type="reset"/>
 			<h:commandButton 
-				value="Return"
+				value="Cancel"
 				styleClass="${formButtonClass}" 
 				type="button"
 				immediate="true" 
-				action="LISTING"/>
+				action="${crud.update}"/>
 		</h:panelGroup>
+	    <h:panelGroup rendered="${ajax}">	  
+			<a4j:commandButton 
+				rendered="${crud.state=='ADD'}"
+				styleClass="${formButtonClass}" 
+				value="Create" 
+				action="${crud.create}"/>			
+			<a4j:commandButton 
+				rendered="${crud.state=='EDIT'}" 
+				styleClass="${formButtonClass}" 
+				value="Update" 
+				action="${crud.update}"/>			
+			<a4j:commandButton 
+				value="Reset"
+				styleClass="${formButtonClass}" 
+				type="reset"/>
+			<a4j:commandButton 
+				value="Cancel"
+				styleClass="${formButtonClass}" 
+				type="button"
+				immediate="true" 
+				action="${crud.update}"/>
+		</h:panelGroup>
+
 	</h:panelGrid>
 
 </ui:composition>

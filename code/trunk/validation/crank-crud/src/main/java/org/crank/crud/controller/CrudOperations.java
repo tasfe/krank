@@ -20,5 +20,7 @@ public interface CrudOperations {
     CrudOutcome delete();
     /** Expose object for creation and updating. Allows object to be edited in the form.*/
     Serializable getEntity();
+    /** Cancel. */
+    CrudOutcome cancel();
 
 }

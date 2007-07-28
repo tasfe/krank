@@ -43,4 +43,9 @@ public class CrudUtils {
         PropertyDescriptor descriptor = map.get(propertyName);
         return descriptor.getPropertyType().getSimpleName();
     }
+    
+    public static String getObjectId(DetailController detailController, Object row) {
+        return detailController.getObjectId( row );
+    }
+    
 }

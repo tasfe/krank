@@ -1,7 +1,9 @@
 package org.crank.crud.controller;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.crank.annotations.design.AllowsConfigurationInjection;
 import org.crank.annotations.design.ExpectsInjection;
@@ -23,11 +25,11 @@ public class CrudController<T, PK extends Serializable> implements CrudOperation
     private EntityLocator entityLocator;
     private PropertiesUtil propertyUtil;
     private String idPropertyName = "id";
-    private boolean readPopulated;
+    private boolean readPopulated = true;
     private Class<T> entityClass;
     private CrudState state;    
     private T entity;
-
+    private Map<String, DetailController> children = new HashMap<String, DetailController>(); 
     private ToggleSupport toggleSupport = new ToggleSupport();
 
     /**
@@ -60,6 +62,7 @@ public class CrudController<T, PK extends Serializable> implements CrudOperation
      * @see CrudOperations#loadCreate()
      */
     public CrudOutcome loadCreate() {
+        init();
         try {
             entity = entityClass.newInstance();
             this.state = CrudState.ADD;
@@ -119,6 +122,7 @@ public class CrudController<T, PK extends Serializable> implements CrudOperation
      */
     @SuppressWarnings("unchecked")
     public CrudOutcome read() {
+        init();
         entity = (T)getCurrentEntity();
         state = CrudState.EDIT; 
         if (readPopulated) {
@@ -193,6 +197,57 @@ public class CrudController<T, PK extends Serializable> implements CrudOperation
     public CrudState getState() {
         return state;
     }
+    public CrudOutcome cancel() {
+        state = CrudState.UNKNOWN;
+        cancelChildren();
+        return null;
+    }
+    public Map<String, DetailController> getChildren() {
+        return children;
+    }
+    public void setChildren( Map<String, DetailController> children ) {
+        this.children = children;
+    }
+    public void init() {
+        this.state = CrudState.UNKNOWN;
+        initDetailChildren();
+        parentChildren();
+    }
 
+    private void initDetailChildren() {
+        if (children!=null) {
+            for (DetailController detailController : children.values()) {
+                detailController.init();
+            }
+        }
+    }
+    
+    
+    /** Inject this parent into all Children. It's fathers day. Give all the children a daddy. */
+    private void parentChildren() {
+        if (children!=null) {
+            for (DetailController detailController : children.values()) {
+                detailController.setParent(this);
+            }
+        }
+    }
 
+    /**
+     * Call cancelSubForms on all children.
+     *
+     */
+    private void cancelChildren() {
+        if (children!=null) {
+            for (DetailController detailController : children.values()) {
+                detailController.cancel();
+            }
+        }
+    }
+    
+    public void addChild (String name, DetailController detailController) {
+        this.children.put(name, detailController);
+        detailController.setParent( this );
+    }
+    
+    
 }

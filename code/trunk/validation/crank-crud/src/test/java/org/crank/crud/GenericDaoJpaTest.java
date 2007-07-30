@@ -53,6 +53,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     public void testFetchWithOrderBy() throws Exception {
         Employee employee = new Employee();
         employee.setFirstName( "Rick" );
+        employee.setNumberOfPromotions( 1 );
         employeeDao.update( employee );
         Map<String, Object> params = new HashMap<String, Object>();
         List employees = employeeDao.find( params, new String[] { "firstName" });

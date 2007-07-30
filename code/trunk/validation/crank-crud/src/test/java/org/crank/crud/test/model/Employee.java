@@ -1,5 +1,6 @@
 package org.crank.crud.test.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -9,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-@Entity
+@Entity(name="Employee")
 @NamedQueries( {
 	@NamedQuery(name="Employee.findEmployeesByDepartment",
 			query="from Employee employee where employee.department.name=?"),
@@ -35,11 +36,12 @@ public class Employee {
 	
 	private String lastName;
 	
-	private boolean active;
+    private boolean active;
 	
 	private int age;
 	
-	private Integer numberOfPromotions;
+    @Column (nullable=false)
+    private Integer numberOfPromotions;
 	
 	private EmployeeStatus status;
 	

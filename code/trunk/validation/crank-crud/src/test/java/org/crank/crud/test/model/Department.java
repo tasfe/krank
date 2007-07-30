@@ -10,7 +10,7 @@ import javax.persistence.OneToMany;
 
 //import org.hibernate.annotations.Proxy;
 
-@Entity
+@Entity(name="Department")
 //@Proxy (lazy=true)
 public class Department {
 

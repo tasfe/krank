@@ -22,6 +22,13 @@ public class CrudUtilsTest {
     @Test()
     public void testPropertyEntityname() {
         assertEquals( "Department", CrudUtils.getPropertyEntityName( Employee.class, "department" ));
+
     }
 
+    @Test
+    public void testIsRequired() {
+        assertTrue(CrudUtils.isRequired( Employee.class, "numberOfPromotions"));
+        assertTrue(CrudUtils.isRequired( Employee.class, "age"));
+    }
+    
 }

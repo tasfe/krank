@@ -25,6 +25,7 @@ public class JPAFilterableDataPaginatorTest extends DbUnitTestBase {
         for (int index = 0; index < 100; index++) {
             Employee employee = new Employee();
             employee.setFirstName( "FOO" + index);
+            employee.setNumberOfPromotions( 1 );
             employeeDao.create(employee);
         }
         

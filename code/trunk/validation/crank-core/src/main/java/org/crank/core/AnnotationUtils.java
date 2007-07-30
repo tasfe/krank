@@ -23,7 +23,14 @@ public class AnnotationUtils {
         return extractValidationAnnotationData(findFieldAnnotations( clazz, propertyName ), allowedPackages);
     }
     
+    public static List<AnnotationData> getAnnotationDataForClass(Class clazz, Set<String> allowedPackages) {
+        return extractValidationAnnotationData(findClassAnnotations( clazz ), allowedPackages);
+    }
     
+    private static Annotation[] findClassAnnotations( Class clazz ) {
+        return clazz.getAnnotations();
+    }
+
     /**
      * Create an annotation data list.
      * 

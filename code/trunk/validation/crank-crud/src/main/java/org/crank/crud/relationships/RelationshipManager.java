@@ -205,7 +205,9 @@ public class RelationshipManager {
      * @return The collection of children (The Owner's pets)
      * @throws Exception Some problem.
      */
-    private Object retrieveChildCollectionFromParentObject(Object parent) throws Exception {
+    public Object retrieveChildCollectionFromParentObject(Object parent) {
+        
+        try {
 
         /* Look up the method to call based on reflection. */
         if (listMethod==null) {
@@ -221,6 +223,10 @@ public class RelationshipManager {
          */
         Object listTypeThing = listMethod.invoke(parent,(Object[])null);
         return listTypeThing;
+        
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
     
     /**

@@ -10,14 +10,14 @@ import org.crank.web.RequestParameterMapFinderImpl;
 
 public class DetailController implements CrudOperations, Serializable {
     
-    private Class entityClass;
-    private RelationshipManager relationshipManager = new RelationshipManager();
-    private Serializable entity;
-    private CrudState state = CrudState.UNKNOWN;
-    private CrudOperations parent;
-    private Map<String, DetailController> children = new HashMap<String, DetailController>();
-    private RequestParameterMapFinder requestParameterMapFinder = new RequestParameterMapFinderImpl();
-    private String idParam = "id";
+    protected Class entityClass;
+    protected RelationshipManager relationshipManager = new RelationshipManager();
+    protected Serializable entity;
+    protected CrudState state = CrudState.UNKNOWN;
+    protected CrudOperations parent;
+    protected Map<String, DetailController> children = new HashMap<String, DetailController>();
+    protected RequestParameterMapFinder requestParameterMapFinder = new RequestParameterMapFinderImpl();
+    protected String idParam = "id";
 
     public void setIdParam( String idParam ) {
         this.idParam = idParam;

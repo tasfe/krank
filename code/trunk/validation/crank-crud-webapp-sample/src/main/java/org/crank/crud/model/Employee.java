@@ -2,15 +2,18 @@ package org.crank.crud.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 //import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 
 
 @Entity
@@ -18,7 +21,8 @@ import javax.persistence.NamedQuery;
 	@NamedQuery(name="Employee.findEmployeesByDepartment",
 			query="from Employee employee where employee.department.name=?"),
 	@NamedQuery(name="Employee.readPopulated",
-					query="from Employee employee join fetch employee.department where employee.id=?"),
+					query="select distinct employee from Employee employee join fetch employee.department " +
+                            "left outer join fetch employee.tasks where employee.id=?"),
 	@NamedQuery(name="Employee.findInEmployeeIds",
 							query="SELECT o FROM Employee o  WHERE  o.id in  ( ? )"),
     @NamedQuery(name="Employee.findSalaryEmployees",
@@ -50,15 +54,23 @@ public class Employee implements Serializable{
 	private Integer rank;
 	
     private Date dob;
+    
+    @OneToMany (cascade=CascadeType.ALL)    
+    private Set<Task> tasks;
 
     //@ManyToOne(fetch=FetchType.LAZY)
     @ManyToOne()
 	private Department department;
     
-	public Long getId() {
+    public void addTask(Task task) {
+        this.tasks.add( task );
+    }
+    public void removeTask(Task task) {
+        this.tasks.remove( task );
+    }
+    public Long getId() {
 		return id;
 	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -134,5 +146,13 @@ public class Employee implements Serializable{
 
     public void setDob( Date dob ) {
         this.dob = dob;
+    }
+
+    public Set<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks( Set<Task> tasks ) {
+        this.tasks = tasks;
     }
 }

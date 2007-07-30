@@ -34,6 +34,7 @@ import org.crank.crud.jsf.support.JsfDetailController;
 import org.crank.crud.jsf.support.SelectItemGenerator;
 import org.crank.crud.model.Department;
 import org.crank.crud.model.Employee;
+import org.crank.crud.model.Task;
 import org.crank.crud.GenericDao;
 import org.crank.crud.GenericDaoFactory;
 import org.crank.web.RequestParameterMapFinderImpl;
@@ -82,6 +83,14 @@ public class SampleConfiguration {
         return adapter;
     }
     
+    @SuppressWarnings("unchecked")
+    @Bean (scope = DefaultScopes.SESSION) 
+    public JsfCrudAdapter employeeCrud() throws Exception {
+        JsfCrudAdapter adapter = cruds().get( "Employee");
+        adapter.getController().addChild( "tasks", new JsfDetailController(Task.class));
+        return adapter;
+    }
+
     
     @SuppressWarnings("unchecked")
     @Bean (scope = DefaultScopes.SINGLETON) 

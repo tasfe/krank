@@ -13,6 +13,12 @@
 		<h:form id="pagForm">
 			<crank:form crud="${cruds['Employee'].controller}"
 						propertyNames="firstName,lastName,active,dob,department">
+				<c:set var="taskDetailController" 
+					value="${employeeCrud.controller.children.tasks}" />						
+				<crank:detailListing detailController="${taskDetailController}" 
+									 propertyNames="name,startDate,endDate,complete,description"
+									 relationshipCollection="#{taskDetailController.model}"
+									 />
 			</crank:form>
 		</h:form>
 	</ui:define>

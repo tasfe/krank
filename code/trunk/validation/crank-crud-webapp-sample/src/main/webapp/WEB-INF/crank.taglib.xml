@@ -88,6 +88,14 @@
 		</function-signature>
 	</function>
 	<function>
+		<function-name>isRequired</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isRequired(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+
+	<function>
 		<function-name>getPropertyEntityName</function-name>
 		<function-class>org.crank.crud.controller.CrudUtils</function-class>
 		<function-signature>

@@ -30,7 +30,7 @@
     <!-- The required attribute is optional, 
          initialize it to true if not found. -->
     <c:if test="${empty required}">
-        <c:set var="required" value="true" />
+        <c:set var="required" value="${crank:isRequired(crud.entityClass,fieldName)}" />
     </c:if>
 
    <h:outputLabel value="${label}" for="#{fieldName}" styleClass="${formLabelStyleClasses}"/>

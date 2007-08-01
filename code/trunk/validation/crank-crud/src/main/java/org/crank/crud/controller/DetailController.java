@@ -55,6 +55,10 @@ public class DetailController implements CrudOperations, Serializable {
         this.relationshipManager = relationshipManager;
     }
 
+    public RelationshipManager getRelationshipManager() {
+        return this.relationshipManager;
+    }
+
     public DetailController () {
     }
     

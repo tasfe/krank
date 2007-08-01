@@ -146,7 +146,7 @@ public class CrudController<T, PK extends Serializable> implements CrudOperation
      * @return outcome
      */
     public CrudOutcome update() {
-        dao.update(entity);
+    	dao.update(entity);
         state = CrudState.UNKNOWN; 
         fireToggle();
         return CrudOutcome.LISTING;

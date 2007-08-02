@@ -32,11 +32,16 @@
     <c:if test="${empty required}">
         <c:set var="required" value="${crank:isRequired(crud.entityClass,fieldName)}" />
     </c:if>
+	<c:if test="${empty idStub}">
+	    <c:set var="idStub" value="${fieldName}${crud.name}Field" />
+	</c:if>
+    
 
-   <h:outputLabel value="${label}" for="#{fieldName}" styleClass="${formLabelStyleClasses}"/>
+   <h:outputLabel id="${idStub}OutputLabelId" value="${label}" 
+   				  for="${idStub}Id" styleClass="${formLabelStyleClasses}"/>
 
    <c:if test="${crank:isText(crud.entityClass,fieldName)}">
-	   <h:inputText id="#{fieldName}" 
+	   <h:inputText id="${idStub}Id" 
 	                     value="#{entity[fieldName]}" 
 	                     required="${required}" 
 	                     styleClass="${formFieldStyleClasses}">
@@ -48,7 +53,7 @@
     <!--  If the value binding is a boolean, display a
            selectBooleanCheckbox field. -->
     <c:if test="${crank:isBoolean(crud.entityClass,fieldName)}">
-	   <h:selectBooleanCheckbox  id="#{fieldName}" 
+	   <h:selectBooleanCheckbox  id="${idStub}Id" 
 						 value="#{entity[fieldName]}" 
 						 required="${required}" 
 						 styleClass="fieldSelectBooleanCheckbox"
@@ -58,7 +63,8 @@
     <!--  If the value binding is a date, 
           display a t:inputDate field. -->
     <c:if test="${crank:isDate(crud.entityClass,fieldName)}">
-		<t:calendar id="#{fieldName}" renderPopupButtonAsImage="true" 
+		<t:calendar id="${idStub}Id" 
+					   renderPopupButtonAsImage="true" 
 	                   renderAsPopup="true" value="#{entity[fieldName]}" 
 	                   required="${required}"
 	                   styleClass="${formFieldStyleClasses}"
@@ -68,16 +74,19 @@
 
     <c:if test="${crank:isManyToOne(crud.entityClass,fieldName)}">
         <c:set var="propEntityName" value="${crank:getPropertyEntityName(crud.entityClass,fieldName)}" />
-		<crank:select id="#{fieldName}" value="#{entity[fieldName]}">
+		<crank:select id="${idStub}Id" 
+		              value="#{entity[fieldName]}">
 			<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
 			<f:converter converterId="" binding="${converters[propEntityName]}"/>
 		</crank:select>    	
     </c:if>
 
     <!--  Display any error messages that are found -->
-    <h:message styleClass="fieldMessage"
+    <h:message 
+	    	   id="${idStub}MessageId" 
+    		   styleClass="fieldMessage"
     		   style="color: red; text-decoration: underline" 
-               for="#{fieldName}" />
+               for="${idStub}Id" />
 
 </ui:composition>
 

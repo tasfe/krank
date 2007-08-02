@@ -13,10 +13,19 @@
 
 <ui:composition>
 		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
+		<c:if test="${idBase}">
+			<c:set var="idBase" value="${detailController.name}DetailListing"/>
+		</c:if>
+		
+		
+		<a4j:region>
 
-		<blockquote>
-			<a4j:commandLink action="${detailController.loadCreate}"
-							 value="Add" reRender="pagForm"/>
+		<h:panelGroup id="${idBase}PanelGroup" 
+					  binding="${detailController.subForm}">
+			<a4j:commandLink
+							id="${idBase}LoadCreateCommandLinkId"  
+							action="${detailController.loadCreate}"
+							value="Add" reRender="pagForm"/>
 							 
 			<crank:form crud="${detailController}" 
 						rendered="${detailController.showForm}"
@@ -24,34 +33,35 @@
 						ajax="${true}">
 			</crank:form>
 			
-			<rich:dataTable  value="#{relationshipCollection}" var="row">
+			<rich:dataTable  id="${idBase}DataTable"   value="${relationshipCollection}" var="row">
 				<f:facet name="header">
-					<rich:columnGroup>
+					<rich:columnGroup id="${idBase}ColumnGroup">
 						<c:forEach items="${pNames}" var="property">
-							<h:column>
-								<h:outputText value="${crank:createLabel(property)}" />
+							<h:column id="${idBase}${property}Header">
+								<h:outputText id="${idBase}${property}HeaderText" value="${crank:createLabel(property)}" />
 							</h:column>
 						</c:forEach>					
-						<h:column>
-								<h:outputText value="Action" />
+						<h:column id="${idBase}ActionColumn">
+								<h:outputText id="${idBase}ActionColumnText" value="Action" />
 						</h:column>
 					</rich:columnGroup>
 				</f:facet>				
 				<c:forEach items="${pNames}" var="property">
-					<h:column>
-						<h:outputText value="#{row[property]}" rendered="${not crank:isBoolean(row.class, property)}"/>
-						<h:graphicImage value="/images/check-sm.gif" rendered="${(row[property] == 'true')}" styleClass="imageCenter"/>
+					<h:column id="${idBase}${property}Column">
+						<h:outputText id="${idBase}${property}RowText" value="${row[property]}" rendered="${not crank:isBoolean(row.class, property)}"/>
+						<h:graphicImage id="${idBase}${property}BooleanGraphic" value="/images/check-sm.gif" rendered="${(row[property] == 'true')}" styleClass="imageCenter"/>
 					</h:column>
 				</c:forEach>
-				<h:column>
-					<table><tr><td><a4j:commandLink action="${detailController.delete}" value="Delete">
-						<f:param name="id" value="${crank:getObjectId(detailController,row)}"/>
+				<h:column id="${idBase}ActionRow">
+					<table><tr><td><a4j:commandLink id="${idBase}ActionRowDelete" action="${detailController.delete}" value="Delete">
+						<f:param id="${idBase}ActionRowDeleteIdParam" name="id" value="${crank:getObjectId(detailController,row)}"/>
 					</a4j:commandLink></td><td>
-					<a4j:commandLink action="${detailController.read}" value="Edit">
-						<f:param name="id" value="${crank:getObjectId(detailController,row)}"/>
+					<a4j:commandLink id="${idBase}ActionRowEdit" action="${detailController.read}" value="Edit">
+						<f:param id="${idBase}ActionRowEditIdParam" name="id" value="${crank:getObjectId(detailController,row)}"/>
 					</a4j:commandLink></td></tr></table>
 				</h:column>
 			</rich:dataTable>
-		</blockquote>	
+		</h:panelGroup>	
+		</a4j:region>		
 </ui:composition>
 </html>

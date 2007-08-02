@@ -21,6 +21,10 @@
 	<c:if test="${empty reRender}">
 	    <c:set var="reRender" value="listingPanel" />
 	</c:if>
+	<c:if test="${idBase}">
+		<c:set var="idBase" value="${paginator.name}_${fieldName}Header"/>
+	</c:if>
+
 	<c:set var="filter" value="${paginator.filterableProperties[fieldName]}"/>
 	<c:set var="orderBy" value="${filter.orderBy}"/>
 	<c:set var="comparison" value="${filter.comparison}"/>
@@ -41,90 +45,97 @@
 
 	<!-- END DEFINE VARIABLES -->
 
-	<h:column styleClass="${columnHeaderClass}">
+	<h:column id="${idBase}Column" styleClass="${columnHeaderClass}">
 	
-		<a4j:outputPanel axajRendered="true">
+		<a4j:outputPanel id="${idBase}AjaxOutputPanel" axajRendered="true">
 		
 				<a4j:commandLink 
+					id="${idBase}SortDesc"
 					styleClass="${headerLinkClass}"
 					reRender="${reRender}"
 					rendered="#{orderBy.asc and paginator.sorting}"
 					onmouseout="popUp(event,'sortImgAsc')" onmouseover="popUp(event,'sortImgAsc')"
 					action="#{orderBy.toggle}">
-					<h:graphicImage value="/images/sortdesc.gif" border="0" />
+					<h:graphicImage id="${idBase}SortDescGraphic" value="/images/sortdesc.gif" border="0" />
 				</a4j:commandLink>
 				
 				<a4j:commandLink 
+				    id="${idBase}SortAsc"
 					styleClass="${headerLinkClass}"
 				    reRender="${reRender}"
 					rendered="#{orderBy.desc and paginator.sorting}"
 					onmouseout="popUp(event,'sortImgDesc')" onmouseover="popUp(event,'sortImgDesc')"
 					action="#{orderBy.toggle}">
-					<h:graphicImage value="/images/sortasc.gif" border="0"/>
+					<h:graphicImage id="${idBase}SortAscGraphic" value="/images/sortasc.gif" border="0"/>
 				</a4j:commandLink>
 				
-				<rich:spacer width="10" height="10"/>
+				<rich:spacer id="${idBase}Spacer1" width="10" height="10"/>
 
-				<a4j:commandLink styleClass="${headerLinkClass}" 
+				<a4j:commandLink id="${idBase}OrderBy" styleClass="${headerLinkClass}" 
 				    value="${label}" reRender="${reRender}"
 					onmouseout="popUp(event,'sortToggle')" onmouseover="popUp(event,'sortToggle')"
 					action="#{orderBy.toggle}"/>
 
-				<rich:spacer width="15" height="10"/>
+				<rich:spacer id="${idBase}Spacer2" width="15" height="10"/>
 
-				<a4j:commandLink  reRender="${reRender}"
+				<a4j:commandLink  id="${idBase}EnableComparison"
+				                  reRender="${reRender}"
 								  action="#{comparison.enable}"
 								  rendered="#{not comparison.enabled}"
 								  onmouseout="popUp(event,'filterOn')" onmouseover="popUp(event,'filterOn')"
 							      styleClass="${headerLinkClass}"								  
 								  >
-					<h:graphicImage value="/images/filterOn.gif" border="0"/>
+					<h:graphicImage id="${idBase}EnableComparisonGraphic" value="/images/filterOn.gif" border="0"/>
 				</a4j:commandLink>
 				
 
-				<a4j:outputPanel axajRendered="true" rendered="#{comparison.enabled and not crank:isDate(paginator.type,fieldName)}">
-					<a4j:outputPanel rendered="${crank:isText(paginator.type,fieldName)}">
-						<h:inputText 		styleClass="${headerFilterInputTextClass}" 
+				<a4j:outputPanel id="${idBase}TextBooleanComparisonPanel" 
+				                 axajRendered="true" 
+				                 rendered="#{comparison.enabled and not crank:isDate(paginator.type,fieldName)}">
+					<a4j:outputPanel id="${idBase}TextComparisonPanel"  rendered="${crank:isText(paginator.type,fieldName)}">
+						<h:inputText id="${idBase}TextComparisonInputText" 		styleClass="${headerFilterInputTextClass}" 
 											value="#{comparison.value}"
 											size="5"/>
 					</a4j:outputPanel>
 
-					<a4j:outputPanel rendered="${crank:isBoolean(paginator.type,fieldName)}">
-						<h:selectBooleanCheckbox  	styleClass="${headerFilterInputTextClass}" 
+					<a4j:outputPanel id="${idBase}BooleanComparisonPanel"  rendered="${crank:isBoolean(paginator.type,fieldName)}">
+						<h:selectBooleanCheckbox  id="${idBase}BooleanComparisonInputCheckbox" 	styleClass="${headerFilterInputTextClass}" 
 											value="#{comparison.value}"
 											/>
 					</a4j:outputPanel>
 
-					<a4j:commandLink  reRender="${reRender}"
+					<a4j:commandLink  id="${idBase}FilterOff1" reRender="${reRender}"
 									  action="#{comparison.disable}"
  									  onmouseout="popUp(event,'filterOff1')" onmouseover="popUp(event,'filterOff1')"
 									  styleClass="${headerLinkClass}"								  
 									  >
-						<h:graphicImage value="/images/filterOff.gif" border="0"/>
+						<h:graphicImage id="${idBase}FilterOff1Graphic" value="/images/filterOff.gif" border="0"/>
 					</a4j:commandLink>
 				</a4j:outputPanel>
 				
-				<a4j:outputPanel axajRendered="true" rendered="${comparison.enabled and crank:isDate(paginator.type,fieldName)}">
+				<a4j:outputPanel id="${idBase}DateComparisonPanel" axajRendered="true" rendered="${comparison.enabled and crank:isDate(paginator.type,fieldName)}">
 					<br />
-					<h:panelGrid columns="3">
+					<h:panelGrid id="${idBase}DateComparisonPanelGrid"  columns="3">
 					
-						<h:outputText value=""/>
-				        <t:calendar renderAsPopup="true" renderPopupButtonAsImage="true" 
+						<h:outputText id="${idBase}Text1" value=""/>
+				        <t:calendar id="${idBase}CalenderInput"  renderAsPopup="true" renderPopupButtonAsImage="true" 
 				        			size="8"
 				                    value="#{comparison.value}">
 				        </t:calendar>
-						<h:outputText value=""/>
-						<h:outputText value="thru" styleClass="headerTextClass"/>
-					    <t:calendar renderAsPopup="true" renderPopupButtonAsImage="true" 
+						<h:outputText id="${idBase}Text2" value=""/>
+						<h:outputText id="${idBase}Text3" value="thru" styleClass="headerTextClass"/>
+					    <t:calendar id="${idBase}CalenderInput2" renderAsPopup="true" renderPopupButtonAsImage="true" 
 				        			size="8"
 					                    value="${comparison.value2}">
 					    </t:calendar>
-						<a4j:commandLink  reRender="${reRender}"
+						<a4j:commandLink  
+										  id="${idBase}FilterOff2"
+										  reRender="${reRender}"
 										  action="#{comparison.disable}"
 	 									  onmouseout="popUp(event,'filterOff2')" onmouseover="popUp(event,'filterOff2')"
 										  styleClass="${headerLinkClass}"								  
 										  >
-							<h:graphicImage value="/images/filterOff.gif" border="0"/>
+							<h:graphicImage id="${idBase}FilterOff2Graphic" value="/images/filterOff.gif" border="0"/>
 						</a4j:commandLink>
 				    </h:panelGrid>					
 	

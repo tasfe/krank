@@ -19,6 +19,16 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
     private Map<String, FilterableProperty> filterableProperties = null;
     private Class type;
     
+    private String name;
+
+    public String getName() {
+        return (name != null ? name : CrudUtils.getClassEntityName(type)) + "Paginator";
+    }
+
+    public void setName( String name ) {
+        this.name = name;
+    }
+    
     public FilteringPaginator() {
         super();
     }

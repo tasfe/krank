@@ -18,6 +18,15 @@ public class DetailController implements CrudOperations, Serializable {
     protected Map<String, DetailController> children = new HashMap<String, DetailController>();
     protected RequestParameterMapFinder requestParameterMapFinder = new RequestParameterMapFinderImpl();
     protected String idParam = "id";
+    private String name;
+
+    public String getName() {
+        return name != null ? name : CrudUtils.getClassEntityName(entityClass);
+    }
+
+    public void setName( String name ) {
+        this.name = name;
+    }
 
     public void setIdParam( String idParam ) {
         this.idParam = idParam;
@@ -173,7 +182,7 @@ public class DetailController implements CrudOperations, Serializable {
     public CrudOutcome cancel() {
         state = CrudState.UNKNOWN;
         cancelChildren();
-        return null;
+        return CrudOutcome.LISTING;
     }
     
     /**

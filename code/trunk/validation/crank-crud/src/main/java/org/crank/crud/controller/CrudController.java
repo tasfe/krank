@@ -31,6 +31,16 @@ public class CrudController<T, PK extends Serializable> implements CrudOperation
     private T entity;
     private Map<String, DetailController> children = new HashMap<String, DetailController>(); 
     private ToggleSupport toggleSupport = new ToggleSupport();
+    private String name;
+    
+    public String getName() {
+        return name != null ? name : CrudUtils.getClassEntityName(entityClass);
+    }
+
+    public void setName( String name ) {
+        this.name = name;
+    }
+    
 
     /**
      * @see Toggleable#addToggleListener(ToggleListener)
@@ -200,7 +210,7 @@ public class CrudController<T, PK extends Serializable> implements CrudOperation
     public CrudOutcome cancel() {
         state = CrudState.UNKNOWN;
         cancelChildren();
-        return null;
+        return CrudOutcome.LISTING;
     }
     public Map<String, DetailController> getChildren() {
         return children;

@@ -82,6 +82,18 @@ public class CrudUtils {
         return descriptor.getPropertyType().getSimpleName();
     }
 
+    public static String getClassEntityName(Class clazz) {
+        AnnotationData data = (AnnotationData)MapUtils.convertListToMap( "name",
+                AnnotationUtils.getAnnotationDataForClass( clazz, allowedPackages )).get( "entity" );
+        if (data != null) {
+            String entityName = (String) data.getValues().get( "name");
+            if (entityName != null && entityName.trim().length() > 0){
+                return (String) data.getValues().get( "name");
+            }
+        }
+        return clazz.getSimpleName();
+    }
+
     @SuppressWarnings("unchecked")
     private static PropertyDescriptor getPropertyDescriptor( Class clazz, String propertyName) {
         Map<String, PropertyDescriptor> map = null;

@@ -72,7 +72,7 @@
 				value="#{jsfCrudAdapter.model}" var="row">
 				<f:facet name="header">
 					<rich:columnGroup>
-						<h:column id="${idBase}ControlColumn">
+						<h:column>
 							<crank:commandLink id="${idBase}SelectAll"
 											   onclick="toggleAllCheckBoxes('${parentForm}',true);"
 							                   toolTipText="Click to select all rows">
@@ -95,7 +95,7 @@
 							<crank:header fieldName="${property}" paginator="${paginator}"
 								reRender="${reRender}" />
 						</c:forEach>
-						<h:column id="${idBase}ActionColumn">
+						<h:column >
 							<h:outputText value="Action" />
 						</h:column>
 					</rich:columnGroup>

@@ -41,12 +41,24 @@
    				  for="${idStub}Id" styleClass="${formLabelStyleClasses}"/>
 
    <c:if test="${crank:isText(crud.entityClass,fieldName)}">
-	   <h:inputText id="${idStub}Id" 
-	                     value="#{entity[fieldName]}" 
-	                     required="${required}" 
-	                     styleClass="${formFieldStyleClasses}">
-	            <ui:insert />
-	   </h:inputText>
+   	   <c:if test="${crank:isLargeText(crud.entityClass,fieldName)}">
+		   <h:inputTextarea id="${idStub}Id" 
+		                     value="#{entity[fieldName]}" 
+		                     required="${required}" 
+		                     styleClass="${formFieldStyleClasses}"
+		                     cols="50"
+		                     rows="${crank:textSize(crud.entityClass,fieldName)/50}">
+		            <ui:insert />
+		   </h:inputTextarea>
+   	   </c:if>
+   	   <c:if test="${not crank:isLargeText(crud.entityClass,fieldName)}">
+		   <h:inputText id="${idStub}Id" 
+		                     value="#{entity[fieldName]}" 
+		                     required="${required}" 
+		                     styleClass="${formFieldStyleClasses}">
+		            <ui:insert />
+		   </h:inputText>
+   	   </c:if>
    </c:if>
 
 

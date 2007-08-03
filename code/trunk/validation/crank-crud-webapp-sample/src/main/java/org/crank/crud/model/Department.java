@@ -12,6 +12,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Cascade;
+
 
 
 //import org.hibernate.annotations.Proxy;
@@ -38,6 +40,7 @@ public class Department implements Serializable{
 //  )
 
     @OneToMany (mappedBy="department", cascade=CascadeType.ALL)
+    @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
     private List<Employee> employees;
 
 	public List<Employee> getEmployees() {

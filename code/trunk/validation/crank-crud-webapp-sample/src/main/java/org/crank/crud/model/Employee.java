@@ -40,10 +40,13 @@ public class Employee implements Serializable{
     @GeneratedValue( strategy = GenerationType.AUTO )	
 	private Long id;
 
-    @Column (nullable=false)
+    @Column (nullable=false, length=32)
 	private String firstName;
 	
 	private String lastName;
+    
+    @Column (length=150)
+    private String description;
 	
 	private boolean active;
 	
@@ -156,5 +159,11 @@ public class Employee implements Serializable{
 
     public void setTasks( Set<Task> tasks ) {
         this.tasks = tasks;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription( String description ) {
+        this.description = description;
     }
 }

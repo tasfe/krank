@@ -53,6 +53,20 @@
 		</function-signature>
 	</function>
 	<function>
+		<function-name>isLargeText</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isLargeText(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>textSize</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			int textSize(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
 		<function-name>isBoolean</function-name>
 		<function-class>org.crank.core.TypeUtils</function-class>
 		<function-signature>

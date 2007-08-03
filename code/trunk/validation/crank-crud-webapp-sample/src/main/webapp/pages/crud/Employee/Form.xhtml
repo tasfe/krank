@@ -12,7 +12,7 @@
 	<ui:define name="content">
 		<h:form id="pagForm">
 			<crank:form crud="${cruds['Employee'].controller}"
-						propertyNames="firstName,lastName,active,dob,department">
+						propertyNames="firstName,lastName,active,dob,department,description">
 				<c:set var="taskDetailController" 
 					value="${employeeCrud.controller.children.tasks}" />						
 				<crank:detailListing detailController="${taskDetailController}" 

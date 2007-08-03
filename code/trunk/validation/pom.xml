@@ -165,6 +165,7 @@
 		<module>crank-springmvc-validation-sample</module>
 		<module>crank-test-support</module>
 		<module>crank-validation</module>
+		<module>crank-crud-webapp-sample</module>
 	</modules>
 
 	<repositories>
@@ -198,6 +199,11 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.crank</groupId>
+				<artifactId>crank-crud-webapp-sample</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.crank</groupId>
 				<artifactId>crank-core</artifactId>

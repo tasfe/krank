@@ -78,7 +78,7 @@ public class GroupTest {
 		example = Example.createExample(employee).excludeZeroes().excludeNone();
 		employee.setAge(0);
 		employee.setLastName(null);
-		assertEquals("4", "(AND [active_EQ_true, department_EQ_null, firstName_EQ_Rick, id_EQ_null, lastName_EQ_null, numberOfPromotions_EQ_null, rank_EQ_null, status_EQ_null])", 
+		assertEquals("4", "(AND [active_EQ_true, department_EQ_null, description_EQ_null, firstName_EQ_Rick, id_EQ_null, lastName_EQ_null, numberOfPromotions_EQ_null, rank_EQ_null, status_EQ_null])", 
 				example.toString());		
 		
 		

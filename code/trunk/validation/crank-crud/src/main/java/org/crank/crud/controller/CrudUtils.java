@@ -27,11 +27,7 @@ public class CrudUtils {
             return true;
         }
         
-        List<AnnotationData> annotationDataForProperty = AnnotationUtils.getAnnotationDataForProperty( clazz, propertyName, false, allowedPackages );
-        if (annotationDataForProperty.size()==0) {
-            annotationDataForProperty = AnnotationUtils.getAnnotationDataForField( clazz, propertyName, allowedPackages );
-        }
-        Map map = MapUtils.convertListToMap( "name", annotationDataForProperty);
+        Map map = getAnnotationDataAsMap( clazz, propertyName );
         
         boolean found = map.get( "required" ) != null;
         /* If you found an annotation called required, return true. */
@@ -58,12 +54,63 @@ public class CrudUtils {
         }
     }
 
-    public static boolean isManyToOne(Class clazz, String propertyName) {
+    public static boolean isLargeText(Class clazz, String propertyName) {
+                
+        Map map = getAnnotationDataAsMap( clazz, propertyName );
+        
+        boolean found = map.get( "column" ) != null;
+        /* If you found an annotation called required, return true. */
+        if (found) {
+                /* If the column annotation data was found, see if the length flag was set. */
+                AnnotationData ad = (AnnotationData) map.get( "column" );
+                Object object = ad.getValues().get("length");
+                /* If the nullable flag was set, return its value. */
+                if (object != null) {
+                    Integer length = (Integer) object;
+                    return length.intValue() > 80;
+                } else {
+                    /* Otherwise, if the nullable value was not set, then return false. */
+                    return false;
+                }
+        }
+        return false;
+        
+    }
+
+    public static int textSize(Class clazz, String propertyName) {
+        
+        Map map = getAnnotationDataAsMap( clazz, propertyName );
+        
+        boolean found = map.get( "column" ) != null;
+        /* If you found an annotation called required, return true. */
+        if (found) {
+                /* If the column annotation data was found, see if the length flag was set. */
+                AnnotationData ad = (AnnotationData) map.get( "column" );
+                Object object = ad.getValues().get("length");
+                /* If the nullable flag was set, return its value. */
+                if (object != null) {
+                    Integer length = (Integer) object;
+                    return length.intValue();
+                } else {
+                    /* Otherwise, if the nullable value was not set, then return false. */
+                    return 0;
+                }
+        }
+        return 0;
+        
+    }
+
+    private static Map getAnnotationDataAsMap( Class clazz, String propertyName ) {
         List<AnnotationData> annotationDataForProperty = AnnotationUtils.getAnnotationDataForProperty( clazz, propertyName, false, allowedPackages );
         if (annotationDataForProperty.size()==0) {
             annotationDataForProperty = AnnotationUtils.getAnnotationDataForField( clazz, propertyName, allowedPackages );
         }
         Map map = MapUtils.convertListToMap( "name", annotationDataForProperty);
+        return map;
+    }
+
+    public static boolean isManyToOne(Class clazz, String propertyName) {
+        Map map = getAnnotationDataAsMap( clazz, propertyName );
         return map.get( "manyToOne" ) != null; 
     }
     

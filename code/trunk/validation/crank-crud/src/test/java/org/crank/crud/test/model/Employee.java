@@ -35,6 +35,9 @@ public class Employee {
 	private String firstName;
 	
 	private String lastName;
+    
+    @Column (length=81)
+    private String description;
 	
     private boolean active;
 	
@@ -122,4 +125,12 @@ public class Employee {
 	public void setRank(Integer rank) {
 		this.rank = rank;
 	}
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription( String description ) {
+        this.description = description;
+    }
 }

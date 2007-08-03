@@ -13,6 +13,20 @@ public class CrudUtilsTest {
 
 
     @Test()
+    public void testTextSize() {
+        assertEquals(0, CrudUtils.textSize( Employee.class, "firstName"));
+        assertEquals(81, CrudUtils.textSize( Employee.class, "description"));
+
+    }
+
+    @Test()
+    public void testIsLargeText() {
+        assertFalse(CrudUtils.isLargeText( Employee.class, "firstName"));
+        assertTrue(CrudUtils.isLargeText( Employee.class, "description"));
+
+    }
+
+    @Test()
     public void testIsManyToOne() {
         assertFalse(CrudUtils.isManyToOne( Employee.class, "age"));
         assertTrue(CrudUtils.isManyToOne( Employee.class, "department"));

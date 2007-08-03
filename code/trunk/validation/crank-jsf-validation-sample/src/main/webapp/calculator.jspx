@@ -3,7 +3,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core" version="2.0"
-	xmlns:crank="http://www.crankframework.com/crank">
+	xmlns:validation="http://code.google.com/p/krank/validation">
 	
 	<ui:composition>
 		<html>	
@@ -22,7 +22,7 @@
 				<h:outputLabel value="First Number" for="firstNumber" />
 				<h:inputText id="firstNumber" value="#{CalcBean.firstNumber}"
 					required="true">
-					<crank:validateBasedOnMetaData/> 
+					<validation:validateBasedOnMetaData/> 
 				</h:inputText> 
 				<div id="firstNumberError"/>
 				<h:message for="firstNumber" showSummary="false" showDetail="true"/>
@@ -30,7 +30,7 @@
 				<h:outputLabel value="Second Number" for="secondNumber" />
 				<h:inputText id="secondNumber" value="#{CalcBean.secondNumber}"
 					required="true">
-					<crank:validateBasedOnMetaData/> 
+					<validation:validateBasedOnMetaData/> 
 				</h:inputText> 
 				<div id="secondNumberError"/>
 				<h:message for="secondNumber" showSummary="false" showDetail="true"/>
@@ -53,7 +53,7 @@
 		</h:panelGroup>
 		
 		<br />
-		<!--  crankclientValidator 
+		<!--  validationclientValidator 
 		           objectExpression="#{CalcBean}"
 		           formName="calcForm" 
 		           propertyNames="firstNumber,secondNumber"  -->

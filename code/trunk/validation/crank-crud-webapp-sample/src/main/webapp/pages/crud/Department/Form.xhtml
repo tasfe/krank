@@ -6,11 +6,15 @@
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 	xmlns:c="http://java.sun.com/jstl/core"
-	xmlns:crank="http://www.googlecode.com/crank">
+	xmlns:crank="http://www.googlecode.com/crank"
+	xmlns:validation="http://code.google.com/p/krank/validation"
+	>
 	
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
 		<h:form id="pagForm">
+            <div id="clientValidationSummary" />
+		
 			<crank:form crud="${deptCrud.controller}"
 						propertyNames="name">
 				<c:set var="employeeDetailController" 
@@ -20,7 +24,12 @@
 									 relationshipCollection="#{deptCrud.controller.entity.employees}"
 									 />
 			</crank:form>
+		
+			<validation:clientValidator  objectExpression="${deptCrud.controller.entity}" 
+		    propertyNames="name" />
+		
 		</h:form>
+		
 	</ui:define>
 </ui:composition>
 </html>

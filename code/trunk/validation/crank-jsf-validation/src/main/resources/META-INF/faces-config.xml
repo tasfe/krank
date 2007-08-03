@@ -21,6 +21,15 @@
 		<component-class>
 			org.crank.web.validation.jsf.support.ValidationScriptGeneratorComponent
 		</component-class>
+		<property>
+			<property-name>formClass</property-name>
+			<property-class>java.lang.Class</property-class>
+		</property>
+		<property>
+			<property-name>fieldName</property-name>
+			<property-class>java.lang.String</property-class>
+		</property>
+
 	</component>
 
 	<lifecycle>

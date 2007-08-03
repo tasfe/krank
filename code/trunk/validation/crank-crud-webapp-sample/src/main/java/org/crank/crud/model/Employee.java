@@ -16,6 +16,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
+import org.crank.annotations.validation.Email;
+import org.crank.annotations.validation.Length;
+import org.crank.annotations.validation.LongRange;
+import org.crank.annotations.validation.Phone;
+import org.crank.annotations.validation.ProperNoun;
+import org.crank.annotations.validation.Required;
+
 
 @Entity
 @NamedQueries( {
@@ -51,6 +58,10 @@ public class Employee implements Serializable{
 	private boolean active;
 	
 	private int age;
+    
+    private String email;
+    
+    private String phone;
 	
 	private Integer numberOfPromotions;
 	
@@ -84,6 +95,7 @@ public class Employee implements Serializable{
 		return firstName;
 	}
 
+    @Required @ProperNoun @Length(min=2, max=35) 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
@@ -109,7 +121,8 @@ public class Employee implements Serializable{
 		return age;
 	}
 
-	public void setAge(int age) {
+    @Required @LongRange(min=18L, max=135L)
+    public void setAge(int age) {
 		this.age = age;
 	}
 
@@ -125,7 +138,8 @@ public class Employee implements Serializable{
 		return lastName;
 	}
 
-	public void setLastName(String lastName) {
+    @Required @ProperNoun @Length(min=2, max=35)
+    public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
@@ -165,5 +179,19 @@ public class Employee implements Serializable{
     }
     public void setDescription( String description ) {
         this.description = description;
+    }
+    public String getEmail() {
+        return email;
+    }
+    @Email
+    public void setEmail( String email ) {
+        this.email = email;
+    }
+    public String getPhone() {
+        return phone;
+    }
+    @Phone
+    public void setPhone( String phone ) {
+        this.phone = phone;
     }
 }

@@ -291,7 +291,6 @@ public class ValidationScriptReaper {
                 
                 String template = lookupValidatorAndEncodeIt(form, suffix, propertyName,
                         validatorMetaData);
-                System.out.println("HERE is a tempalte" + template);
                 swriter.write(template);
             }
         }

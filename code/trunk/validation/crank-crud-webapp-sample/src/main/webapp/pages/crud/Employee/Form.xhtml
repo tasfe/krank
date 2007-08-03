@@ -7,10 +7,12 @@
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:crank="http://www.googlecode.com/crank"
+	xmlns:validation="http://code.google.com/p/krank/validation"	
 	>
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
 		<h:form id="pagForm">
+			<div id="clientValidationSummary" />
 			<crank:form crud="${cruds['Employee'].controller}"
 						propertyNames="firstName,lastName,active,dob,department,description">
 				<c:set var="taskDetailController" 
@@ -19,6 +21,10 @@
 									 propertyNames="name,startDate,endDate,complete,description"
 									 relationshipCollection="#{taskDetailController.model}"
 									 />
+
+			<validation:clientValidator  objectExpression="${cruds['Employee'].controller.entity}" 
+		    			propertyNames="firstName,lastName,active,dob,department,description" />
+
 			</crank:form>
 		</h:form>
 	</ui:define>

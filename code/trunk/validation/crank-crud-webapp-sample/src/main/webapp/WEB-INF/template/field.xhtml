@@ -9,7 +9,8 @@
       xmlns:c="http://java.sun.com/jstl/core"
 	  xmlns:fn="http://java.sun.com/jsp/jstl/functions"   
       xmlns:t="http://myfaces.apache.org/tomahawk"
-	  xmlns:crank="http://www.googlecode.com/crank"	
+	  xmlns:crank="http://www.googlecode.com/crank"
+	  xmlns:validation="http://code.google.com/p/krank/validation"
       >
 
   <ui:composition>
@@ -48,6 +49,7 @@
 		                     styleClass="${formFieldStyleClasses}"
 		                     cols="50"
 		                     rows="${crank:textSize(crud.entityClass,fieldName)/50}">
+		            <validation:validateBasedOnMetaData formClass="${crud.entityClass}" fieldName="${fieldName}"/> 
 		            <ui:insert />
 		   </h:inputTextarea>
    	   </c:if>
@@ -56,6 +58,7 @@
 		                     value="#{entity[fieldName]}" 
 		                     required="${required}" 
 		                     styleClass="${formFieldStyleClasses}">
+		            <validation:validateBasedOnMetaData formClass="${crud.entityClass}" fieldName="${fieldName}"/>
 		            <ui:insert />
 		   </h:inputText>
    	   </c:if>
@@ -79,8 +82,9 @@
 					   renderPopupButtonAsImage="true" 
 	                   renderAsPopup="true" value="#{entity[fieldName]}" 
 	                   required="${required}"
-	                   styleClass="${formFieldStyleClasses}"
->	              <ui:insert />
+	                   styleClass="${formFieldStyleClasses}">
+		          <validation:validateBasedOnMetaData formClass="${crud.entityClass}" fieldName="${fieldName}"/>
+	              <ui:insert />
 		</t:calendar>
 	</c:if>
 
@@ -88,17 +92,21 @@
         <c:set var="propEntityName" value="${crank:getPropertyEntityName(crud.entityClass,fieldName)}" />
 		<crank:select id="${idStub}Id" 
 		              value="#{entity[fieldName]}">
+		    <validation:validateBasedOnMetaData formClass="${crud.entityClass}" fieldName="${fieldName}"/>		              
 			<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
 			<f:converter converterId="" binding="${converters[propEntityName]}"/>
 		</crank:select>    	
     </c:if>
 
     <!--  Display any error messages that are found -->
-    <h:message 
+    <h:panelGroup id="${idStub}ErrorId">
+	    <div id="${fieldName}Error"/>
+    	<h:message 
 	    	   id="${idStub}MessageId" 
     		   styleClass="fieldMessage"
     		   style="color: red; text-decoration: underline" 
                for="${idStub}Id" />
+    </h:panelGroup>
 
 </ui:composition>
 

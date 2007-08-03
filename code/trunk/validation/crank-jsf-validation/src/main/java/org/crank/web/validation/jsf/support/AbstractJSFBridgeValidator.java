@@ -1,5 +1,7 @@
 package org.crank.web.validation.jsf.support;
 
+import java.io.Serializable;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -20,7 +22,7 @@ import org.crank.validation.ValidatorMessages;
  * @author Rick Hightower
  * */
 @DependsOnJSF
-public abstract class AbstractJSFBridgeValidator implements Validator {
+public abstract class AbstractJSFBridgeValidator implements Validator, Serializable {
 
 	/**
 	 * Validate the field value.

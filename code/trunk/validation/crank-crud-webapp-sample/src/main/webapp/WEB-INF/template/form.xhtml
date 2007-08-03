@@ -45,12 +45,15 @@
 				rendered="${crud.state=='ADD'}"
 				styleClass="${formButtonClass}" 
 				value="Create" 
-				action="${crud.create}"/>			
+				action="${crud.create}"
+				onclick="${onclick}"
+				/>
 			<h:commandButton 
 				id="${crud.name}EditCommandButton"
 				rendered="${crud.state=='EDIT'}" 
 				styleClass="${formButtonClass}" 
 				value="Update" 
+				onclick="${onclick}"				
 				action="${crud.update}"/>			
 			<h:commandButton 
 				id="${crud.name}ResetCommandButton"
@@ -71,12 +74,14 @@
 				rendered="${crud.state=='ADD'}"
 				styleClass="${formButtonClass}" 
 				value="Create" 
+				onclick="${onclick}"				
 				action="${crud.create}"/>			
 			<a4j:commandButton 
 				id="${crud.name}EditCommandButtonAjax"
 				rendered="${crud.state=='EDIT'}" 
 				styleClass="${formButtonClass}" 
 				value="Update" 
+				onclick="${onclick}"				
 				action="${crud.update}"/>			
 			<a4j:commandButton 
 				id="${crud.name}ResetCommandButtonAjax"

@@ -718,7 +718,7 @@
 			var wasFieldValid = false;
 			
 			clearValidationSummary();
-			${validators} // <-------- Form validators get added here.
+			${validators}
 			return errorCount==0;
 		}
 		</SCRIPT>

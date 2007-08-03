@@ -11,20 +11,21 @@
 	>
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
-		<h:form id="pagForm">
+		<h:form id="pagForm" prependId="false">
 			<div id="clientValidationSummary" />
 			<crank:form crud="${cruds['Employee'].controller}"
-						propertyNames="firstName,lastName,active,dob,department,description">
+						propertyNames="firstName,lastName,active,dob,age,phone,email,department,description"
+						onclick="return validate();">
 				<c:set var="taskDetailController" 
 					value="${employeeCrud.controller.children.tasks}" />						
 				<crank:detailListing detailController="${taskDetailController}" 
-									 propertyNames="name,startDate,endDate,complete,description"
+									 propertyNames="name,startDate,endDate,complete"
 									 relationshipCollection="#{taskDetailController.model}"
 									 />
-
+<!-- 
 			<validation:clientValidator  objectExpression="${cruds['Employee'].controller.entity}" 
 		    			propertyNames="firstName,lastName,active,dob,department,description" />
-
+ -->
 			</crank:form>
 		</h:form>
 	</ui:define>

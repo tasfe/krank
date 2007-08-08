@@ -81,6 +81,20 @@
 		</function-signature>
 	</function>
 	<function>
+		<function-name>contains</function-name>
+		<function-class>org.crank.core.StringUtils</function-class>
+		<function-signature>
+			boolean contains(java.lang.String, java.lang.String)
+		</function-signature>
+	</function>	
+	<function>
+		<function-name>replace</function-name>
+		<function-class>org.crank.core.StringUtils</function-class>
+		<function-signature>
+			java.lang.String replace(java.lang.String, java.lang.String, java.lang.String)
+		</function-signature>
+	</function>	
+	<function>
 		<function-name>split</function-name>
 		<function-class>org.crank.core.StringUtils</function-class>
 		<function-signature>

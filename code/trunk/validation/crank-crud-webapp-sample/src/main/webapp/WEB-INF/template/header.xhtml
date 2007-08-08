@@ -22,8 +22,9 @@
 	    <c:set var="reRender" value="listingPanel" />
 	</c:if>
 	<c:if test="${idBase}">
-		<c:set var="idBase" value="${paginator.name}_${fieldName}Header"/>
+		<c:set var="idBase" value="${paginator.name}_${crank:replace(fieldName,'.','_')}Header"/>
 	</c:if>
+
 
 	<c:set var="filter" value="${paginator.filterableProperties[fieldName]}"/>
 	<c:set var="orderBy" value="${filter.orderBy}"/>
@@ -48,7 +49,6 @@
 	<h:column  styleClass="${columnHeaderClass}">
 	
 		<a4j:outputPanel axajRendered="true">
-		
 				<a4j:commandLink 
 					styleClass="${headerLinkClass}"
 					reRender="${reRender}"

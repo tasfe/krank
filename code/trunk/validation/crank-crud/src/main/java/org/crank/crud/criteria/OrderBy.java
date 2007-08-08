@@ -6,7 +6,14 @@ public class OrderBy implements Serializable{
 	private String name;
 	private OrderDirection direction;
     private boolean enabled = false;
+    private Integer sequence = 0;
 
+    public Integer getSequence() {
+        return sequence;
+    }
+    public void setSequence( Integer sequence ) {
+        this.sequence = sequence;
+    }
     public OrderBy () {
 	}
 	public OrderBy (final String aName, final OrderDirection aDirection) {

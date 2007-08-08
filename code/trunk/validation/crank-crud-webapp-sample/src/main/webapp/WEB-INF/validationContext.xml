@@ -107,10 +107,7 @@
 	-->
 	<bean id="phoneRegex" class="java.lang.String">
 		<constructor-arg>
-			<value>
-				1?( |-)?((\([0-9]{3}\) ?)|([0-9]{3}[- \.]))?[0-9]{3}[-
-				\.][0-9]{4}(\s(x[0-9]+)?){0,1}$
-			</value>
+			<value>1?( |-)?((\([0-9]{3}\) ?)|([0-9]{3}[- \.]))?[0-9]{3}[-\.][0-9]{4}(\s(x[0-9]+)?){0,1}$</value>
 		</constructor-arg>
 	</bean>
 
@@ -133,9 +130,7 @@
 	-->
 	<bean id="emailRegex" class="java.lang.String">
 		<constructor-arg>
-			<value>
-				^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.(([0-9]{1,3})|([a-zA-Z]{2,3})|(aero|coop|info|museum|name))$
-			</value>
+			<value>^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.(([0-9]{1,3})|([a-zA-Z]{2,3})|(aero|coop|info|museum|name))$</value>
 		</constructor-arg>
 	</bean>
 
@@ -185,9 +180,7 @@
 	-->
 	<bean id="numberRegex" class="java.lang.String">
 		<constructor-arg>
-			<value>
-				^((([0-9]{1,3})(,[0-9]{3})*)|([0-9]+))(.[0-9]+)?$
-			</value>
+			<value>^((([0-9]{1,3})(,[0-9]{3})*)|([0-9]+))(.[0-9]+)?$</value>
 		</constructor-arg>
 	</bean>
 
@@ -203,9 +196,7 @@
 	<bean id="currencyRegex" name="dollarRegex"
 		class="java.lang.String">
 		<constructor-arg>
-			<value>
-				^\$?([0-9]{1,3}(\,[0-9]{3})*|([0-9]+))(.[0-9]{1,2})?$
-			</value>
+			<value>^\$?([0-9]{1,3}(\,[0-9]{3})*|([0-9]+))(.[0-9]{1,2})?$</value>
 		</constructor-arg>
 	</bean>
 

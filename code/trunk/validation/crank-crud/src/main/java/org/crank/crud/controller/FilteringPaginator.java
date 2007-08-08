@@ -65,9 +65,11 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         public FPToggleListener() {
         }
         public void toggle( ToggleEvent event ) {
-            OrderBy orderBy = (OrderBy) event.getSource();
-            orderBy.setSequence( sequence );
-            sequence++;
+            if (event.getSource() instanceof OrderBy) {
+                OrderBy orderBy = (OrderBy) event.getSource();
+                orderBy.setSequence( sequence );
+                sequence++;
+            }
             filter();
         }
     } 

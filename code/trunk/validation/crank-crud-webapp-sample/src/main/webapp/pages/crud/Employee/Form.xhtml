@@ -14,8 +14,9 @@
 		<h:form id="pagForm" prependId="false">
 			<div id="clientValidationSummary" />
 			<crank:form crud="${cruds['Employee'].controller}"
-						propertyNames="firstName,lastName,active,dob,age,phone,email,department,description"
-						onclick="return validate();">
+						propertyNames="firstName,lastName,active,dob,age,phone,email,department,description">
+						
+<!--  onclick="return validate();" -->
 				<c:set var="taskDetailController" 
 					value="${employeeCrud.controller.children.tasks}" />						
 				<crank:detailListing detailController="${taskDetailController}" 

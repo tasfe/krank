@@ -20,7 +20,7 @@
 				<c:set var="employeeDetailController" 
 					value="${deptCrud.controller.children.employees}" />
 				<crank:detailListing detailController="${employeeDetailController}" 
-									 propertyNames="firstName,lastName,active,dob"
+									 propertyNames="firstName,lastName,active,dob,age,phone,email,department,description,numberOfPromotions"
 									 relationshipCollection="#{deptCrud.controller.entity.employees}"
 									 />
 			</crank:form>

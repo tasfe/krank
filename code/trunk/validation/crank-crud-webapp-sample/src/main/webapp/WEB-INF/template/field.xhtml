@@ -93,7 +93,7 @@
 		<crank:select id="${idStub}Id" 
 		              value="#{entity[fieldName]}">
 		    <validation:validateBasedOnMetaData formClass="${crud.entityClass}" fieldName="${fieldName}"/>		              
-			<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
+			<f:selectItems id="${idStub}SelectItemsId" value="${selectItemGenerators[propEntityName].list}" />
 			<f:converter converterId="" binding="${converters[propEntityName]}"/>
 		</crank:select>    	
     </c:if>

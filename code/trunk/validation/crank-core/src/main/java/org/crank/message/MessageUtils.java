@@ -49,6 +49,7 @@ public final class MessageUtils {
 	public static String generateLabelValue(final String fieldName) {
 		StringBuffer buffer = new StringBuffer(fieldName.length() * 2);
 		char[] chars = fieldName.toCharArray();
+        boolean capNextChar = false;
 
 		for (int index = 0; index < chars.length; index++) {
 			char cchar = chars[index];
@@ -61,6 +62,17 @@ public final class MessageUtils {
 
 				continue;
 			}
+            
+            if (cchar == '.') {
+                buffer.append(' ');
+                capNextChar = true;
+                continue;
+            }
+            
+            if (capNextChar) {
+                capNextChar = false;
+                cchar = Character.toUpperCase(cchar);
+            }
 
 			if (index == 0) {
 				cchar = Character.toUpperCase(cchar);

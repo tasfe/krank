@@ -6,12 +6,30 @@ import junit.framework.TestCase;
 
 public class TypeUtilsTest extends TestCase {
     
-    class Test {
+    public static class Foo {
+        String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName( String name ) {
+            this.name = name;
+        }
+    }
+    public static class Test {
         private boolean bool;
         private String text;
         private Date date;
         private java.sql.Date sqlDate;
+        private Foo theFoo;
 
+        public Foo getTheFoo() {
+            return theFoo;
+        }
+        public void setTheFoo( Foo theFoo ) {
+            this.theFoo = theFoo;
+        }
         public boolean isBool() {
             return bool;
         }
@@ -41,6 +59,10 @@ public class TypeUtilsTest extends TestCase {
     protected void setUp() throws Exception {
     }
 
+
+    public void testGetProperyDescriptor() {
+        assertNotNull(TypeUtils.getPropertyDescriptor( Test.class, "theFoo.name" ));
+    }
 
     public void testIsText() {
         assertFalse(TypeUtils.isText( Test.class, "bool" ));

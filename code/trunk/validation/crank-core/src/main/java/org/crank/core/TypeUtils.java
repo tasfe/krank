@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 
+
 public class TypeUtils {
 
     @SuppressWarnings("unchecked")
@@ -46,7 +47,22 @@ public class TypeUtils {
         return false;
     }
 
-    private static PropertyDescriptor getPropertyDescriptor( final Class type, final String propertyName ) {
+    public static PropertyDescriptor getPropertyDescriptor( final Class type, final String propertyName ) {
+        if (!propertyName.contains( "." )) {
+            return doGetPropertyDescriptor( type, propertyName );
+        } else {
+            String [] propertyNames = propertyName.split( "[.]" );
+            Class clazz = type;
+            PropertyDescriptor propertyDescriptor=null;
+            for (String pName : propertyNames) {
+                propertyDescriptor = doGetPropertyDescriptor( clazz, pName );
+                clazz = propertyDescriptor.getClass();
+            }
+            return propertyDescriptor;
+         }
+    }
+
+    private static PropertyDescriptor doGetPropertyDescriptor( final Class type, final String propertyName ) {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo( type );
             PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
@@ -56,7 +72,7 @@ public class TypeUtils {
                 }
             }
             return null;
-
+   
         } catch (IntrospectionException ex) {
             throw new RuntimeException( ex );
         }

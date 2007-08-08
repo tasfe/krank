@@ -22,6 +22,10 @@ public class MessageUtilsTest extends TestCase {
         assertNotNull(label);
         assertEquals( "Dad", label );
         
+        label = MessageUtils.getLabel( "mom.lovesDad", ResourceBundle.getBundle( "org/crank/message/resources" ));
+        assertNotNull(label);
+        assertEquals( "Mom Loves Dad", label );
+
     }
 
 }

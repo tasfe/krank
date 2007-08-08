@@ -11,6 +11,12 @@ public class CrudUtilsTest {
     protected void setUp() throws Exception {
     }
 
+    @Test()
+    public void isEntity() {
+        assertTrue(CrudUtils.isEntity( Employee.class));
+        assertFalse(CrudUtils.isEntity( Object.class));
+    }
+
 
     @Test()
     public void testTextSize() {

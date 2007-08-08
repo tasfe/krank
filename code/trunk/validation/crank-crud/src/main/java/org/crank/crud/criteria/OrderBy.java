@@ -11,6 +11,9 @@ public class OrderBy implements Serializable{
 	}
 	public OrderBy (final String aName, final OrderDirection aDirection) {
 		this.name = aName;
+        if (this.name.contains( "_" )) {
+            this.name = name.replace( '_', '.');
+        }
 		this.direction = aDirection;
 	}
 	public static OrderBy[] orderBy(OrderBy... orderBy) {

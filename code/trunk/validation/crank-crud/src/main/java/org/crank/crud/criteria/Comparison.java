@@ -95,14 +95,15 @@ public class Comparison extends Criterion {
 	
 	public Comparison (final String aName, final Operator aOperator, final Object aValue) {
 		this.name = aName;
+        if (this.name.contains( "_" )) {
+            this.name = name.replace( '_', '.');
+        }
 		this.operator = aOperator;
 		this.value = aValue;
 	}
 	
 	public Comparison (final String aName, final Operator aOperator, final Object aValue, final boolean alias) {
-		this.name = aName;
-		this.operator = aOperator;
-		this.value = aValue;
+        this(aName, aOperator, aValue);
 		this.alias = alias;
 	}
 	

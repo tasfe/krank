@@ -129,6 +129,12 @@ public class CrudUtils {
         return descriptor.getPropertyType().getSimpleName();
     }
 
+    public static boolean isEntity (Class clazz) {
+        AnnotationData data = (AnnotationData)MapUtils.convertListToMap( "name",
+                AnnotationUtils.getAnnotationDataForClass( clazz, allowedPackages )).get( "entity" );
+        return data != null;
+    }
+
     public static String getClassEntityName(Class clazz) {
         AnnotationData data = (AnnotationData)MapUtils.convertListToMap( "name",
                 AnnotationUtils.getAnnotationDataForClass( clazz, allowedPackages )).get( "entity" );

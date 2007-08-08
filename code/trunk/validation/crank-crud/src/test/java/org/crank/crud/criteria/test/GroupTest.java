@@ -13,7 +13,17 @@ import static org.testng.AssertJUnit.*;
 
 public class GroupTest {
 	
-	@Test
+    @Test
+    public void testDepartmentName () {
+        Group group = and(eq("department.name",  "IT"), eq("lastName", "Hightower"));
+        assertEquals("(AND [department.name_EQ_IT, lastName_EQ_Hightower])", group.toString());
+
+        group = and(eq("department_name",  "IT"), eq("lastName", "Hightower"));
+        assertEquals("(AND [department.name_EQ_IT, lastName_EQ_Hightower])", group.toString());
+        
+    }
+
+    @Test
 	public void testPrime () {
 		Group group = and(eq("firstName",  "Rick"), eq("lastName", "Hightower"));
 		assertEquals("(AND [firstName_EQ_Rick, lastName_EQ_Hightower])", group.toString());

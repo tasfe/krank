@@ -42,18 +42,33 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         createFilterProperties();
     }
 
-    private void createFilterProperties(  ) {
+    private void createFilterProperties( ) {
         filterableProperties = new HashMap<String, FilterableProperty>();
+        createFilterProperties( type, null );
+    }
+
+    private void createFilterProperties( final Class theType, final String propertyName ) {
         BeanInfo beanInfo = null;
         try {
-            beanInfo = Introspector.getBeanInfo( type );
+            beanInfo = Introspector.getBeanInfo( theType );
         } catch (IntrospectionException ie) {
             throw new RuntimeException(ie);
         }
         PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
         for (PropertyDescriptor propertyDescriptor: propertyDescriptors) {
-            FilterableProperty filterableProperty = new FilterableProperty(propertyDescriptor.getName(), propertyDescriptor.getPropertyType());
-            filterableProperties.put( propertyDescriptor.getName(), filterableProperty );
+            
+            String property = null;
+            if (propertyName != null) {
+                property = propertyName + "." +  propertyDescriptor.getName();
+            } else {
+                property = propertyDescriptor.getName();
+            }
+            FilterableProperty filterableProperty = new FilterableProperty(property, propertyDescriptor.getPropertyType());
+
+            filterableProperties.put( property, filterableProperty );
+            if (CrudUtils.isEntity( propertyDescriptor.getPropertyType() )) {
+                createFilterProperties( propertyDescriptor.getPropertyType(), property );
+            }
             
             filterableProperty.addToggleListener( new ToggleListener() {
                 public void toggle( ToggleEvent event ) {

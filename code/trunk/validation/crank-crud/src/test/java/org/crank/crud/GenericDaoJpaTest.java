@@ -49,6 +49,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     }
 
 
+
     @Test
     public void testFetchWithOrderBy() throws Exception {
         Employee employee = new Employee();
@@ -128,6 +129,27 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     	EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
     	List<Employee> employees = employeeDAO.find("department.name", "Engineering");
     	AssertJUnit.assertTrue(employees.size() > 0);
+    }
+
+    @Test
+    public void testFindRelatedFieldWithUnderBar () {
+        EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
+        List<Employee> employees = employeeDAO.find("department_name", "Engineering");
+        AssertJUnit.assertTrue(employees.size() > 0);
+    }
+
+    @Test
+    public void testFindRelatedFieldWithSearchOrdered () {
+        EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
+        List<Employee> employees = employeeDAO.searchOrdered( eq("department.name", "Engineering"), "department.name" );
+        AssertJUnit.assertTrue(employees.size() > 0);
+    }
+    
+    @Test
+    public void testFindRelatedFieldWithSearchOrderedWithUnderBar () {
+        EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
+        List<Employee> employees = employeeDAO.searchOrdered( eq("department_name", "Engineering"), "department_name" );
+        AssertJUnit.assertTrue(employees.size() > 0);
     }
 
     @Test 

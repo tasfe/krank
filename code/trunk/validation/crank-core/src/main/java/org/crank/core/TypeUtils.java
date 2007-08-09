@@ -73,8 +73,9 @@ public class TypeUtils {
             }
             return null;
    
-        } catch (IntrospectionException ex) {
-            throw new RuntimeException( ex );
+        } catch (Exception ex) {
+            throw new RuntimeException( "Unable to get property " + propertyName + " for class " + type,
+                    ex );
         }
     }
 

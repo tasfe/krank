@@ -64,6 +64,11 @@
 	<a4j:outputPanel id="${idBase}AjaxOutputPanel" ajaxRendered="true">
 		
 		<h:panelGrid id="${reRender}" columns="1" width="${dataTableWidth}">
+		
+		    <a4j:commandLink  id="${idBase}AddEntityLink"
+						action="${crud.loadCreate}"
+						value="Add New" reRender="${reRender}"/>
+		
 			<crank:paginator paginator="${paginator}" reRender="${reRender}" />
 	
 			<rich:dataTable width="${dataTableWidth}" id="${idBase}DataTable"

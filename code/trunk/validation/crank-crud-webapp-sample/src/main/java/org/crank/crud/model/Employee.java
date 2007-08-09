@@ -78,6 +78,14 @@ public class Employee implements Serializable{
     @ManyToOne()
 	private Department department;
     
+    private PersistedFile file;
+    
+    public PersistedFile getFile() {
+        return file;
+    }
+    public void setFile( PersistedFile file ) {
+        this.file = file;
+    }
     public void addTask(Task task) {
         this.tasks.add( task );
     }

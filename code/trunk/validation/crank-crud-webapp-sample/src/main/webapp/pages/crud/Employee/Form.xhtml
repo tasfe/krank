@@ -7,14 +7,22 @@
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:crank="http://www.googlecode.com/crank"
-	xmlns:validation="http://code.google.com/p/krank/validation"	
-	>
+	xmlns:validation="http://code.google.com/p/krank/validation"
+	xmlns:t="http://myfaces.apache.org/tomahawk">
+	
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
-		<h:form id="pagForm" prependId="false">
+		<h:form id="pagForm" prependId="false" enctype="multipart/form-data">
 			<div id="clientValidationSummary" />
-			<crank:form crud="${cruds['Employee'].controller}"
+			<crank:form crud="${employeeMainCrud}"
 						propertyNames="firstName,lastName,active,dob,age,phone,email,department,description">
+
+            <t:inputFileUpload id="fileupload"
+                               accept="image/*"
+                               value="${employeeMainCrud.uploadFile}"
+                               storage="file"
+                               required="true"
+                               maxlength="200000"/>
 						
 <!--  onclick="return validate();" -->
 				<c:set var="taskDetailController" 

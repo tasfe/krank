@@ -20,9 +20,11 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 import org.crank.controller.ControllerBean;
+import org.crank.controller.EmployeeController;
 import org.crank.core.spring.support.SpringBeanWrapperPropertiesUtil;
 import org.crank.crud.controller.CrudController;
 import org.crank.crud.controller.CrudManagedObject;
+import org.crank.crud.controller.CrudOperations;
 import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.controller.FilteringPaginator;
 import org.crank.crud.controller.datasource.JpaFilteringPagingDataSource;
@@ -73,6 +75,13 @@ public class SampleConfiguration {
             cruds.put(mo.getName(), jsfCrudAdapter);
         }
         return cruds;
+    }
+    
+    @Bean (scope = DefaultScopes.SESSION)
+    public CrudOperations employeeMainCrud() throws Exception{
+        EmployeeController controller = new EmployeeController();
+        controller.setController( cruds().get( "Employee" ).getController() );
+        return controller;
     }
 
     @SuppressWarnings("unchecked")

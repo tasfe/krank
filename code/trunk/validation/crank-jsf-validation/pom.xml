@@ -27,8 +27,6 @@
 			<groupId>javax.faces</groupId>
 			<artifactId>jsf-api</artifactId>
 		</dependency>
-
-
 		<dependency>
 			<groupId>javax.el</groupId>
 			<artifactId>el-api</artifactId>
@@ -37,9 +35,10 @@
 			<groupId>el-impl</groupId>
 			<artifactId>el-impl</artifactId>
 		</dependency>
-
-
-
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+		</dependency>		        		
 		<dependency>
 			<groupId>javax.faces</groupId>
 			<artifactId>jsf-api</artifactId>
@@ -60,6 +59,5 @@
 			<version>2.0.8</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 </project>

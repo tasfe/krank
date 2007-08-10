@@ -11,7 +11,7 @@ The major improvements from Presto and Crank is that Crank is geared towards ann
 
 Out of the box with Crank you can easily create CRUD listings. For example the following code would produce a CRUD listing that allows all columns to be sorted and filtered:
 
-{code}
+{{{
 <h:form id="expListForm" rendered="#{controllerBean.showListing}">
     <crank:listing paginator="${paginators['Employee']}" 
 		jsfCrudAdapter="${cruds['Employee']}" 
@@ -22,7 +22,7 @@ Out of the box with Crank you can easily create CRUD listings. For example the f
 		crud="${cruds['Employee'].controller}"/>
 </h:form>
 
-{code}
+}}}
 
 The above produces the following listing (from the example crud app, which you can [download | http://code.google.com/p/krank/downloads/list] or get from [SVN | http://code.google.com/p/krank/source] or [read more about | http://code.google.com/p/krank/w/list] and try out).
 
@@ -36,7 +36,7 @@ The forms management is nice in that it will automatically render the right kind
 
 Let's say for example that you have an Employee object with JPA annotations as follows:
 
-{code}
+{{{
 @Entity
 public class Employee implements Serializable {
 
@@ -216,7 +216,7 @@ public class Employee implements Serializable {
     }
 }
 
-{code}
+}}}
 
 We can easily render the above object in a form without writng a lot of code. We can allow editing of the OneToMany relationship (Employee->Tasks) and the ManyToOne relationship (Employee->Department) without much effort and practically no code. The idea behind Crank Crud is reasonable behavior. Also we read and process the meta-data stored in the JPA annotations, Java types, and validation annotations to render the write kind of input fields and validation.
 
@@ -272,8 +272,6 @@ Here is an example of runtime processing (the example needs some CSS love... sor
 A couple of parting shots, Crank is a tiered framework much of the code has nothing to do with JSF and can work easily with other frameworks namely Spring MVC. We are using quite a bit of Crank with a Spring MVC application. There is an example of integating Crank Validation with Spring MVC and a Crank Crud Spring MVC example is in the works (Chris Mathias).
 
 The example Crank Crud is based on JSF, Ajax4JSF, Facelets, Spring, and JPA (Hibernate based). The listings are Ajax enabled thanks to Ajax4JSF.
-
-So why am I writing this. Bragging? No... Well maybe. Do I want feedback? Not really... although suggestions are welcome. Mainly I am writing this becuase I am looking for help. Are there other people out there who must use JSF or want to use JSF and also need to create CRUD listings? Then please use Crank or better yet help us improve it. I'd love to get a few more solid commiters. I'd love to see Crank ported to other web frameworks (Struts 2, better Spring MVC support) and GUI frameworks (Swing, GWT). 
 
 
 

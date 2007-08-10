@@ -244,7 +244,7 @@ There is quite a bit going on. The above allows you to edit first name, last nam
 
 In addtion, to provide validation you can use validation. Notice that the email and phone (as well as others properties) are annotated with validation rules which get processed as runtime:
 
-{code}
+{{{
     @Required
     @ProperNoun
     @Length( min = 2, max = 35 )
@@ -262,8 +262,7 @@ In addtion, to provide validation you can use validation. Notice that the email 
         this.phone = phone;
     }
 
-{code}
-
+}}}
 
 Here is an example of runtime processing (the example needs some CSS love... sorry):
 
@@ -272,6 +271,5 @@ Here is an example of runtime processing (the example needs some CSS love... sor
 A couple of parting shots, Crank is a tiered framework much of the code has nothing to do with JSF and can work easily with other frameworks namely Spring MVC. We are using quite a bit of Crank with a Spring MVC application. There is an example of integating Crank Validation with Spring MVC and a Crank Crud Spring MVC example is in the works (Chris Mathias).
 
 The example Crank Crud is based on JSF, Ajax4JSF, Facelets, Spring, and JPA (Hibernate based). The listings are Ajax enabled thanks to Ajax4JSF.
-
 
 

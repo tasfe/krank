@@ -1,64 +1,19 @@
 package org.crank.crud.controller;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.crank.core.RequestParameterMapFinder;
 import org.crank.crud.relationships.RelationshipManager;
-import org.crank.web.RequestParameterMapFinderImpl;
 
-public class DetailController implements CrudOperations, Serializable {
+public class DetailController<T, PK extends Serializable> extends CrudControllerBase<T, PK> {
     
-    protected Class entityClass;
     protected RelationshipManager relationshipManager = new RelationshipManager();
-    protected Serializable entity;
-    protected CrudState state = CrudState.UNKNOWN;
-    protected CrudOperations parent;
-    protected Map<String, DetailController> children = new HashMap<String, DetailController>();
-    protected RequestParameterMapFinder requestParameterMapFinder = new RequestParameterMapFinderImpl();
     protected String idParam = "id";
-    private String name;
 
-    public String getName() {
-        return name != null ? name : CrudUtils.getClassEntityName(entityClass);
-    }
-
-    public void setName( String name ) {
-        this.name = name;
-    }
 
     public void setIdParam( String idParam ) {
         this.idParam = idParam;
     }
 
-    public void setRequestParameterMapFinder( RequestParameterMapFinder requestParameterMapFinder ) {
-        this.requestParameterMapFinder = requestParameterMapFinder;
-    }
-
-    public void setChildren( Map<String, DetailController> children ) {
-        this.children = children;
-    }
-
-    public Map<String, DetailController> getChildren() {
-        return children;
-    }
-
-    public CrudState getState() {
-        return state;
-    }
-
-    public void setState( CrudState state ) {
-        this.state = state;
-    }
-
-    public void setEntityClass( Class entityClass ) {
-        this.entityClass = entityClass;
-    }
-
-    public void setParent( CrudOperations parent ) {
-        this.parent = parent;
-    }
 
     public void setRelationshipManager( RelationshipManager relationshipManager ) {
         this.relationshipManager = relationshipManager;
@@ -71,18 +26,20 @@ public class DetailController implements CrudOperations, Serializable {
     public DetailController () {
     }
     
+    @SuppressWarnings("unchecked")
     public DetailController (final Class entityClass) {
         this.entityClass = entityClass;
         relationshipManager.setEntityClass( entityClass );
     }
 
+    @SuppressWarnings("unchecked")
     public DetailController (final CrudOperations parent, final Class entityClass) {
         this.entityClass = entityClass;
         this.parent = parent;
         relationshipManager.setEntityClass( entityClass );
     }
     
-    public CrudOutcome create() {
+    public CrudOutcome doCreate() {
         Object parent = (Object) this.parent.getEntity();
 
         /* Add this object to the parent. */
@@ -105,9 +62,6 @@ public class DetailController implements CrudOperations, Serializable {
         return this.relationshipManager.getObjectId( parent.getEntity(), row);
     }
 
-    public Serializable getEntity() {
-        return entity;
-    }
 
     public CrudOutcome loadCreate() {
         init();
@@ -136,81 +90,20 @@ public class DetailController implements CrudOperations, Serializable {
         return this.requestParameterMapFinder.getMap().get( this.idParam )[0];
     }
 
-    public CrudOutcome update() {
+    protected CrudOutcome doUpdate() {
         this.state = CrudState.UNKNOWN;
         return null;
     }
 
-    /**
-     * Create a new entity. An Entity is the object we are managing.
-     *
-     */
-    private void createEntity() {
-        try {
-            this.entity = (Serializable) entityClass.newInstance();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-    
-    public void init() {
-        createEntity();
-        this.state = CrudState.UNKNOWN;
-        initDetailChildren();
-        parentChildren();
-    }
-    
-    
-    private void initDetailChildren() {
-        if (children!=null) {
-            for (DetailController detailController : children.values()) {
-                detailController.init();
-            }
-        }
-    }
-    
-    
-    /** Inject this parent into all Children. It's fathers day. Give all the children a daddy. */
-    private void parentChildren() {
-        if (children!=null) {
-            for (DetailController detailController : children.values()) {
-                detailController.setParent(this);
-            }
-        }
-    }
     
     public CrudOutcome cancel() {
         state = CrudState.UNKNOWN;
         cancelChildren();
         return CrudOutcome.LISTING;
     }
-    
-    /**
-     * Call cancelSubForms on all children.
-     *
-     */
-    private void cancelChildren() {
-        if (children!=null) {
-            for (DetailController detailController : children.values()) {
-                detailController.cancel();
-            }
-        }
-    }
-    
-    public void addChild (String name, DetailController detailController) {
-        this.children.put(name, detailController);
-        detailController.setParent( this );
-    }
-    
-    public boolean isShowListing() {
-        return state != CrudState.ADD || state != CrudState.EDIT;
-    }
-    public boolean isShowForm() {
-        return state == CrudState.ADD || state == CrudState.EDIT;
-    }
-
-    public Class getEntityClass() {
-        return entityClass;
+        
+    public CrudOutcome deleteSelected() {
+        throw new UnsupportedOperationException();
     }
 
 }

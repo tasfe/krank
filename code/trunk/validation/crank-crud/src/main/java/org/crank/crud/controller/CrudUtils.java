@@ -4,6 +4,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Set;
 import org.crank.core.AnnotationData;
 import org.crank.core.AnnotationUtils;
 import org.crank.core.MapUtils;
+import org.crank.crud.model.PersistedFile;
 
 
 public class CrudUtils {
@@ -78,6 +80,18 @@ public class CrudUtils {
     }
 
     public static int textSize(Class clazz, String propertyName) {
+        return columnSize( clazz, propertyName );
+    }
+
+    public static boolean isFile(Class clazz, String propertyName) {
+        if (PersistedFile.class.isAssignableFrom( getPropertyDescriptor( clazz, propertyName ).getPropertyType() )) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static int columnSize(Class clazz, String propertyName) {
         
         Map map = getAnnotationDataAsMap( clazz, propertyName );
         
@@ -94,7 +108,9 @@ public class CrudUtils {
                 } else {
                     /* Otherwise, if the nullable value was not set, then return false. */
                     return 0;
+                
                 }
+                
         }
         return 0;
         

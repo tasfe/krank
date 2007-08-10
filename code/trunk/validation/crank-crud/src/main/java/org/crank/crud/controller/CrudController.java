@@ -1,15 +1,8 @@
 package org.crank.crud.controller;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.crank.annotations.design.AllowsConfigurationInjection;
 import org.crank.annotations.design.ExpectsInjection;
-import org.crank.annotations.design.OptionalInjection;
-import org.crank.core.PropertiesUtil;
-import org.crank.crud.GenericDao;
 
 /**
  * Controls CRUD operations from an application.
@@ -20,51 +13,23 @@ import org.crank.crud.GenericDao;
  * @see CrudOperations
  * @see Toggleable
  */
-public class CrudController<T, PK extends Serializable> implements CrudOperations, Toggleable {
-    private GenericDao<T, PK> dao;
-    private EntityLocator entityLocator;
-    private PropertiesUtil propertyUtil;
-    private String idPropertyName = "id";
-    private boolean readPopulated = true;
-    private Class<T> entityClass;
-    private CrudState state;    
-    private T entity;
-    private Map<String, DetailController> children = new HashMap<String, DetailController>(); 
-    private ToggleSupport toggleSupport = new ToggleSupport();
-    private String name;
-    
-    public String getName() {
-        return name != null ? name : CrudUtils.getClassEntityName(entityClass);
-    }
-
-    public void setName( String name ) {
-        this.name = name;
-    }
-    
-
-    /**
-     * @see Toggleable#addToggleListener(ToggleListener)
-     */
-    public void addToggleListener(ToggleListener listener) {
-        toggleSupport.addToggleListener( listener );
-    }
-    /**
-     * @see Toggleable#addToggleListener(ToggleListener)
-     */    
-    public void removeToggleListener(ToggleListener listener) {
-        toggleSupport.removeToggleListener( listener );
-    }
-
-    /**
-     * Fire and event to the listeners.
-     *
-     */
-    private void fireToggle() {
-        toggleSupport.fireToggle();
-    }
-
+public class CrudController<T, PK extends Serializable> extends CrudControllerBase<T, PK>  {
     public CrudController () {
         
+    }
+    
+    /**
+     * Update the entity in the data store. 
+     * Notify listeners that the entity was updated.
+     * @see CrudOperations#update()
+     * @return outcome
+     */
+    @SuppressWarnings("unchecked")
+    public CrudOutcome doUpdate() {
+        dao.update((T)entity);
+        state = CrudState.UNKNOWN; 
+        fireToggle();
+        return CrudOutcome.LISTING;
     }
     
     /**
@@ -73,12 +38,8 @@ public class CrudController<T, PK extends Serializable> implements CrudOperation
      */
     public CrudOutcome loadCreate() {
         init();
-        try {
-            entity = entityClass.newInstance();
-            this.state = CrudState.ADD;
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
+        createEntity();
+        this.state = CrudState.ADD;
         return CrudOutcome.FORM;
     }
 
@@ -88,8 +49,9 @@ public class CrudController<T, PK extends Serializable> implements CrudOperation
      * @see CrudOperations#create()
      * @retrun outcome
      */
-    public CrudOutcome create() {
-        dao.create(entity);
+    @SuppressWarnings("unchecked")
+    public CrudOutcome doCreate() {
+        dao.create((T)entity);
         this.state = CrudState.UNKNOWN;
         fireToggle();
         return CrudOutcome.LISTING;
@@ -149,114 +111,15 @@ public class CrudController<T, PK extends Serializable> implements CrudOperation
         return entityLocator.getSelectedEntities();
     }
 
-    /**
-     * Update the entity in the data store. 
-     * Notify listeners that the entity was updated.
-     * @see CrudOperations#update()
-     * @return outcome
-     */
-    public CrudOutcome update() {
-    	dao.update(entity);
-        state = CrudState.UNKNOWN; 
-        fireToggle();
-        return CrudOutcome.LISTING;
-    }
-
-    /** 
-     * @see CrudOperations#getEntity()
-     */
-    public Serializable getEntity() {
-        return (Serializable) entity;
-    }
-
-
-
-    public void setDao( GenericDao<T, PK> dao ) {
-        this.dao = dao;
-    }
-
     @ExpectsInjection
     public void setEntityLocator( EntityLocator entityLocator ) {
         this.entityLocator = entityLocator;
     }
 
-    @ExpectsInjection    
-    public void setPropertyUtil( PropertiesUtil propertyUtil ) {
-        this.propertyUtil = propertyUtil;
-    }
-
-    @OptionalInjection
-    public void setIdPropertyName( String idPropertyName ) {
-        this.idPropertyName = idPropertyName;
-    }
-
-    @AllowsConfigurationInjection
-    public void setReadPopulated( boolean readPopulated ) {
-        this.readPopulated = readPopulated;
-    }
-
-    @AllowsConfigurationInjection
-    public void setEntityClass( Class<T> entityClass ) {
-        this.entityClass = entityClass;
-    }
-    
-    public Class<T> getEntityClass() {
-        return entityClass;
-    }
-
-    public CrudState getState() {
-        return state;
-    }
     public CrudOutcome cancel() {
         state = CrudState.UNKNOWN;
         cancelChildren();
         return CrudOutcome.LISTING;
-    }
-    public Map<String, DetailController> getChildren() {
-        return children;
-    }
-    public void setChildren( Map<String, DetailController> children ) {
-        this.children = children;
-    }
-    public void init() {
-        this.state = CrudState.UNKNOWN;
-        initDetailChildren();
-        parentChildren();
-    }
-
-    private void initDetailChildren() {
-        if (children!=null) {
-            for (DetailController detailController : children.values()) {
-                detailController.init();
-            }
-        }
-    }
-    
-    
-    /** Inject this parent into all Children. It's fathers day. Give all the children a daddy. */
-    private void parentChildren() {
-        if (children!=null) {
-            for (DetailController detailController : children.values()) {
-                detailController.setParent(this);
-            }
-        }
-    }
-
-    /**
-     * Call cancelSubForms on all children.
-     *
-     */
-    private void cancelChildren() {
-        if (children!=null) {
-            for (DetailController detailController : children.values()) {
-                detailController.cancel();
-            }
-        }
-    }
-    
-    public void addChild (String name, DetailController detailController) {
-        this.children.put(name, detailController);
-        detailController.setParent( this );
     }
     
     

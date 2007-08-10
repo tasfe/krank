@@ -10,6 +10,7 @@
 	  xmlns:fn="http://java.sun.com/jsp/jstl/functions"   
       xmlns:t="http://myfaces.apache.org/tomahawk"
 	  xmlns:crank="http://www.googlecode.com/crank"
+	  xmlns:crud="http://www.googlecode.com/crank/crud"
 	  xmlns:validation="http://code.google.com/p/krank/validation"
       >
 
@@ -25,13 +26,13 @@
 
     <!--  The label is optional. Generate it if it is missing. -->
 	<c:if test="${empty label}">
-	    <c:set var="label" value="${crank:createLabel(fieldName)}" />
+	    <c:set var="label" value="${crud:createLabel(fieldName)}" />
 	</c:if>
 
     <!-- The required attribute is optional, 
          initialize it to true if not found. -->
     <c:if test="${empty required}">
-        <c:set var="required" value="${crank:isRequired(crud.entityClass,fieldName)}" />
+        <c:set var="required" value="${crud:isRequired(crud.entityClass,fieldName)}" />
     </c:if>
 	<c:if test="${empty idStub}">
 	    <c:set var="idStub" value="${fieldName}${crud.name}Field" />
@@ -41,19 +42,19 @@
    <h:outputLabel id="${idStub}OutputLabelId" value="${label}" 
    				  for="${idStub}Id" styleClass="${formLabelStyleClasses}"/>
 
-   <c:if test="${crank:isText(crud.entityClass,fieldName)}">
-   	   <c:if test="${crank:isLargeText(crud.entityClass,fieldName)}">
+   <c:if test="${crud:isText(crud.entityClass,fieldName)}">
+   	   <c:if test="${crud:isLargeText(crud.entityClass,fieldName)}">
 		   <h:inputTextarea id="${idStub}Id" 
 		                     value="#{entity[fieldName]}" 
 		                     required="${required}" 
 		                     styleClass="${formFieldStyleClasses}"
 		                     cols="50"
-		                     rows="${crank:textSize(crud.entityClass,fieldName)/50}">
+		                     rows="${crud:textSize(crud.entityClass,fieldName)/50}">
 		            <validation:validateBasedOnMetaData formClass="${crud.entityClass}" fieldName="${fieldName}"/> 
 		            <ui:insert />
 		   </h:inputTextarea>
    	   </c:if>
-   	   <c:if test="${not crank:isLargeText(crud.entityClass,fieldName)}">
+   	   <c:if test="${not crud:isLargeText(crud.entityClass,fieldName)}">
 		   <h:inputText id="${idStub}Id" 
 		                     value="#{entity[fieldName]}" 
 		                     required="${required}" 
@@ -67,7 +68,7 @@
 
     <!--  If the value binding is a boolean, display a
            selectBooleanCheckbox field. -->
-    <c:if test="${crank:isBoolean(crud.entityClass,fieldName)}">
+    <c:if test="${crud:isBoolean(crud.entityClass,fieldName)}">
 	   <h:selectBooleanCheckbox  id="${idStub}Id" 
 						 value="#{entity[fieldName]}" 
 						 required="${required}" 
@@ -77,7 +78,7 @@
 
     <!--  If the value binding is a date, 
           display a t:inputDate field. -->
-    <c:if test="${crank:isDate(crud.entityClass,fieldName)}">
+    <c:if test="${crud:isDate(crud.entityClass,fieldName)}">
 		<t:calendar id="${idStub}Id" 
 					   renderPopupButtonAsImage="true" 
 	                   renderAsPopup="true" value="#{entity[fieldName]}" 
@@ -88,23 +89,23 @@
 		</t:calendar>
 	</c:if>
 
-    <c:if test="${crank:isManyToOne(crud.entityClass,fieldName)}">
-        <c:set var="propEntityName" value="${crank:getPropertyEntityName(crud.entityClass,fieldName)}" />
-		<crank:select id="${idStub}Id" 
+    <c:if test="${crud:isManyToOne(crud.entityClass,fieldName)}">
+        <c:set var="propEntityName" value="${crud:getPropertyEntityName(crud.entityClass,fieldName)}" />
+		<crud:select id="${idStub}Id" 
 		              value="#{entity[fieldName]}">
 		    <validation:validateBasedOnMetaData formClass="${crud.entityClass}" fieldName="${fieldName}"/>		              
 			<f:selectItems id="${idStub}SelectItemsId" value="${selectItemGenerators[propEntityName].list}" />
 			<f:converter converterId="" binding="${converters[propEntityName]}"/>
-		</crank:select>    	
+		</crud:select>    	
     </c:if>
     
-    <c:if test="${crank:isFile(crud.entityClass,fieldName)}">
+    <c:if test="${crud:isFile(crud.entityClass,fieldName)}">
         <c:set var="mapKeyName" value="uploadFile_${fieldName}" />
         <t:inputFileUpload id="fileupload"
                                accept="image/*"
                                value="${crud.dynamicProperties[mapKeyName]}"
                                storage="file"
-                               maxlength="${crank:columnSize(crud.entityClass,fieldName)}"/>
+                               maxlength="${crud:columnSize(crud.entityClass,fieldName)}"/>
     </c:if>
 
     

@@ -9,7 +9,8 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-	xmlns:crank="http://www.googlecode.com/crank">
+	xmlns:crank="http://www.googlecode.com/crank"
+	xmlns:crud="http://www.googlecode.com/crank/crud">
 
 <ui:composition>
 
@@ -121,16 +122,16 @@
 				</h:column>
 				
 				<c:forEach items="${pNames}" var="property">
-					<c:set var='idName' value='${crank:replace(property, ".", "_")}'/>
+					<c:set var='idName' value='${crud:replace(property, ".", "_")}'/>
 					<h:column>
-						<c:if test="${not crank:contains(property, '.')}">
+						<c:if test="${not crud:contains(property, '.')}">
 								<h:outputText id="${idBase}${idName}Text" 
 											  value="#{row.object[property]}" 
 											  rendered="${not ((row.object[property] == 'true') or (row.object[property] == 'false'))}"/>
 								<h:graphicImage id="${idBase}${idName}Bool" value="/images/check-sm.gif" rendered="${(row.object[property] == 'true')}" styleClass="imageCenter"/>
 
 						</c:if>
-						<c:if test="${crank:contains(property, '.')}">
+						<c:if test="${crud:contains(property, '.')}">
 								<h:outputText id="${idBase}${idName}ComplexText" 
 											  value="#{row.map[property]}" />
 						</c:if>

@@ -9,7 +9,8 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-	xmlns:crank="http://www.googlecode.com/crank">
+	xmlns:crank="http://www.googlecode.com/crank"
+	xmlns:crud="http://www.googlecode.com/crank/crud">
 
 <ui:composition>
 		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
@@ -38,7 +39,7 @@
 					<rich:columnGroup id="${idBase}ColumnGroup">
 						<c:forEach items="${pNames}" var="property">
 							<h:column id="${idBase}${property}Header">
-								<h:outputText id="${idBase}${property}HeaderText" value="${crank:createLabel(property)}" />
+								<h:outputText id="${idBase}${property}HeaderText" value="${crud:createLabel(property)}" />
 							</h:column>
 						</c:forEach>					
 						<h:column id="${idBase}ActionColumn">
@@ -48,16 +49,16 @@
 				</f:facet>				
 				<c:forEach items="${pNames}" var="property">
 					<h:column id="${idBase}${property}Column">
-						<h:outputText id="${idBase}${property}RowText" value="${row[property]}" rendered="${not crank:isBoolean(row.class, property)}"/>
+						<h:outputText id="${idBase}${property}RowText" value="${row[property]}" rendered="${not crud:isBoolean(row.class, property)}"/>
 						<h:graphicImage id="${idBase}${property}BooleanGraphic" value="/images/check-sm.gif" rendered="${(row[property] == 'true')}" styleClass="imageCenter"/>
 					</h:column>
 				</c:forEach>
 				<h:column id="${idBase}ActionRow">
 					<table><tr><td><a4j:commandLink id="${idBase}ActionRowDelete" action="${detailController.delete}" value="Delete">
-						<f:param id="${idBase}ActionRowDeleteIdParam" name="id" value="${crank:getObjectId(detailController,row)}"/>
+						<f:param id="${idBase}ActionRowDeleteIdParam" name="id" value="${crud:getObjectId(detailController,row)}"/>
 					</a4j:commandLink></td><td>
 					<a4j:commandLink id="${idBase}ActionRowEdit" action="${detailController.read}" value="Edit">
-						<f:param id="${idBase}ActionRowEditIdParam" name="id" value="${crank:getObjectId(detailController,row)}"/>
+						<f:param id="${idBase}ActionRowEditIdParam" name="id" value="${crud:getObjectId(detailController,row)}"/>
 					</a4j:commandLink></td></tr></table>
 				</h:column>
 			</rich:dataTable>

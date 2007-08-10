@@ -9,20 +9,21 @@
 	  xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	  xmlns:rich="http://richfaces.ajax4jsf.org/rich"
       xmlns:t="http://myfaces.apache.org/tomahawk"
-	  xmlns:crank="http://www.googlecode.com/crank">
+	  xmlns:crank="http://www.googlecode.com/crank"
+	  xmlns:crud="http://www.googlecode.com/crank/crud">
 
 <ui:composition>
 
 	<!-- DEFINE VARIABLES -->
 	<c:if test="${empty label}">
-	    <c:set var="label" value="${crank:createLabel(fieldName)}" />
+	    <c:set var="label" value="${crud:createLabel(fieldName)}" />
 	</c:if>
 	
 	<c:if test="${empty reRender}">
 	    <c:set var="reRender" value="listingPanel" />
 	</c:if>
 	<c:if test="${idBase}">
-		<c:set var="idBase" value="${paginator.name}_${crank:replace(fieldName,'.','_')}Header"/>
+		<c:set var="idBase" value="${paginator.name}_${crud:replace(fieldName,'.','_')}Header"/>
 	</c:if>
 
 
@@ -89,14 +90,14 @@
 
 				<a4j:outputPanel 
 				                 axajRendered="true" 
-				                 rendered="#{comparison.enabled and not crank:isDate(paginator.type,fieldName)}">
-					<a4j:outputPanel rendered="${crank:isText(paginator.type,fieldName)}">
+				                 rendered="#{comparison.enabled and not crud:isDate(paginator.type,fieldName)}">
+					<a4j:outputPanel rendered="${crud:isText(paginator.type,fieldName)}">
 						<h:inputText styleClass="${headerFilterInputTextClass}" 
 											value="#{comparison.value}"
 											size="5"/>
 					</a4j:outputPanel>
 
-					<a4j:outputPanel rendered="${crank:isBoolean(paginator.type,fieldName)}">
+					<a4j:outputPanel rendered="${crud:isBoolean(paginator.type,fieldName)}">
 						<h:selectBooleanCheckbox styleClass="${headerFilterInputTextClass}" 
 											value="#{comparison.value}"
 											/>
@@ -111,7 +112,7 @@
 					</a4j:commandLink>
 				</a4j:outputPanel>
 				
-				<a4j:outputPanel axajRendered="true" rendered="${comparison.enabled and crank:isDate(paginator.type,fieldName)}">
+				<a4j:outputPanel axajRendered="true" rendered="${comparison.enabled and crud:isDate(paginator.type,fieldName)}">
 					<br />
 					<h:panelGrid columns="3">
 					

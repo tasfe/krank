@@ -24,7 +24,6 @@ public class TomahawkFileUploadHandler implements FileUploadHandler {
           BeanWrapper wrapper = new BeanWrapperImpl(crudOperations.getEntity());
           Map<String, Object> dynamicProperties = crudOperations.getDynamicProperties();
           
-          ;
           for(Map.Entry<String, Object> entry: dynamicProperties.entrySet()) {
                if (entry.getKey().startsWith( markerString )) {
                    extractFileInfo( wrapper, entry.getKey().substring( markerString.length() ), (UploadedFile) entry.getValue() );
@@ -33,9 +32,12 @@ public class TomahawkFileUploadHandler implements FileUploadHandler {
     }
 
     private void extractFileInfo( BeanWrapper wrapper, String propertyName, UploadedFile uploadFile ) {
+           if (uploadFile == null) {
+               return;
+           }
            Object propertyValue = initFilePropertyIfNeeded( wrapper, propertyName );
            if (propertyValue instanceof PersistedFile) {
-               extractInfoNormal( propertyName, uploadFile, propertyValue );
+               extractInfoNormal( propertyName, uploadFile, (PersistedFile) propertyValue );
            }  else {
                extactInfoDynamic( wrapper, propertyName, uploadFile );
            }
@@ -51,8 +53,7 @@ public class TomahawkFileUploadHandler implements FileUploadHandler {
            wrapper.setPropertyValue( propertyName + dot + contentTypeProperty, uploadFile.getContentType());
     }
 
-    private void extractInfoNormal( String propertyName, UploadedFile uploadFile, Object propertyValue ) {
-        PersistedFile file = (PersistedFile) propertyValue;
+    private void extractInfoNormal( String propertyName, UploadedFile uploadFile, PersistedFile file  ) {
            try {
                file.setBytes( uploadFile.getBytes() );
            } catch (IOException e) {

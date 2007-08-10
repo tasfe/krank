@@ -26,7 +26,8 @@ Out of the box with Crank you can easily create CRUD listings. For example the f
 
 The above produces the following listing (from the example crud app, which you can [http://code.google.com/p/krank/downloads/list download] or get from [ http://code.google.com/p/krank/source SVN ] or [http://code.google.com/p/krank/w/list read more about] and try it out).
 
-!EmployeeListing.jpg!
+http://www.thearcmind.com/confluence/download/attachments/4173/EmployeeListing.jpg
+
 
 The listing has pagination, each column is filterable (dates, strings, booleans, relationships). By filterable, I mean you can click the inspection icon (magnifying glass) and enter in filters for that column. You can apply as many filters and sorts (order bys) as  you need. You can clear filters and sorts as well. You can sort more than one field. 
 
@@ -238,7 +239,8 @@ Here is the page that renders a form to edit the Employee object and its relatio
 
 The above renders this form:
 
-!EmployeeForm.jpg!
+http://www.thearcmind.com/confluence/download/attachments/4173/EmployeeForm.jpg
+
 
 There is quite a bit going on. The above allows you to edit first name, last name, active, and dob (date of birth) using text input, checkboxes and calendar widget with no effort. More amazingly, you are able to change department which is a ManyToOne relationship with no additonal code. Also a file input field is rendered for the file property. Even more amazingly the above allows you to easily render a master detail within the form (Employee has Tasks). I have hoped I piqued your interests. 
 
@@ -266,7 +268,7 @@ In addtion, to provide validation you can use validation. Notice that the email 
 
 Here is an example of runtime processing (the example needs some CSS love... sorry):
 
-!EmployeeFormValidation.jpg!
+http://www.thearcmind.com/confluence/download/attachments/4173/EmployeeFormValidation.jpg
 
 A couple of parting shots, Crank is a tiered framework much of the code has nothing to do with JSF and can work easily with other frameworks namely Spring MVC. We are using quite a bit of Crank with a Spring MVC application. There is an example of integating Crank Validation with Spring MVC and a Crank Crud Spring MVC example is in the works (Chris Mathias).
 

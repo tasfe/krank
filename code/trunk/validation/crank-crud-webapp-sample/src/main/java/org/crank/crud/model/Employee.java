@@ -26,146 +26,149 @@ import org.crank.crud.model.PersistedFile;
 
 @Entity
 @NamedQueries( {
-	@NamedQuery(name="Employee.findEmployeesByDepartment",
-			query="from Employee employee where employee.department.name=?"),
-	@NamedQuery(name="Employee.readPopulated",
-					query="select distinct employee from Employee employee join fetch employee.department " +
-                            "left outer join fetch employee.tasks where employee.id=?"),
-	@NamedQuery(name="Employee.findInEmployeeIds",
-							query="SELECT o FROM Employee o  WHERE  o.id in  ( ? )"),
-    @NamedQuery(name="Employee.findSalaryEmployees",
-				query="SELECT o FROM Employee o  WHERE  o.status = org.crank.crud.model.EmployeeStatus.SALARY")
-				,
-	@NamedQuery(name="Employee.findExcellentEmployees",
-						query="SELECT o FROM Employee o  WHERE  o.rank = org.crank.crud.model.EmployeeRank.EXCELLENT"
-	)
-	
-})
-public class Employee implements Serializable{
+        @NamedQuery( name = "Employee.findEmployeesByDepartment", query = "from Employee employee where employee.department.name=?" ),
+        @NamedQuery( name = "Employee.readPopulated", query = "select distinct employee from Employee employee join fetch employee.department "
+                + "left outer join fetch employee.tasks where employee.id=?" ),
+        @NamedQuery( name = "Employee.findInEmployeeIds", query = "SELECT o FROM Employee o  WHERE  o.id in  ( ? )" ),
+        @NamedQuery( name = "Employee.findSalaryEmployees", query = "SELECT o FROM Employee o  WHERE  o.status = org.crank.crud.model.EmployeeStatus.SALARY" ),
+        @NamedQuery( name = "Employee.findExcellentEmployees", query = "SELECT o FROM Employee o  WHERE  o.rank = org.crank.crud.model.EmployeeRank.EXCELLENT" )
+
+} )
+public class Employee implements Serializable {
 
     @Id
-    @GeneratedValue( strategy = GenerationType.AUTO )	
-	private Long id;
+    @GeneratedValue( strategy = GenerationType.AUTO )
+    private Long id;
 
-    @Column (nullable=false, length=32)
-	private String firstName;
-	
-	private String lastName;
-    
-    @Column (length=150)
+    @Column( nullable = false, length = 32 )
+    private String firstName;
+
+    private String lastName;
+
+    @Column( length = 150 )
     private String description;
-	
-	private boolean active;
-	
-	private int age;
-    
+
+    private boolean active;
+
+    private int age;
+
     private String email;
-    
+
     private String phone;
-	
-	private Integer numberOfPromotions;
-	
-	private EmployeeStatus status;
-	
-	private Integer rank;
-	
+
+    private Integer numberOfPromotions;
+
+    private EmployeeStatus status;
+
+    private Integer rank;
+
     private Date dob;
-    
-    @OneToMany (cascade=CascadeType.ALL)    
+
+    @OneToMany( cascade = CascadeType.ALL )
     private Set<Task> tasks;
 
-    //@ManyToOne(fetch=FetchType.LAZY)
-    @ManyToOne()
-	private Department department;
-    
+    // @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne( )
+    private Department department;
+
     private PersistedFile file;
-    
+
     public PersistedFile getFile() {
         return file;
     }
+
     public void setFile( PersistedFile file ) {
         this.file = file;
     }
-    public void addTask(Task task) {
+
+    public void addTask( Task task ) {
         this.tasks.add( task );
     }
-    public void removeTask(Task task) {
+
+    public void removeTask( Task task ) {
         this.tasks.remove( task );
     }
+
     public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
+        return id;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public void setId( Long id ) {
+        this.id = id;
+    }
 
-    @Required @ProperNoun @Length(min=2, max=35) 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public Department getDepartment() {
-		return department;
-	}
+    @Required
+    @ProperNoun
+    @Length( min = 2, max = 35 )
+    public void setFirstName( String firstName ) {
+        this.firstName = firstName;
+    }
 
-	public void setDepartment(Department department) {
-        System.out.println("SET DEPARTMENT " + department);
-		this.department = department;
-	}
+    public Department getDepartment() {
+        return department;
+    }
 
-	public boolean isActive() {
-		return active;
-	}
+    public void setDepartment( Department department ) {
+        System.out.println( "SET DEPARTMENT " + department );
+        this.department = department;
+    }
 
-	public void setActive(boolean active) {
-		this.active = active;
-	}
+    public boolean isActive() {
+        return active;
+    }
 
-	public int getAge() {
-		return age;
-	}
+    public void setActive( boolean active ) {
+        this.active = active;
+    }
 
-    @Required @LongRange(min=18L, max=135L)
-    public void setAge(int age) {
-		this.age = age;
-	}
+    public int getAge() {
+        return age;
+    }
 
-	public Integer getNumberOfPromotions() {
-		return numberOfPromotions;
-	}
+    @Required
+    @LongRange( min = 18L, max = 135L )
+    public void setAge( int age ) {
+        this.age = age;
+    }
 
-	public void setNumberOfPromotions(Integer numberOfPromotions) {
-		this.numberOfPromotions = numberOfPromotions;
-	}
+    public Integer getNumberOfPromotions() {
+        return numberOfPromotions;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public void setNumberOfPromotions( Integer numberOfPromotions ) {
+        this.numberOfPromotions = numberOfPromotions;
+    }
 
-    @Required @ProperNoun @Length(min=2, max=35)
-    public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public EmployeeStatus getStatus() {
-		return status;
-	}
+    @Required
+    @ProperNoun
+    @Length( min = 2, max = 35 )
+    public void setLastName( String lastName ) {
+        this.lastName = lastName;
+    }
 
-	public void setStatus(EmployeeStatus status) {
-		this.status = status;
-	}
+    public EmployeeStatus getStatus() {
+        return status;
+    }
 
-	public Integer getRank() {
-		return rank;
-	}
+    public void setStatus( EmployeeStatus status ) {
+        this.status = status;
+    }
 
-	public void setRank(Integer rank) {
-		this.rank = rank;
-	}
+    public Integer getRank() {
+        return rank;
+    }
+
+    public void setRank( Integer rank ) {
+        this.rank = rank;
+    }
 
     public Date getDob() {
         return dob;
@@ -182,22 +185,28 @@ public class Employee implements Serializable{
     public void setTasks( Set<Task> tasks ) {
         this.tasks = tasks;
     }
+
     public String getDescription() {
         return description;
     }
+
     public void setDescription( String description ) {
         this.description = description;
     }
+
     public String getEmail() {
         return email;
     }
+
     @Email
     public void setEmail( String email ) {
         this.email = email;
     }
+
     public String getPhone() {
         return phone;
     }
+
     @Phone
     public void setPhone( String phone ) {
         this.phone = phone;

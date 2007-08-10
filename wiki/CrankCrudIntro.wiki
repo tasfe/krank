@@ -3,7 +3,7 @@
 = What is Crank? =
 
 
-[http://code.google.com/p/krank/ Crank] is a framework for doing CRUD based applications very quickly. It is a nascent framework, but it has made some recent progress. Crank is based on ideas we explored with [ http://jroller.com/RickHigh/entry/automated_master_detail_facelets_hiberante Presto] and a much earlier framework that I worked on at [http://www.eblox.com/ eBlox ]. And even a framework (Swing JDBC based) that Scott Fauerbach and I wrote earlier.
+[http://code.google.com/p/krank/ Crank] is a framework for doing CRUD based applications very quickly. It is a nascent framework, but it has made some recent progress. Crank is based on ideas we explored with [http://jroller.com/RickHigh/entry/automated_master_detail_facelets_hiberante Presto] and a much earlier framework that I worked on at [http://www.eblox.com/ eBlox ]. And even a framework (Swing JDBC based) that Scott Fauerbach and I wrote earlier.
 
 Scott Fauerbach, Chris Mathias and many others worked on Presto. Scott Fauerbach and many others worked on the original framework (which I believe we called CRUD which was Struts/EJB2 based circa 2001). Currently Paul Tabor, Chris Mathias, and many others are working on Crank.
 
@@ -218,7 +218,7 @@ public class Employee implements Serializable {
 
 }}}
 
-We can easily render the above object in a form without writng a lot of code. We can allow editing of the OneToMany relationship (Employee->Tasks) and the ManyToOne relationship (Employee->Department) without much effort and practically no code. The idea behind Crank Crud is reasonable behavior. Also we read and process the meta-data stored in the JPA annotations, Java types, and validation annotations to render the write kind of input fields and validation.
+We can easily render the above object in a form without writng a lot of code. We can allow editing of the OneToMany relationship (Employee->Tasks) and the ManyToOne relationship (Employee->Department) without much effort and practically no code. The idea behind Crank Crud is reasonable behavior. Also we read and process the meta-data stored in the JPA annotations, Java types, and validation annotations to render the right kind of input fields and validation.
 
 Here is the page that renders a form to edit the Employee object and its relationship.
 
@@ -271,4 +271,3 @@ Here is an example of runtime processing (the example needs some CSS love... sor
 A couple of parting shots, Crank is a tiered framework much of the code has nothing to do with JSF and can work easily with other frameworks namely Spring MVC. We are using quite a bit of Crank with a Spring MVC application. There is an example of integating Crank Validation with Spring MVC and a Crank Crud Spring MVC example is in the works (Chris Mathias).
 
 The example Crank Crud is based on JSF, Ajax4JSF, Facelets, Spring, and JPA (Hibernate based). The listings are Ajax enabled thanks to Ajax4JSF.
-

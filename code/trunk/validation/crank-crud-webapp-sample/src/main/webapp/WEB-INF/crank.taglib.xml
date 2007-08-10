@@ -60,12 +60,27 @@
 		</function-signature>
 	</function>
 	<function>
+		<function-name>isFile</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isFile(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
 		<function-name>textSize</function-name>
 		<function-class>org.crank.crud.controller.CrudUtils</function-class>
 		<function-signature>
 			int textSize(java.lang.Class, java.lang.String)
 		</function-signature>
 	</function>
+	<function>
+		<function-name>columnSize</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			int columnSize(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+
 	<function>
 		<function-name>isBoolean</function-name>
 		<function-class>org.crank.core.TypeUtils</function-class>

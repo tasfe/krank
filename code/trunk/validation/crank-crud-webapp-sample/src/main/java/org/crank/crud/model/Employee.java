@@ -22,7 +22,7 @@ import org.crank.annotations.validation.LongRange;
 import org.crank.annotations.validation.Phone;
 import org.crank.annotations.validation.ProperNoun;
 import org.crank.annotations.validation.Required;
-
+import org.crank.crud.model.PersistedFile;
 
 @Entity
 @NamedQueries( {

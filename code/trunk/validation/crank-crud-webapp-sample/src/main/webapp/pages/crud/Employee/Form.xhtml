@@ -14,15 +14,9 @@
 	<ui:define name="content">
 		<h:form id="pagForm" prependId="false" enctype="multipart/form-data">
 			<div id="clientValidationSummary" />
-			<crank:form crud="${employeeMainCrud}"
-						propertyNames="firstName,lastName,active,dob,age,phone,email,department,description">
+			<crank:form crud="${cruds['Employee'].controller}"
+						propertyNames="firstName,lastName,active,dob,age,phone,email,department,description,file">
 
-            <t:inputFileUpload id="fileupload"
-                               accept="image/*"
-                               value="${employeeMainCrud.uploadFile}"
-                               storage="file"
-                               required="true"
-                               maxlength="200000"/>
 						
 <!--  onclick="return validate();" -->
 				<c:set var="taskDetailController" 

@@ -97,6 +97,17 @@
 			<f:converter converterId="" binding="${converters[propEntityName]}"/>
 		</crank:select>    	
     </c:if>
+    
+    <c:if test="${crank:isFile(crud.entityClass,fieldName)}">
+        <c:set var="mapKeyName" value="uploadFile_${fieldName}" />
+        <t:inputFileUpload id="fileupload"
+                               accept="image/*"
+                               value="${crud.dynamicProperties[mapKeyName]}"
+                               storage="file"
+                               maxlength="${crank:columnSize(crud.entityClass,fieldName)}"/>
+    </c:if>
+
+    
 
     <!--  Display any error messages that are found -->
     <h:panelGroup id="${idStub}ErrorId">

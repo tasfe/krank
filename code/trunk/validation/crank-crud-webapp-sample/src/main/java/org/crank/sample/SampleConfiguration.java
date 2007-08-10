@@ -20,14 +20,13 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 import org.crank.controller.ControllerBean;
-import org.crank.controller.EmployeeController;
 import org.crank.core.spring.support.SpringBeanWrapperPropertiesUtil;
 import org.crank.crud.controller.CrudController;
 import org.crank.crud.controller.CrudManagedObject;
-import org.crank.crud.controller.CrudOperations;
 import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.controller.FilteringPaginator;
 import org.crank.crud.controller.datasource.JpaFilteringPagingDataSource;
+import org.crank.crud.controller.support.tomahawk.TomahawkFileUploadHandler;
 import org.crank.crud.dao.DepartmentDAO;
 import org.crank.crud.dao.EmployeeDAO;
 import org.crank.crud.jsf.support.EntityConverter;
@@ -49,6 +48,7 @@ public class SampleConfiguration {
     
     static
     {
+        
         managedObjects.add( new CrudManagedObject(Employee.class, EmployeeDAO.class) );
         managedObjects.add( new CrudManagedObject(Department.class, DepartmentDAO.class) );
     }
@@ -68,6 +68,7 @@ public class SampleConfiguration {
         Map <String, JsfCrudAdapter> cruds = new HashMap<String, JsfCrudAdapter>();
         for (CrudManagedObject mo : managedObjects) {
             CrudController crudController = new CrudController();
+            crudController.setFileUploadHandler( new TomahawkFileUploadHandler() );
             crudController.setPropertyUtil( new SpringBeanWrapperPropertiesUtil() );
             crudController.setEntityClass( mo.getEntityType() );
             crudController.setDao( repositories().get( mo.getName() ) );
@@ -77,13 +78,6 @@ public class SampleConfiguration {
         return cruds;
     }
     
-    @Bean (scope = DefaultScopes.SESSION)
-    public CrudOperations employeeMainCrud() throws Exception{
-        EmployeeController controller = new EmployeeController();
-        controller.setController( cruds().get( "Employee" ).getController() );
-        return controller;
-    }
-
     @SuppressWarnings("unchecked")
     @Bean (scope = DefaultScopes.SESSION) 
     public JsfCrudAdapter deptCrud() throws Exception {

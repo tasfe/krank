@@ -28,6 +28,9 @@
   		<c:set var="rendered" value="true"/>
   	</c:if>
   	
+	<c:set var="entityLabel" value="${crud:createLabel(crud.name)}"/>
+  	
+  	
 	<c:set var="pNames"
 			value="${fn:split(propertyNames, ',')}" />
 
@@ -76,26 +79,34 @@
 				styleClass="${formButtonClass}" 
 				value="Create" 
 				onclick="${onclick}"				
-				action="${crud.create}"/>			
+				action="${crud.create}"
+				reRender="${reRender}"
+				/>
 			<a4j:commandButton 
 				id="${crud.name}EditCommandButtonAjax"
 				rendered="${crud.state=='EDIT'}" 
 				styleClass="${formButtonClass}" 
 				value="Update" 
 				onclick="${onclick}"				
-				action="${crud.update}"/>			
+				action="${crud.update}"
+				reRender="${reRender}"
+				/>
 			<a4j:commandButton 
 				id="${crud.name}ResetCommandButtonAjax"
 				value="Reset"
 				styleClass="${formButtonClass}" 
-				type="reset"/>
+				type="reset"
+				reRender="${reRender}"
+				/>
 			<a4j:commandButton 
 				id="${crud.name}CancelCommandButtonAjax"
 				value="Cancel"
 				styleClass="${formButtonClass}" 
 				type="button"
 				immediate="true" 
-				action="${crud.cancel}"/>
+				action="${crud.cancel}"
+				reRender="${reRender}"
+				/>
 		</h:panelGroup>
 
 	</h:panelGrid>

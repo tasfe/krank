@@ -2,6 +2,7 @@ package org.crank.crud.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -27,8 +28,11 @@ import org.crank.crud.model.PersistedFile;
 @Entity
 @NamedQueries( {
         @NamedQuery( name = "Employee.findEmployeesByDepartment", query = "from Employee employee where employee.department.name=?" ),
-        @NamedQuery( name = "Employee.readPopulated", query = "select distinct employee from Employee employee join fetch employee.department "
-                + "left outer join fetch employee.tasks where employee.id=?" ),
+        @NamedQuery( name = "Employee.readPopulated", 
+                query = "select distinct employee from Employee employee " +
+                        "join fetch employee.department " + 
+                        "left outer join fetch employee.tasks " +
+                        "where employee.id=?" ),
         @NamedQuery( name = "Employee.findInEmployeeIds", query = "SELECT o FROM Employee o  WHERE  o.id in  ( ? )" ),
         @NamedQuery( name = "Employee.findSalaryEmployees", query = "SELECT o FROM Employee o  WHERE  o.status = org.crank.crud.model.EmployeeStatus.SALARY" ),
         @NamedQuery( name = "Employee.findExcellentEmployees", query = "SELECT o FROM Employee o  WHERE  o.rank = org.crank.crud.model.EmployeeRank.EXCELLENT" )
@@ -65,7 +69,7 @@ public class Employee implements Serializable {
     private Date dob;
 
     @OneToMany( cascade = CascadeType.ALL )
-    private Set<Task> tasks;
+    private Set<Task> tasks = new HashSet<Task>();
 
     // @ManyToOne(fetch=FetchType.LAZY)
     @ManyToOne( )

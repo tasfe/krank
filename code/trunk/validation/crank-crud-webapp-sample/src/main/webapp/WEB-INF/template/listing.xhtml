@@ -66,11 +66,13 @@
 		
 		<h:panelGrid id="${reRender}" columns="1" width="${dataTableWidth}">
 		
-		    <a4j:commandLink  id="${idBase}AddEntityLink"
-						action="${crud.loadCreate}"
-						value="Add New" reRender="${reRender}"/>
 		
-			<crank:paginator paginator="${paginator}" reRender="${reRender}" />
+			<crank:paginator paginator="${paginator}" reRender="${reRender}" >
+			    <a4j:commandLink  id="${idBase}AddEntityLink"
+						action="${crud.loadCreate}"
+						value="Add New ${crud:createLabel(jsfCrudAdapter.controller.name)}" reRender="${reRender}"/>		
+			</crank:paginator>
+
 	
 			<rich:dataTable width="${dataTableWidth}" id="${idBase}DataTable"
 				rows="${numRows}" columnClasses="${listingDataTableColumnClasses}"

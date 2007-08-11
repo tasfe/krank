@@ -12,24 +12,18 @@
 	
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
-		<h:form id="pagForm" prependId="false" enctype="multipart/form-data">
+		<h:form id="employeeForm" prependId="false" enctype="multipart/form-data">
 			<div id="clientValidationSummary" />
-			<crank:form crud="${cruds['Employee'].controller}"
-						propertyNames="firstName,lastName,active,dob,age,phone,email,department,description,file">
-
-						
-<!--  onclick="return validate();" -->
+			<a4j:region>
+			<crank:form crud="${cruds['Employee'].controller}" 
+						propertyNames="firstName,lastName,active,dob,age,phone,email,department,description,file,numberOfPromotions">
 				<c:set var="taskDetailController" 
 					value="${employeeCrud.controller.children.tasks}" />						
 				<crank:detailListing detailController="${taskDetailController}" 
 									 propertyNames="name,startDate,endDate,complete"
-									 relationshipCollection="#{taskDetailController.model}"
-									 />
-<!-- 
-			<validation:clientValidator  objectExpression="${cruds['Employee'].controller.entity}" 
-		    			propertyNames="firstName,lastName,active,dob,department,description" />
- -->
+									 reRender="employeeForm"/>
 			</crank:form>
+			</a4j:region>
 		</h:form>
 	</ui:define>
 </ui:composition>

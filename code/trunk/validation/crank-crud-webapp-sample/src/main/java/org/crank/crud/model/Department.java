@@ -1,6 +1,7 @@
 package org.crank.crud.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -41,7 +42,7 @@ public class Department implements Serializable{
 
     @OneToMany (mappedBy="department", cascade=CascadeType.ALL)
     @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
-    private List<Employee> employees;
+    private List<Employee> employees = new ArrayList<Employee>();
 
 	public List<Employee> getEmployees() {
 		return employees;

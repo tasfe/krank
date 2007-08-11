@@ -4,6 +4,11 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd"
     version="1.2">
 
+<!-- 
+  <lifecycle>
+		<phase-listener>org.crank.jsf.support.DebugPhaseListener</phase-listener>
+  </lifecycle>
+   -->
   <application>
     <variable-resolver>
     	org.springframework.web.jsf.DelegatingVariableResolver
@@ -25,17 +30,6 @@
     </renderer>
   
   </render-kit>
-  <!-- 
-  <converter>
-  	<converter-for-class>org.crank.crud.model.Department</converter-for-class>
-	<converter-class>org.crank.crud.dao.DepartmentConverter</converter-class>
-  </converter>
-   -->
-   <!-- 
-   <factory>
-   		<application-factory>org.crank.core.spring.support.ApplicationFactory</application-factory>
-   </factory>
-    -->
   <navigation-rule>
   	<from-view-id>/pages/crud/Employee/*</from-view-id>
   	<navigation-case>

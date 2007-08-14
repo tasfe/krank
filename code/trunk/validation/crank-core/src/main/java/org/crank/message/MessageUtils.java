@@ -50,18 +50,24 @@ public final class MessageUtils {
 		StringBuffer buffer = new StringBuffer(fieldName.length() * 2);
 		char[] chars = fieldName.toCharArray();
         boolean capNextChar = false;
+        boolean lastCharWasUpperCase = false;
 
 		for (int index = 0; index < chars.length; index++) {
 			char cchar = chars[index];
 
 			if (Character.isUpperCase(cchar)) {
-                if (index!=0) {
+                
+                if (index!=0 && !lastCharWasUpperCase) {
                     buffer.append(' ');
                 }
+                
+                lastCharWasUpperCase = true;                
 				buffer.append(cchar);
 
 				continue;
-			}
+			} else {
+                lastCharWasUpperCase = false;
+            }
             
             if (cchar == '.') {
                 buffer.append(' ');

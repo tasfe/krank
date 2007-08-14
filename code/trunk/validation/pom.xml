@@ -14,16 +14,16 @@
         <repository>
             <id>arc-mind.release</id>
             <name>ArcMind Release Repository</name>
-            <url>scp://10.1.10.254/usr/local/apache2/htdocs/maven2</url>
+            <url>scp://10.1.10.250/var/www/html/maven.vmc.local/maven2</url>
         </repository>
         <snapshotRepository>
             <id>arc-mind.snapshot.release</id>
             <name>ArcMind Release Repository</name>
-            <url>scp://10.1.10.254/usr/local/apache2/htdocs/maven2-snaps</url>
+            <url>scp://10.1.10.250/var/www/html/maven.vmc.local/maven2-snaps</url>
         </snapshotRepository>
         <site>
             <id>krank.website</id>
-            <url>scp://10.1.10.254/usr/local/apache2/htdocs/krank</url>
+            <url>scp://10.1.10.250/var/www/html/maven.vmc.local/vmc-site</url>
         </site>
     </distributionManagement>
 

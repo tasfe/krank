@@ -60,6 +60,7 @@ public class Employee implements Serializable {
 
     private String phone;
 
+    @Column (nullable=false)
     private Integer numberOfPromotions;
 
     private EmployeeStatus status;

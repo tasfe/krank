@@ -97,7 +97,7 @@ public class TomahawkFileUploadHandlerTest {
         }
 
         public String getName() {
-            return "c:\\foo\\bar.txt";
+            return "//foo//bar.txt";
         }
 
         public long getSize() {

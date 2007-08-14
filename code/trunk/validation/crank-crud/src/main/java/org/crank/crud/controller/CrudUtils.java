@@ -4,7 +4,6 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +57,12 @@ public class CrudUtils {
 
     public static boolean isLargeText(Class clazz, String propertyName) {
                 
+        if (!(getPropertyDescriptor(clazz, propertyName).getPropertyType() == String.class)) {
+            return false;
+        }
         Map map = getAnnotationDataAsMap( clazz, propertyName );
+        
+        
         
         boolean found = map.get( "column" ) != null;
         /* If you found an annotation called required, return true. */

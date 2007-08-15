@@ -1,15 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<artifactId>crank-base</artifactId>
-		<groupId>org.crank</groupId>
-	<version>0.6-SNAPSHOT</version>
-	</parent>
 	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.crank</groupId>
+		<artifactId>crank-base</artifactId>
+		<version>0.6-SNAPSHOT</version>
+	</parent>
+
 	<groupId>org.crank</groupId>
 	<artifactId>crank-jsf-validation</artifactId>
 	<name>crank-jsf-validation</name>
 	<version>0.6-SNAPSHOT</version>
-	<url>http://maven.apache.org</url>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.crank</groupId>
@@ -22,6 +24,11 @@
 		<dependency>
 			<groupId>org.crank</groupId>
 			<artifactId>crank-test-support</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<classifier>jdk15</classifier>
 		</dependency>
 		<dependency>
 			<groupId>javax.faces</groupId>

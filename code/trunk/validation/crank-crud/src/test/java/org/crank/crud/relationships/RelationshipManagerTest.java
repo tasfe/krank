@@ -181,10 +181,19 @@ public class RelationshipManagerTest implements Serializable {
 
         employeeAddressManager = new RelationshipManager();
         employeeAddressManager.setEntityClass ( Address.class );
-        employeeAddressManager.setListFromParentMethodName( "getAddresses" );
-        
+        employeeAddressManager.setChildCollectionProperty( "addresses" );
     }
 
+
+    @Test
+    public void testNullRelationship() {
+        Employee emp = new Employee("Bob");
+        emp.setTasks( null );
+        employeeTaskManager = new RelationshipManager();
+        employeeTaskManager.setEntityClass( Task.class );
+        employeeTaskManager.addToParent( emp, new Task("Some task") );
+        
+    }
 
     @Test
     public void testList() {

@@ -3,12 +3,16 @@ package org.crank.crud.relationships;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.crank.core.StringUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -36,33 +40,25 @@ public class RelationshipManager {
     private String idPropertyName = "id";
     
     /**
-     * @CONFIG
-     * The type of id, used to retrieve the object from the database for
-     * read operations, i.e., the user clicks on the object out of the list.
-     */
-    //private Class idType = Long.class;
-    
-    
-    /**
      * @CONFIG or @RUNTIME
-     * This allows developers to overide the addMethod of the parent.
+     * This allows developers to override the addMethod of the parent.
      * This will default to add${entityName} if not configured by the developer.
      */
     private String addToParentMethodName = null;
 
     /**
      * @CONFIG or @RUNTIME
-     * This allows developers to overide the removeMethod of the parent.
+     * This allows developers to override the removeMethod of the parent.
      * This will default to remove${entityName} if not configured by the developer.
      */
     private String removeFromParentMethodName = null;
 
     /**
      * @CONFIG or @RUNTIME
-     * This allows developers to overide the getListMethod of the parent.
+     * This allows developers to override the getListMethod of the parent.
      * This will default to get${entityName}s if not configured by the developer.
      */
-    private String listFromParentMethodName = null;
+    private String childCollectionProperty = null;
 
     /**
      * @RUNTIME
@@ -85,16 +81,10 @@ public class RelationshipManager {
     private boolean relationshipIsBag = false;
     
     /**
-     * Hold the last value of the getListMethod. Cached for speed.
-     * This is used to grab the list from the parent.
-     */
-    private Method listMethod;
-
-
-    /**
-     * Used to index hashmaps out of the list.
+     * Used to index HashMaps out of the list.
      */
     private Class keyType = String.class;
+
     
     /**
      * Read entity from parent.
@@ -170,7 +160,7 @@ public class RelationshipManager {
      *  This is for children who are not in the persistence system yet, i.e., not in the database yet.
      * */
     private Serializable getChildFromChildrenCollectionUsingHashCode(String indexValue, Object listTypeThing) {
-        /* Parse the hashcode out of the indexValue. */
+        /* Parse the hash code out of the indexValue. */
         long hash = Long.parseLong(indexValue.substring(4));
 
 
@@ -197,38 +187,61 @@ public class RelationshipManager {
         }
          return child;
     }
+
     
     
     /**
-     * Get the child list from the parent, e.g., call owner.getPets() or department.getEmployees(), etc.
-     * @param parent the parent object (Owner has pets... Owner is the parent).
+     * Get the child list from the parent, e.g., call owner.getPets() or
+     * department.getEmployees(), etc.
+     * 
+     * @param parent
+     *            the parent object (Owner has pets... Owner is the parent).
      * @return The collection of children (The Owner's pets)
-     * @throws Exception Some problem.
+     * @throws Exception
+     *             Some problem.
      */
-    public Object retrieveChildCollectionFromParentObject(Object parent) {
-        
-        try {
-
-        /* Look up the method to call based on reflection. */
-        if (listMethod==null) {
-
-            if (listFromParentMethodName == null) {
-                listFromParentMethodName = "get" + entityName + "s";
-            }
-            listMethod = parent.getClass().getMethod(listFromParentMethodName,(Class[]) null);
-        }
-
-        /* Invoke the method and return the list type thing (it can be an
-         * Array, List, Set or Map)
-         */
-        Object listTypeThing = listMethod.invoke(parent,(Object[])null);
-        return listTypeThing;
-        
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
+    public Object retrieveChildCollectionFromParentObject( Object parent ) {
+            /*
+             * Invoke the method and return the list type thing (it can be an
+             * Array, List, Set or Map)
+             */
+            BeanWrapper wrapper = new BeanWrapperImpl (parent);
+            //need to guess if null
+            Object listTypeThing = wrapper.getPropertyValue( childCollectionProperty() );
+            return listTypeThing;
     }
+
     
+    private String childCollectionProperty() {
+        if (childCollectionProperty == null) {
+            String unCapitalizeEntityname = StringUtils.unCapitalize( this.entityName);
+            if (unCapitalizeEntityname.endsWith( "s" )) {
+                unCapitalizeEntityname = unCapitalizeEntityname + "es";
+            } else {
+                unCapitalizeEntityname = unCapitalizeEntityname + "s";
+            }
+            childCollectionProperty = unCapitalizeEntityname;
+        }
+        return childCollectionProperty;
+    }
+
+    /**
+     * Set the child list into the parent, e.g., call owner.getPets() or
+     * department.getEmployees(), etc.
+     * 
+     * @param parent
+     *            the parent object (Owner has pets... Owner is the parent).
+     * @return The collection of children (The Owner's pets)
+     * @throws NoSuchMethodException 
+     * @throws SecurityException 
+     * @throws Exception
+     *             Some problem.
+     */
+    private void setChildCollectionIntoParentObject( Object parent, Object newCollection ) {
+            BeanWrapper wrapper = new BeanWrapperImpl(parent);
+            wrapper.setPropertyValue( this.childCollectionProperty, newCollection);
+    }
+
     /**
      * This method finds a child object in a children collection for Sets and Bags using the id of the child.
      * This is for children who are in the persistence system already, i.e., in the database already.
@@ -281,11 +294,18 @@ public class RelationshipManager {
      */
     @SuppressWarnings("unchecked")
     public void addToParent(Object parent, Object child) {
-
         try {
-            /* The following does the equiv of owner.addPet(pet); */
+
+            Object childCollection = retrieveChildCollectionFromParentObject(parent);
+            if (childCollection==null) {
+                initChildCollection( parent, childCollection );
+            }
+
+        
+            /* The following does the equivalent of owner.addPet(pet); */
             Class parentClass = parent.getClass();
 
+            
             /* Initialize the addMethod name if needed. */
             if (addToParentMethodName==null) {
                 addToParentMethodName = "add" + entityName;
@@ -307,12 +327,25 @@ public class RelationshipManager {
             throw new RuntimeException(ex);
         }
     }
+
+    private void initChildCollection( Object parent, Object childCollection ) throws Exception {
+        BeanWrapper wrapper = new BeanWrapperImpl (parent);
+        Class propertyType = wrapper.getPropertyType( this.childCollectionProperty );
+        if (List.class.isAssignableFrom( propertyType )) {
+            childCollection = new ArrayList();
+        } else if (Set.class.isAssignableFrom( propertyType )) {
+            childCollection = new HashSet();
+        } else if (Map.class.isAssignableFrom( propertyType )) {
+            childCollection = new HashMap();
+        }
+        setChildCollectionIntoParentObject( parent, childCollection );
+    }
     
     @SuppressWarnings("unchecked")
     public void removeFromParent(Object parent, Object child) {
 
         try {
-            /* The following does the equiv of owner.addPet(pet); */
+            /* The following does the equivalent of owner.addPet(pet); */
             Class parentClass = parent.getClass();
 
             /* Initialize the removeMethod name if needed. */
@@ -462,16 +495,9 @@ public class RelationshipManager {
         }
     }
     
-    //    public void setIdType( Class idType ) {
-//        this.idType = idType;
-//    }
 
     public void setKeyType( Class keyType ) {
         this.keyType = keyType;
-    }
-
-    public void setListFromParentMethodName( String listFromParentMethodName ) {
-        this.listFromParentMethodName = listFromParentMethodName;
     }
 
     public void setRelationshipIsBag( boolean relationshipIsBag ) {
@@ -480,6 +506,14 @@ public class RelationshipManager {
 
     public void setRemoveFromParentMethodName( String removeFromParentMethodName ) {
         this.removeFromParentMethodName = removeFromParentMethodName;
+    }
+
+    public String getChildCollectionProperty() {
+        return childCollectionProperty;
+    }
+
+    public void setChildCollectionProperty( String childCollectionProperty ) {
+        this.childCollectionProperty = childCollectionProperty;
     }
     
     

@@ -201,7 +201,6 @@
 		  <id>springframework.org</id>
 		  <name>Springframework Maven Repository</name>
 		  <url>https://s3.amazonaws.com/maven.springframework.org/snapshot</url>
-		  <!--url>http://s3browse.com/explore/maven.springframework.org/snapshot/</url-->
 		</repository>
 	</repositories>
 

@@ -1,8 +1,11 @@
 package org.crank.crud.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+//import java.util.ArrayList;
+//import java.util.HashSet;
+//import java.util.List;
 import java.util.List;
+//import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -17,13 +20,11 @@ import org.hibernate.annotations.Cascade;
 
 
 
-//import org.hibernate.annotations.Proxy;
-
 @Entity
 @NamedQueries( {
     @NamedQuery(name="Department.readPopulated",
             query="select distinct department from Department department " +
-                    " join fetch department.employees " +
+                    " left outer join fetch department.employees " +
                     " where department.id=?")    
 })
 public class Department implements Serializable{
@@ -34,15 +35,9 @@ public class Department implements Serializable{
     private String name;
     
     
-//  @org.hibernate.annotations.BatchSize(size = 20)
-//  , fetch=FetchType.EAGER)
-//  @org.hibernate.annotations.Fetch (
-//          org.hibernate.annotations.FetchMode.JOIN
-//  )
-
     @OneToMany (mappedBy="department", cascade=CascadeType.ALL)
     @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
-    private List<Employee> employees = new ArrayList<Employee>();
+    private List<Employee> employees = null;
 
 	public List<Employee> getEmployees() {
 		return employees;
@@ -80,8 +75,6 @@ public class Department implements Serializable{
 
     @Override
     public boolean equals( Object arg0 ) {
-        System.out.println("------------------ EQUALS CALLED ------------------" );
-
         if (arg0 == null) {
             return false;
         }

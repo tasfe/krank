@@ -12,18 +12,21 @@
 	
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
-		<h:form id="pagForm">
+		<h:form id="departmentForm">
             <div id="clientValidationSummary" />
+			<a4j:region>
 		
 			<crank:form crud="${deptCrud.controller}"
 						propertyNames="name">
 				<c:set var="employeeDetailController" 
 					value="${deptCrud.controller.children.employees}" />
 				<crank:detailListing detailController="${employeeDetailController}" 
-									 propertyNames="firstName,lastName,active,dob,age,phone,email,department,description,numberOfPromotions"
-									 relationshipCollection="#{deptCrud.controller.entity.employees}"
+									 propertyNames="firstName,lastName,active,dob,age,numberOfPromotions"
+									 reRender="departmentForm"
 									 />
 			</crank:form>
+			</a4j:region>
+			
 		<!-- 
 			<validation:clientValidator  objectExpression="${deptCrud.controller.entity}" 
 		    propertyNames="name" />

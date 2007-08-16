@@ -12,6 +12,13 @@
 		</function-signature>
 	</function>
 	<function>
+		<function-name>isEnum</function-name>
+		<function-class>org.crank.core.TypeUtils</function-class>
+		<function-signature>
+			boolean isEnum(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
 		<function-name>isText</function-name>
 		<function-class>org.crank.core.TypeUtils</function-class>
 		<function-signature>
@@ -96,6 +103,13 @@
 		</function-signature>
 	</function>
 	<function>
+		<function-name>isEnumerated</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isEnumerated(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
 		<function-name>isRequired</function-name>
 		<function-class>org.crank.crud.controller.CrudUtils</function-class>
 		<function-signature>
@@ -130,6 +144,15 @@
 				org.crank.javax.faces.SelectOne
 			</component-type>
 			<renderer-type>org.crank.javax.faces.Listbox</renderer-type>
+		</component>
+	</tag>
+	<tag>
+		<tag-name>selectOneMenu</tag-name>
+		<component>
+			<component-type>
+				org.crank.javax.faces.SelectOneMenu
+			</component-type>
+			<renderer-type>org.crank.javax.faces.Menu</renderer-type>
 		</component>
 	</tag>
 </facelet-taglib>

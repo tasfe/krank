@@ -9,6 +9,7 @@ import javax.faces.model.SelectItem;
 import org.crank.core.PropertiesUtil;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.NotReadablePropertyException;
 
 /**
  * Utility class for taking a list of Entites and turning that list into a list
@@ -42,9 +43,19 @@ public class SelectItemUtils {
     public List createSelectItems( final List list, String idProperty, String labelProperty ) {
         List selectItems = new ArrayList(list.size()); // new list of selectItems
         for (Iterator iter = list.iterator(); iter.hasNext();) {
-            BeanWrapper entity = new BeanWrapperImpl( iter.next() );
-            String label = entity.getPropertyValue( labelProperty ).toString();
-            String id = entity.getPropertyValue( idProperty ).toString();
+        	Object item = (Object) iter.next();
+            String label = "?";
+            String id;
+
+            try {
+                BeanWrapper entity = new BeanWrapperImpl( (Object)item );
+                label = entity.getPropertyValue( labelProperty ).toString();
+                id = entity.getPropertyValue( idProperty ).toString();
+            } catch (NotReadablePropertyException ex) {
+	              label = (String)item.toString();
+	              id = (String)item.toString();
+            }
+            
             SelectItem selectItem = new SelectItem( id, label );
             selectItems.add( selectItem );
         }

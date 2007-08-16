@@ -35,7 +35,7 @@ public class JsfDetailController extends DetailController{
     private UIPanel subForm;
 
     public UIPanel getSubForm() {
-        return subForm;
+        return null;
     }
 
     public void setSubForm( UIPanel subForm ) {

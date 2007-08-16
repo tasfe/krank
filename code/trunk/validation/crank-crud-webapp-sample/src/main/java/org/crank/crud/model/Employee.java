@@ -110,7 +110,7 @@ public class Employee implements Serializable {
 
     @Required
     @ProperNoun
-    @Length( min = 2, max = 35 )
+    //@Length( min = 2, max = 35 )
     public void setFirstName( String firstName ) {
         this.firstName = firstName;
     }

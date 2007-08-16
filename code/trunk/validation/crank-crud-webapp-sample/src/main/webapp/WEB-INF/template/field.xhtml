@@ -55,7 +55,10 @@
 		                     styleClass="${formFieldStyleClasses}"
 		                     cols="50"
 		                     rows="${crud:textSize(type,fieldName)/50}">
-		            <validation:validateBasedOnMetaData formClass="${type}" fieldName="${fieldName}"/> 
+		            <validation:validateBasedOnMetaData formClass="${type}" fieldName="${fieldName}"/>
+		            <c:if test="${crud:textSize(type,fieldName)>0}">
+		            	<f:validateLength maximum="${crud:textSize(type,fieldName)}" />
+		            </c:if>
 		            <ui:insert />
 		   </h:inputTextarea>
    	   </c:if>
@@ -65,6 +68,9 @@
 		                     required="${required}" 
 		                     styleClass="${formFieldStyleClasses}">
 		            <validation:validateBasedOnMetaData formClass="${type}" fieldName="${fieldName}"/>
+		            <c:if test="${crud:textSize(type,fieldName)>0}">
+		            	<f:validateLength maximum="${crud:textSize(type,fieldName)}" />
+		            </c:if>
 		            <ui:insert />
 		   </h:inputText>
    	   </c:if>

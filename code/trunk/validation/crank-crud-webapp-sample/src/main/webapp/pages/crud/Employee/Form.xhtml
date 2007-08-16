@@ -17,6 +17,8 @@
 			<a4j:region>
 			<crank:form crud="${cruds['Employee'].controller}" 
 						propertyNames="firstName,lastName,active,dob,age,phone,email,department,description,file,numberOfPromotions">
+				<crank:compositePanel entity="${cruds['Employee'].controller.entity.address}" name="address" propertyNames="line1,line2,zipCode"/>
+				
 				<c:set var="taskDetailController" 
 					value="${employeeCrud.controller.children.tasks}" />						
 				<crank:detailListing detailController="${taskDetailController}" 

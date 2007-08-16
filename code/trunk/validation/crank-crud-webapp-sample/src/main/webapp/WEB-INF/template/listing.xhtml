@@ -126,17 +126,32 @@
 				<c:forEach items="${pNames}" var="property">
 					<c:set var='idName' value='${crud:replace(property, ".", "_")}'/>
 					<h:column>
-						<c:if test="${not crud:contains(property, '.')}">
-								<h:outputText id="${idBase}${idName}Text" 
-											  value="#{row.object[property]}" 
-											  rendered="${not ((row.object[property] == 'true') or (row.object[property] == 'false'))}"/>
-								<h:graphicImage id="${idBase}${idName}Bool" value="/images/check-sm.gif" rendered="${(row.object[property] == 'true')}" styleClass="imageCenter"/>
-
-						</c:if>
-						<c:if test="${crud:contains(property, '.')}">
-								<h:outputText id="${idBase}${idName}ComplexText" 
-											  value="#{row.map[property]}" />
-						</c:if>
+						<c:choose>
+							<c:when test="${crud:contains(property, '.')}">
+								<c:choose>
+									<c:when test="${crud:isBoolean(crud.entityClass,property)}">
+										<h:graphicImage value="/images/check-sm.gif"
+											rendered="${(row.map[property] == 'true')}"
+											styleClass="imageCenter" />
+									</c:when>
+									<c:otherwise>
+										<h:outputText value="#{row.map[property]}" />
+									</c:otherwise>
+								</c:choose>
+							</c:when>
+							<c:otherwise>
+								<c:choose>
+									<c:when test="${crud:isBoolean(crud.entityClass,property)}">
+										<h:graphicImage value="/images/check-sm.gif"
+											rendered="${(row.object[property] == 'true')}"
+											styleClass="imageCenter" />
+									</c:when>
+									<c:otherwise>
+										<h:outputText value="#{row.object[property]}" />
+									</c:otherwise>
+								</c:choose>
+							</c:otherwise>
+						</c:choose>
 					</h:column>
 				</c:forEach>
 				

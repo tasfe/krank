@@ -10,9 +10,7 @@
   </lifecycle>
    -->
   <application>
-    <variable-resolver>
-    	org.springframework.web.jsf.DelegatingVariableResolver
-    </variable-resolver>    
+    <variable-resolver>org.springframework.web.jsf.DelegatingVariableResolver</variable-resolver>
   </application>
   
   <component>

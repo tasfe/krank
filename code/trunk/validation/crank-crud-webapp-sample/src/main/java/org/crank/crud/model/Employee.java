@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.crank.annotations.validation.Email;
 import org.crank.annotations.validation.Length;
@@ -68,11 +69,12 @@ public class Employee implements Serializable {
     private Integer rank;
 
     private Date dob;
+    
+    private Address address;
 
     @OneToMany( cascade = CascadeType.ALL )
     private Set<Task> tasks = new HashSet<Task>();
 
-    // @ManyToOne(fetch=FetchType.LAZY)
     @ManyToOne( )
     private Department department;
 
@@ -215,5 +217,16 @@ public class Employee implements Serializable {
     @Phone
     public void setPhone( String phone ) {
         this.phone = phone;
+    }
+
+    public Address getAddress() {
+        if (address == null) {
+            address = new Address();
+        }
+        return address;
+    }
+
+    public void setAddress( Address address ) {
+        this.address = address;
     }
 }

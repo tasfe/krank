@@ -15,7 +15,7 @@
 			<h:form id="expListForm" rendered="#{controllerBean.showListing}">
 				<crank:listing paginator="${paginators['Employee']}" 
 							   jsfCrudAdapter="${cruds['Employee']}" 
-							   propertyNames="firstName,lastName,active,dob,age,phone,email,department.name,description"
+							   propertyNames="firstName,lastName,active,dob,age,phone,department.name,address.zipCode"
 							   pageTitle="Employees"
 							   parentForm="expListForm"
 							   reRender="expListForm"

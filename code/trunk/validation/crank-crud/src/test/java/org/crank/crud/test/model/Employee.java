@@ -48,6 +48,8 @@ public class Employee {
 	
 	private EmployeeStatus status;
 	
+	private Address address;
+	
 	private Integer rank;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -132,5 +134,13 @@ public class Employee {
 
     public void setDescription( String description ) {
         this.description = description;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress( Address address ) {
+        this.address = address;
     }
 }

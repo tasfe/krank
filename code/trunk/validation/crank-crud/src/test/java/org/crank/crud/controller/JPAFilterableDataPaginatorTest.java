@@ -72,6 +72,10 @@ public class JPAFilterableDataPaginatorTest extends DbUnitTestBase {
         AssertJUnit.assertEquals("Bob", employee.getFirstName());
         AssertJUnit.assertEquals(11, paginator.getPageCount());
         
+        paginator.getFilterableProperties().get( "address.zipCode" ).getOrderBy().toggle();
+        employee = (Employee)paginator.getPage().get( 0 );
+        
+        
     }
 
     public void setPaginatableFilterableDataSource( JpaFilteringPagingDataSource paginatableDataSource ) {

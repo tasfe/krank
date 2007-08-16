@@ -95,6 +95,8 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
             //!theType.equals( propertyDescriptor.getPropertyType() does not allow circular dependencies which plagues us.
             if (CrudUtils.isEntity( propertyDescriptor.getPropertyType() ) && !theType.equals( propertyDescriptor.getPropertyType() )) {
                 createFilterProperties( propertyDescriptor.getPropertyType(), property );
+            } else if (CrudUtils.isEmbeddable( propertyDescriptor.getPropertyType() ) && !theType.equals( propertyDescriptor.getPropertyType() )) {
+                createFilterProperties( propertyDescriptor.getPropertyType(), property );                
             }
             
             filterableProperty.addToggleListener(new FPToggleListener(property));
@@ -102,7 +104,7 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
     }
 
     public void filter() {
-        /* Clear the comparision group b/c we are about to recreate it */
+        /* Clear the comparison group b/c we are about to recreate it */
         filterablePaginatableDataSource().group().clear();
         
         /* OrderBy collection list. */

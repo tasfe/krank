@@ -1,5 +1,6 @@
 package org.crank.crud.controller;
 
+
 import org.crank.crud.test.model.Employee;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -27,6 +28,7 @@ public class CrudUtilsTest {
 
     @Test()
     public void testIsLargeText() {
+        assertFalse(CrudUtils.isLargeText( Employee.class, "address.line1"));
         assertFalse(CrudUtils.isLargeText( Employee.class, "firstName"));
         assertFalse(CrudUtils.isLargeText( Employee.class, "numberOfPromotions"));        
         assertTrue(CrudUtils.isLargeText( Employee.class, "description"));

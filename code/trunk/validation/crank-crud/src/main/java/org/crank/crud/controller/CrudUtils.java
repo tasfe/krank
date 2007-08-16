@@ -1,8 +1,5 @@
 package org.crank.crud.controller;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +8,9 @@ import java.util.Set;
 
 import org.crank.core.AnnotationData;
 import org.crank.core.AnnotationUtils;
+import org.crank.core.CrankException;
 import org.crank.core.MapUtils;
+import org.crank.core.TypeUtils;
 import org.crank.crud.model.PersistedFile;
 
 
@@ -56,30 +55,33 @@ public class CrudUtils {
     }
 
     public static boolean isLargeText(Class clazz, String propertyName) {
-                
-        if (!(getPropertyDescriptor(clazz, propertyName).getPropertyType() == String.class)) {
+        try {   
+            if (!(getPropertyDescriptor(clazz, propertyName).getPropertyType() == String.class)) {
+                return false;
+            }
+            Map map = getAnnotationDataAsMap( clazz, propertyName );
+            
+            
+            
+            boolean found = map.get( "column" ) != null;
+            /* If you found an annotation called required, return true. */
+            if (found) {
+                    /* If the column annotation data was found, see if the length flag was set. */
+                    AnnotationData ad = (AnnotationData) map.get( "column" );
+                    Object object = ad.getValues().get("length");
+                    /* If the nullable flag was set, return its value. */
+                    if (object != null) {
+                        Integer length = (Integer) object;
+                        return length.intValue() > 80;
+                    } else {
+                        /* Otherwise, if the nullable value was not set, then return false. */
+                        return false;
+                    }
+            }
             return false;
+        } catch (Exception ex) {
+            throw new CrankException(ex, "Unable to get property %s from class %s", propertyName, clazz);
         }
-        Map map = getAnnotationDataAsMap( clazz, propertyName );
-        
-        
-        
-        boolean found = map.get( "column" ) != null;
-        /* If you found an annotation called required, return true. */
-        if (found) {
-                /* If the column annotation data was found, see if the length flag was set. */
-                AnnotationData ad = (AnnotationData) map.get( "column" );
-                Object object = ad.getValues().get("length");
-                /* If the nullable flag was set, return its value. */
-                if (object != null) {
-                    Integer length = (Integer) object;
-                    return length.intValue() > 80;
-                } else {
-                    /* Otherwise, if the nullable value was not set, then return false. */
-                    return false;
-                }
-        }
-        return false;
         
     }
 
@@ -155,6 +157,12 @@ public class CrudUtils {
         return data != null;
     }
 
+    public static boolean isEmbeddable (Class clazz) {
+        AnnotationData data = (AnnotationData)MapUtils.convertListToMap( "name",
+                AnnotationUtils.getAnnotationDataForClass( clazz, allowedPackages )).get( "embeddable" );
+        return data != null;
+    }
+
     public static String getClassEntityName(Class clazz) {
         AnnotationData data = (AnnotationData)MapUtils.convertListToMap( "name",
                 AnnotationUtils.getAnnotationDataForClass( clazz, allowedPackages )).get( "entity" );
@@ -169,16 +177,7 @@ public class CrudUtils {
 
     @SuppressWarnings("unchecked")
     private static PropertyDescriptor getPropertyDescriptor( Class clazz, String propertyName) {
-        Map<String, PropertyDescriptor> map = null;
-        try {
-            BeanInfo beanInfo = Introspector.getBeanInfo( clazz );
-            map = MapUtils.convertArrayToMap("name", beanInfo.getPropertyDescriptors());
-        } catch (IntrospectionException e) {
-            throw new RuntimeException (e);
-        }
-        
-        PropertyDescriptor descriptor = map.get(propertyName);
-        return descriptor;
+        return TypeUtils.getPropertyDescriptor( clazz, propertyName );
     }
     
     public static String getObjectId(DetailController detailController, Object row) {

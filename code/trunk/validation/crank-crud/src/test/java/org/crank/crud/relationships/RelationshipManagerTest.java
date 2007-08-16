@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import static org.testng.AssertJUnit.*;
+//import static org.testng.AssertJUnit.*;
 
-public class RelationshipManagerTest implements Serializable {
+public class RelationshipManagerTest extends TestCase implements Serializable {
     
     public class Address implements Serializable {
         
@@ -110,12 +112,12 @@ public class RelationshipManagerTest implements Serializable {
             this.firstName = firstName;
         }
         
-        public void addTask(Task task) {
-            this.tasks.add( task );
-        }
-        public void removeTask(Task task) {
-            this.tasks.remove( task );
-        }
+//        public void addTask(Task task) {
+//            this.tasks.add( task );
+//        }
+//        public void removeTask(Task task) {
+//            this.tasks.remove( task );
+//        }
 
         public Set<Task> getTasks() {
             return tasks;
@@ -168,8 +170,8 @@ public class RelationshipManagerTest implements Serializable {
         employee.setId( 1L );
         department = new Department();
         department.addEmployee(employee);
-        employee.addTask( new Task("Task1") );
-        employee.addTask( new Task("Task2") );
+        employee.getTasks().add( new Task("Task1") );
+        employee.getTasks().add( new Task("Task2") );
         employee.addAddress(new Address("85748", "Home"));
         employee.addAddress(new Address("95053", "Work"));
         
@@ -215,8 +217,13 @@ public class RelationshipManagerTest implements Serializable {
         departmentEmployeeManager.addToParent( department, employee3 );
         assertEquals("66", departmentEmployeeManager.getObjectId( department, employee3));
         
+        Employee employee4 = new Employee("Rick");
+        employee3.setId( 77L );
+        departmentEmployeeManager.addToParent( department, employee4 );
+        assertEquals("77", departmentEmployeeManager.getObjectId( department, employee3));
+
         departmentEmployeeManager.removeFromParent( department, employee2 );
-        assertTrue(department.getEmployees().size() == 2);
+        assertEquals(3, department.getEmployees().size());
     }
 
     @Test

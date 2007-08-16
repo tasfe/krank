@@ -12,12 +12,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+
+import org.crank.core.CrankException;
 import org.crank.core.StringUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
 
-public class RelationshipManager {
+public class RelationshipManager implements Serializable {
 
     /**
      * @CONFIG
@@ -201,14 +203,20 @@ public class RelationshipManager {
      *             Some problem.
      */
     public Object retrieveChildCollectionFromParentObject( Object parent ) {
-            /*
-             * Invoke the method and return the list type thing (it can be an
-             * Array, List, Set or Map)
-             */
-            BeanWrapper wrapper = new BeanWrapperImpl (parent);
             //need to guess if null
-            Object listTypeThing = wrapper.getPropertyValue( childCollectionProperty() );
+            Object listTypeThing = getChildCollection( parent );
             return listTypeThing;
+    }
+
+    private Object getChildCollection( Object parent ) {
+        /*
+         * Invoke the method and return the list type thing (it can be an
+         * Array, List, Set or Map)
+         */
+        BeanWrapper wrapper = new BeanWrapperImpl (parent);
+
+        Object listTypeThing = wrapper.getPropertyValue( childCollectionProperty() );
+        return listTypeThing;
     }
 
     
@@ -298,7 +306,7 @@ public class RelationshipManager {
 
             Object childCollection = retrieveChildCollectionFromParentObject(parent);
             if (childCollection==null) {
-                initChildCollection( parent, childCollection );
+                childCollection=initChildCollection( parent );
             }
 
         
@@ -310,26 +318,40 @@ public class RelationshipManager {
             if (addToParentMethodName==null) {
                 addToParentMethodName = "add" + entityName;
             }
+            
             /*
              * Initialize the addMethod if needed.
              * Look up the addMethod using reflection.
              */
             if (addToParentMethod==null) {
-                addToParentMethod = parentClass.getMethod(addToParentMethodName , new Class[]{this.entityClass});
+                try {
+                    addToParentMethod = parentClass.getMethod(addToParentMethodName , new Class[]{this.entityClass});
+                } catch (Exception methodNotFoundException ) {
+                    if (childCollection instanceof Collection) {
+                        Collection col = (Collection) childCollection;
+                        col.add( child );
+                    } else {
+                        throw new CrankException(methodNotFoundException, "Unable to add child %s to parent %s because %s",
+                                child, parent, methodNotFoundException.getMessage());
+                    }
+                    return;
+                }
             }
 
             /*
              * Invoke the addMethod on parent passing the child as an argument.
-             */
-            addToParentMethod.invoke(parent, new Object[]{child});
+             */                
+            addToParentMethod.invoke(parent, new Object[]{child});                    
+            
         } catch (Exception ex) {
             /* If there are any problems throw a nested exception. */
-            throw new RuntimeException(ex);
+            throw new CrankException(ex, "Unable to add child to parent");
         }
     }
 
-    private void initChildCollection( Object parent, Object childCollection ) throws Exception {
+    private Object initChildCollection( Object parent ) throws Exception {
         BeanWrapper wrapper = new BeanWrapperImpl (parent);
+        Object childCollection=null;
         Class propertyType = wrapper.getPropertyType( this.childCollectionProperty );
         if (List.class.isAssignableFrom( propertyType )) {
             childCollection = new ArrayList();
@@ -339,6 +361,7 @@ public class RelationshipManager {
             childCollection = new HashMap();
         }
         setChildCollectionIntoParentObject( parent, childCollection );
+        return childCollection;
     }
     
     @SuppressWarnings("unchecked")
@@ -353,20 +376,31 @@ public class RelationshipManager {
                 removeFromParentMethodName = "remove" + entityName;
             }
             /*
-             * Initialize the removeMethod if needed.
-             * Look up the removeMethod using reflection.
+             * Initialize the addMethod if needed.
+             * Look up the addMethod using reflection.
              */
             if (removeFromParentMethod==null) {
-                removeFromParentMethod = parentClass.getMethod(removeFromParentMethodName, new Class[]{this.entityClass});
+                try {
+                    removeFromParentMethod = parentClass.getMethod(removeFromParentMethodName, new Class[]{this.entityClass});
+                } catch (Exception methodNotFoundException ) {
+                    Object childCollection = retrieveChildCollectionFromParentObject( parent );
+                    if (childCollection instanceof Collection) {
+                        Collection col = (Collection) childCollection;
+                        col.remove( child );
+                    } else {
+                        throw new CrankException(methodNotFoundException, "Unable to remove child %s from parent %s because %s",
+                                child, parent, methodNotFoundException.getMessage());
+                    }
+                    return;
+                }
             }
-
             /*
              * Invoke the removeMethod on parent passing the child as an argument.
              */
-            removeFromParentMethod.invoke(parent, new Object[]{child});
+            removeFromParentMethod.invoke(parent, new Object[]{child});            
         } catch (Exception ex) {
             /* If there are any problems throw a nested exception. */
-            throw new RuntimeException(ex);
+            throw new CrankException(ex, "Unable to remove child");
         }
     }
 

@@ -8,6 +8,16 @@ public class Employee {
     
     @ErrorHandler
     long iq;
+    
+    private Address address;
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress( Address address ) {
+        this.address = address;
+    }
 
     public long getIq() {
         return iq;

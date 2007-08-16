@@ -65,10 +65,16 @@ public class TypeUtilsTest extends TestCase {
     }
 
     public void testIsText() {
+
         assertFalse(TypeUtils.isText( Test.class, "bool" ));
         assertTrue(TypeUtils.isText( Test.class, "text" ));
+        
     }
 
+    public void testIsTextCompoundProperty() {
+        assertTrue(TypeUtils.isText( Employee.class, "address.line1" ));
+    }
+    
     public void testIsBoolean() {
         assertTrue(TypeUtils.isBoolean( Test.class, "bool" ));
         assertFalse(TypeUtils.isBoolean( Test.class, "text" ));

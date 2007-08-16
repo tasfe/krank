@@ -1,8 +1,6 @@
 package org.crank.core;
 
-import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -74,7 +72,7 @@ public class AnnotationUtils {
             }
             return annotations;
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new CrankException(ex, "Unable to extract annotations for property %s of class %s. useRead = %s", propertyName, clazz, useRead);
         }
 
     }
@@ -90,14 +88,21 @@ public class AnnotationUtils {
      */
     private static Annotation[] findPropertyAnnotations(Class clazz, String propertyName, boolean useRead)
             throws IntrospectionException {
-                
-        /* Grab the bean info that has the write method info. */
-        BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
         
-        /* Get the writeMethod and read its annotations. */
-        Method method = findMethodForProperty(propertyName, beanInfo, useRead);
-        if (method!=null) {
-            Annotation[] annotations = method.getAnnotations();
+        PropertyDescriptor propertyDescriptor = TypeUtils.getPropertyDescriptor(clazz, propertyName);
+        if (propertyDescriptor == null) {
+            return new Annotation[]{};    
+        }
+        Method accessMethod = null;
+        
+        if (useRead) {
+            accessMethod = propertyDescriptor.getReadMethod();                    
+        } else {
+            accessMethod = propertyDescriptor.getWriteMethod();
+        }
+        
+        if (accessMethod!=null) {
+            Annotation[] annotations = accessMethod.getAnnotations();
             return annotations;
         } else {
             return new Annotation[]{};
@@ -106,6 +111,9 @@ public class AnnotationUtils {
     
     private static Annotation[] findFieldAnnotations(Class clazz, String propertyName) {
         Field field = findFieldForProperty(clazz, propertyName);
+        if (field==null) {
+            return new Annotation[] {};
+        }
         Annotation[] annotations = field.getAnnotations();
         return annotations;
     }
@@ -132,26 +140,6 @@ public class AnnotationUtils {
             field.setAccessible( true );
         }
         return field;
-    }
-
-    /**
-     * Finds a write method for a given property.
-     * @param propertyName
-     * @param beanInfo
-     * @return
-     */
-    private static Method findMethodForProperty(String propertyName, BeanInfo beanInfo, boolean read) {
-        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-        for (PropertyDescriptor descriptor : propertyDescriptors) {
-            if (propertyName.equals(descriptor.getName())) {
-                if (read) {
-                    return descriptor.getReadMethod();                    
-                } else {
-                    return descriptor.getWriteMethod();
-                }
-            }
-        }
-        return null;
     }
     
     

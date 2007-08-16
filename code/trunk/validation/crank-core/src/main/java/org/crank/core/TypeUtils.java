@@ -1,7 +1,6 @@
 package org.crank.core;
 
 import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.math.BigDecimal;
@@ -56,7 +55,10 @@ public class TypeUtils {
             PropertyDescriptor propertyDescriptor=null;
             for (String pName : propertyNames) {
                 propertyDescriptor = doGetPropertyDescriptor( clazz, pName );
-                clazz = propertyDescriptor.getClass();
+                if (propertyDescriptor == null) {
+                    return null;
+                }
+                clazz = propertyDescriptor.getPropertyType();
             }
             return propertyDescriptor;
          }

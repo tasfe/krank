@@ -33,6 +33,7 @@ import org.crank.crud.jsf.support.EntityConverter;
 import org.crank.crud.jsf.support.JsfCrudAdapter;
 import org.crank.crud.jsf.support.JsfDetailController;
 import org.crank.crud.jsf.support.SelectItemGenerator;
+import org.crank.crud.model.ContactInfo;
 import org.crank.crud.model.Department;
 import org.crank.crud.model.Employee;
 import org.crank.crud.model.Task;
@@ -91,6 +92,7 @@ public class SampleConfiguration {
     public JsfCrudAdapter employeeCrud() throws Exception {
         JsfCrudAdapter adapter = cruds().get( "Employee");
         adapter.getController().addChild( "tasks", new JsfDetailController(Task.class));
+        adapter.getController().addChild( "contacts", new JsfDetailController(ContactInfo.class));
         return adapter;
     }
 

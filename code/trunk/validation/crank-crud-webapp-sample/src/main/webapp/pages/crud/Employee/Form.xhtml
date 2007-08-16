@@ -20,10 +20,19 @@
 				<crank:compositePanel entity="${cruds['Employee'].controller.entity.address}" name="address" propertyNames="line1,line2,zipCode"/>
 				
 				<c:set var="taskDetailController" 
-					value="${employeeCrud.controller.children.tasks}" />						
+					value="${employeeCrud.controller.children.tasks}" />
+
+				<c:set var="contactDetailController" 
+					value="${employeeCrud.controller.children.contacts}" />						
+											
 				<crank:detailListing detailController="${taskDetailController}" 
 									 propertyNames="name,startDate,endDate,complete"
 									 reRender="employeeForm"/>
+
+				<crank:detailListing detailController="${contactDetailController}" 
+									 propertyNames="name,phone"
+									 reRender="employeeForm"/>
+
 			</crank:form>
 			</a4j:region>
 		</h:form>

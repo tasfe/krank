@@ -25,6 +25,7 @@ import org.crank.annotations.validation.Phone;
 import org.crank.annotations.validation.ProperNoun;
 import org.crank.annotations.validation.Required;
 import org.crank.crud.model.PersistedFile;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 @NamedQueries( {
@@ -33,6 +34,7 @@ import org.crank.crud.model.PersistedFile;
                 query = "select distinct employee from Employee employee " +
                         "join fetch employee.department " + 
                         "left outer join fetch employee.tasks " +
+                        "left outer join fetch employee.contacts " +
                         "where employee.id=?" ),
         @NamedQuery( name = "Employee.findInEmployeeIds", query = "SELECT o FROM Employee o  WHERE  o.id in  ( ? )" ),
         @NamedQuery( name = "Employee.findSalaryEmployees", query = "SELECT o FROM Employee o  WHERE  o.status = org.crank.crud.model.EmployeeStatus.SALARY" ),
@@ -73,7 +75,12 @@ public class Employee implements Serializable {
     private Address address;
 
     @OneToMany( cascade = CascadeType.ALL )
+    @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})    
     private Set<Task> tasks = new HashSet<Task>();
+    
+    @OneToMany( cascade = CascadeType.ALL )
+    @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})    
+    private Set<ContactInfo> contacts = new HashSet<ContactInfo>();
 
     @ManyToOne( )
     private Department department;
@@ -228,5 +235,13 @@ public class Employee implements Serializable {
 
     public void setAddress( Address address ) {
         this.address = address;
+    }
+
+    public Set<ContactInfo> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts( Set<ContactInfo> contacts ) {
+        this.contacts = contacts;
     }
 }

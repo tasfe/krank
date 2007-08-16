@@ -136,6 +136,11 @@ public class CrudUtils {
         return map.get( "manyToOne" ) != null; 
     }
     
+    public static boolean isEnumerated(Class clazz, String propertyName) {
+        Map map = getAnnotationDataAsMap( clazz, propertyName );
+        return map.get( "enumerated" ) != null; 
+    }
+    
     @SuppressWarnings("unchecked")
     public static String getPropertyEntityName(Class clazz, String propertyName) {
         PropertyDescriptor descriptor = getPropertyDescriptor( clazz, propertyName);

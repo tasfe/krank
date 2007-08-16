@@ -9,6 +9,15 @@ public class DetailController<T, PK extends Serializable> extends CrudController
     protected RelationshipManager relationshipManager = new RelationshipManager();
     protected String idParam = "id";
 
+    private boolean showDetails = false;
+    
+    public boolean isShowDetails() {
+		return showDetails;
+	}
+
+	public void setShowDetails(boolean showDetails) {
+		this.showDetails = showDetails;
+	}
 
     public void setIdParam( String idParam ) {
         this.idParam = idParam;
@@ -104,6 +113,10 @@ public class DetailController<T, PK extends Serializable> extends CrudController
         
     public CrudOutcome deleteSelected() {
         throw new UnsupportedOperationException();
+    }
+    
+    public void toggleShowDetails() {
+    	showDetails = !showDetails;
     }
 
 }

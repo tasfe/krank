@@ -35,9 +35,24 @@
 		<property name="bo" >
 			<value>org.crank.crud.test.model.Employee</value>
 		</property>
-	</bean>	
+	</bean>
 
-	<bean id="departmentDao" parent="daoFactory">
+                             <!--
+	<bean id="preloadingEmployeeDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.test.dao.EmployeeDAO</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.Employee</value>
+		</property>
+        <property name="cacheConfiguration">
+            <bean class="org.crank.crud.cache.CacheConfiguration">
+                <property name="preloadingRecordCount" value="10" />
+            </bean>
+        </property>
+    </bean>                      -->
+
+    <bean id="departmentDao" parent="daoFactory">
 		<property name="interface">
 			<value>org.crank.crud.test.dao.DepartmentDAO</value>
 		</property>

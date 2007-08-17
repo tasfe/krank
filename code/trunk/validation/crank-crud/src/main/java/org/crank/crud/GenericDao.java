@@ -60,7 +60,7 @@ public interface GenericDao<T, PK extends Serializable> {
 
     /**
      * Remove an object from persistent storage in the database.
-     * @param id
+     * @param entity
      *          The Primary Key of the object to delete.
      */
     void delete( T entity );

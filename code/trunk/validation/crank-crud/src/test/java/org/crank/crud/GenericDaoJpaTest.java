@@ -18,6 +18,7 @@ import org.crank.crud.test.DbUnitTestBase;
 import org.crank.crud.test.dao.EmployeeDAO;
 import org.crank.crud.test.model.Department;
 import org.crank.crud.test.model.Employee;
+import org.crank.crud.test.model.EmployeeStatus;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
@@ -35,7 +36,25 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     public String getDataSetXml() {
         return "data/Employee.xml";
     }
+    
+    @Test
+    public void testCreateObject() {
 
+        Employee employee = new Employee();
+        employee.setAge( 5 );
+        employee.setDescription( "Ugly" );
+        employee.setFirstName( "Joe" );
+        employee.setLastName( "Barone" );
+        employee.setNumberOfPromotions( -1 );
+        employee.setStatus( EmployeeStatus.HOURLY );
+//        Department department = new Department();
+//        department.setName( "Losers" );
+//        department.addEmployee( employee );
+//        departmentDao.create( department );
+        employeeDao.create( employee );
+        assert employee.getId() != null && employee.getId() > 0;
+        employeeDao.delete(employee.getId());
+    }
 
     @Test
     public void testDeleteObject() throws Exception {

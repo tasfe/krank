@@ -23,7 +23,10 @@
             <property name="hibernate.dialect"
                       value="org.hibernate.dialect.MySQLDialect" />
 	    
-	        <!-- you may want to change this provider in production -->
+	        <!-- you may want to change this provider in production
+            <property name="hibernate.cache.provider_class"
+                      value="org.hibernate.cache.TreeCacheProvider" />  -->
+
             <property name="hibernate.cache.provider_class"
                       value="org.hibernate.cache.HashtableCacheProvider" />
 

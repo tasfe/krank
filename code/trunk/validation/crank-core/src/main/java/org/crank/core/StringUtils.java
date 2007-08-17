@@ -1,5 +1,6 @@
 package org.crank.core;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,6 +16,20 @@ public class StringUtils {
 
     public static List<String> split(String str) {
         return Arrays.asList( str.split( "," ) );
+    }    
+    
+    public static List<String> splitProperty(String str) {
+    	
+    	String prop1 = str.substring(0,str.indexOf("."));
+    	String prop2 = str.substring(str.indexOf(".") + 1, str.length());
+    	
+    	List<String> results = new ArrayList();
+    	
+    	results.add(prop1);
+    	results.add(prop2);
+    	
+    	return results;
+        
     }    
     
     public static String unCapitalize (String string) {

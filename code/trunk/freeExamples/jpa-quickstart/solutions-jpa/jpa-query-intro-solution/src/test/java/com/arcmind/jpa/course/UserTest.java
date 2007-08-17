@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
@@ -32,7 +34,7 @@ public class UserTest extends TestCase {
 		}
 	}
 	
-	private void deleteTestData() {
+	private void deleteTestData() throws Exception {
 		
 		entityManager = entityManagerFactory.createEntityManager();
 		/* Start a transaction. */
@@ -46,11 +48,319 @@ public class UserTest extends TestCase {
         } catch (Exception ex) {
         	ex.printStackTrace();
         	transaction.rollback();
-        	fail();
+        	throw ex;
         }
 		
 	}
 
+
+
+	private void createTestData() throws Exception {
+		String[] userNames = new String[]{"RickHi","BobSmith","Sergey","PaulHix","Taboraz"}; 
+		entityManager = entityManagerFactory.createEntityManager();
+		/* Start a transaction. */
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+        	for (String userName : userNames) {
+        		User user = new User();
+        		user.setName(userName);
+        		entityManager.persist(user);
+        	}
+        	for (int index = 0; index < 100; index++) {
+        		User user = new User();
+        		user.setName("user" + index);
+        		entityManager.persist(user);
+        	}        	
+        	transaction.commit();
+        	
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+        	transaction.rollback();
+        	throw ex;
+        }
+	}
+
+	public void testQueryUsers () throws Exception {
+		/* Start a transaction. */
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+        	
+        	Query query =
+        		entityManager.createQuery("select user from User user");
+        	
+        	List<User> users = query.getResultList();        	
+        	for (User user : users) {
+        		System.out.println(user.getName());
+        	}
+        	
+        	assertNotNull(users);
+        	assertTrue(users.size() > 0);
+
+        	
+        	transaction.commit();
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+        	transaction.rollback();
+        	throw ex;
+        }
+	}
+	
+	public void testQueryUserNames () throws Exception {
+		/* Start a transaction. */
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+        	
+        	Query query = entityManager.createQuery("select user.name from User " +
+        			" user");
+        	List<String> userNames = query.getResultList();        	
+        	for (String userName : userNames) {
+        		System.out.println(userName);
+        	}
+        	transaction.commit();        	
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+        	transaction.rollback();
+        	throw ex;
+        }
+	}
+	
+	public void testMoreThanOneColumn () throws Exception {
+		/* Start a transaction. */
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+        	
+        	Query query = 
+        		entityManager.createQuery("select user, user.name " +
+        				" from User user");
+        	List<Object[]> usersData = query.getResultList();        	
+        	for (Object[] data : usersData) {
+        		User user = (User) data[0];
+        		String userName = (String) data[1];
+        		System.out.println(user.getId());
+        		System.out.println(userName);
+        	}
+        	transaction.commit();        	
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+        	transaction.rollback();
+        	throw ex;
+        }
+        	
+		
+	}
+
+	
+	public void testSQLQuery () throws Exception {
+		/* Start a transaction. */
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+        	
+        	Query query =
+        		entityManager.createNativeQuery(
+        				"select user.name from User user");
+        	List<String> userNames = query.getResultList();        	
+        	for (String userName : userNames) {
+        		System.out.println(userName);
+        	}
+        	transaction.commit();        	
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+        	transaction.rollback();
+        	throw ex;
+        }
+	}
+		
+
+	public void testPositionalParameters () throws Exception {
+		/* Start a transaction. */
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+        	
+        	Query query =
+        		entityManager.createQuery(
+        				"select user from User user where user.name like ?");
+        	
+        	query.setParameter(1, "R%");
+        	
+        	List<User> users = query.getResultList();
+        	
+        	for (User user : users) {
+        		System.out.println(user.getName());
+        	}
+        	        	
+
+        	transaction.commit();        	
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+        	transaction.rollback();
+        	throw ex;
+        }
+	}
+
+	public void testNamedParameters () throws Exception {
+		/* Start a transaction. */
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+        	
+        	Query query =
+        		entityManager.createQuery(
+        				"select user from User user where user.name like :name");
+        	
+        	query.setParameter("name", "R%");
+        	
+        	List<User> users = query.getResultList();
+        	
+        	for (User user : users) {
+        		System.out.println(user.getName());
+        	}
+        	        	
+
+        	transaction.commit();        	
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+        	transaction.rollback();
+        	throw ex;
+        }
+	}
+
+	public void testSingleLoad () throws Exception {
+		/* Start a transaction. */
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+        	
+        	Query query =
+        		entityManager.createQuery(
+        				"select user from User user where user.name = ?");
+        	query.setParameter(1, "PaulHix");
+
+        	User user = (User) query.getSingleResult();
+        	assertNotNull(user);
+        	        	
+
+        	transaction.commit();        	
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+        	transaction.rollback();
+        	throw ex;
+        }
+	}
+
+
+	public void testSingleLoadNotFound () throws Exception {
+		/* Start a transaction. */
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+        	
+        	
+        	try {
+        		Query query =
+	        		entityManager.createQuery(
+	        				"select user from User user where user.name = ?");
+	        	
+	        	query.setParameter(1, "THIS_USER_NAME_IS_NOT_IN_THE_DB");
+	        	
+	        	User user2 = (User) query.getSingleResult();
+	        	System.out.println(user2);
+	        	fail();
+        	} catch (NoResultException nre) {
+        		System.out.println("This exception is expected");
+        	}
+        	
+
+        	transaction.commit();        	
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+        	transaction.rollback();
+        	throw ex;
+        }
+	}
+	
+	public void testTooManyFound () throws Exception {
+		/* Start a transaction. */
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+        	
+        	
+        	try {
+        		Query query =
+	        		entityManager.createQuery(
+	        				"select user from User user ");
+	        	
+	        	
+	        	User user2 = (User) query.getSingleResult();
+	        	System.out.println(user2);
+	        	fail();
+
+	        	
+        	} catch (NonUniqueResultException nure) {
+        		System.out.println("This exception is expected");
+        	}
+        	
+
+        	transaction.commit();        	
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+        	transaction.rollback();
+        	throw ex;
+        }
+	}
+
+	public void testPagination () throws Exception {
+		/* Start a transaction. */
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+        	
+        	
+        	try {
+        		Query query =
+	        		entityManager.createQuery(
+	        				"select user from User user");
+        		
+        		query.setFirstResult(0);
+        		query.setMaxResults(10);
+
+            	List<User> users = query.getResultList();
+            	
+            	assertEquals(10, users.size());
+            	
+            	for (User user : users) {
+            		System.out.println(user.getName());
+            	}
+        		
+        	} catch (NoResultException nre) {
+        		System.out.println("This exception is expected");
+        	}
+        	
+
+        	transaction.commit();        	
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+        	transaction.rollback();
+        	throw ex;
+        }
+	}
 
 	public void testCrudOperations() throws Exception{
 		
@@ -120,125 +430,5 @@ public class UserTest extends TestCase {
         assertNull(user);
         
 	}
-
-	private void createTestData() {
-		String[] userNames = new String[]{"RickHi","BobSmith","Sergey","PaulHix","Taboraz"}; 
-		entityManager = entityManagerFactory.createEntityManager();
-		/* Start a transaction. */
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
-
-        try {
-        	for (String userName : userNames) {
-        		User user = new User();
-        		user.setName(userName);
-        		entityManager.persist(user);
-        	}
-        	transaction.commit();
-        	
-        } catch (Exception ex) {
-        	ex.printStackTrace();
-        	transaction.rollback();
-        	fail();
-        }
-	}
-
-	public void testQueryUsers () {
-		/* Start a transaction. */
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
-
-        try {
-        	
-        	Query query =
-        		entityManager.createQuery("select user from User user");
-        	List<User> users = query.getResultList();        	
-        	for (User user : users) {
-        		System.out.println(user.getName());
-        	}
-        	
-        	assertNotNull(users);
-        	assertTrue(users.size() > 0);
-
-        	
-        	transaction.commit();
-        } catch (Exception ex) {
-        	ex.printStackTrace();
-        	transaction.rollback();
-        	fail();
-        }
-	}
-	
-	public void testQueryUserNames () {
-		/* Start a transaction. */
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
-
-        try {
-        	
-        	Query query = entityManager.createQuery("select user.name from User " +
-        			" user");
-        	List<String> userNames = query.getResultList();        	
-        	for (String userName : userNames) {
-        		System.out.println(userName);
-        	}
-        	transaction.commit();        	
-        } catch (Exception ex) {
-        	ex.printStackTrace();
-        	transaction.rollback();
-        	fail();
-        }
-	}
-	
-	public void testMoreThanOneColumn () {
-		/* Start a transaction. */
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
-
-        try {
-        	
-        	Query query = 
-        		entityManager.createQuery("select user, user.name " +
-        				" from User user");
-        	List<Object[]> usersData = query.getResultList();        	
-        	for (Object[] data : usersData) {
-        		User user = (User) data[0];
-        		String userName = (String) data[1];
-        		System.out.println(user.getId());
-        		System.out.println(userName);
-        	}
-        	transaction.commit();        	
-        } catch (Exception ex) {
-        	ex.printStackTrace();
-        	transaction.rollback();
-        	fail();
-        }
-        	
-		
-	}
-
-	
-	public void testSQLQuery () {
-		/* Start a transaction. */
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
-
-        try {
-        	
-        	Query query =
-        		entityManager.createNativeQuery(
-        				"select user.name from User user");
-        	List<String> userNames = query.getResultList();        	
-        	for (String userName : userNames) {
-        		System.out.println(userName);
-        	}
-        	transaction.commit();        	
-        } catch (Exception ex) {
-        	ex.printStackTrace();
-        	transaction.rollback();
-        	fail();
-        }
-	}
-		
 	
 }

@@ -44,16 +44,21 @@ public class JsfDetailController extends DetailController{
     
     @SuppressWarnings("unchecked")
     public DataModel getModel() {
-        Object object = this.relationshipManager.retrieveChildCollectionFromParentObject(parent.getEntity());
-        if (object instanceof List) {
-            model.setWrappedData( object );
-        } else if (object instanceof Set) {
-            model.setWrappedData( new ArrayList((Set)object) );
-        } else if (object instanceof Map)  {
-            Map map = (Map) object;
-            model.setWrappedData( new ArrayList(map.values()) );
+        if (parent.getEntity()==null) {
+            model.setWrappedData( new ArrayList() );
+        } else {
+            Object object = this.relationshipManager.retrieveChildCollectionFromParentObject(parent.getEntity(), true);
+            if (object instanceof List) {
+                model.setWrappedData( object );
+            } else if (object instanceof Set) {
+                model.setWrappedData( new ArrayList((Set)object) );
+            } else if (object instanceof Map)  {
+                Map map = (Map) object;
+                model.setWrappedData( new ArrayList(map.values()) );
+            }
         }
         return model;
+
     }
 
     /**

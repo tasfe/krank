@@ -207,6 +207,21 @@ public class RelationshipManager implements Serializable {
             Object listTypeThing = getChildCollection( parent );
             return listTypeThing;
     }
+    
+    public Object retrieveChildCollectionFromParentObject( Object parent, boolean createIfMissing ) {
+        Object childCollection = retrieveChildCollectionFromParentObject(parent);
+        if (childCollection==null && createIfMissing) {
+            try {
+                childCollection=initChildCollection( parent );
+            } catch (Exception ex) {
+                //Do nothing on purpose.
+            }
+        }
+        return childCollection;
+        
+    }
+
+
 
     private Object getChildCollection( Object parent ) {
         /*

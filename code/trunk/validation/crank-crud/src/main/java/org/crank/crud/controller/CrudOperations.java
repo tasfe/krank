@@ -37,7 +37,7 @@ public interface CrudOperations {
     /** */
     void init();
     /** */
-    void addChild (String name, DetailController detailController);
+    DetailController addChild (String name, DetailController detailController);
     /** */
     boolean isShowListing();
     /** */

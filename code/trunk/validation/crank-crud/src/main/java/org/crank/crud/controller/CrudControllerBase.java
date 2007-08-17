@@ -149,12 +149,13 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
         }
     }
 
-    public void addChild( String name, DetailController detailController ) {
+    public DetailController addChild( String name, DetailController detailController ) {
         this.children.put(name, detailController);
         if (detailController.getRelationshipManager().getChildCollectionProperty() == null ) {
             detailController.getRelationshipManager().setChildCollectionProperty( name );
         }
         detailController.setParent( this );
+        return detailController;
     }
     
     /**

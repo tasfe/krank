@@ -12,6 +12,13 @@
 		</function-signature>
 	</function>
 	<function>
+		<function-name>createEnumLabel</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			java.lang.String generateEnumLabelValue(java.lang.String)
+		</function-signature>
+	</function>
+	<function>
 		<function-name>isEnum</function-name>
 		<function-class>org.crank.core.TypeUtils</function-class>
 		<function-signature>
@@ -86,6 +93,13 @@
 		<function-class>org.crank.core.StringUtils</function-class>
 		<function-signature>
 			java.util.List split(java.lang.String)
+		</function-signature>
+	</function>	
+	<function>
+		<function-name>splitProperty</function-name>
+		<function-class>org.crank.core.StringUtils</function-class>
+		<function-signature>
+			java.util.List splitProperty(java.lang.String)
 		</function-signature>
 	</function>	
 	<function>

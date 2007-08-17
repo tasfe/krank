@@ -7,6 +7,7 @@ import java.util.List;
 import javax.faces.model.SelectItem;
 
 import org.crank.core.PropertiesUtil;
+import org.crank.crud.controller.CrudUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.NotReadablePropertyException;
@@ -49,10 +50,10 @@ public class SelectItemUtils {
 
             try {
                 BeanWrapper entity = new BeanWrapperImpl( (Object)item );
-                label = entity.getPropertyValue( labelProperty ).toString();
+                label = entity.getPropertyValue( CrudUtils.generateEnumLabelValue(labelProperty) ).toString();
                 id = entity.getPropertyValue( idProperty ).toString();
             } catch (NotReadablePropertyException ex) {
-	              label = (String)item.toString();
+	              label = CrudUtils.generateEnumLabelValue((String)item.toString());
 	              id = (String)item.toString();
             }
             

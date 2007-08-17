@@ -4,6 +4,8 @@ import java.beans.PropertyDescriptor;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.crank.core.AnnotationData;
@@ -188,5 +190,56 @@ public class CrudUtils {
     public static String getObjectId(DetailController detailController, Object row) {
         return detailController.getObjectId( row );
     }
+    
+
+	public static String getEnumLabel(final String enumConstant,
+			final ResourceBundle bundle) {
+
+		String label;
+
+		/** Look for enumConstant, e.g., ACTIVE_ACCOUNT == Active Account. */
+		try {
+			label = bundle.getString(enumConstant);
+		} catch (MissingResourceException mre) {
+			label = generateEnumLabelValue(enumConstant);
+		}
+
+		return label;
+	}
+
+	public static String generateEnumLabelValue(final String enumConstant) {
+		StringBuffer buffer = new StringBuffer(enumConstant.length() * 2);
+		char[] chars = enumConstant.toCharArray();
+        boolean capNextChar = false;
+
+		for (int index = 0; index < chars.length; index++) {
+			char cchar = chars[index];
+
+            if (cchar == '_') {
+                buffer.append(' ');
+                capNextChar = true;
+                continue;
+            }
+            
+            if (capNextChar) {
+                capNextChar = false;
+                cchar = Character.toUpperCase(cchar);
+				buffer.append(cchar);
+				continue;
+            }
+
+			if (index == 0) {
+				cchar = Character.toUpperCase(cchar);
+				buffer.append(cchar);
+				continue;
+			}
+
+			cchar = Character.toLowerCase(cchar);
+			buffer.append(cchar);
+		}
+
+		return buffer.toString();
+	}
+
     
 }

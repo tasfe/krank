@@ -83,7 +83,8 @@ public class SampleConfiguration {
     @Bean (scope = DefaultScopes.SESSION) 
     public JsfCrudAdapter deptCrud() throws Exception {
         JsfCrudAdapter adapter = cruds().get( "Department");
-        adapter.getController().addChild( "employees", new JsfDetailController(Employee.class));
+        adapter.getController().addChild( "employees", new JsfDetailController(Employee.class))
+        .addChild( "tasks", new JsfDetailController(Task.class) );
         return adapter;
     }
     

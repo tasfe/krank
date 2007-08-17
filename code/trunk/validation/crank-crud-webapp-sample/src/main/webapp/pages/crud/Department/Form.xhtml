@@ -20,10 +20,17 @@
 						propertyNames="name">
 				<c:set var="employeeDetailController" 
 					value="${deptCrud.controller.children.employees}" />
+				<c:set var="taskDetailController" 
+					value="${deptCrud.controller.children.employees.children.tasks}" />
+					
 				<crank:detailListing detailController="${employeeDetailController}" 
 									 propertyNames="firstName,lastName,active,dob,age,numberOfPromotions"
-									 reRender="departmentForm"
-									 />
+									 reRender="departmentForm">
+					<crank:detailListing detailController="${taskDetailController}" 
+									 propertyNames="name,startDate,endDate,complete"
+									 reRender="departmentForm"/>
+									 
+				</crank:detailListing>
 			</crank:form>
 			</a4j:region>
 			

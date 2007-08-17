@@ -14,16 +14,10 @@
 
 <ui:composition>
 		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
-		<c:if test="${empty idBase}">
-			<c:set var="idBase" value="${detailController.name}DetailListing"/>
-		</c:if>
 		<c:set var="entityLabel" value="${crud:createLabel(detailController.name)}"/>
 
-		<h:panelGroup id="${idBase}PanelGroup" 
-					  binding="${detailController.subForm}">
-			<a4j:commandLink
-							id="${idBase}LoadCreateCommandLinkId"  
-							action="${detailController.loadCreate}"
+		<h:panelGroup binding="${detailController.subForm}">
+			<a4j:commandLink action="${detailController.loadCreate}"
 							value="Add ${entityLabel}" reRender="${reRender}"
 							immediate="true"/>
 							 
@@ -35,34 +29,35 @@
 						entityLabel="${entityLabel}">
 			</crank:form>
 			
-			<rich:dataTable  id="${idBase}DataTable"   value="${detailController.model}" var="row">
+			<rich:dataTable value="${detailController.model}" var="row">
 				<f:facet name="header">
-					<rich:columnGroup id="${idBase}ColumnGroup">
+					<rich:columnGroup>
 						<c:forEach items="${pNames}" var="property">
-							<h:column id="${idBase}${property}Header">
+							<h:column >
 								<h:outputText id="${idBase}${property}HeaderText" value="${crud:createLabel(property)}" />
 							</h:column>
 						</c:forEach>					
-						<h:column id="${idBase}ActionColumn">
+						<h:column >
 								<h:outputText id="${idBase}ActionColumnText" value="Action" />
 						</h:column>
 					</rich:columnGroup>
 				</f:facet>				
 				<c:forEach items="${pNames}" var="property">
-					<h:column id="${idBase}${property}Column">
-						<h:outputText id="${idBase}${property}RowText" value="${row[property]}" rendered="${not crud:isBoolean(row.class, property)}"/>
-						<h:graphicImage id="${idBase}${property}BooleanGraphic" value="/images/check-sm.gif" rendered="${(row[property] == 'true')}" styleClass="imageCenter"/>
+					<h:column >
+						<h:outputText value="${row[property]}" rendered="${not crud:isBoolean(row.class, property)}"/>
+						<h:graphicImage value="/images/check-sm.gif" rendered="${(row[property] == 'true')}" styleClass="imageCenter"/>
 					</h:column>
 				</c:forEach>
 				<h:column id="${idBase}ActionRow">
-					<table><tr><td><a4j:commandLink id="${idBase}ActionRowDelete" action="${detailController.delete}" value="Delete">
-						<f:param id="${idBase}ActionRowDeleteIdParam" name="id" value="${crud:getObjectId(detailController,row)}"/>
+					<table><tr><td><a4j:commandLink action="${detailController.delete}" value="Delete">
+						<f:param  name="id" value="${crud:getObjectId(detailController,row)}"/>
 					</a4j:commandLink></td><td>
-					<a4j:commandLink id="${idBase}ActionRowEdit" action="${detailController.read}" value="Edit">
-						<f:param id="${idBase}ActionRowEditIdParam" name="id" value="${crud:getObjectId(detailController,row)}"/>
+					<a4j:commandLink action="${detailController.read}" value="Edit">
+						<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
 					</a4j:commandLink></td></tr></table>
 				</h:column>
 			</rich:dataTable>
-		</h:panelGroup>	
+		</h:panelGroup>
+		<ui:insert/>	
 </ui:composition>
 </html>

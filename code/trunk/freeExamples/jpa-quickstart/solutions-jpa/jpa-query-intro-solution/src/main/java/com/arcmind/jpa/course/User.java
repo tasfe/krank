@@ -4,8 +4,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries ({
+    @NamedQuery (
+        name="getUsers", 
+        query="SELECT u FROM User u ORDER BY u.name ASC"
+    ),
+    @NamedQuery (
+        name="loadUser", 
+        query="SELECT u FROM User u WHERE u.name=:userName"
+    )
+})
 public class User {
 	@Id 
     @GeneratedValue( strategy = GenerationType.AUTO )		

@@ -25,11 +25,7 @@ import org.crank.crud.criteria.OrderDirection;
 import org.crank.crud.criteria.VerifiedBetween;
 import org.crank.crud.join.Fetch;
 import org.crank.crud.join.Join;
-import org.springframework.orm.jpa.EntityManagerFactoryAccessor;
-import org.springframework.orm.jpa.JpaAccessor;
 import org.springframework.orm.jpa.JpaSystemException;
-import org.springframework.orm.jpa.support.JpaDaoSupport;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -48,8 +44,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 
 public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable> implements GenericDao<T, PK>, Finder<T> {
-
-    private long serialVersionUID = 1l;
     
     protected Class<T> type = null;
 

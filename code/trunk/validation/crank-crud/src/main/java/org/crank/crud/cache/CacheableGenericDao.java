@@ -1,8 +1,5 @@
 package org.crank.crud.cache;
 
-
-import java.io.Serializable;
-
 /**
  * Interface for cache awareness/capability
  *

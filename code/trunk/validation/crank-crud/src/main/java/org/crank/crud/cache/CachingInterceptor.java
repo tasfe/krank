@@ -2,7 +2,6 @@ package org.crank.crud.cache;
 
 import org.springframework.aop.IntroductionInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.crank.crud.Finder;
 
 /**
  * Interceptor for cache awareness.
@@ -28,7 +27,9 @@ public class CachingInterceptor implements IntroductionInterceptor {
         //trap for update methods - invalidate cache item
         //trap for delete method - invalidate cache item.
         //trap for create method - add to cache??
-        
+        if (genericDao==null) {
+        	
+        }
 
         return methodInvocation.proceed();
     }

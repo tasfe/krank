@@ -1,7 +1,5 @@
 package org.crank.crud.cache;
 
-import javax.persistence.NamedQuery;
-import java.io.Serializable;
 
 /**
  * Interface for preload awareness/capability.

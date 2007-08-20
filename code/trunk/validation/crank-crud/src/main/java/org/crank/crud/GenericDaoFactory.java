@@ -24,6 +24,11 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
     private EntityManagerFactory entityManagerFactory;
 
     private boolean preloadEnabled = false;
+    {
+    	if(preloadEnabled) {
+    		
+    	}
+    }
     private CacheConfiguration cacheConfiguration;
 
 

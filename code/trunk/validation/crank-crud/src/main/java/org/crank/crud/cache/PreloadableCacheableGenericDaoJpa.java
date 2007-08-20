@@ -2,7 +2,6 @@ package org.crank.crud.cache;
 
 import org.crank.crud.GenericDaoJpa;
 
-import javax.persistence.NamedQuery;
 import java.io.Serializable;
 
 

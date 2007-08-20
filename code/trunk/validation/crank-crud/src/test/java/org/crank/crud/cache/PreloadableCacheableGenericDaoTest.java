@@ -1,10 +1,6 @@
 package org.crank.crud.cache;
 
-import org.crank.crud.GenericDaoFactory;
 import org.crank.crud.test.DbUnitTestBase;
-import org.crank.crud.test.dao.EmployeeDAO;
-import org.crank.crud.test.model.Employee;
-import org.testng.annotations.Test;
 
 /**
  * Created by IntelliJ IDEA.

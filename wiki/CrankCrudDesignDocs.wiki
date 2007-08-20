@@ -1,0 +1,10 @@
+#summary Crank Crud Design Documentation
+
+= Introduction =
+
+Covers the basic structure of Crank Crud. At least the 'CrudContoller' parts.
+
+= Details =
+
+The 'CrudController' class is the controller for forms that edit Entities (domain objects like Department, Employee, etc.).
+

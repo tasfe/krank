@@ -3,7 +3,6 @@ package org.crank.sample;
 
 import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.controller.Pageable;
-import org.crank.crud.jsf.support.JsfCrudAdapter;
 import org.crank.crud.model.Employee;
 import org.crank.crud.GenericDao;
 

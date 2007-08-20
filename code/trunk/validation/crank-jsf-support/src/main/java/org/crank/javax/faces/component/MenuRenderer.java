@@ -529,7 +529,7 @@ public class MenuRenderer extends HtmlBasicInputRenderer {
             itemValue = curItem.getValue();
         }
         if (valuesArray != null) {
-            type = valuesArray.getClass().getComponentType();
+            //type = valuesArray.getClass().getComponentType();
         }
 
         Map<String, Object> requestMap = context.getExternalContext().getRequestMap();

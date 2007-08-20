@@ -2,9 +2,16 @@
 
 = Introduction =
 
-Covers the basic structure of Crank Crud. At least the 'CrudContoller' parts.
+Covers the basic structure of Crank Crud. At least the `CrudContoller` parts.
 
 = Details =
 
-The 'CrudController' class is the controller for forms that edit Entities (domain objects like Department, Employee, etc.).
+The `CrudController` class is the controller for forms that edit entities (domain objects like Department, Employee, etc.).
 
+`DetailCrudController` class is the controller for editing details. Think of `DetailCrudController` as the "detail" in Master detail.
+
+`CrudController` has a map of `DetailController`s. For example a `CrudContoller` might be tied to a `Department` entity class. The `Department` form may allow editing of `employees` on the `Department` form.
+
+Thus the `Department` `CrudController` would have an employees (map key = `employees`) `DetailController` associated with it.
+
+`CrudControllerBase` is the code that is used by both `CrudController` and `DetailController`.

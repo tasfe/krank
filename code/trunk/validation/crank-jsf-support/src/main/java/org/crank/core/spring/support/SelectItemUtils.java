@@ -50,7 +50,7 @@ public class SelectItemUtils {
 
             try {
                 BeanWrapper entity = new BeanWrapperImpl( (Object)item );
-                label = entity.getPropertyValue( CrudUtils.generateEnumLabelValue(labelProperty) ).toString();
+                label = entity.getPropertyValue( labelProperty ).toString();
                 id = entity.getPropertyValue( idProperty ).toString();
             } catch (NotReadablePropertyException ex) {
 	              label = CrudUtils.generateEnumLabelValue((String)item.toString());

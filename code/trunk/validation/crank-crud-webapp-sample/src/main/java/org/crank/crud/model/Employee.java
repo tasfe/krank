@@ -31,7 +31,7 @@ import org.hibernate.annotations.Cascade;
         @NamedQuery( name = "Employee.findEmployeesByDepartment", query = "from Employee employee where employee.department.name=?" ),
         @NamedQuery( name = "Employee.readPopulated", 
                 query = "select distinct employee from Employee employee " +
-                        "join fetch employee.department " + 
+                        "left outer join fetch employee.department " + 
                         "left outer join fetch employee.tasks " +
                         "left outer join fetch employee.contacts " +
                         "where employee.id=?" ),

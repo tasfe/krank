@@ -7,7 +7,7 @@ package com.arcmind.jpa.course;
 
 import junit.framework.TestCase;
 
-public class UserTest extends TestCase {
+public class UserBasicCrudOperationsTest extends TestCase {
 
 //	private EntityManager entityManager;
 //	private EntityManagerFactory entityManagerFactory;

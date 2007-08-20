@@ -467,3 +467,8 @@ a:hover, a:active {
 	background-color:#ffffcc;
 	layer-background-color:#ffffcc;
 }
+.titleCommandLink, .titleCommandLink:active, .titleCommandLink:visited {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: large;
+	color: #7694D1;
+}

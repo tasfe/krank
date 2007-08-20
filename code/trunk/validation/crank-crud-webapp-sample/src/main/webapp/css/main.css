@@ -1,5 +1,5 @@
 html, body {
-	background : #ffffff url(../images/stuft-bg.jpg) repeat-y top right;
+	background : #ffffff url(../images/bg.jpg) repeat-y top right;
 	height: 100%;
 }
 a:link, a:visited {
@@ -17,9 +17,42 @@ a:hover, a:active {
 	text-transform: uppercase;
 	padding: 10px 0px 10px 0px;
 }
+.pageTitle {
+	font-size: large;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	text-transform: uppercase;
+	padding: 10px 10px 10px 10px;
+}
 #header {
 	background-image: url("../images/presto_bg_slice.gif");
 	width: 100%;
+}
+.columnHeaderSimple {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: small;
+    text-align: center;
+	background-color: #DDDDDD;
+}
+.nodeBranch {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: small;
+	width: 20px;
+	vertical-align: top;
+    text-align: center;
+	background-color: #DDDDDD;
+}
+.nodeLeaf {
+    vertical-align: top;
+    text-align: left;
+	margin-left: auto;
+    margin-right: auto
+}
+.columnGroup {
+	width: 20px;
+	vertical-align: top;
+    text-align: center;
+	background-color: #DDDDDD;
 }
 .columnHeaderLeft {
     text-align: left;
@@ -27,7 +60,11 @@ a:hover, a:active {
     font-size: x-small;
     color: #666666;
 }
-
+.panelColumnLeft {
+    text-align: left;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: x-small;
+}
 .columnHeaderRight {
     text-align: right;
     font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -56,6 +93,7 @@ a:hover, a:active {
 
 .oddRow {background-color: White;}
 .evenRow {background-color: #EFEFEF;}
+.radioGroup {background-color: #DFDFDF;}
 .tableHeader {
     background-image: url("../images/table_header_bg.gif");
     background-repeat: repeat-x;
@@ -170,6 +208,11 @@ a:hover, a:active {
 	background-color: White;
 	width: 100%
 }
+.detailPanelGrid {
+	padding: 10px;
+	border: 1px dotted #999999;
+	width: 100%
+}
 .columnCommandLink, .columnCommandLink:active, .columnCommandLink:visited {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: x-small;
@@ -238,6 +281,13 @@ a:hover, a:active {
 .paginationImageButton {
 	vertical-align: middle;
 	padding: 0px 1px 0px 1px;
+}
+
+.imageTopCenter {
+	vertical-align: top;
+	display: block;
+    margin-left: auto;
+    margin-right: auto
 }
 
 .imageCenter {
@@ -314,6 +364,11 @@ a:hover, a:active {
 	font-size: x-small;
 	color: Red;
 	text-decoration: underline overline;
+}
+.dropdownSmall {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: xx-small;
+	color: Black;
 }
 .dropdown {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -400,7 +455,7 @@ a:hover, a:active {
     border: 1px solid #999999;
 }
 .toolTip {
-	font:10px/12px Arial,Helvetica,sans-serif; 
+	font:14px/16px Arial,Helvetica,sans-serif; 
 	border:solid 1px #666666; 
 	padding:1px;
 	position:absolute; 
@@ -412,4 +467,3 @@ a:hover, a:active {
 	background-color:#ffffcc;
 	layer-background-color:#ffffcc;
 }
-                  

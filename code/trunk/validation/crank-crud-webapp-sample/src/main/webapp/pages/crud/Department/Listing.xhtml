@@ -10,16 +10,31 @@
 	>
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
-		<a4j:outputPanel>
-			<h:form id="departmentForm">
-				<crank:listing paginator="${paginators['Department']}" 
-							   jsfCrudAdapter="${deptCrud}" 
-							   propertyNames="name"
-							   parentForm="departmentForm"
-							   reRender="${reRender}"
-							   crud="${deptCrud.controller}"/>							   
-			</h:form>
-		</a4j:outputPanel>
+
+		<h:form>
+			<h:panelGroup>
+				<h:commandLink action="HOME" value="Home" styleClass="paginationPageNumberLink"/>
+				<h:outputText value="|" styleClass="paginationPageNumberLink"/>
+				<h:outputText value="Departments" styleClass="paginationPageNumberLink"/>
+			</h:panelGroup>
+		</h:form>
+	
+		<h:outputText value="Departments" styleClass="pageTitle"/>
+
+		<a4j:region renderRegionOnly="false"> 
+			<a4j:form id="${daoName}ListForm">
+				<crank:listing 
+					paginator="${paginators['Department']}" 
+					jsfCrudAdapter="${cruds['Department']}" 
+					propertyNames="name"
+					pageTitle="${daoName}"
+					parentForm="${daoName}ListForm"
+					reRender="${daoName}ListForm"
+					crud="${cruds['Department'].controller}"/>
+			</a4j:form>
+		</a4j:region>
+				
+		
 	</ui:define>
 </ui:composition>
 </html>

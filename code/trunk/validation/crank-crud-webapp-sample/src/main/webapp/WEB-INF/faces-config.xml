@@ -28,6 +28,28 @@
     </renderer>
   
   </render-kit>
+  
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>HOME</from-outcome>
+  		<to-view-id>/pages/Home.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+  
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>EMPLOYEES</from-outcome>
+  		<to-view-id>/pages/crud/Employee/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+  
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>DEPARTMENTS</from-outcome>
+  		<to-view-id>/pages/crud/Department/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+  
   <navigation-rule>
   	<from-view-id>/pages/crud/Employee/*</from-view-id>
   	<navigation-case>
@@ -37,6 +59,10 @@
   	<navigation-case>
   		<from-outcome>FORM</from-outcome>
   		<to-view-id>/pages/crud/Employee/Form.xhtml</to-view-id>
+  	</navigation-case>  	
+  	<navigation-case>
+  		<from-outcome>EXPORT</from-outcome>
+  		<to-view-id>/pages/crud/Employee/ExportListing.xhtml</to-view-id>
   	</navigation-case>  	
   </navigation-rule>
   <navigation-rule>

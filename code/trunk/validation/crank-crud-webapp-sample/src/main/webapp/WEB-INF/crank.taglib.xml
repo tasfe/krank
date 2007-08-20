@@ -40,5 +40,9 @@
 		<tag-name>detailListing</tag-name>
 		<source>template/detailListing.xhtml</source>
 	</tag>
+	<tag>
+		<tag-name>exportListing</tag-name>
+		<source>template/exportListing.xhtml</source>
+	</tag>
 
 </facelet-taglib>

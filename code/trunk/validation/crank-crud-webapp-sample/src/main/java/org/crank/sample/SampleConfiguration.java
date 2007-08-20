@@ -25,6 +25,7 @@ import org.crank.crud.controller.CrudController;
 import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.controller.FilteringPaginator;
+import org.crank.crud.controller.datasource.EnumDataSource;
 import org.crank.crud.controller.datasource.JpaFilteringPagingDataSource;
 import org.crank.crud.controller.support.tomahawk.TomahawkFileUploadHandler;
 import org.crank.crud.dao.DepartmentDAO;
@@ -36,11 +37,11 @@ import org.crank.crud.jsf.support.SelectItemGenerator;
 import org.crank.crud.model.ContactInfo;
 import org.crank.crud.model.Department;
 import org.crank.crud.model.Employee;
+import org.crank.crud.model.EmployeeStatus;
 import org.crank.crud.model.Task;
 import org.crank.crud.GenericDao;
 import org.crank.crud.GenericDaoFactory;
 import org.crank.web.RequestParameterMapFinderImpl;
-
 
 @Configuration (defaultLazy=Lazy.TRUE)
 public class SampleConfiguration {
@@ -52,6 +53,8 @@ public class SampleConfiguration {
         
         managedObjects.add( new CrudManagedObject(Employee.class, EmployeeDAO.class) );
         managedObjects.add( new CrudManagedObject(Department.class, DepartmentDAO.class) );
+//        managedObjects.add( new CrudManagedObject(ContactInfo.class, ContactInfoDAO.class) );
+//        managedObjects.add( new CrudManagedObject(Task.class, TaskDAO.class) );
     }
     
     @Bean (scope = DefaultScopes.SESSION)
@@ -127,11 +130,18 @@ public class SampleConfiguration {
     @Bean (scope = DefaultScopes.SINGLETON)
     public Map<String, SelectItemGenerator> selectItemGenerators() throws Exception {
         Map<String, SelectItemGenerator> selectItemGenerators = new HashMap<String, SelectItemGenerator>();
+
+        SelectItemGenerator selectItemGenerator = new SelectItemGenerator();
+        EnumDataSource<EmployeeStatus> dataSource = new EnumDataSource();
+        dataSource.setType(EmployeeStatus.class);
+        selectItemGenerator.setDataSource( dataSource );
+        selectItemGenerators.put("EmployeeStatus", selectItemGenerator);
+        
         for (CrudManagedObject mo : managedObjects) {
-            SelectItemGenerator selectItemGenerator = new SelectItemGenerator();
-            JpaFilteringPagingDataSource<Department, Long> dataSource = new JpaFilteringPagingDataSource<Department, Long>();
-            dataSource.setDao( repositories().get( mo.getName() ));
-            selectItemGenerator.setDataSource( dataSource );
+            selectItemGenerator = new SelectItemGenerator();
+            JpaFilteringPagingDataSource<Department, Long> jpaDataSource = new JpaFilteringPagingDataSource<Department, Long>();
+            jpaDataSource.setDao( repositories().get( mo.getName() ));
+            selectItemGenerator.setDataSource( jpaDataSource );
             selectItemGenerators.put(mo.getName(), selectItemGenerator);
         }
         return selectItemGenerators;

@@ -9,24 +9,16 @@
 	  xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	  xmlns:rich="http://richfaces.ajax4jsf.org/rich"
       xmlns:t="http://myfaces.apache.org/tomahawk"
-	  xmlns:crank="http://www.googlecode.com/crank"
-	  xmlns:crud="http://www.googlecode.com/crank/crud">
+	  xmlns:crud="http://www.googlecode.com/crank/crud"
+      xmlns:crank="http://www.googlecode.com/crank">
 
 <ui:composition>
 
-	<!-- DEFINE VARIABLES -->
+	<!-- DEFINE VARIABLES --> 
 	<c:if test="${empty label}">
-	    <c:set var="label" value="${crud:createLabel(fieldName)}" />
+	    <c:set var="label" value="${crud:replace(crud:createLabel(fieldName),'.','_')}" />
 	</c:if>
 	
-	<c:if test="${empty reRender}">
-	    <c:set var="reRender" value="listingPanel" />
-	</c:if>
-	<c:if test="${idBase}">
-		<c:set var="idBase" value="${paginator.name}_${crud:replace(fieldName,'.','_')}Header"/>
-	</c:if>
-
-
 	<c:set var="filter" value="${paginator.filterableProperties[fieldName]}"/>
 	<c:set var="orderBy" value="${filter.orderBy}"/>
 	<c:set var="comparison" value="${filter.comparison}"/>
@@ -44,12 +36,13 @@
 	<c:if test="${empty columnHeaderClass}">
 	    <c:set var="columnHeaderClass" value="dataTableColumnHeader" />
 	</c:if>
+	
+	<c:set var="fieldId" value="${crud:replace(fieldName,'.','_')}"/>
 
 	<!-- END DEFINE VARIABLES -->
 
-	<h:column  styleClass="${columnHeaderClass}">
+	<h:column styleClass="${columnHeaderClass}">
 	
-		<a4j:outputPanel axajRendered="true">
 				<a4j:commandLink 
 					styleClass="${headerLinkClass}"
 					reRender="${reRender}"
@@ -77,8 +70,7 @@
 
 				<rich:spacer width="15" height="10"/>
 
-				<a4j:commandLink  
-				                  reRender="${reRender}"
+				<a4j:commandLink  reRender="${reRender}"
 								  action="#{comparison.enable}"
 								  rendered="#{not comparison.enabled}"
 								  onmouseout="popUp(event,'filterOn')" onmouseover="popUp(event,'filterOn')"
@@ -87,20 +79,24 @@
 					<h:graphicImage value="/images/filterOn.gif" border="0"/>
 				</a4j:commandLink>
 				
-
-				<a4j:outputPanel 
-				                 axajRendered="true" 
-				                 rendered="#{comparison.enabled and not crud:isDate(paginator.type,fieldName)}">
+				<a4j:outputPanel axajRendered="true" rendered="#{comparison.enabled and not crud:isDate(paginator.type,fieldName)}">
 					<a4j:outputPanel rendered="${crud:isText(paginator.type,fieldName)}">
-						<h:inputText styleClass="${headerFilterInputTextClass}" 
+						<h:inputText 		
+											styleClass="${headerFilterInputTextClass}" 
 											value="#{comparison.value}"
 											size="5"/>
 					</a4j:outputPanel>
 
+					<a4j:outputPanel rendered="${crud:isEnum(paginator.type,fieldName)}">
+				        <c:set var="propEntityName" value="${crud:getPropertyEntityName(paginator.type,fieldName)}" />
+				        <h:selectOneMenu value="#{comparison.value}">
+							<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
+						</h:selectOneMenu>
+					</a4j:outputPanel>
+
 					<a4j:outputPanel rendered="${crud:isBoolean(paginator.type,fieldName)}">
 						<h:selectBooleanCheckbox styleClass="${headerFilterInputTextClass}" 
-											value="#{comparison.value}"
-											/>
+											value="#{comparison.value}"/>
 					</a4j:outputPanel>
 
 					<a4j:commandLink  reRender="${reRender}"
@@ -111,10 +107,8 @@
 						<h:graphicImage value="/images/filterOff.gif" border="0"/>
 					</a4j:commandLink>
 				</a4j:outputPanel>
-				
-				<a4j:outputPanel axajRendered="true" rendered="${comparison.enabled and crud:isDate(paginator.type,fieldName)}">
 					<br />
-					<h:panelGrid columns="3">
+					<h:panelGrid columns="3" rendered="${comparison.enabled and crud:isDate(paginator.type,fieldName)}">
 					
 						<h:outputText value=""/>
 				        <t:calendar renderAsPopup="true" renderPopupButtonAsImage="true" 
@@ -127,8 +121,7 @@
 				        			size="8"
 					                    value="${comparison.value2}">
 					    </t:calendar>
-						<a4j:commandLink  
-										  reRender="${reRender}"
+						<a4j:commandLink  reRender="${reRender}"
 										  action="#{comparison.disable}"
 	 									  onmouseout="popUp(event,'filterOff2')" onmouseover="popUp(event,'filterOff2')"
 										  styleClass="${headerLinkClass}"								  
@@ -137,10 +130,6 @@
 						</a4j:commandLink>
 				    </h:panelGrid>					
 	
-				</a4j:outputPanel>
-
-
-		</a4j:outputPanel>
 	</h:column>
 
 </ui:composition>

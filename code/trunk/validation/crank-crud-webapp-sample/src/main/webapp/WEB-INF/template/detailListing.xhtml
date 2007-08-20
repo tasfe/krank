@@ -9,55 +9,143 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-	xmlns:crank="http://www.googlecode.com/crank"
-	xmlns:crud="http://www.googlecode.com/crank/crud">
+	xmlns:crud="http://www.googlecode.com/crank/crud"
+	xmlns:crank="http://www.googlecode.com/crank">
 
 <ui:composition>
-		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
-		<c:set var="entityLabel" value="${crud:createLabel(detailController.name)}"/>
 
-		<h:panelGroup binding="${detailController.subForm}">
-			<a4j:commandLink action="${detailController.loadCreate}"
-							value="Add ${entityLabel}" reRender="${reRender}"
-							immediate="true"/>
-							 
-			<crank:form crud="${detailController}" 
-						rendered="${detailController.showForm}"
-						propertyNames="${propertyNames}"
-						ajax="${true}"
-						reRender="${reRender}"
-						entityLabel="${entityLabel}">
-			</crank:form>
-			
-			<rich:dataTable value="${detailController.model}" var="row">
-				<f:facet name="header">
-					<rich:columnGroup>
-						<c:forEach items="${pNames}" var="property">
-							<h:column >
-								<h:outputText id="${idBase}${property}HeaderText" value="${crud:createLabel(property)}" />
+		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
+		
+	    <c:if test="${empty rendered}">
+	        <c:set var="rendered" value="true" />
+	    </c:if>
+
+		<f:verbatim id="${daoName}DetailTips">
+			<div id="editDetailTip" class="toolTip">Edit this record</div>
+			<div id="deleteDetailTip" class="toolTip">Delete this record</div>
+		</f:verbatim>
+
+		<h:panelGroup id="bindingPanel${daoName}" binding="${detailController.subForm}">
+			<crank:node
+			    id="detail${daoName}"
+				entity="#{detailController}"
+				expandAction="toggleShowDetails"
+				expandText="${daoName}..."
+				closeAction="toggleShowDetails"
+				collapseText="${daoName} (hide)"
+				fixedBranch="${true}"
+				layout="vertical"
+				reRender="${reRender}"
+				expandRendered="${not detailController.showDetails}"
+				closeRendered="${detailController.showDetails}"
+				expandToolTip="Click to show Add / Edit ${daoName}"
+				closeToolTip="Click to hide ${daoName}">
+				
+				<h:panelGrid columns="2" rendered="${detailController.showDetails}" >
+					<rich:spacer width="10" height="10"/>
+					<h:panelGrid columns="1" styleClass="detailPanelGrid" >
+						<crank:commandLink 
+							id="addNewDetail${daoName}"
+							entity="${detailController}"
+							action="loadCreate"
+							immediate="true"
+							rendered="#{not detailController.showForm}"
+							toolTipText="Click to add a new detail record..."
+							reRender="${reRender}"
+							styleClass="${toggleLinkClass}">
+								<h:outputText value="Add new..."/>
+						</crank:commandLink>							
+						<crank:form   
+							id="${daoName}DetailSubForm"
+							crud="${detailController}" 
+							propertyNames="${propertyNames}"
+							immediate="true"
+							rendered="#{detailController.showForm}"
+							reRender="${reRender}"
+							parentForm="${parentForm}"
+							hideCancel="${true}"
+							daoName="${daoName}"
+							ajax="${true}"/>
+	
+						<rich:dataTable value="#{detailController.model}" var="row">
+							<f:facet name="header">
+								<rich:columnGroup>
+									<c:forEach items="${pNames}" var="property">
+										<h:column>
+											<h:outputText value="${crud:createLabel(property)}" />
+										</h:column>
+									</c:forEach>					
+									<h:column>
+											<h:outputText value="Action" />
+									</h:column>
+								</rich:columnGroup>
+							</f:facet>				
+							<c:forEach items="${pNames}" var="property">
+								<h:column>
+
+									<c:choose>
+										<c:when test="${crud:contains(property, '.')}">
+											<c:choose>
+												<c:when test="${crud:isBoolean(detailController.entityClass,property)}">
+													<h:graphicImage value="/images/check-sm.gif" rendered="${(row.map[property] == 'true')}" styleClass="imageCenter"/>
+												</c:when>
+												<c:when test="${crud:isEnum(detailController.entityClass,property)}">
+													<h:outputText value="#{crud:createEnumLabel(row.map[property])}" />
+												</c:when>
+												<c:otherwise>
+													<h:outputText value="#{row.map[property]}" />
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											<c:choose>
+												<c:when test="${crud:isBoolean(detailController.entityClass,property)}">
+													<h:graphicImage value="/images/check-sm.gif" rendered="${(row[property] == 'true')}" styleClass="imageCenter"/>
+												</c:when>
+												<c:when test="${crud:isEnum(detailController.entityClass,property)}">
+													<h:outputText value="#{crud:createEnumLabel(row[property])}" />
+												</c:when>
+												<c:otherwise>
+													<h:outputText value="#{row[property]}" />
+												</c:otherwise>
+											</c:choose>
+										</c:otherwise>
+									</c:choose>
+
+								</h:column>
+							</c:forEach>
+							
+							<h:column>
+
+								<h:panelGrid columns="2">
+									<a4j:commandLink 
+										action="${detailController.read}" 
+										onmouseout="popUp(event,'editDetailTip')"
+										onmouseover="popUp(event,'editDetailTip')"
+										reRender="${reRender},detail${daoName}">
+											<h:graphicImage value="/images/edit-sm.gif" border="0" styleClass="${listingImageButtonClass}" />
+										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
+									</a4j:commandLink>
+
+									<a4j:commandLink
+										action="${detailController.delete}"
+										onclick="if (!confirm('Are you sure you want to delete this item?')) return false"
+										onmouseout="popUp(event,'deleteDetailTip')" 
+										onmouseover="popUp(event,'deleteDetailTip')"
+										reRender="detailPanel${daoName}">
+										<h:graphicImage value="/images/del-sm.gif" border="0" styleClass="${listingImageButtonClass}"/>
+										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
+									</a4j:commandLink>
+								</h:panelGrid>
 							</h:column>
-						</c:forEach>					
-						<h:column >
-								<h:outputText id="${idBase}ActionColumnText" value="Action" />
-						</h:column>
-					</rich:columnGroup>
-				</f:facet>				
-				<c:forEach items="${pNames}" var="property">
-					<h:column >
-						<h:outputText value="${row[property]}" rendered="${not crud:isBoolean(row.class, property)}"/>
-						<h:graphicImage value="/images/check-sm.gif" rendered="${(row[property] == 'true')}" styleClass="imageCenter"/>
-					</h:column>
-				</c:forEach>
-				<h:column id="${idBase}ActionRow">
-					<table><tr><td><a4j:commandLink action="${detailController.delete}" value="Delete">
-						<f:param  name="id" value="${crud:getObjectId(detailController,row)}"/>
-					</a4j:commandLink></td><td>
-					<a4j:commandLink action="${detailController.read}" value="Edit">
-						<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
-					</a4j:commandLink></td></tr></table>
-				</h:column>
-			</rich:dataTable>
+							
+						</rich:dataTable>
+						
+					</h:panelGrid>
+				</h:panelGrid>
+
+			</crank:node>
 		</h:panelGroup>
-		<ui:insert/>	
+
 </ui:composition>
 </html>

@@ -4,31 +4,24 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:z="http://www.qualcomm.com/jsf/core"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-	xmlns:crank="http://www.googlecode.com/crank"
-	xmlns:crud="http://www.googlecode.com/crank/crud">
+	xmlns:crud="http://www.googlecode.com/crank/crud"
+	xmlns:crank="http://www.googlecode.com/crank">
 
 <ui:composition>
 
-	<div id="editTip" class="toolTip">Edit this record</div>
-	<div id="deleteTip" class="toolTip">Delete this record</div>
+	<div id="editTip${daoName}" class="toolTip">Edit this record</div>
+	<div id="disableTip${daoName}" class="toolTip">Disable this record</div>
 	
 	<!-- DEFINE VARIABLES -->
-	<c:if test="${idBase}">
-		<c:set var="idBase" value="${paginator.name}Listing"/>
-	</c:if>
 	<c:if test="${empty id}">
-		<c:set var="id" value="${idBase}" />
+		<c:set var="id" value="PaginatedListing" />
 	</c:if>
 	<c:if test="${empty reRender}">
 		<c:set var="reRender" value="panelGroup${id}" />
-	</c:if>
-	<c:if test="${empty numRows}">
-		<c:set var="numRows" value="10" />
 	</c:if>
 	<c:if test="${empty dataTableWidth}">
 		<c:set var="${dataTableWidth}" value="100%" />
@@ -58,52 +51,42 @@
 	<c:if test="${empty listingImageButtonClass}">
 		<c:set var="listingImageButtonClass" value="paginationImageButton" />
 	</c:if>
-
 	<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
 	
-	
-	<a4j:outputPanel id="${idBase}AjaxOutputPanel" ajaxRendered="true">
-		
-		<h:panelGrid id="${reRender}" columns="1" width="${dataTableWidth}">
-		
-		
-			<crank:paginator paginator="${paginator}" reRender="${reRender}" >
-			    <a4j:commandLink  id="${idBase}AddEntityLink"
-						action="${crud.loadCreate}"
-						value="Add New ${crud:createLabel(jsfCrudAdapter.controller.name)}" reRender="${reRender}"/>		
-			</crank:paginator>
+		<h:panelGrid id="listPanel${id}" columns="1" width="${dataTableWidth}">
+			<crank:paginator paginator="${paginator}" reRender="${reRender}" />
 
-	
-			<rich:dataTable width="${dataTableWidth}" id="${idBase}DataTable"
-				rows="${numRows}" columnClasses="${listingDataTableColumnClasses}"
+			<rich:dataTable width="${dataTableWidth}" id="dataTable${id}"
+				rows="#{paginator.itemsPerPage}" columnClasses="${listingDataTableColumnClasses}"
 				rowClasses="${listingDataTableRowClasses}"
 				value="#{jsfCrudAdapter.model}" var="row">
 				<f:facet name="header">
 					<rich:columnGroup>
 						<h:column>
-							<crank:commandLink id="${idBase}SelectAll"
+							<crank:commandLink id="selectAll${id}"
 											   onclick="toggleAllCheckBoxes('${parentForm}',true);"
 							                   toolTipText="Click to select all rows">
-								<h:graphicImage id="${idBase}SelectAllGraphic" value="/images/selected-sm.gif" border="0" styleClass="${listingImageButtonClass}"/>
+								<h:graphicImage id="selectAll${id}Img" value="/images/selected-sm.gif" border="0" styleClass="${listingImageButtonClass}"/>
 							</crank:commandLink>
-							<crank:commandLink id="${idBase}SelectNone"
+							<crank:commandLink id="selectNone${id}"
 							                   onclick="toggleAllCheckBoxes('${parentForm}',false);"
 							                   toolTipText="Click to un-select all rows">
-								<h:graphicImage id="${idBase}SelectNoneGraphic" value="/images/unselected-sm.gif" border="0" styleClass="${listingImageButtonClass}"/>
+								<h:graphicImage id="selectNone${id}Img" value="/images/unselected-sm.gif" border="0" styleClass="${listingImageButtonClass}"/>
 							</crank:commandLink>
-							<crank:commandLink id="${idBase}DeleteSelected"
+							
+							<crank:commandLink id="disableSelected${id}"
 											   entity="${crud}"
 											   action="deleteSelected"
-											   onclick="if (!confirm('Are you sure you want to delete all selected items?')) return false"
+											   onclick="if (!confirm('Are you sure you want to disable all selected items?')) return false"
 							                   toolTipText="Click to delete selected rows">
-								<h:graphicImage id="${idBase}DeleteSelectedGraphic" value="/images/del-alt-sm.gif" border="0" styleClass="${listingImageButtonClass}"/>
+								<h:graphicImage id="disableSelected${id}Img" value="/images/del-alt-sm.gif" border="0" styleClass="${listingImageButtonClass}"/>
 							</crank:commandLink>
 						</h:column>
 						<c:forEach items="${pNames}" var="property">
 							<crank:header fieldName="${property}" paginator="${paginator}"
 								reRender="${reRender}" />
 						</c:forEach>
-						<h:column >
+						<h:column>
 							<h:outputText value="Action" />
 						</h:column>
 					</rich:columnGroup>
@@ -111,28 +94,28 @@
 				</f:facet>
 				
 				<f:facet name="footer">
-					<h:panelGroup id="${idBase}FooterPanel" styleClass="${listingFooterClass}">
+					<h:panelGroup styleClass="${listingFooterClass}">
 						<h:outputText
-						 	id="${idBase}PaginatorStatusText"
 							styleClass="${listingOutputTextClass}"
 							value="Page #{paginator.currentPageNumber+1} of #{paginator.pageCount}" />
 					</h:panelGroup>
 				</f:facet>
 				
-				<h:column id="${idBase}SelectColumn">
-	   				<h:selectBooleanCheckbox id="${idBase}SelectCheckBox" value="#{row.selected}" styleClass="imageCenter"/>
+				<h:column>
+	   				<h:selectBooleanCheckbox value="#{row.selected}" styleClass="imageCenter"/>
 				</h:column>
 				
 				<c:forEach items="${pNames}" var="property">
-					<c:set var='idName' value='${crud:replace(property, ".", "_")}'/>
 					<h:column>
+					
 						<c:choose>
 							<c:when test="${crud:contains(property, '.')}">
 								<c:choose>
 									<c:when test="${crud:isBoolean(crud.entityClass,property)}">
-										<h:graphicImage value="/images/check-sm.gif"
-											rendered="${(row.map[property] == 'true')}"
-											styleClass="imageCenter" />
+										<h:graphicImage value="/images/check-sm.gif" rendered="${(row.map[property] == 'true')}" styleClass="imageCenter"/>
+									</c:when>
+									<c:when test="${crud:isEnum(crud.entityClass,property)}">
+										<h:outputText value="#{crud:createEnumLabel(row.map[property])}" />
 									</c:when>
 									<c:otherwise>
 										<h:outputText value="#{row.map[property]}" />
@@ -142,9 +125,10 @@
 							<c:otherwise>
 								<c:choose>
 									<c:when test="${crud:isBoolean(crud.entityClass,property)}">
-										<h:graphicImage value="/images/check-sm.gif"
-											rendered="${(row.object[property] == 'true')}"
-											styleClass="imageCenter" />
+										<h:graphicImage value="/images/check-sm.gif" rendered="${(row.object[property] == 'true')}" styleClass="imageCenter"/>
+									</c:when>
+									<c:when test="${crud:isEnum(crud.entityClass,property)}">
+										<h:outputText value="#{crud:createEnumLabel(row.object[property])}" />
 									</c:when>
 									<c:otherwise>
 										<h:outputText value="#{row.object[property]}" />
@@ -152,26 +136,42 @@
 								</c:choose>
 							</c:otherwise>
 						</c:choose>
+					
+						<!--<c:if test="${not crud:contains(property, '.')}">
+							<h:outputText value="#{row.object[property]}" rendered="${not ((row.object[property] == 'true') or (row.object[property] == 'false'))}"/>
+							<h:graphicImage value="/images/check-sm.gif" rendered="${(row.object[property] == 'true')}" styleClass="imageCenter"/>
+						</c:if>
+						<c:if test="${crud:contains(property, '.')}">
+							<h:outputText value="#{row.map[property]}" rendered="${not ((row.map[property] == 'true') or (row.map[property] == 'false'))}"/>
+							<h:graphicImage value="/images/check-sm.gif" rendered="${(row.map[property] == 'true')}" styleClass="imageCenter"/>
+						</c:if>-->
 					</h:column>
 				</c:forEach>
 				
 				<h:column>
-					<h:commandLink id="${idBase}ReadCommandLink" action="${crud.read}"  onmouseout="popUp(event,'editTip')" onmouseover="popUp(event,'editTip')">
-							<h:graphicImage value="/images/edit-sm.gif" border="0" styleClass="${listingImageButtonClass}" />
-					</h:commandLink>
-					&nbsp;
-					<h:commandLink id="${idBase}DeleteCommandLink"
-						action="${crud.delete}"  
-						onclick="if (!confirm('Are you sure you want to delete this item?')) return false"
-						onmouseout="popUp(event,'deleteTip')" 
-						onmouseover="popUp(event,'deleteTip')">
-							<h:graphicImage value="/images/del-sm.gif" border="0" styleClass="${listingImageButtonClass}"/>
-					</h:commandLink>
+					<h:panelGroup>
+						<a4j:commandLink 
+							action="${crud.read}"
+							immediate="true"
+							onmouseout="popUp(event,'editTip')"
+							onmouseover="popUp(event,'editTip')"
+							onclick="${editFunction}" >
+								<h:graphicImage value="/images/edit-sm.gif" border="0" styleClass="${listingImageButtonClass}" />
+						</a4j:commandLink>
+
+						<a4j:commandLink
+							action="${crud.delete}"  
+							onclick="if (!confirm('Are you sure you want to delete this item?')) return false"
+							onmouseout="popUp(event,'disableTip')" 
+							onmouseover="popUp(event,'disableTip')">
+								<h:graphicImage value="/images/del-sm.gif" border="0" styleClass="${listingImageButtonClass}"/>
+						</a4j:commandLink>
+					</h:panelGroup>
 				</h:column>
 				
 			</rich:dataTable>
+
 		</h:panelGrid>
-	</a4j:outputPanel>
-	
+
 </ui:composition>
 </html>

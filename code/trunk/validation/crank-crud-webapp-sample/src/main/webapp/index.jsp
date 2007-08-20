@@ -4,9 +4,8 @@
 
 <head></head>
 
-<body>
-<a href="./pages/crud/Employee/Listing.jsf">Employee Listing</a>
-<a href="./pages/crud/Department/Listing.jsf">Department Listing</a>
-</body>
+	<body>
+		<jsp:forward page="/pages/Home.jsf" />
+	</body>
 
 </html>

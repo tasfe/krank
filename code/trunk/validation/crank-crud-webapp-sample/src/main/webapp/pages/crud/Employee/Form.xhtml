@@ -12,31 +12,76 @@
 	
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
-		<h:form id="employeeForm" prependId="false" enctype="multipart/form-data">
-			<div id="clientValidationSummary" />
-			<a4j:region>
-			<crank:form crud="${cruds['Employee'].controller}" 
-						propertyNames="firstName,lastName,active,dob,age,phone,email,department,description,file,numberOfPromotions">
-				<crank:compositePanel entity="${cruds['Employee'].controller.entity.address}" 
-				                      name="address" propertyNames="line1,line2,zipCode"/>
-				
-				<c:set var="taskDetailController" 
-					value="${employeeCrud.controller.children.tasks}" />
 
-				<c:set var="contactDetailController" 
-					value="${employeeCrud.controller.children.contacts}" />						
-											
-				<crank:detailListing detailController="${taskDetailController}" 
-									 propertyNames="name,startDate,endDate,complete"
-									 reRender="employeeForm"/>
-
-				<crank:detailListing detailController="${contactDetailController}" 
-									 propertyNames="name,phone"
-									 reRender="employeeForm"/>
-
-			</crank:form>
-			</a4j:region>
+		<c:set var="daoName" value="Employee" />
+		<c:set var="renderListings" value="${(employeeCrud.controller.state=='ADD') or (employeeCrud.controller.state == 'EDIT') or (employeeCrud.controller.state == null) }" />
+		
+		<c:choose>
+			<c:when test="${empty reRender}">
+				<c:set var="reRender" value="${daoName}DetailFormB,${daoName}DetailList1,${daoName}DetailList2,${daoName}DetailForm"/>
+			</c:when>
+			<c:otherwise>
+				<c:set var="reRender" value="${reRender},${daoName}DetailFormB,${daoName}DetailList1,${daoName}DetailList2,${daoName}DetailForm"/>
+			</c:otherwise>
+		</c:choose>
+	
+		<h:form>
+			<h:panelGroup>
+				<h:commandLink action="HOME" value="Home" styleClass="paginationPageNumberLink"/>
+				<h:outputText value="|" styleClass="paginationPageNumberLink"/>
+				<h:commandLink action="EMPLOYEES" value="Employees" styleClass="paginationPageNumberLink"/>
+				<h:outputText value="|" styleClass="paginationPageNumberLink"/>
+				<h:outputText value="Employee (add, edit)" styleClass="paginationPageNumberLink"/>
+			</h:panelGroup>
 		</h:form>
+	
+		<h:outputText value="Employee" styleClass="pageTitle"/>
+
+		<a4j:region renderRegionOnly="false"> 
+			<a4j:form
+				id="${daoName}DetailFormB"
+				rendered="#{(cruds['Employee'].controller.state == 'ADD') or (cruds['Employee'].controller.state == 'EDIT')}">
+
+				<crank:form
+					id="${daoName}DetailForm" 
+					crud="${cruds['Employee'].controller}" 
+					daoName="${daoName}"
+					parentForm="${daoName}DetailFormB"
+					reRender="${reRender}"
+					cancelAlwaysOn="true"
+					ajax="${true}"
+					propertyNames="firstName,lastName,status,active,dob,age,phone,email,department,description,file,numberOfPromotions">
+
+					<crank:compositePanel entity="${cruds['Employee'].controller.entity.address}" name="address" propertyNames="line1,line2,zipCode"/>
+
+
+					<c:set var="taskDetailController" 
+						value="${employeeCrud.controller.children.tasks}" />
+	
+					<c:set var="contactDetailController" 
+						value="${employeeCrud.controller.children.contacts}" />						
+
+					<crank:detailListing 
+						id="${daoName}DetailList1"
+						detailController="${taskDetailController}" 
+						daoName="Tasks"
+						rendered="${renderListings}"
+						reRender="${daoName}DetailFormB"
+						parentForm="${daoName}DetailFormB"
+						propertyNames="name,startDate,endDate,complete"/>
+	
+					<crank:detailListing 
+						id="${daoName}DetailList2"
+						rendered="${renderListings}"
+						reRender="${daoName}DetailFormB"
+						daoName="Contacts"
+						detailController="${contactDetailController}" 
+						parentForm="${daoName}DetailFormB"
+						propertyNames="name,phone"/>
+
+				</crank:form>
+			</a4j:form>
+		</a4j:region>
 	</ui:define>
 </ui:composition>
 </html>

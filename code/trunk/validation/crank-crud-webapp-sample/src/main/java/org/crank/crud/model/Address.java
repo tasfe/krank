@@ -8,7 +8,15 @@ public class Address {
     private String line1;
     private String line2;
     private String zipCode;
-    public String getZipCode() {
+//    private Country country;
+//    
+//    public Country getCountry() {
+//		return country;
+//	}
+//	public void setCountry(Country country) {
+//		this.country = country;
+//	}
+	public String getZipCode() {
         return zipCode;
     }
     public void setZipCode( String zipCode ) {

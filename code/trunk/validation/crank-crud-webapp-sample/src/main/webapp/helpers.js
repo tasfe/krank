@@ -96,3 +96,34 @@ function toggleAllCheckBoxes(FormName, CheckValue) {
 		for(var i = 0; i < countCheckBoxes; i++)
 			objCheckBoxes[i].checked = CheckValue;
 }
+
+function setExclusiveGroup(FormName, Caller, GroupId, ExclusiveValue) {
+	if(!document.forms[FormName])
+		return;
+
+	var oInp = document.forms[FormName].getElementsByTagName('input');
+	var objCheckBoxes = new Array();
+	var j=0;
+	for(var i=0;i<oInp.length;i++){
+		if(oInp[i].getAttribute('type')=='checkbox'){
+			if (oInp[i].getAttribute('id').indexOf(FormName+":"+GroupId) == 0) {
+				if (oInp[i].getAttribute('id').indexOf(FormName+":"+GroupId+Caller) == -1) {
+					objCheckBoxes[j++] = oInp[i];
+				}
+			}
+		}
+	}	
+	
+	if(!objCheckBoxes)
+		return;
+		
+	var countCheckBoxes = objCheckBoxes.length;
+	
+	if(!countCheckBoxes)
+		objCheckBoxes.checked = ExclusiveValue;
+	else
+		// set the check value for all check boxes!
+		for(var i = 0; i < countCheckBoxes; i++)
+			objCheckBoxes[i].checked = ExclusiveValue;
+}
+

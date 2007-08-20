@@ -6,46 +6,113 @@
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 	xmlns:c="http://java.sun.com/jstl/core"
-    xmlns:crank="http://www.googlecode.com/crank">
-    
+	xmlns:crank="http://www.googlecode.com/crank"
+	>
 <ui:composition>
 
-	<c:if test="${empty nodeColumnClasses}">
-		<c:set var="nodeColumnClasses" value="imageTopCenter,panelColumnLeft" />
+	<c:if test="${empty toggleLinkClass}">
+		<c:set var="toggleLinkClass" value="paginationPageNumberLink" />
 	</c:if>
 
-	<h:panelGrid columns="2" columnClasses="${nodeColumnClasses}">
+	<c:if test="${empty fixedBranch}">
+		<c:set var="fixedBranch" value="${false}" />
+	</c:if>
+
+	<c:if test="${empty layout}">
+		<c:set var="layout" value="horizontal" />
+	</c:if>
+
+	<c:if test="${empty columnClasses}">
+		<c:set var="columnClasses" value="nodeBranch, nodeLeaf" />
+	</c:if>
+
+	<c:if test="${empty layout}">
+		<c:set var="layout" value="horizontal" />
+	</c:if>
 	
-		<!-- NODE EXPAND / CONTRACT INDICATOR -->
-		<a4j:form id="toggleForm${id}" >
-			<crank:commandLink 
-				id="expand${id}"
-				entity="${entity}"
-				action="${expandAction}"
-				toolTipText="${expandToolTip}"
-				rendered="${expandRendered}" 
-				reRender="node${id},toggleForm${id}"  >
-				<h:graphicImage value="/images/add-new.gif" border="0"/>
-				<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
-			</crank:commandLink>
-			<crank:commandLink 
-				id="close${id}"
-				entity="${entity}"
-				action="${closeAction}"
-				toolTipText="${closeToolTip}"
-				rendered="#{closeRendered}" 
-				reRender="node${nodeId},toggleForm${id}"  >
-				<h:graphicImage value="/images/fold.gif" border="0"/>
-				<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
-			</crank:commandLink>
-		</a4j:form>
-		
-		<!-- NODE CONTENT -->
-		<a4j:outputPanel id="node${id}">
+	<c:choose>
+		<c:when test="${layout=='horizontal'}">
+			<c:set var="gridCols" value="2" />
+		</c:when>
+		<c:otherwise>
+			<c:set var="gridCols" value="1" />
+			<c:set var="columnClasses" value="" />
+		</c:otherwise>
+	</c:choose>
+
+	<c:if test="${empty expandText}">
+		<c:set var="expandText" value="+" />
+	</c:if>
+
+	<c:if test="${empty collapseText}">
+		<c:set var="collapseText" value="-" />
+	</c:if>
+
+	<c:choose>
+		<c:when test="${not empty reRender}">
+			<c:set var="reRenderers" value="${reRender},nodePanel${id},node${id},close${id},expand${id},fixed${id},fixedC${id}" />
+		</c:when>
+		<c:otherwise>
+			<c:set var="reRenderers" value="nodePanel${id},node${id},close${id},expand${id},fixed${id},fixedC${id}" />
+		</c:otherwise>
+	</c:choose>
+	<h:panelGrid id="nodePanel${id}" columns="${gridCols}" columnClasses="${columnClasses}">
+		<crank:commandLink 
+			id="expand${id}"
+			immediate="true"
+			entity="${entity}"
+			action="${expandAction}"
+			onclick="${expandOnClick}"
+			toolTipText="${expandToolTip}"
+			reRender="${reRenderers}"
+			rendered="${expandRendered and (not fixedBranch)}" 
+			styleClass="${toggleLinkClass}">
+			<h:outputText id="expand${id}Out" value="${expandText}" />
+			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
+		</crank:commandLink>
+		<crank:commandLink 
+			id="close${id}"
+			immediate="true"
+			entity="${entity}"
+			action="${closeAction}"
+			onclick="${closeOnClick}"
+			toolTipText="${closeToolTip}"
+			reRender="${reRenderers}"
+			rendered="#{closeRendered and (not fixedBranch)}" 
+			styleClass="${toggleLinkClass}">
+			<h:outputText id="close${id}Out" value="${collapseText}" />
+			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
+		</crank:commandLink>
+		<crank:commandLink 
+			id="fixed${id}"
+			immediate="true"
+			entity="${entity}"
+			action="${expandAction}"
+			onclick="${expandOnClick}"
+			toolTipText="${expandToolTip}"
+			reRender="${reRenderers}"
+			rendered="${expandRendered and fixedBranch}" 
+			styleClass="${toggleLinkClass}">
+			<h:outputText id="fixed${id}Out" value="${expandText}" />
+			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
+		</crank:commandLink>
+		<crank:commandLink 
+			id="fixedC${id}"
+			immediate="true"
+			entity="${entity}"
+			action="${closeAction}"
+			onclick="${closeOnClick}"
+			toolTipText="${closeToolTip}"
+			reRender="${reRenderers}"
+			rendered="#{closeRendered and fixedBranch}" 
+			styleClass="${toggleLinkClass}">
+			<h:outputText id="fixedC${id}Out" value="${collapseText}" />
+			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
+		</crank:commandLink>
+		<a4j:outputPanel id="node${id}" layout="block">
 			<ui:insert/>
 		</a4j:outputPanel>
-
 	</h:panelGrid>
-	
+
 </ui:composition>
 </html>

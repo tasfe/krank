@@ -54,40 +54,49 @@
 		</c:otherwise>
 	</c:choose>
 	
+	<c:choose>
+		<c:when test="${not empty reRender}">
+			<c:set var="reRenderers" value="${reRender},cmdLink${id},${id}tip,${id}tipText" />
+		</c:when>
+		<c:otherwise>
+			<c:set var="reRenderers" value="cmdLink${id},${id}tip,${id}tipText" />
+		</c:otherwise>
+	</c:choose>
+	
 	<!-- END DEFINE VARIABLES -->
-	<c:if test="${not empty toolTipText}">
+	
+	<f:verbatim rendered="${(not empty onmouseout) and (not empty onmouseover) and (not empty toolTipText)}">
 		<div id="${id}tip" class="${toolTipClass}">${toolTipText}</div>
-	</c:if>
+	</f:verbatim>
 	
 	<c:choose>
 		<c:when test="${empty action}">
 			<h:outputLink
-			    id="${id}" 
+			    id="cmdLink${id}" 
 			    styleClass="${styleClass}"
 				onclick="${onclick}"
 				value="${value}"
 				rendered="#{rendered}"
 				onmouseout="${onmouseout}" 
-				onmouseover="${onmouseover}"
-				reRender="${reRender}">
+				onmouseover="${onmouseover}">
 					<ui:insert/>
 			</h:outputLink>
 		</c:when>
 		<c:otherwise>
 			<a4j:commandLink
-			    id="${id}" 
+			    id="cmdLink${id}" 
 			    styleClass="${styleClass}"
 				action="#{entity[action]}"
 				onclick="${onclick}"
 				immediate="${immediate}"
 				rendered="#{rendered}"
-				reRender="${reRender}"
+				reRender="${reRenderers}"
 				onmouseout="${onmouseout}" 
 				onmouseover="${onmouseover}">
 					<ui:insert/>
 			</a4j:commandLink>
 		</c:otherwise>
 	</c:choose>
-		
+
 </ui:composition>
 </html>

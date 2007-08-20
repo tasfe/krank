@@ -6,9 +6,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
-//import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -71,6 +71,7 @@ public class Employee implements Serializable {
 
     private Date dob;
     
+    @Embedded
     private Address address;
 
     @OneToMany( cascade = CascadeType.ALL )

@@ -26,7 +26,7 @@
 		<!-- HSQL-DB. -->		
 		<properties>
 			<property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver" />
-			<property name="hibernate.connection.url" value="jdbc:hsqldb:/TMP/DATA" />
+			<property name="hibernate.connection.url" value="jdbc:hsqldb:/TMP/DATA/SOLUTION" />
 			<property name="hibernate.connection.username" value="sa" />
 			<property name="hibernate.connection.password" value="" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect" />

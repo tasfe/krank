@@ -30,14 +30,8 @@
 package org.crank.javax.faces.component;
 
 
-import java.util.Iterator;
-import javax.faces.application.FacesMessage;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
-import javax.faces.model.SelectItemGroup;
-
-import com.sun.faces.util.MessageFactory;
 
 
 /**
@@ -128,17 +122,17 @@ public class UISelectOne extends javax.faces.component.UISelectOne {
     // --------------------------------------------------------- Private Methods
 
 
-    /**
-     * <p>Return <code>true</code> if the specified value matches one of the
-     * available options, performing a recursive search if if a
-     * {@link SelectItemGroup} instance is detected.</p>
-     *
-     * @param value {@link UIComponent} value to be tested
-     * @param items Iterator over the {@link SelectItem}s to be checked
-     */
-    private boolean matchValue(Object value, Iterator items) {
-        return (true);
-    }
+//    /**
+//     * <p>Return <code>true</code> if the specified value matches one of the
+//     * available options, performing a recursive search if if a
+//     * {@link SelectItemGroup} instance is detected.</p>
+//     *
+//     * @param value {@link UIComponent} value to be tested
+//     * @param items Iterator over the {@link SelectItem}s to be checked
+//     */
+//    private boolean matchValue(Object value, Iterator items) {
+//        return (true);
+//    }
 
 
 

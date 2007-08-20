@@ -509,7 +509,7 @@ public class MenuRenderer extends HtmlBasicInputRenderer {
 
         Object submittedValues[] = getSubmittedSelectedValues(context,
                                                               component);
-        Class type = String.class;
+        //Class type = String.class;
         Object valuesArray = null;
         Object itemValue = null;
 

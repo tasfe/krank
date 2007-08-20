@@ -14,6 +14,9 @@ import javax.persistence.Table;
 @Entity(name = "SimpleUser")
 public class User {
 	
+	@ManyToMany
+	private List<Role> roles;
+
 	@OneToOne
 	private ContactInfo contactInfo;
 
@@ -23,8 +26,6 @@ public class User {
 	private String name;
 
 
-	@ManyToMany
-	private List<Role> roles;
 
 	public User(String name, ContactInfo contactInfo) {
 		super();

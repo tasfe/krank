@@ -9,6 +9,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
+import org.hibernate.LazyInitializationException;
+
+
 import junit.framework.TestCase;
 
 public class RelationshipsTest extends TestCase {
@@ -19,6 +22,19 @@ public class RelationshipsTest extends TestCase {
 	
 	private String[] roles = new String[]{"ADMIN", "USER", "SUPER_USER"};
 	
+	private void crreateRoles() throws Exception {
+		/* Setup the roles. */
+		execute(new TransactionTemplate(){
+			public Object execute() {
+				
+				for (String sRole : roles) {
+					entityManager.persist(new Role(sRole));
+				}
+				return null;
+			}
+		});
+	}
+
 	static {
 		//destroyDB();
 	}
@@ -52,18 +68,6 @@ public class RelationshipsTest extends TestCase {
 	}
 
 
-	private void crreateRoles() throws Exception {
-		/* Setup the roles. */
-		execute(new TransactionTemplate(){
-			public Object execute() {
-				
-				for (String sRole : roles) {
-					entityManager.persist(new Role(sRole));
-				}
-				return null;
-			}
-		});
-	}
 	
 
 	protected void tearDown() throws Exception {
@@ -158,8 +162,10 @@ public class RelationshipsTest extends TestCase {
 		assertEquals("sysadmins", loadedGroup.getName()); //1
 		assertEquals("ADMIN", loadedGroup.getRoles().get(0).getName()); //2
 		assertEquals("PaulTab", loadedGroup.getUsers().get(2).getName()); //3
-		assertEquals("5205551212", loadedGroup.getUsers().get(2).getContactInfo().getPhone()); //4
-		assertEquals("85748", loadedGroup.getUsers().get(2).getContactInfo().getAddress().getZip()); //5
+		assertEquals("5205551212", loadedGroup.getUsers().get(2)
+				.getContactInfo().getPhone()); //4
+		assertEquals("85748", loadedGroup.getUsers().get(2)
+				.getContactInfo().getAddress().getZip()); //5
 
 
 		/* Demonstrate laziness issues. ----------------------------------------------- */
@@ -178,61 +184,52 @@ public class RelationshipsTest extends TestCase {
 			}
 			
 		});
-		
-		assertEquals("ADMIN", loadedGroup.getRoles().get(0).getName()); //2
 
-		
 		entityManager.close();
+		
+		try {
+		   assertEquals("ADMIN", loadedGroup.getRoles().get(0).getName()); //1
+		   fail();
+		} catch (LazyInitializationException lie) {
+			assertTrue(true);
+		}
+		
 		entityManager = entityManagerFactory.createEntityManager();
 
 		/* Reread the group. */
-		final Group groupToDelete = (Group) execute(new TransactionTemplate(){
-			
+		final Group groupToDelete = (Group) execute(new TransactionTemplate(){		
 			public Object execute() {
-				
 				return (Group) 
 				entityManager.createNamedQuery("loadGroup")
 				.setParameter("name", "sysadmins").getSingleResult();
-				
 			}
-			
 		});
 		
 		/* Delete the group and all users in the group. */
-		execute(new TransactionTemplate(){
-			
+		execute(new TransactionTemplate(){			
 			public Object execute() {
 				Group group = groupToDelete;
-				
 				/* Remove all roles. */
 				group.getRoles().clear(); 
 				entityManager.flush(); //1
-
-				
-				
 				/* Remove the users associated with this group. */
 				for (User user : group.getUsers()) {
 					if (user.getContactInfo() != null) {
 						entityManager.remove(user.getContactInfo());
 					}
-					
 					entityManager.remove(user); 
 				}
 				entityManager.remove(group);
-				
-
 				return null;
 			}
-			
 		});
 		
 	}
 
 	public interface TransactionTemplate {
 		Object execute();
-		
 	}
-
+	
 	private Object execute(TransactionTemplate tt) throws Exception {
 		Object result = null;
 		if (entityManager==null || !entityManager.isOpen()) {

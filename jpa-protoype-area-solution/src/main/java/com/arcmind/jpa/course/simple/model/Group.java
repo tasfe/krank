@@ -11,19 +11,19 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-@NamedQuery(name = "loadGroup", query = "select group from Group "
-		+ " group where group.name = :name")
 
 @Table(name = "UserGroup")		
 @Entity
+@NamedQuery(name = "loadGroup", query = "select group from Group "
+	+ " group where group.name = :name")
 public class Group {
-
-	@OneToMany
-	private List<User> users;
 
 	@ManyToMany
 	private List<Role> roles;
 
+	@OneToMany
+	private List<User> users;
+	
 	@Id
 	@GeneratedValue
 	private Long id;

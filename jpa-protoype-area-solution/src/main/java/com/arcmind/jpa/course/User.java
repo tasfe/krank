@@ -5,10 +5,13 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
+
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,7 +28,7 @@ import javax.persistence.UniqueConstraint;
         )
 public class User {
 	@Id 
-    @GeneratedValue( strategy = GenerationType.AUTO )
+    @GeneratedValue( )
     @Column (name="USER_ID", nullable=true)
 	private Long id;
 	
@@ -41,6 +44,22 @@ public class User {
 	@Temporal(TemporalType.TIME)//TemporalType.TIMESTAMP, TemporalType.DATE, TemporalType.TIME
 	private Date createDate;
 	
+	@Enumerated(EnumType.STRING)
+	@Basic(optional=false)
+	private UserType type;
+	
+	@Enumerated(EnumType.ORDINAL)	
+	private EmployeeType employeeType=
+		         EmployeeType.NOT_EMPLOYEE;
+	
+	public UserType getType() {
+		return type;
+	}
+
+	public void setType(UserType type) {
+		this.type = type;
+	}
+
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -49,6 +68,7 @@ public class User {
 		this.createDate = createDate;
 	}
 
+	static int sprayer = 0;
 	@PrePersist
 	public void prepareForStorage() {
 		if (createDate==null) {
@@ -56,6 +76,20 @@ public class User {
 		}
 		if (email == null) {
 			email = name + "@arc-mind.com";
+		}
+		if (type==null) {
+			sprayer++;
+			if (sprayer % 2 == 0) {
+				type = UserType.SILVER; 
+			}else if (sprayer % 3 == 0) {
+				type = UserType.GOLD;
+			}else if (sprayer % 7 == 0) {
+				type = UserType.PREMIERE;				
+			}else if (sprayer % 13 == 0) {
+				type = UserType.PREMIERE_PLUS;				
+			} else {
+				type = UserType.NORMAL;
+			}
 		}
 	}
 
@@ -76,6 +110,14 @@ public class User {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public EmployeeType getEmployeeType() {
+		return employeeType;
+	}
+
+	public void setEmployeeType(EmployeeType employeeType) {
+		this.employeeType = employeeType;
 	}
 
 }

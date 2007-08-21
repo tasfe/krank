@@ -32,7 +32,17 @@ http://krank.googlecode.com/svn/code/trunk/validation/docs/images/master_detail_
 
 == CRUD Pagination Design Details ==
 
-`Pageable` is the interface for controllers that provide pagination. The `Paginator` is a concrete class that provides pagination support. Again, `Pageable` is not tied to JSF, Spring MVC or Struts. `Pageable` as all classes discussed so far can in theory be used by JSF, Spring MVC, Struts, Swing, etc.
+Crank CRUD also supports building paginatable, filterable listings. You can sort by any field/property (`Employee.firstName`, `Employee.dob`) or any relationship field/property (`Employee.department.name`, `Employee.address.zip`). Much of this is accomplished through the use of the Crank Criteria API. The Crank CRUD uses the Crank Criteria API extensively. Below is a picture that shows what a typcial listing might look like:
+
+====Typical Crank Listing:====
+http://krank.googlecode.com/svn/code/trunk/validation/docs/images/paginated_filterable_listing.jpg
+
+The listing equates to the following features:
+
+====Feature map:====
+http://krank.googlecode.com/svn/code/trunk/validation/docs/images/paginated_filterable_listing_feature_map.jpg
+
+Let's go over the classes and interfaces that make up the filterable, paginatable Crank listings. `Pageable` is the interface for controllers that provide pagination. The `Paginator` is a concrete class that provides pagination support. Again, `Pageable` is not tied to JSF, Spring MVC or Struts. `Pageable` as all classes discussed so far can in theory be used by JSF, Spring MVC, Struts, Swing, etc.
 
 `FilterablePageable` is an interface that controllers implement if they are going to provide pagination and filtering.
 
@@ -46,3 +56,8 @@ There is a `FilterableProperty` for each property of the Entity. The `Filterable
 ====UML diagram for Pagination and Filtering Controller classes:====
 
 http://krank.googlecode.com/svn/code/trunk/validation/docs/images/pagination.png
+
+It may help to tie some of these controllers back to the listing picture as follows:
+
+====Controller map for pagination:====
+http://krank.googlecode.com/svn/code/trunk/validation/docs/images/paginated_filterable_listing_mappings.jpg

@@ -10,13 +10,24 @@ The `CrudController` class is the controller for forms that edit entities (domai
 
 The `CrudController` class implements the `CrudOperation`s interface. The `CrudOperation`s interface defines a composition pattern structure.
 
-None of the above is tied to Spring MVC or JSF. You can use the above with any GUI frontend espcially with those that use expression binding languages like JSF EL and OGNL.
+None of the above is tied to Spring MVC or JSF. You can use the above with any GUI front-end especially with those that use expression binding languages like JSF EL and OGNL.
 
 Here is UML diagram showing these classes:
 
 http://krank.googlecode.com/svn/code/trunk/validation/docs/images/master_detail.png
 
 == CRUD Pagination Design Details ==
+
+`Pageable` is the interface for controllers that provide pagination. The `Paginator` is a concrete class that provides pagination support. Again, `Pageable` is not tied to JSF, Spring MVC or Struts. `Pageable` as all classes discussed so far can in theory be used by JSF, Spring MVC, Struts, Swing, etc.
+
+`FilterablePageable` is an interface that controllers implement if they are going to provide pagination and filtering.
+
+`FilteringPaginator` is a controller that extends the `Paginator` class and adds filtering. A `FilteringPagnator` has a list of `FilterableProperty` instances. 
+
+Each `FilterableProperty` instance has an `OrderBy` and `Comparison` associated with it (from the [http://code.google.com/p/krank/wiki/UsingDAO Criteria DSL support]). When the value of `OrderBy` or `Comparison` changes they fire events that the `FilteringPaginator` captures. Once the `FilteringPaginator`, receives events from the `Comparison` or `OrderBy` objects it reprocesses the listing.
+
+
+There is a `FilterableProperty` for each property of the Entity. The `FilterableProperty` consist of a `Comparison` object and an `OrderBy` object. The `Comparison` object and an `OrderBy` object are from our Crank Criteria DSL. (In actuality `FilterableProperty` works with `OrderByWithEvents`, `BetweenComparisonWithEvents` and `ComparisonWithEvents` which subclass `OrderBy`, `BetweenComparison` and `Comparison` from the [http://code.google.com/p/krank/wiki/UsingDAO Criteria DSL support] and add change notification event handling.)
 
 Here is UML diagram showing these classes:
 

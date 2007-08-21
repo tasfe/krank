@@ -24,7 +24,9 @@ import org.hibernate.annotations.Cascade;
 @NamedQueries( {
     @NamedQuery(name="Department.readPopulated",
             query="select distinct department from Department department " +
-                    " left outer join fetch department.employees " +
+                    " left outer join fetch department.employees employee " +
+                    " left outer join fetch employee.tasks " +
+                    " left outer join fetch employee.contacts " +                    
                     " where department.id=?")    
 })
 public class Department implements Serializable{

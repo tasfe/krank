@@ -16,10 +16,6 @@
 
 		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
 		
-	    <c:if test="${empty rendered}">
-	        <c:set var="rendered" value="true" />
-	    </c:if>
-
 		<f:verbatim id="${daoName}DetailTips">
 			<div id="editDetailTip" class="toolTip">Edit this record</div>
 			<div id="deleteDetailTip" class="toolTip">Delete this record</div>
@@ -63,9 +59,10 @@
 							rendered="#{detailController.showForm}"
 							reRender="${reRender}"
 							parentForm="${parentForm}"
-							hideCancel="${true}"
 							daoName="${daoName}"
-							ajax="${true}"/>
+							ajax="${true}">
+							<ui:insert/>
+						</crank:form>
 	
 						<rich:dataTable value="#{detailController.model}" var="row">
 							<f:facet name="header">
@@ -145,7 +142,7 @@
 
 					<rich:spacer width="20" height="10"/>
 					<h:panelGrid columns="1" styleClass="detailPanelGrid" >
-						<ui:insert/>
+						 
 					</h:panelGrid>
 					
 				</h:panelGrid>

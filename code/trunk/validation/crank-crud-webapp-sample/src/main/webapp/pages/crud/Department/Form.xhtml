@@ -14,7 +14,6 @@
 	<ui:define name="content">
 	
 		<c:set var="daoName" value="Department" />
-		<c:set var="renderListings" value="${(deptCrud.controller.state=='ADD') or (deptCrud.controller.state == 'EDIT') or (deptCrud.controller.state == null) }" />
 		
 		<c:choose>
 			<c:when test="${empty reRender}">
@@ -61,14 +60,12 @@
 						id="${daoName}DetailList1"
 						detailController="${employeeDetailController}" 
 						daoName="Employees"
-						rendered="${renderListings}"
 						reRender="${daoName}DetailFormB"
 						parentForm="${daoName}DetailFormB"
 						propertyNames="firstName,lastName,active,dob,age,numberOfPromotions">
 	
 						<crank:detailListing 
 							id="${daoName}DetailList2"
-							rendered="${renderListings}"
 							reRender="${daoName}DetailFormB"
 							daoName="Tasks"
 							detailController="${taskDetailController}" 

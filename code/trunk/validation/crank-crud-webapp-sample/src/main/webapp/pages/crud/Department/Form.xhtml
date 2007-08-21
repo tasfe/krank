@@ -64,17 +64,18 @@
 						rendered="${renderListings}"
 						reRender="${daoName}DetailFormB"
 						parentForm="${daoName}DetailFormB"
-						propertyNames="firstName,lastName,active,dob,age,numberOfPromotions"/>
+						propertyNames="firstName,lastName,active,dob,age,numberOfPromotions">
 	
-					<crank:detailListing 
-						id="${daoName}DetailList2"
-						rendered="${renderListings}"
-						reRender="${daoName}DetailFormB"
-						daoName="Tasks"
-						detailController="${taskDetailController}" 
-						parentForm="${daoName}DetailFormB"
-						propertyNames="name,startDate,endDate,complete"/>
-
+						<crank:detailListing 
+							id="${daoName}DetailList2"
+							rendered="${renderListings}"
+							reRender="${daoName}DetailFormB"
+							daoName="Tasks"
+							detailController="${taskDetailController}" 
+							parentForm="${daoName}DetailFormB"
+							propertyNames="name,startDate,endDate,complete"/>
+							
+					</crank:detailListing>
 				</crank:form>
 			</a4j:form>
 		</a4j:region>

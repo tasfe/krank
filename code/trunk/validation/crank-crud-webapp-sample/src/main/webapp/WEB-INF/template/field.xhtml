@@ -38,7 +38,7 @@
 
     <!--  The label is optional. Generate it if it is missing.  Decorate it if required -->
 	<c:choose>
-		<c:when test="${false or required=='true' and not crud:isBoolean(type,fieldName)}">
+		<c:when test="${required=='true' and not crud:isBoolean(type,fieldName)}">
 			<c:choose>
 				<c:when test="${empty label}">
 				    <c:set var="label" value="${crud:createLabel(fieldName)}*" />

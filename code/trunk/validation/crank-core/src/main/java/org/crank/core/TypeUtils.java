@@ -10,19 +10,18 @@ import java.util.Date;
 
 public class TypeUtils {
 
-    @SuppressWarnings("unchecked")
-    public static boolean isDate( Class type, String propertyName ) {
+    public static boolean isDate( Class<?> type, String propertyName ) {
         PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
-        Class propertyType = pd.getPropertyType();
+        Class<?> propertyType = pd.getPropertyType();
         if (Date.class.isAssignableFrom( propertyType )) {
             return true;
         }
         return false;
     }
 
-    public static boolean isText( Class type, String propertyName ) {
+    public static boolean isText( Class<?> type, String propertyName ) {
         PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
-        Class propertyType = pd.getPropertyType();
+        Class<?> propertyType = pd.getPropertyType();
 
         if (propertyType == String.class || propertyType == Integer.class || propertyType == BigDecimal.class
                 || propertyType == BigInteger.class || propertyType == Character.class || propertyType == Long.class
@@ -35,9 +34,9 @@ public class TypeUtils {
         }
     }
 
-    public static boolean isEnum( final Class type, final String propertyName ) {
+    public static boolean isEnum( final Class<?> type, final String propertyName ) {
         PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
-        Class propertyType = pd.getPropertyType();
+        Class<?> propertyType = pd.getPropertyType();
         if (propertyType == Enum.class) {
             return true;
         } else if (propertyType.isEnum()) {
@@ -46,9 +45,9 @@ public class TypeUtils {
         return false;
     }
 
-    public static boolean isBoolean( final Class type, final String propertyName ) {
+    public static boolean isBoolean( final Class<?> type, final String propertyName ) {
         PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
-        Class propertyType = pd.getPropertyType();
+        Class<?> propertyType = pd.getPropertyType();
         if (propertyType == Boolean.class) {
             return true;
         } else if (propertyType.isPrimitive() && "boolean".equals( propertyType.getName() )) {
@@ -57,12 +56,12 @@ public class TypeUtils {
         return false;
     }
 
-    public static PropertyDescriptor getPropertyDescriptor( final Class type, final String propertyName ) {
+    public static PropertyDescriptor getPropertyDescriptor( final Class<?> type, final String propertyName ) {
         if (!propertyName.contains( "." )) {
             return doGetPropertyDescriptor( type, propertyName );
         } else {
             String [] propertyNames = propertyName.split( "[.]" );
-            Class clazz = type;
+            Class<?> clazz = type;
             PropertyDescriptor propertyDescriptor=null;
             for (String pName : propertyNames) {
                 propertyDescriptor = doGetPropertyDescriptor( clazz, pName );
@@ -75,7 +74,7 @@ public class TypeUtils {
          }
     }
 
-    private static PropertyDescriptor doGetPropertyDescriptor( final Class type, final String propertyName ) {
+    private static PropertyDescriptor doGetPropertyDescriptor( final Class<?> type, final String propertyName ) {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo( type );
             PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();

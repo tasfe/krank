@@ -13,19 +13,19 @@ import org.crank.annotations.design.NeedsRefactoring;
 
 public class AnnotationUtils {
 
-    public static List<AnnotationData> getAnnotationDataForProperty(Class clazz, String propertyName, boolean useReadMethod, Set<String> allowedPackages) {
+    public static List<AnnotationData> getAnnotationDataForProperty(Class<?> clazz, String propertyName, boolean useReadMethod, Set<String> allowedPackages) {
         return extractValidationAnnotationData(extractAllAnnotationsForProperty(clazz, propertyName, useReadMethod), allowedPackages);
     }
     
-    public static List<AnnotationData> getAnnotationDataForField(Class clazz, String propertyName, Set<String> allowedPackages) {
+    public static List<AnnotationData> getAnnotationDataForField(Class<?> clazz, String propertyName, Set<String> allowedPackages) {
         return extractValidationAnnotationData(findFieldAnnotations( clazz, propertyName ), allowedPackages);
     }
     
-    public static List<AnnotationData> getAnnotationDataForClass(Class clazz, Set<String> allowedPackages) {
+    public static List<AnnotationData> getAnnotationDataForClass(Class<?> clazz, Set<String> allowedPackages) {
         return extractValidationAnnotationData(findClassAnnotations( clazz ), allowedPackages);
     }
     
-    private static Annotation[] findClassAnnotations( Class clazz ) {
+    private static Annotation[] findClassAnnotations( Class<?> clazz ) {
         return clazz.getAnnotations();
     }
 
@@ -59,7 +59,7 @@ public class AnnotationUtils {
      */
     @NeedsRefactoring("There has to be a better way to do this. Read comments " +
             "about potential bug.")
-    private static Annotation[] extractAllAnnotationsForProperty(Class clazz, String propertyName, boolean useRead) {
+    private static Annotation[] extractAllAnnotationsForProperty(Class<?> clazz, String propertyName, boolean useRead) {
         try {
 
             Annotation[] annotations = findPropertyAnnotations(clazz, propertyName, useRead);
@@ -86,7 +86,7 @@ public class AnnotationUtils {
      * @return
      * @throws IntrospectionException
      */
-    private static Annotation[] findPropertyAnnotations(Class clazz, String propertyName, boolean useRead)
+    private static Annotation[] findPropertyAnnotations(Class<?> clazz, String propertyName, boolean useRead)
             throws IntrospectionException {
         
         PropertyDescriptor propertyDescriptor = TypeUtils.getPropertyDescriptor(clazz, propertyName);
@@ -109,7 +109,7 @@ public class AnnotationUtils {
         }
     }
     
-    private static Annotation[] findFieldAnnotations(Class clazz, String propertyName) {
+    private static Annotation[] findFieldAnnotations(Class<?> clazz, String propertyName) {
         Field field = findFieldForProperty(clazz, propertyName);
         if (field==null) {
             return new Annotation[] {};
@@ -118,7 +118,7 @@ public class AnnotationUtils {
         return annotations;
     }
 
-    private static Field findFieldForProperty(Class clazz, String propertyName) {
+    private static Field findFieldForProperty(Class<?> clazz, String propertyName) {
         Field field = null;
         try {
             field = clazz.getDeclaredField( propertyName );

@@ -6,9 +6,9 @@ import java.util.Map;
 
 public class Log {
     
-    private static Map<Class, Log> logMap = new HashMap<Class, Log>();
+    private static Map<Class<?>, Log> logMap = new HashMap<Class<?>, Log>();
     
-    protected Class clasz;
+    protected Class<?> clasz;
     
     public void info(String message) {
         System.out.println(message);
@@ -27,13 +27,13 @@ public class Log {
     }
     
     
-    public static Log getLog(Class clazz) {
+    public static Log getLog(Class<?> clazz) {
         Log log = logMap.get(clazz);
         if (log !=null) {
             return null;
         }
         try {
-                Class logClass = Class.forName(CrankConstants.LOG);
+                Class<?> logClass = Class.forName(CrankConstants.LOG);
                 log = (Log) logClass.newInstance();
                 log.setClasz(clazz);
                 logMap.put(clazz,log);
@@ -44,7 +44,7 @@ public class Log {
         }
     }
     
-    protected void setClasz(Class clasz) {
+    protected void setClasz(Class<?> clasz) {
         this.clasz = clasz;
     }
     

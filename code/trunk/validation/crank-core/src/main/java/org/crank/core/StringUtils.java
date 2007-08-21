@@ -23,7 +23,7 @@ public class StringUtils {
     	String prop1 = str.substring(0,str.indexOf("."));
     	String prop2 = str.substring(str.indexOf(".") + 1, str.length());
     	
-    	List<String> results = new ArrayList();
+    	List<String> results = new ArrayList<String>();
     	
     	results.add(prop1);
     	results.add(prop2);

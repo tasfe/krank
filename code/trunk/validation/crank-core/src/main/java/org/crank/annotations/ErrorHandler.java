@@ -17,7 +17,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD})
 public @interface ErrorHandler {
-	Class exceptionClass() default java.lang.Exception.class; //The exception that we are hanlding
+	Class<? extends Exception> exceptionClass() default java.lang.Exception.class; //The exception that we are hanlding
 	String messageDetail() default "Problem"; //The message we are going to send the end user
 	String messageSummary() default "Problem"; //The message we are going to send the end user
 	String id() default "";

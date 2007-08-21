@@ -5,8 +5,8 @@ import java.io.PrintWriter;
 import java.util.Formatter;
 
 public class CrankException extends RuntimeException {
-    
-    private Throwable wrappedException;
+	private static final long serialVersionUID = 1L;
+	private Throwable wrappedException;
 
     public CrankException() {
         super();

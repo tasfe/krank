@@ -19,9 +19,11 @@ import org.crank.core.ResourceBundleLocator;
  * starts with a "{". 
  * 
  * Future: It will look up the message in the 
- * EL context if it starts wtih a "#{"
+ * EL context if it starts with a "#{"
  * */
 public class MessageSpecification implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	Log log = Log.getLog(MessageSpecification.class);
     
 	/** The detailMessage part of the message. */
@@ -246,7 +248,7 @@ public class MessageSpecification implements Serializable {
 
 	/** Holds the current subject. This allows this class to be stateless
 	 * yet still allow us to change the subject on a per thread basis. */
-	private ThreadLocal subjectHolder = new ThreadLocal();
+	private ThreadLocal<String> subjectHolder = new ThreadLocal<String>();
 	
 	/** Allows client objects to set the subject for the current thread
 	 * per instance of the MessageSpecification. */
@@ -259,7 +261,7 @@ public class MessageSpecification implements Serializable {
 	 * current subject is not found. */
     public String getSubject() {
 		if (subjectHolder.get()!=null) {
-			return (String) subjectHolder.get();
+			return subjectHolder.get();
 		}
 		return subject;
 	}

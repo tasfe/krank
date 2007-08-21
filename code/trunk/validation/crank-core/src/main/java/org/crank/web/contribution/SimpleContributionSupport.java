@@ -12,7 +12,7 @@ import java.io.Writer;
  *
  */
 public class SimpleContributionSupport implements Contribution, Serializable {
-
+	private static final long serialVersionUID = 1L;
 	private String contributionText;
 	
     protected String getContributionText() {

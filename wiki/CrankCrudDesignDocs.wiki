@@ -12,8 +12,12 @@ The `CrudController` class implements the `CrudOperation`s interface. The `CrudO
 
 None of the above is tied to Spring MVC or JSF. You can use the above with any GUI frontend espcially with those that use expression binding languages like JSF EL and OGNL.
 
+Here is UML diagram showing these classes:
 
 http://krank.googlecode.com/svn/code/trunk/validation/docs/images/master_detail.png
 
 == CRUD Pagination Design Details ==
 
+Here is UML diagram showing these classes:
+
+http://krank.googlecode.com/svn/code/trunk/validation/docs/images/pagination.png

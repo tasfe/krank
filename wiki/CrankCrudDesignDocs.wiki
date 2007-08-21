@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Covers the basic structure of Crank Crud. At least the CRUD contoller parts, namely pagination and CRUD operations.
+Covers the basic structure of Crank Crud. At least the CRUD controller parts, namely pagination and CRUD operations.
 
 == CRUD Controller Design Details ==
 

@@ -8,13 +8,27 @@ Covers the basic structure of Crank Crud. At least the CRUD contoller parts, nam
 
 The `CrudController` class is the controller for forms that edit entities (domain objects like Department, Employee, etc.). `DetailCrudController` class is the controller for editing details. Think of `DetailCrudController` as the "detail" in Master detail. `CrudController` has a map of `DetailController`s. For example a `CrudContoller` might be tied to a `Department` entity class. The `Department` form may allow editing of `employees` on the `Department` form. Thus the `Department` `CrudController` would have an employees (map key = `employees`) `DetailController` associated with it. `CrudControllerBase` is the code that is used by both `CrudController` and `DetailController`.
 
-The `CrudController` class implements the `CrudOperation`s interface. The `CrudOperation`s interface defines a composition pattern structure.
+To visualize what we are talking about, look at the following diagram:
+
+http://krank.googlecode.com/svn/code/trunk/validation/docs/images/master_detail_pic.jpg
+
+Notice that the `Department` object (managed in JPA) is a parent of the `Employee`s list. 
+An `Employee` is being edited, and it has a list of tasks.
+Thus `Department` has employees, and an `Employee` has tasks.
+
+The `CrudController` class implements the `CrudOperation`s interface. The `CrudOperation`s interface defines a composition pattern structure. A master detail page is backed by a `CrudController` that can have `DetailControllers` which in turn can have `DetailControllers` which in turn can have `DetailControllers` ad infinitum.
 
 None of the above is tied to Spring MVC or JSF. You can use the above with any GUI front-end especially with those that use expression binding languages like JSF EL and OGNL.
 
 ====UML diagram for CRUD controller classes:====
 
 http://krank.googlecode.com/svn/code/trunk/validation/docs/images/master_detail.png
+
+It may be best to visualize the relationship of controllers with this picture:
+
+====Controller to Master Detail form elements:====
+
+http://krank.googlecode.com/svn/code/trunk/validation/docs/images/master_detail_pic_controlle_mapping.jpg
 
 == CRUD Pagination Design Details ==
 

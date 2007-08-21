@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Covers the basic structure of Crank Crud. At least the `CrudContoller` parts.
+Covers the basic structure of Crank Crud. At least the CRUD contoller parts, namely pagination and CRUD operations.
 
 == CRUD Controller Design Details ==
 
@@ -12,7 +12,7 @@ The `CrudController` class implements the `CrudOperation`s interface. The `CrudO
 
 None of the above is tied to Spring MVC or JSF. You can use the above with any GUI front-end especially with those that use expression binding languages like JSF EL and OGNL.
 
-Here is UML diagram showing these classes:
+====UML diagram for CRUD controller classes:====
 
 http://krank.googlecode.com/svn/code/trunk/validation/docs/images/master_detail.png
 
@@ -29,6 +29,6 @@ Each `FilterableProperty` instance has an `OrderBy` and `Comparison` associated 
 
 There is a `FilterableProperty` for each property of the Entity. The `FilterableProperty` consist of a `Comparison` object and an `OrderBy` object. The `Comparison` object and an `OrderBy` object are from our Crank Criteria DSL. (In actuality `FilterableProperty` works with `OrderByWithEvents`, `BetweenComparisonWithEvents` and `ComparisonWithEvents` which subclass `OrderBy`, `BetweenComparison` and `Comparison` from the [http://code.google.com/p/krank/wiki/UsingDAO Criteria DSL support] and add change notification event handling.)
 
-Here is UML diagram showing these classes:
+====UML diagram for Pagination and Filtering Controller classes:====
 
 http://krank.googlecode.com/svn/code/trunk/validation/docs/images/pagination.png

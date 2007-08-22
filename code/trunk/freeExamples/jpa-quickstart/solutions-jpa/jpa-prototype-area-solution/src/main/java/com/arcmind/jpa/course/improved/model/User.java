@@ -11,8 +11,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity(name = "ImprovedUser")
+
 public class User {
 	
+	@OneToOne
+	private ContactInfo contactInfo;
+
 	@ManyToOne ()
 	@JoinColumn(name="FK_GROUP_ID")	
 	private Group parentGroup;
@@ -20,8 +24,6 @@ public class User {
 	@ManyToMany
 	private List<Role> roles;
 
-	@OneToOne
-	private ContactInfo contactInfo;
 
 	@Id
 	@GeneratedValue

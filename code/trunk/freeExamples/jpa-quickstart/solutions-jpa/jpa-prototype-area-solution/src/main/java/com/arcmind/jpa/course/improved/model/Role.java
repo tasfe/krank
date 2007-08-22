@@ -11,13 +11,17 @@ import javax.persistence.NamedQuery;
 @Entity(name="ImprovedRole")
 @NamedQuery(name = "improved.loadRole", 
 		query = "select role from ImprovedRole role where role.name=:name")
+
 public class Role {
+	
+	@ManyToMany(mappedBy="roles")
+	private List<Group> groups;
+
+	
 	@Id
 	@GeneratedValue
 	private Long id;
 	
-	@ManyToMany(mappedBy="roles")
-	private List<Group> groups;
 
 	private String name;
 

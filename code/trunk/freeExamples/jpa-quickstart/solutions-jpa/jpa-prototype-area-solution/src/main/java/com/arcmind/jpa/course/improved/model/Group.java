@@ -15,20 +15,35 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
-@Table(name = "ImprovedGroup")		
-@Entity (name="ImprovedGroup")
 @NamedQuery(name = "improved.loadGroup", 
 		query = "select group from ImprovedGroup "
 	+ " group where group.name = :name")
+	
+@Table(name = "ImprovedGroup")		
+@Entity (name="ImprovedGroup")
+
 public class Group {
+	
+	public void addUser(User user) {
+		user.setParentGroup(this);
+		getUsers().add(user);		
+	}
+	
+	public void removeUser(User user) {
+		user.setParentGroup(null);
+		users.remove(user);
+	}
 
 	@ManyToMany
 	private List<Role> roles;
+
+
 
 //	@OneToMany
 //	@JoinColumn(name="FK_GROUP_ID")
 	@OneToMany(mappedBy="parentGroup")
 	private List<User> users;
+	
 	
 	@Id
 	@GeneratedValue
@@ -86,14 +101,5 @@ public class Group {
 
 	}
 
-	public void addUser(User user) {
-		user.setParentGroup(this);
-		getUsers().add(user);		
-	}
-	
-	public void removeUser(User user) {
-		user.setParentGroup(null);
-		users.remove(user);
-	}
 	
 }

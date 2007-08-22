@@ -9,28 +9,29 @@ import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.OneToOne;
 
-@Entity (name="ImprovedContactInfo")
+@Entity(name = "ImprovedContactInfo")
+
 public class ContactInfo {
 
-	@OneToOne(mappedBy="contactInfo")
+	@OneToOne(mappedBy = "contactInfo")
 	private User user;
 	
-	private Address address;
 	
+	private Address address;
+
 	@Embedded
-	@AttributeOverrides (value={
-			@AttributeOverride(name="line1", 
-					column=@Column(name="work_Address_Line1")),
-			@AttributeOverride(name="line2", 
-					column=@Column(name="work_Address_Line2")),
-			@AttributeOverride(name="zip", 
-					column=@Column(name="work_Address_Zip")),
-			@AttributeOverride(name="state", 
-					column=@Column(name="work_Address_State")),
-	})
+	@AttributeOverrides(value = {
+			@AttributeOverride(name = "line1", 
+					column = @Column(name = "work_Address_Line1")),
+			@AttributeOverride(name = "line2", 
+					column = @Column(name = "work_Address_Line2")),
+			@AttributeOverride(name = "zip", 
+					column = @Column(name = "work_Address_Zip")),
+			@AttributeOverride(name = "state", 
+					column = @Column(name = "work_Address_State")), })
 	private Address workAddress;
 
-	
+
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -39,12 +40,13 @@ public class ContactInfo {
 	private String lastName;
 
 	public ContactInfo(String phone, String firstName, String lastName,
-			Address address) {
+			Address address, Address workAddress) {
 		super();
 		this.phone = phone;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
+		this.workAddress = workAddress;
 	}
 
 	public String getPhone() {

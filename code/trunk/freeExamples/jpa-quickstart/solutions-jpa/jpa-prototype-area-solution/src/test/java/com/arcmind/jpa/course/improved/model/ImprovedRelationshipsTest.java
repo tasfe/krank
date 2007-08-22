@@ -108,16 +108,12 @@ public class ImprovedRelationshipsTest extends TestCase {
 
 		/* Construct the group. */
 		final Group group = new Group("sysadmins");
-//		group.getUsers().add(new User("RickHigh"));
-//		group.getUsers().add(new User("PaulHix"));
-//		group.getUsers().add(new User("PaulTab", 
-//				new ContactInfo("5205551212", "Paul", "Taboraz", 
-//				new Address("123 Main", "", "85748", "AZ"))));
 		group.addUser(new User("RickHigh"));
 		group.addUser(new User("PaulHix"));
 		group.addUser(new User("PaulTab", 
 				new ContactInfo("5205551212", "Paul", "Taboraz", 
-				new Address("123 Main", "", "85748", "AZ"))));
+				new Address("123 Main", "", "85748", "AZ"),
+				new Address("1350 A Kinney", "", "95503", "CA"))));
 
 		/* Persist the group. */
 		execute(new TransactionTemplate(){
@@ -166,17 +162,20 @@ public class ImprovedRelationshipsTest extends TestCase {
 		/* Ensure it was written to the database correctly. */
 		assertEquals("sysadmins", loadedGroup.getName()); //1
 		assertEquals("ADMIN", loadedGroup.getRoles().get(0).getName()); //2
-		assertEquals("sysadmins", loadedGroup.getRoles().get(0).getGroups().get(0).getName()); //3
+		assertEquals("sysadmins", 
+				loadedGroup.getRoles().get(0).getGroups().get(0).getName()); //3**
 		assertEquals(3, loadedGroup.getUsers().size()); //4
 		assertEquals("PaulTab", loadedGroup.getUsers().get(2).getName()); //5
 		assertEquals("5205551212", loadedGroup.getUsers().get(2)
 				.getContactInfo().getPhone()); //6
 		assertEquals("85748", loadedGroup.getUsers().get(2)
 				.getContactInfo().getAddress().getZip()); //7
+		assertEquals("95503", loadedGroup.getUsers().get(2)
+				.getContactInfo().getWorkAddress().getZip()); //8**
 		assertEquals("sysadmins", loadedGroup.getUsers().get(2)
-				.getParentGroup().getName()); //8
+				.getParentGroup().getName()); //9**
 		assertEquals("PaulTab", loadedGroup.getUsers().get(2)
-				.getContactInfo().getUser().getName()); //9
+				.getContactInfo().getUser().getName()); //10**
 
 
 		/* Demonstrate laziness issues. ----------------------------------------------- */

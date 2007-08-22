@@ -277,6 +277,7 @@ a:hover, a:active {
 }
 .dataTableColumnHeader {
 	background-color: #6699ff;
+	vertical-align: top;
 }
 .paginationImageButton {
 	vertical-align: middle;

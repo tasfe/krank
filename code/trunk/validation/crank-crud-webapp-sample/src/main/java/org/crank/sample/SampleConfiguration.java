@@ -26,7 +26,7 @@ import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.controller.FilteringPaginator;
 import org.crank.crud.controller.datasource.EnumDataSource;
-import org.crank.crud.controller.datasource.JpaFilteringPagingDataSource;
+import org.crank.crud.controller.datasource.DaoFilteringPagingDataSource;
 import org.crank.crud.controller.support.tomahawk.TomahawkFileUploadHandler;
 import org.crank.crud.dao.DepartmentDAO;
 import org.crank.crud.dao.EmployeeDAO;
@@ -117,7 +117,7 @@ public class SampleConfiguration {
     public Map<String, FilterablePageable> paginators () throws Exception {
         Map<String, FilterablePageable> paginators = new HashMap<String, FilterablePageable>();
         for (CrudManagedObject mo : managedObjects) {
-            JpaFilteringPagingDataSource dataSource = new JpaFilteringPagingDataSource();
+            DaoFilteringPagingDataSource dataSource = new DaoFilteringPagingDataSource();
             dataSource.setDao( repositories().get( mo.getName() ));
             FilteringPaginator dataPaginator = new FilteringPaginator(dataSource, mo.getEntityType());
             dataPaginator.setRequestParameterMapFinder(new RequestParameterMapFinderImpl());
@@ -139,7 +139,7 @@ public class SampleConfiguration {
         
         for (CrudManagedObject mo : managedObjects) {
             selectItemGenerator = new SelectItemGenerator();
-            JpaFilteringPagingDataSource<Department, Long> jpaDataSource = new JpaFilteringPagingDataSource<Department, Long>();
+            DaoFilteringPagingDataSource<Department, Long> jpaDataSource = new DaoFilteringPagingDataSource<Department, Long>();
             jpaDataSource.setDao( repositories().get( mo.getName() ));
             selectItemGenerator.setDataSource( jpaDataSource );
             selectItemGenerators.put(mo.getName(), selectItemGenerator);

@@ -61,10 +61,10 @@
 		</property>
 	</bean>	
 	
-	<bean id="paginatableDataSource" class="org.crank.crud.controller.datasource.JpaPagingDataSource">
+	<bean id="paginatableDataSource" class="org.crank.crud.controller.datasource.DaoPagingDataSource">
 		<property name="dao" ref="employeeDao"/>
 	</bean>
-	<bean id="paginatableFilterableDataSource" class="org.crank.crud.controller.datasource.JpaFilteringPagingDataSource">
+	<bean id="paginatableFilterableDataSource" class="org.crank.crud.controller.datasource.DaoFilteringPagingDataSource">
 		<property name="dao" ref="employeeDao"/>
 	</bean>
 

@@ -1,7 +1,7 @@
 package org.crank.crud.controller.datasource;
 
 import org.crank.crud.GenericDao;
-import org.crank.crud.controller.datasource.JpaFilteringPagingDataSource;
+import org.crank.crud.controller.datasource.DaoFilteringPagingDataSource;
 import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Operator;
 import org.crank.crud.test.DbUnitTestBase;
@@ -10,9 +10,9 @@ import org.testng.annotations.Test;
 import org.testng.AssertJUnit;
 
 
-public class JPAFilterablePaginatableDataSourceTest extends DbUnitTestBase {
+public class DaoFilterablePaginatableDataSourceTest extends DbUnitTestBase {
     
-    private JpaFilteringPagingDataSource paginatableDataSource;
+    private DaoFilteringPagingDataSource paginatableDataSource;
     private GenericDao<Employee, Long> employeeDao;
     
     public String getDataSetXml() {
@@ -45,7 +45,7 @@ public class JPAFilterablePaginatableDataSourceTest extends DbUnitTestBase {
 //        AssertJUnit.assertEquals("FOO0", employee.getFirstName());
     }
 
-    public void setPaginatableFilterableDataSource( JpaFilteringPagingDataSource paginatableDataSource ) {
+    public void setPaginatableFilterableDataSource( DaoFilteringPagingDataSource paginatableDataSource ) {
         this.paginatableDataSource = paginatableDataSource;
     }
 

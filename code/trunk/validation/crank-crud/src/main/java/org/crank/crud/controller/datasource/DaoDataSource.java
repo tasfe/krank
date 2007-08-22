@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.crank.crud.GenericDao;
 
-public class JpaDataSource<T, PK extends Serializable> implements DataSource {
+public class DaoDataSource<T, PK extends Serializable> implements DataSource {
     protected GenericDao<T, PK> dao;
 
     public void setDao( GenericDao<T, PK> dao ) {
@@ -16,7 +16,7 @@ public class JpaDataSource<T, PK extends Serializable> implements DataSource {
         return dao.find(  );
     }
     
-    public JpaDataSource() {
+    public DaoDataSource() {
         super();
     }
 

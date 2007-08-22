@@ -6,11 +6,11 @@ import java.util.List;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.OrderBy;
 
-public class JpaFilteringDataSource<T, PK extends Serializable> extends JpaDataSource<T, PK> implements FilteringDataSource {
+public class DaoFilteringDataSource<T, PK extends Serializable> extends DaoDataSource<T, PK> implements FilteringDataSource {
     protected Group group = new Group();
     protected OrderBy[] orderBy;
 
-    public JpaFilteringDataSource() {
+    public DaoFilteringDataSource() {
         super();
     }
 

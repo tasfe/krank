@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.crank.crud.GenericDao;
 
-public class JpaPagingDataSource<T, PK extends Serializable> implements PagingDataSource{
+public class DaoPagingDataSource<T, PK extends Serializable> implements PagingDataSource{
 
     private GenericDao<T, PK> dao;
 

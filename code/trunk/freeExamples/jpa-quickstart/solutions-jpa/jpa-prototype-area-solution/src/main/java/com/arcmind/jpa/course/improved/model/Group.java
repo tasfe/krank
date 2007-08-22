@@ -12,6 +12,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 
@@ -41,6 +42,8 @@ public class Group {
 
 //	@OneToMany
 //	@JoinColumn(name="FK_GROUP_ID")
+	
+	@OrderBy("name ASC")
 	@OneToMany(mappedBy="parentGroup")
 	private List<User> users;
 	

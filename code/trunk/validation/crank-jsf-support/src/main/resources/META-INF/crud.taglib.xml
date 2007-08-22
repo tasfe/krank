@@ -151,6 +151,13 @@
 			java.lang.String unCapitalize(java.lang.String)
 		</function-signature>
 	</function>
+	<function>
+		<function-name>numRowsToDisplay</function-name>
+		<function-class>org.crank.crud.jsf.support.CrudUtils</function-class>
+		<function-signature>
+			java.lang.Long getNumRowsToDisplay(java.lang.Long, java.lang.Integer) 
+		</function-signature>
+	</function>
 	<tag>
 		<tag-name>select</tag-name>
 		<component>

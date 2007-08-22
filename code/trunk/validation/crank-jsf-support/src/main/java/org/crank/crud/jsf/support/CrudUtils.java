@@ -31,4 +31,12 @@ public abstract class CrudUtils {
 
         throw new IllegalStateException("Currently only supports Long, Integer and String id types. ");
     }
+    
+    public static Long getNumRowsToDisplay(Long count, Integer maxRows) {
+    	if (count > maxRows) {
+    		return maxRows.longValue();
+    	}
+    	return count;
+    }
+    
 }

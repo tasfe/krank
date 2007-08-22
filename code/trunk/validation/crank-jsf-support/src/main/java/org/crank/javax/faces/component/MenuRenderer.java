@@ -805,9 +805,14 @@ public class MenuRenderer extends HtmlBasicInputRenderer {
             logger.fine("Rendering " + itemCount + " options");
         }
         // If "size" is *not* set explicitly, we have to default it correctly
-        Integer size = (Integer) component.getAttributes().get("size");
+        Integer size = Integer.getInteger((String)component.getAttributes().get("size"));
         if (size == null || size == Integer.MIN_VALUE) {
-            size = itemCount;
+        	//TODO: HACK... need to 'cifer why the size isn't getting processed correctly from the tag - Paul T.
+        	if (itemCount > 20) {
+        		size = 20;
+        	} else {
+                size = itemCount;
+        	}
         }
         writeDefaultSize(writer, size);
 

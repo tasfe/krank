@@ -1,4 +1,4 @@
-package com.arcmind.jpa.course.improved.model;
+package com.arcmind.jpa.course.fetch.model;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -8,11 +8,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
-import org.hibernate.LazyInitializationException;
-
 import junit.framework.TestCase;
 
-public class ImprovedRelationshipsTest extends TestCase {
+public class FetchRelationshipsTest extends TestCase {
 
 	private EntityManager entityManager;
 	private EntityManagerFactory entityManagerFactory;
@@ -91,7 +89,7 @@ public class ImprovedRelationshipsTest extends TestCase {
 		execute(new TransactionTemplate() {
 			public Object execute() {
 
-				entityManager.createQuery("delete ImprovedRole").executeUpdate();
+				entityManager.createQuery("delete FetchRole").executeUpdate();
 
 				return null;
 			}
@@ -125,22 +123,8 @@ public class ImprovedRelationshipsTest extends TestCase {
 				/* Associate the group with a role. */
 				group.getRoles().add(
 						(Role) entityManager.createNamedQuery(
-								"improved.loadRole").setParameter("name",
+								"fetch.loadRole").setParameter("name",
 								"ADMIN").getSingleResult());
-
-				/* Write the users associated with this group. */
-				for (User user : group.getUsers()) {
-					entityManager.persist(user);
-					if (user.getContactInfo() != null) {
-						entityManager.persist(user.getContactInfo());
-						if (user.getContactInfo().getPhoneNumbers()!=null && 
-								user.getContactInfo().getPhoneNumbers().size()>0) {
-							for (PhoneNumber phoneNumber : user.getContactInfo().getPhoneNumbers().values()) {
-								entityManager.persist(phoneNumber);
-							}
-						}
-					}
-				}
 
 				return null;
 			}
@@ -157,7 +141,7 @@ public class ImprovedRelationshipsTest extends TestCase {
 			public Object execute() {
 
 				return (Group) entityManager.createNamedQuery(
-						"improved.loadGroup").setParameter("name", "sysadmins")
+						"fetch.loadGroup").setParameter("name", "sysadmins")
 						.getSingleResult();
 
 			}
@@ -196,7 +180,7 @@ public class ImprovedRelationshipsTest extends TestCase {
 			public Object execute() {
 
 				return (Group) entityManager.createNamedQuery(
-						"improved.loadGroup").setParameter("name", "sysadmins")
+						"fetch.loadGroup").setParameter("name", "sysadmins")
 						.getSingleResult();
 
 			}
@@ -205,12 +189,8 @@ public class ImprovedRelationshipsTest extends TestCase {
 
 		entityManager.close();
 
-		try {
-			assertEquals("ADMIN", loadedGroup.getRoles().get(0).getName()); //1
-			fail();
-		} catch (LazyInitializationException lie) {
-			assertTrue(true);
-		}
+		//   LAZY INIT PROBLEM GOES AWAY
+		assertEquals("ADMIN", loadedGroup.getRoles().get(0).getName()); //1
 
 		entityManager = entityManagerFactory.createEntityManager();
 
@@ -218,7 +198,7 @@ public class ImprovedRelationshipsTest extends TestCase {
 		final Group groupToDelete = (Group) execute(new TransactionTemplate() {
 			public Object execute() {
 				return (Group) entityManager.createNamedQuery(
-						"improved.loadGroup").setParameter("name", "sysadmins")
+						"fetch.loadGroup").setParameter("name", "sysadmins")
 						.getSingleResult();
 			}
 		});
@@ -227,17 +207,10 @@ public class ImprovedRelationshipsTest extends TestCase {
 		execute(new TransactionTemplate() {
 			public Object execute() {
 				Group group = groupToDelete;
-				/* Remove all roles. */
-				group.getRoles().clear();
-				entityManager.flush(); //1
-				/* Remove the users associated with this group. */
-				for (User user : group.getUsers()) {
-					if (user.getContactInfo() != null) {
-						entityManager.remove(user.getContactInfo());
-					}
-					entityManager.remove(user);
-				}
+				
 				entityManager.remove(group);
+				group.getRoles().clear();
+				
 				return null;
 			}
 		});
@@ -263,17 +236,17 @@ public class ImprovedRelationshipsTest extends TestCase {
 		try {
 			result = tt.execute();
 			try {
-				if (!join)
-					transaction.commit();
-			}catch (Exception ise) {
-				ise.printStackTrace();
+			if (!join)
+				transaction.commit();
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			if (!join) {
 				try {
 					transaction.rollback();
-				} catch (IllegalStateException ise) {
+				} catch (Exception ise) {
 					ex.printStackTrace();
 				}
 			}

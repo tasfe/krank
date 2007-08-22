@@ -7,23 +7,35 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 //import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
+//import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
-import javax.persistence.Table;
 
 
 @NamedQuery(name = "improved.loadGroup", 
 		query = "select group from ImprovedGroup "
 	+ " group where group.name = :name")
 	
-@Table(name = "ImprovedGroup")		
 @Entity (name="ImprovedGroup")
-
 public class Group {
+
+	@OrderBy("name ASC")
+	@OneToMany(mappedBy="parentGroup")
+	//private Set<User> users;
+	private List<User> users;
+
+//	@OneToMany
+//	@JoinColumn(name="FK_GROUP_ID")
+	
+//	 @JoinTable(name="GROUP_ROLE",
+//				joinColumns={@JoinColumn(name="FK_GROUP_ID")},
+//				inverseJoinColumns={@JoinColumn(name="FK_ROLE_ID")})	
+	@ManyToMany
+	private List<Role> roles;
+	
+	
 	
 	public void addUser(User user) {
 		user.setParentGroup(this);
@@ -35,17 +47,10 @@ public class Group {
 		users.remove(user);
 	}
 
-	@ManyToMany
-	private List<Role> roles;
 
 
 
-//	@OneToMany
-//	@JoinColumn(name="FK_GROUP_ID")
 	
-	@OrderBy("name ASC")
-	@OneToMany(mappedBy="parentGroup")
-	private List<User> users;
 	
 	
 	@Id
@@ -61,21 +66,28 @@ public class Group {
 		this.id = id;
 	}
 
+//	public Set<User> getUsers() {
+//		if (users == null) {
+//			users = new java.util.HashSet<User>();
+//		}
+//		return users;
+//	}
+//
+//	public void setUsers(Set<User> users) {
+//		this.users = users;
+//	}
+
 	public List<User> getUsers() {
-		if (users == null) {
-			users = new ArrayList<User>();
-		}
-		return users;
+	if (users == null) {
+		users = new ArrayList<User>();
+	}
+	return users;
 	}
 
 	public void setUsers(List<User> users) {
 		this.users = users;
 	}
 
-	@JoinTable(name="GROUP_ROLE",
-			joinColumns={@JoinColumn(name="FK_GROUP_ID")},
-			inverseJoinColumns={@JoinColumn(name="FK_ROLE_ID")}
-			)
 	public List<Role> getRoles() {
 		if (roles == null) {
 			roles = new ArrayList<Role>();

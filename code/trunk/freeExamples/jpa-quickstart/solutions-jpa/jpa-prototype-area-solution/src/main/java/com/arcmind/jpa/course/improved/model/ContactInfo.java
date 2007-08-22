@@ -1,5 +1,8 @@
 package com.arcmind.jpa.course.improved.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Embedded;
@@ -7,14 +10,48 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity(name = "ImprovedContactInfo")
 
 public class ContactInfo {
 
-	@OneToOne(mappedBy = "contactInfo")
+	public void addPhoneNumber(PhoneNumber phoneNumber){
+		if (phoneNumbers == null) {
+			phoneNumbers = new HashMap<String, PhoneNumber>();
+		}
+		phoneNumbers.put(phoneNumber.getName(), phoneNumber);
+	}
+
+	@OneToMany
+	@JoinColumn(name="FK_CONTACT_INFO")
+	@MapKey(name="name")
+	private Map<String, PhoneNumber> phoneNumbers; 
+
+	@OneToOne()
 	private User user;
+	
+	
+	@Id
+	@GeneratedValue
+	private Long id;
+
+	
+	
+
+	
+	public Map<String, PhoneNumber> getPhoneNumbers() {
+		return phoneNumbers;
+	}
+
+	public void setPhoneNumbers(Map<String, PhoneNumber> phones) {
+		this.phoneNumbers = phones;
+	}
+
+	
 	
 	
 	private Address address;
@@ -32,30 +69,18 @@ public class ContactInfo {
 	private Address workAddress;
 
 
-	@Id
-	@GeneratedValue
-	private Long id;
-	private String phone;
 	private String firstName;
 	private String lastName;
 
 	public ContactInfo(String phone, String firstName, String lastName,
 			Address address, Address workAddress) {
 		super();
-		this.phone = phone;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
 		this.workAddress = workAddress;
 	}
 
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
 
 	public String getFirstName() {
 		return firstName;

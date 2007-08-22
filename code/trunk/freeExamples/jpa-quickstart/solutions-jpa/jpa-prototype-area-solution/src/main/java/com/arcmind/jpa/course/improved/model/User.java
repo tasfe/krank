@@ -11,10 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity(name = "ImprovedUser")
-
 public class User {
 	
-	@OneToOne
+	@OneToOne(mappedBy = "user")
 	private ContactInfo contactInfo;
 
 	@ManyToOne ()
@@ -36,6 +35,8 @@ public class User {
 		super();
 		this.name = name;
 		this.contactInfo = contactInfo;
+		this.contactInfo.setUser(this);
+		
 	}
 
 	public List<Role> getRoles() {

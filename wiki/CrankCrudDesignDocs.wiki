@@ -61,3 +61,33 @@ It may help to tie some of these controllers back to the listing picture as foll
 
 ====Controller map for pagination:====
 http://krank.googlecode.com/svn/code/trunk/validation/docs/images/paginated_filterable_listing_mappings.jpg
+
+== DataSource ==
+The `DataSource` module is really the generic models for our controllers. It allows us to divorce the "how to retrieve the model objects" from the controller. It is more akin to a `DataSource` in a PowerBuilder, VB, Delphi sense than a Java JDBC sense. A `DataSource` is an object that produces a list of model objects. Sometimes these model objects can come from a database, sometimes an xml file, sometime a plain java.util.List, sometimes the list if prefiltered, sometimes it is sorted, sometimes from an Enum class, somtimes a list of constants, etc.
+
+Thus a `DataSource` defines a contract that provides a list of objects. It can be used to back a list box controller for example.
+
+A `PagingDataSource` defines a contract to return a list of items with a index number and the number of items that you want to return.
+
+A `FilteringDataSource` defines a contract to return a list of model object using the current Criteria DSL (`Group` and `OrderBy`) to restrict and sort the results.
+
+A `FilteringPagingDataSource` defines a contract to provide pagination and filtering support.
+
+====UML Diagrams for DataSource interfaces:====
+http://krank.googlecode.com/svn/code/trunk/validation/docs/images/datasource-interfaces.png
+
+`EnumDataSource` turns a Java Enum into a datasource.
+
+`DaoDataSource` reads object out of the database using an instance of the GenericDAO interface.
+
+`DaoFilteringDataSource` is a datasource that uses a `GenericDAO` to read a filtered list.
+
+`DaoPagingDataSource` is a datasource that uses a `GenericDAO` object (perhaps the `GenericJpaDao` object that uses the Crank Criteria DSL) to read model objects a page at a time.
+
+`DaoFilteringPagingDataSource` sorts, filters and pages model objects. It is service to the controller. The controller discussed earlier provides the state of paging (what page are we on, how many page does the user want to see). This object just provides getting the data from the database.
+
+`SimplePagingDataSource` allows any list to become a paginated `DataSource`.
+
+====UML Diagrams for DataSource Concrete Classes:====
+http://krank.googlecode.com/svn/code/trunk/validation/docs/images/datasource.png
+

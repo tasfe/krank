@@ -477,6 +477,7 @@
             </dependency>
             
             <!-- JBoss Cache dependencies -->
+            <!--
             <dependency>
                 <groupId>jboss</groupId>
                 <artifactId>jboss-cache</artifactId>
@@ -513,21 +514,14 @@
          <version>3.2.3</version>
       </dependency>       
       
-      <!-- JBoss unit testing -->
+       JBoss unit testing 
       
          <dependency>
          <groupId>jboss</groupId>
          <artifactId>jboss-test</artifactId>
          <version>1.0.3.GA</version>
       </dependency>       
-           
-            <!--
-	        <dependency>
-	            <groupId>jboss</groupId>
-	            <artifactId>jboss-j2ee</artifactId>
-	            <version>4.0.2</version>
-	        </dependency>
--->
+           -->
 		</dependencies>
 	</dependencyManagement>
 

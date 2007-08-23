@@ -89,16 +89,13 @@
         </dependency>
         
         <!-- JBoss cache dependencies. -->
-
+<!--  
         <dependency>
             <groupId>jboss</groupId>
             <artifactId>jboss-cache</artifactId>
         </dependency>
-        <!--         <dependency>
-            <groupId>jboss</groupId>
-            <artifactId>jboss-j2ee</artifactId>
-            </dependency>
-        -->
+            
+        
         <dependency>
             <groupId>jboss</groupId>
             <artifactId>jboss-common-core</artifactId>
@@ -130,6 +127,6 @@
         <dependency>
             <groupId>jboss</groupId>
             <artifactId>jboss-test</artifactId>
-        </dependency>
+        </dependency>-->
     </dependencies>
 </project>

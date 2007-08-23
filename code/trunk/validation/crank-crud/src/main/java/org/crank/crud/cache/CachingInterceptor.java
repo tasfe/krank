@@ -24,9 +24,6 @@ public class CachingInterceptor implements IntroductionInterceptor {
 
         //create cache if necessary
 
-        //trap for update methods - invalidate cache item
-        //trap for delete method - invalidate cache item.
-        //trap for create method - add to cache??
         if (genericDao==null) {
         	
         }

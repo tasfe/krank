@@ -54,6 +54,8 @@ public final class MessageUtils {
         class GenerationCommand {
             boolean capNextChar = false;
             boolean lastCharWasUpperCase = false;
+            boolean lastCharWasNumber = false;
+            boolean lastCharWasSpecial = false;
             boolean shouldContinue = true;
             char[] chars = fieldName.toCharArray();
             void processFieldName() {
@@ -62,8 +64,12 @@ public final class MessageUtils {
         			char cchar = chars[index];
         			shouldContinue = true;
 
+        			processCharWasNumber(buffer, index, cchar);
+        			if (!shouldContinue) {
+        				continue;
+        			}
+
         			processCharWasUpperCase(buffer, index, cchar);
-        			
         			if (!shouldContinue) {
         				continue;
         			}
@@ -86,6 +92,26 @@ public final class MessageUtils {
         		}
             	
             }
+			private void processCharWasNumber(StringBuffer buffer,
+					int index, char cchar) {
+				if (lastCharWasSpecial) {
+					return;
+				}
+				
+				if (Character.isDigit(cchar)) {
+				    
+				    if (index!=0 && !lastCharWasNumber) {
+				        buffer.append(' ');
+				    }
+				    
+				    lastCharWasNumber = true;                
+					buffer.append(cchar);
+
+					this.shouldContinue = false;
+				} else {
+					lastCharWasNumber = false;
+				}
+			}
 			private char processFirstCharacterCheck(final StringBuffer buffer,
 					int index, char cchar) {
 				/* Always capitalize the first character. */
@@ -106,14 +132,18 @@ public final class MessageUtils {
 			}
 			private void processSpecialChars(final StringBuffer buffer,
 					char cchar) {
+				lastCharWasSpecial = false;
 				/* If the character is '.' or '_' then append a space and mark
 				 * the next iteration to capitalize.
 				 */
 				if (cchar == '.' || cchar == '_') {
 				    buffer.append(' ');
 				    capNextChar = true;
+					lastCharWasSpecial = false;				    
 				    this.shouldContinue = false;
 				}
+				
+				
 			}
 			private void processCharWasUpperCase(final StringBuffer buffer,
 					int index, char cchar) {
@@ -139,8 +169,8 @@ public final class MessageUtils {
         GenerationCommand gc = new GenerationCommand();
         gc.processFieldName();
         
-
-		return buffer.toString();
+        /* This is a hack to get address.line_1 to work. */
+		return buffer.toString().replace("  ", " ");
 	}
 
 }

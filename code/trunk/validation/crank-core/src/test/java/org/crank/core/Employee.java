@@ -3,7 +3,7 @@ package org.crank.core;
 import org.crank.annotations.ErrorHandler;
 
 
-public class Employee {
+public class Employee extends Person {
     int age;
     
     @ErrorHandler

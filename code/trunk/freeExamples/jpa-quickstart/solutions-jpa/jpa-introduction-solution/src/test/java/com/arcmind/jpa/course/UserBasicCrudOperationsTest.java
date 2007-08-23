@@ -140,6 +140,7 @@ public class UserBasicCrudOperationsTest extends TestCase {
 
         /* Call merge, persist method will not work. */
         user = entityManager.merge(user);
+        id = user.getId();
         
         transaction.commit();
         /* Close the entityManager. */

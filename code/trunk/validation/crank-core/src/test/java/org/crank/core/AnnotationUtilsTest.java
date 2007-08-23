@@ -34,6 +34,12 @@ public class AnnotationUtilsTest {
             AnnotationUtils.getAnnotationDataForField( Employee.class, "iq", packageNames);
         assertNotNull( annotationDataForProperty );
         assertTrue( annotationDataForProperty.size() > 0);
+        
+        annotationDataForProperty =
+            AnnotationUtils.getAnnotationDataForField( Employee.class, "height", packageNames);
+        assertNotNull( annotationDataForProperty );
+        assertTrue( annotationDataForProperty.size() > 0);
+        
     }
 
 }

@@ -111,6 +111,14 @@ public class AnnotationUtils {
     
     private static Annotation[] findFieldAnnotations(Class<?> clazz, String propertyName) {
         Field field = findFieldForProperty(clazz, propertyName);
+        
+        
+        while (field == null) {
+        	Class<?> sclazz = clazz.getSuperclass();
+        	if (sclazz!=null) {
+        		field = findFieldForProperty(sclazz, propertyName);
+        	}
+        }
         if (field==null) {
             return new Annotation[] {};
         }

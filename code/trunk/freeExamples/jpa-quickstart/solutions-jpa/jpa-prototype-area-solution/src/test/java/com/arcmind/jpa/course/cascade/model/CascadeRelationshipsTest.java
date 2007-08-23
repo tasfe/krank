@@ -2,6 +2,7 @@ package com.arcmind.jpa.course.cascade.model;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.math.BigDecimal;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -264,4 +265,63 @@ public class CascadeRelationshipsTest extends TestCase {
 		return result;
 	}
 
+	public void testDetachedCascadeObject() throws Exception {
+		Order order = new Order("shopping cart");
+		
+		/* Open Persistence context and start transaction. */
+		entityManager = entityManagerFactory.createEntityManager();
+		transaction = entityManager.getTransaction();
+		transaction.begin();
+		
+		entityManager.persist(order);
+		
+		transaction.commit();
+		entityManager.close();
+		/* Close Persistence context. order is now detached. */
+		
+		Order order2 = new Order();
+		order2.setId(order.getId());
+		order2.setName(order.getName());
+		
+		LineItem lineItem = new LineItem("Java Tools for Extreme Programming",
+				new BigDecimal("19.99"));
+		
+		order2.addLineItem(lineItem);
+
+		/* Open Persistence context and start transaction. */
+		entityManager = entityManagerFactory.createEntityManager();
+		transaction = entityManager.getTransaction();
+		transaction.begin();
+		
+		entityManager.merge(lineItem);
+		
+		transaction.commit();
+		entityManager.close();
+		/* Close Persistence context. order is now detached. */
+		
+
+		
+	}
+	
+	public void testTransient() throws Exception {
+		Order order = new Order("shopping cart");
+				
+		LineItem lineItem = new LineItem("Java Tools for Extreme Programming",
+				new BigDecimal("19.99"));
+		
+		order.addLineItem(lineItem);
+
+		/* Open Persistence context and start transaction. */
+		entityManager = entityManagerFactory.createEntityManager();
+		transaction = entityManager.getTransaction();
+		transaction.begin();
+		
+		entityManager.merge(lineItem);
+		
+		transaction.commit();
+		entityManager.close();
+		/* Close Persistence context. order is now detached. */
+		
+	}
+	
 }

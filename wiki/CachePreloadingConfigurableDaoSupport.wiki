@@ -57,6 +57,7 @@ Purpose:
 	</bean>
 }}} 			
 			
+[http://krank.googlecode.com/svn/code/trunk/validation/docs/images/caching_and_preload_base.jpg]
 
   # TODO: Programatically create cache if no cache exists (meaning cache annotation was not available)
   # TODO: Inspect POJO for @Cache annotation and overloaded cache name. (is this all hibernate specific?) 

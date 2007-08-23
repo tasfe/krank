@@ -41,11 +41,17 @@ public class UserBasicCrudOperationsTest extends TestCase {
 
         /* Persist the user using the entityManager. */
         try {
-	        entityManager.persist(user);
+	        //entityManager.persist(user);
+        	user = entityManager.merge(user);
         	transaction.commit();
 
         } catch (Exception ex) {
-        	transaction.rollback();
+        	try {
+        		transaction.rollback();
+        	} catch (Exception ex2) {
+        		
+        	}
+        	throw ex;
         }
         id = user.getId();
         user = null;
@@ -61,6 +67,7 @@ public class UserBasicCrudOperationsTest extends TestCase {
         /* Look up the user in the database. */
         user = entityManager.find(User.class, id);
         user.setName("RicardoTorreAlto");
+        
         /* Stop the read transaction. */
         readTransaction.commit();
         
@@ -78,7 +85,12 @@ public class UserBasicCrudOperationsTest extends TestCase {
         	entityManager.remove(user);
         	deleteTransaction.commit();        	
         } catch (Exception ex) {
-        	deleteTransaction.rollback();
+        	try {
+        		transaction.rollback();
+        	} catch (Exception ex2) {
+        		
+        	}
+        	throw ex;
         }
         /* Overall Objective: Test that the user was deleted. */
         /* Start the transaction. */

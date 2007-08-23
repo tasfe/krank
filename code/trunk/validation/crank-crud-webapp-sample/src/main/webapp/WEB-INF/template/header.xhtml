@@ -54,20 +54,22 @@
 				<div style="text-align: right">
 				
 				<rich:spacer width="25" height="10"/>
-					
+
+				<!-- Sort Descending  -->
 				<a4j:commandLink 
 					styleClass="${headerLinkClass}"
 					reRender="${reRender}"
-					rendered="#{orderBy.asc and paginator.sorting}"
+					rendered="#{orderBy.asc and orderBy.enabled}"
 					onmouseout="popUp(event,'sortImgAsc')" onmouseover="popUp(event,'sortImgAsc')"
 					action="#{orderBy.toggle}">
 					<h:graphicImage value="/images/sortdesc.gif" border="0" />
 				</a4j:commandLink>
-				
+
+				<!-- Sort Ascending  -->
 				<a4j:commandLink 
 					styleClass="${headerLinkClass}"
 				    reRender="${reRender}"
-					rendered="#{orderBy.desc and paginator.sorting}"
+					rendered="#{orderBy.desc and orderBy.enabled}"
 					onmouseout="popUp(event,'sortImgDesc')" onmouseover="popUp(event,'sortImgDesc')"
 					action="#{orderBy.toggle}">
 					<h:graphicImage value="/images/sortasc.gif" border="0"/>

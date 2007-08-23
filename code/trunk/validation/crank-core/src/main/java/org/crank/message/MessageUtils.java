@@ -47,48 +47,98 @@ public final class MessageUtils {
 	 * @return generated label name.
 	 */
 	public static String generateLabelValue(final String fieldName) {
-		StringBuffer buffer = new StringBuffer(fieldName.length() * 2);
-		char[] chars = fieldName.toCharArray();
-        boolean capNextChar = false;
-        boolean lastCharWasUpperCase = false;
+		
+		final StringBuffer buffer = new StringBuffer(fieldName.length() * 2);
+		
+        
+        class GenerationCommand {
+            boolean capNextChar = false;
+            boolean lastCharWasUpperCase = false;
+            boolean shouldContinue = true;
+            char[] chars = fieldName.toCharArray();
+            void processFieldName() {
 
-		for (int index = 0; index < chars.length; index++) {
-			char cchar = chars[index];
+            	for (int index = 0; index < chars.length; index++) {
+        			char cchar = chars[index];
+        			shouldContinue = true;
 
-			if (Character.isUpperCase(cchar)) {
-                
-                if (index!=0 && !lastCharWasUpperCase) {
-                    buffer.append(' ');
-                }
-                
-                lastCharWasUpperCase = true;                
-				buffer.append(cchar);
+        			processCharWasUpperCase(buffer, index, cchar);
+        			
+        			if (!shouldContinue) {
+        				continue;
+        			}
+                    
+        			processSpecialChars(buffer, cchar);
 
-				continue;
-			} else {
-                lastCharWasUpperCase = false;
+        			if (!shouldContinue) {
+        				continue;
+        			}
+
+                    cchar = processCapitalizeCommand(cchar);
+
+                    cchar = processFirstCharacterCheck(buffer, index, cchar);
+        			
+                    if (!shouldContinue) {
+        				continue;
+        			}
+
+        			buffer.append(cchar);
+        		}
+            	
             }
-            
-            if (cchar == '.') {
-                buffer.append(' ');
-                capNextChar = true;
-                continue;
-            }
-            
-            if (capNextChar) {
-                capNextChar = false;
-                cchar = Character.toUpperCase(cchar);
-            }
-
-			if (index == 0) {
-				cchar = Character.toUpperCase(cchar);
-				buffer.append(cchar);
-
-				continue;
+			private char processFirstCharacterCheck(final StringBuffer buffer,
+					int index, char cchar) {
+				/* Always capitalize the first character. */
+				if (index == 0) {
+					cchar = Character.toUpperCase(cchar);
+					buffer.append(cchar);
+					this.shouldContinue = false;        				
+				}
+				return cchar;
 			}
+			private char processCapitalizeCommand(char cchar) {
+				/* Capitalize the character. */
+				if (capNextChar) {
+				    capNextChar = false;
+				    cchar = Character.toUpperCase(cchar);
+				}
+				return cchar;
+			}
+			private void processSpecialChars(final StringBuffer buffer,
+					char cchar) {
+				/* If the character is '.' or '_' then append a space and mark
+				 * the next iteration to capitalize.
+				 */
+				if (cchar == '.' || cchar == '_') {
+				    buffer.append(' ');
+				    capNextChar = true;
+				    this.shouldContinue = false;
+				}
+			}
+			private void processCharWasUpperCase(final StringBuffer buffer,
+					int index, char cchar) {
+				/* If the character is uppercase, append a space and keep track
+				 * that the last character was uppercase for the next iteration.
+				 */
+				if (Character.isUpperCase(cchar)) {
+				    
+				    if (index!=0 && !lastCharWasUpperCase) {
+				        buffer.append(' ');
+				    }
+				    
+				    lastCharWasUpperCase = true;                
+					buffer.append(cchar);
 
-			buffer.append(cchar);
-		}
+					this.shouldContinue = false;
+				} else {
+				    lastCharWasUpperCase = false;
+				}
+			}
+        }
+
+        GenerationCommand gc = new GenerationCommand();
+        gc.processFieldName();
+        
 
 		return buffer.toString();
 	}

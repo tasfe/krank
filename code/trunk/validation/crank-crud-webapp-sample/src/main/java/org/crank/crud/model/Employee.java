@@ -1,6 +1,5 @@
 package org.crank.crud.model;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,10 +17,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 import org.crank.annotations.validation.Email;
-import org.crank.annotations.validation.Length;
 import org.crank.annotations.validation.LongRange;
 import org.crank.annotations.validation.Phone;
-import org.crank.annotations.validation.ProperNoun;
 import org.crank.annotations.validation.Required;
 import org.crank.crud.model.PersistedFile;
 import org.hibernate.annotations.Cascade;
@@ -40,19 +37,14 @@ import org.hibernate.annotations.Cascade;
         @NamedQuery( name = "Employee.findExcellentEmployees", query = "SELECT o FROM Employee o  WHERE  o.rank = org.crank.crud.model.EmployeeRank.EXCELLENT" )
 
 } )
-public class Employee implements Serializable {
+public class Employee extends Person {
 
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
     private Long id;
 
-    @Column( nullable = false, length = 32 )
-    private String firstName;
 
-    private String lastName;
 
-    @Column( length = 150 )
-    private String description;
 
     private boolean active;
 
@@ -111,16 +103,6 @@ public class Employee implements Serializable {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    @Required
-    @ProperNoun
-    //@Length( min = 2, max = 35 )
-    public void setFirstName( String firstName ) {
-        this.firstName = firstName;
-    }
 
     public Department getDepartment() {
         return department;
@@ -157,16 +139,6 @@ public class Employee implements Serializable {
         this.numberOfPromotions = numberOfPromotions;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    @Required
-    @ProperNoun
-    @Length( min = 2, max = 35 )
-    public void setLastName( String lastName ) {
-        this.lastName = lastName;
-    }
 
     public EmployeeStatus getStatus() {
         return status;
@@ -200,13 +172,6 @@ public class Employee implements Serializable {
         this.tasks = tasks;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription( String description ) {
-        this.description = description;
-    }
 
     public String getEmail() {
         return email;

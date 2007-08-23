@@ -15,7 +15,7 @@ public class EmployeeDaoTest {
 //        applicationContext = new ClassPathXmlApplicationContext( "org/crank/jpasandbox/applicationContext.xml" );
 //    }
 //    
-//    @Test
+//    @TestThis
 //    public void testCreateObject() {
 //        EmployeeDao employeeDao = (EmployeeDao) applicationContext.getBean( "employeeDao" );
 //        Employee employee = new Employee();

@@ -11,7 +11,10 @@ import javax.persistence.ManyToOne;
 @Entity
 public class LineItem {
 	
-	@ManyToOne (cascade={CascadeType.MERGE})
+	/* This works for Hibernate. */
+	//@ManyToOne (cascade={CascadeType.MERGE})
+	/* This is a safer bet for more than one JPA implementation: TopLink, JODO, etc.. */
+	@ManyToOne (cascade={CascadeType.MERGE, CascadeType.PERSIST})
 	//@ManyToOne ()
 	private Order order;
 

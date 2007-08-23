@@ -38,24 +38,15 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     }
     
     @Test
-    public void testCreateObject() {
-
-        Employee employee = new Employee();
-        employee.setAge( 5 );
-        employee.setDescription( "Ugly" );
-        employee.setFirstName( "Joe" );
-        employee.setLastName( "Barone" );
-        employee.setNumberOfPromotions( -1 );
-        employee.setStatus( EmployeeStatus.HOURLY );
-//        Department department = new Department();
-//        department.setName( "Losers" );
-//        department.addEmployee( employee );
-//        departmentDao.create( department );
-        employeeDao.create( employee );
-        assert employee.getId() != null && employee.getId() > 0;
-        employeeDao.delete(employee.getId());
+    public void testLazy() {
+        List<Department> departments = departmentDao.find();
+        assert departments.size() > 0;
+        Department department = departments.get( 0 );
+        assert department != null;
+        List<Employee> employees = department.getEmployees();
+        assert employees.size() > 0;
     }
-
+    
     @Test
     public void testDeleteObject() throws Exception {
         Employee employee = (Employee) employeeDao.read( 1L );
@@ -66,8 +57,6 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         AssertJUnit.assertNull( employee );
         initPersistenceStuff();
     }
-
-
 
     @Test
     public void testFetchWithOrderBy() throws Exception {

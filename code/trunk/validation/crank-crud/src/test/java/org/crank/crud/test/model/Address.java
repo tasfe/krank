@@ -1,11 +1,14 @@
 package org.crank.crud.test.model;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
 public class Address {
     
+    @Column (length=150)
     private String line1;
+    @Column (length=150)
     private String line2;
     private String zipCode;
     public String getLine1() {

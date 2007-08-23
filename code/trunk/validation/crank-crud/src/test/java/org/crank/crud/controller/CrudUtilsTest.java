@@ -28,10 +28,10 @@ public class CrudUtilsTest {
 
     @Test()
     public void testIsLargeText() {
-        assertFalse(CrudUtils.isLargeText( Employee.class, "address.line1"));
         assertFalse(CrudUtils.isLargeText( Employee.class, "firstName"));
         assertFalse(CrudUtils.isLargeText( Employee.class, "numberOfPromotions"));        
         assertTrue(CrudUtils.isLargeText( Employee.class, "description"));
+    	assertTrue(CrudUtils.isLargeText( Employee.class, "address.line1"));
 
     }
 

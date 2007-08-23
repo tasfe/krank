@@ -3,6 +3,8 @@ package org.crank.core;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -74,7 +76,69 @@ public class TypeUtils {
          }
     }
 
-    private static PropertyDescriptor doGetPropertyDescriptor( final Class<?> type, final String propertyName ) {
+    public static Field getField( final Class<?> type, final String fieldName ) {
+        if (!fieldName.contains( "." )) {
+            return doFindFieldInHeirarchy( type, fieldName );
+        } else {
+            String [] fieldNames = fieldName.split( "[.]" );
+            Class<?> clazz = type;
+            Field  field=null;
+            for (String fName : fieldNames) {
+                field = doFindFieldInHeirarchy( clazz, fName );
+                if (field == null) {
+                    return null;
+                }
+                clazz = field.getType();
+            }
+            return field;
+         }
+    }
+
+    private static Field doFindFieldInHeirarchy(Class<?> clazz, String propertyName) {
+        Field field = doGetField(clazz, propertyName);
+        
+        Class<?> sclazz = clazz.getSuperclass();
+        if (field == null) {
+	        while (true) {
+	        	if (sclazz!=null) {
+	        		field = doGetField(sclazz, propertyName);
+	        		sclazz = sclazz.getSuperclass();
+	        	}
+	        	if (field!=null) {
+	        		break;
+	        	}
+	        	if (sclazz==null) {
+	        		break;
+	        	}
+	        }
+        }
+        return field;
+    }
+
+    private static Field doGetField(Class<?> clazz, String fieldName) {
+        Field field = null;
+        try {
+            field = clazz.getDeclaredField( fieldName );
+        } catch (SecurityException se) {
+            field = null;
+        } catch (NoSuchFieldException nsfe) {
+            field = null;
+        }
+        if (field == null) {
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field f : fields) {
+                if (f.getName().equals( fieldName )) {
+                    field = f;
+                }
+            }
+        }        
+        if (field != null) {
+            field.setAccessible( true );
+        }
+        return field;
+	}
+
+	private static PropertyDescriptor doGetPropertyDescriptor( final Class<?> type, final String propertyName ) {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo( type );
             PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();

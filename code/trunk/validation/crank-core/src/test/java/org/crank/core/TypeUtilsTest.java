@@ -6,7 +6,12 @@ import junit.framework.TestCase;
 
 public class TypeUtilsTest extends TestCase {
     
-    public static class Foo {
+    public static class SuperFoo {
+        private String bar;
+
+    }
+
+	public static class Foo extends SuperFoo{
         String name;
 
         public String getName() {
@@ -59,6 +64,11 @@ public class TypeUtilsTest extends TestCase {
     protected void setUp() throws Exception {
     }
 
+
+    public void testGetField() {
+        assertNotNull(TypeUtils.getField(Test.class, "theFoo.name" ));
+        assertNotNull(TypeUtils.getField(Test.class, "theFoo.bar" ));
+    }
 
     public void testGetProperyDescriptor() {
         assertNotNull(TypeUtils.getPropertyDescriptor( Test.class, "theFoo.name" ));

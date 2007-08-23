@@ -110,15 +110,7 @@ public class AnnotationUtils {
     }
     
     private static Annotation[] findFieldAnnotations(Class<?> clazz, String propertyName) {
-        Field field = findFieldForProperty(clazz, propertyName);
-        
-        
-        while (field == null) {
-        	Class<?> sclazz = clazz.getSuperclass();
-        	if (sclazz!=null) {
-        		field = findFieldForProperty(sclazz, propertyName);
-        	}
-        }
+        Field field = TypeUtils.getField(clazz, propertyName);        
         if (field==null) {
             return new Annotation[] {};
         }
@@ -126,29 +118,6 @@ public class AnnotationUtils {
         return annotations;
     }
 
-    private static Field findFieldForProperty(Class<?> clazz, String propertyName) {
-        Field field = null;
-        try {
-            field = clazz.getDeclaredField( propertyName );
-        } catch (SecurityException se) {
-            field = null;
-        } catch (NoSuchFieldException nsfe) {
-            field = null;
-        }
-        if (field == null) {
-            Field[] fields = clazz.getDeclaredFields();
-            for (Field f : fields) {
-                if (f.getName().equals( propertyName )) {
-                    field = f;
-                }
-            }
-        }
-        
-        if (field != null) {
-            field.setAccessible( true );
-        }
-        return field;
-    }
     
     
 }

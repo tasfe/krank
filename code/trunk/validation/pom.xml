@@ -68,6 +68,10 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.3</version>
+				<configuration>
+                                  <excludedGroups>broken</excludedGroups>
+				</configuration>
+
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -159,13 +163,13 @@
 		<module>crank-core</module>
 		<module>crank-crud</module>
 		<module>crank-cache-web-test</module>
+		<module>crank-test-support</module>
 		<module>crank-jsf-support</module>
+		<module>crank-validation</module>
 		<module>crank-jsf-validation</module>
 		<module>crank-jsf-validation-sample</module>
 		<module>crank-springmvc-validation</module>
 		<module>crank-springmvc-validation-sample</module>
-		<module>crank-test-support</module>
-		<module>crank-validation</module>
 		<module>crank-crud-webapp-sample</module>
 	</modules>
 

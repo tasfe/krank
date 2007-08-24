@@ -5,7 +5,7 @@ import javax.persistence.EntityManagerFactory;
 import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
-import org.crank.crud.cache.CacheConfiguration;
+import org.crank.crud.cache.PreloadConfiguration;
 import org.crank.crud.cache.PreloadableCacheableGenericDaoJpa;
 import org.crank.crud.cache.CachingAdvisor;
 
@@ -29,15 +29,15 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
     		
     	}
     }
-    private CacheConfiguration cacheConfiguration;
+    private PreloadConfiguration preloadConfiguration;
 
 
     public void setPreloadEnabled(boolean preloadEnabled) {
         this.preloadEnabled = preloadEnabled;
     }
 
-    public void setCacheConfiguration(CacheConfiguration cacheConfiguration) {
-        this.cacheConfiguration = cacheConfiguration;
+    public void setCacheConfiguration(PreloadConfiguration preloadConfiguration) {
+        this.preloadConfiguration = preloadConfiguration;
     }
 
     public void setEntityManagerFactory( EntityManagerFactory entityManagerFactory ) {
@@ -83,11 +83,11 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
     }
 
     private GenericDaoJpa loadCachingDao() {
-        if (cacheConfiguration == null) {
+        if (preloadConfiguration == null) {
             throw new RuntimeException( "The Caching Configuration property must be set to use a caching dao." );
         }
         PreloadableCacheableGenericDaoJpa dao = new PreloadableCacheableGenericDaoJpa( bo );
-        dao.setCacheConfiguration( cacheConfiguration );
+        dao.setCacheConfiguration( preloadConfiguration );
         dao.setEntityManagerFactory( entityManagerFactory );
         processPreloading( dao );
         this.addAdvisor( new CachingAdvisor() );
@@ -105,7 +105,7 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
     }
 
     private boolean isCachingEnabled() {
-        return cacheConfiguration != null;
+        return preloadConfiguration != null;
     }
 
     public void setBo( Class bo ) {

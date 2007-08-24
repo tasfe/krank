@@ -6,7 +6,7 @@ package org.crank.crud.cache;
  * @author Chris Mathias
  * @version $Revision$
  */
-public class CacheConfiguration {
+public class PreloadConfiguration {
     private String cacheName;
     private boolean eternal = false;
     private boolean overflowToDisk = true;

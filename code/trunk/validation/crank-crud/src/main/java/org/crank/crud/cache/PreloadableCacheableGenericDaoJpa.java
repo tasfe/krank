@@ -11,10 +11,10 @@ import java.io.Serializable;
  * @author Chris Mathias
  * @version $Revision$
  */
-public class PreloadableCacheableGenericDaoJpa<T, PK extends Serializable> extends GenericDaoJpa implements CacheableGenericDao, PreloadableGenericDao {
+public class PreloadableCacheableGenericDaoJpa<T, PK extends Serializable> extends GenericDaoJpa implements PreloadableGenericDao {
 
     private int defaultPreloadCacheSize = 500;
-    private CacheConfiguration cacheConfiguration;
+    private PreloadConfiguration preloadConfiguration;
 
     public PreloadableCacheableGenericDaoJpa() {
     }
@@ -43,12 +43,12 @@ public class PreloadableCacheableGenericDaoJpa<T, PK extends Serializable> exten
         getJpaTemplate().findByNamedQuery(hql);
     }
 
-    public void setCacheConfiguration(CacheConfiguration cacheConfiguration) {
-        this.cacheConfiguration = cacheConfiguration;
+    public void setCacheConfiguration(PreloadConfiguration preloadConfiguration) {
+        this.preloadConfiguration = preloadConfiguration;
     }
 
-    public CacheConfiguration getCacheConfiguration() {
-        return cacheConfiguration;
+    public PreloadConfiguration getCacheConfiguration() {
+        return preloadConfiguration;
     }
 
 

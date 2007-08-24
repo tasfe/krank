@@ -27,7 +27,7 @@
             <value>org.crank.crud.test.model.Employee</value>
         </property>
         <property name="cacheConfiguration">
-            <bean class="org.crank.crud.cache.CacheConfiguration">
+            <bean class="org.crank.crud.cache.PreloadConfiguration">
                 <property name="preloadingRecordCount" value="10" />
             </bean>
         </property>

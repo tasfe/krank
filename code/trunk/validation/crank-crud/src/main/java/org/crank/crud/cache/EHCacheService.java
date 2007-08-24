@@ -29,7 +29,7 @@ public class EHCacheService implements CacheService {
         return setupMBeans;
     }
 
-    public void createCache( CacheConfiguration crankCacheConfiguration ) {
+    public void createCache( PreloadConfiguration crankCacheConfiguration ) {
         validateCacheInstance();
         if (!hasCache(crankCacheConfiguration.getCacheName())) {
             //otherwise add new cache.
@@ -60,7 +60,7 @@ public class EHCacheService implements CacheService {
         }
     }
     
-    private Cache createEHCacheWithConfiguration(CacheConfiguration crankCacheConfiguration) {
+    private Cache createEHCacheWithConfiguration(PreloadConfiguration crankCacheConfiguration) {
         Cache cache = new Cache(
                 crankCacheConfiguration.getCacheName(),
                 crankCacheConfiguration.getMaxElementsInMemory(),
@@ -77,7 +77,7 @@ public class EHCacheService implements CacheService {
         return cache;
     }
     
-    private MemoryStoreEvictionPolicy getMemoryStoreEvictionPolicy(CacheConfiguration crankCacheConfiguration) {
+    private MemoryStoreEvictionPolicy getMemoryStoreEvictionPolicy(PreloadConfiguration crankCacheConfiguration) {
         //TODO: make sure this actually works.
         return MemoryStoreEvictionPolicy.fromString( crankCacheConfiguration.getMemoryStoreEvictionPolicy() );
     }

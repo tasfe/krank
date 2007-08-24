@@ -3,7 +3,7 @@ package org.crank.crud.cache;
 import java.util.List;
 
 public interface CacheService {
-    void createCache(CacheConfiguration cacheConfiguration);
+    void createCache(PreloadConfiguration preloadConfiguration);
     void expireCache(String cacheName);
     boolean hasCache(String cacheName);
     List<String> listCaches();

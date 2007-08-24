@@ -50,17 +50,17 @@ public class EHCacheServiceTest extends DbUnitTestBase {
     
     @Test
     public void testCreateCache() {
-        CacheConfiguration cacheConfiguration = new CacheConfiguration();
-        cacheConfiguration.setCacheName( "FooBar" );
-        ehCacheService.createCache( cacheConfiguration );
+        PreloadConfiguration preloadConfiguration = new PreloadConfiguration();
+        preloadConfiguration.setCacheName( "FooBar" );
+        ehCacheService.createCache( preloadConfiguration );
         assert ehCacheService.hasCache( "FooBar" );
     }
     
     @Test
     public void testRemoveCache() {
-        CacheConfiguration cacheConfiguration = new CacheConfiguration();
-        cacheConfiguration.setCacheName( "FooBar" );
-        ehCacheService.createCache( cacheConfiguration );
+        PreloadConfiguration preloadConfiguration = new PreloadConfiguration();
+        preloadConfiguration.setCacheName( "FooBar" );
+        ehCacheService.createCache( preloadConfiguration );
         assert ehCacheService.hasCache( "FooBar" );
         ehCacheService.expireCache( "FooBar" );
         assert !ehCacheService.hasCache( "FooBar" );

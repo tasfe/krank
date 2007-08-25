@@ -17,6 +17,8 @@
 		<module>jpa-query-intro-solution</module>
 		<module>jpa-ejb3-transactions-solution</module>
 		<module>jpa-ejb3-aop-solution</module>
+		<module>jpa-cache-solution</module>
+		<!--<module>jpa-cache-jboss-solution</module>-->
 	</modules>
 	
 </project>

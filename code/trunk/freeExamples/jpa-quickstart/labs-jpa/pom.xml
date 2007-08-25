@@ -16,6 +16,8 @@
 		<module>jpa-introduction</module>
 		<module>jpa-ejb3-transactions</module>
 		<module>jpa-ejb3-aop</module>
+		<module>jpa-cache</module>
+		<!--<module>jpa-cache-jboss</module>-->
 	</modules>
 
 </project>

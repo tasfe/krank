@@ -13,29 +13,24 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 
 @Entity (name="In2Subject")
 @Inheritance (strategy=InheritanceType.TABLE_PER_CLASS)
+@SequenceGenerator(name="SUBJECT_SEQ", 
+		initialValue=1, allocationSize=10)
 public abstract class Subject implements Serializable {
-
-	private Long id;
-	private Set<Role> roles;
-	private String name;
-	private ContactInfo contactInfo;
-
 	@Id @GeneratedValue (strategy=GenerationType.SEQUENCE)
 	@Column(name="SUBJECT_ID")
 	public Long getId() {
 		return id;
 	}
-	
 	@Column (name="SUBJECT_NAME")
 	public String getName() {
 		return name;
 	}
-	
 	@Transient
 	public Set<Role> getRoles() {
 		if (roles == null) {
@@ -43,7 +38,6 @@ public abstract class Subject implements Serializable {
 		}
 		return roles;
 	}
-	
 	@OneToOne(cascade={CascadeType.ALL})
 	@JoinColumn(name="SUBJECT_CONTACT_INFO_ID")
 	public ContactInfo getContactInfo() {
@@ -51,6 +45,10 @@ public abstract class Subject implements Serializable {
 	}
 
 	
+	private Long id;
+	private Set<Role> roles;
+	private String name;
+	private ContactInfo contactInfo;
 
 	public Subject (String name, ContactInfo contactInfo) {
 		this.name = name;

@@ -31,8 +31,8 @@ public abstract class Subject implements Serializable {
 	private String name;
 	
 	@ManyToMany(fetch=FetchType.EAGER)
-	@JoinTable(name="IN_GROUP_ROLE", 
-			    joinColumns={@JoinColumn(name="FK_GROUP_ID")},
+	@JoinTable(name="IN_SUBJECT_ROLE", 
+			    joinColumns={@JoinColumn(name="FK_SUBJECT_ID")},
 				inverseJoinColumns={@JoinColumn(name="FK_ROLE_ID")})	
 	private Set<Role> roles;
 	

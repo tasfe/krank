@@ -29,7 +29,8 @@ public class ContactInfo {
 	@MapKey(name="name")
 	private Map<String, PhoneNumber> phoneNumbers; 
 
-	@OneToOne(mappedBy="contactInfo")
+	@OneToOne()
+	@JoinColumn(name="SUBJECT_ID")
 	private Subject subject;
 	
 	

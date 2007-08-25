@@ -20,7 +20,7 @@ import org.hibernate.annotations.CacheModeType;
 @Entity
 @NamedQueries( {
 		@NamedQuery(name = "getUsers", query = "SELECT u FROM User u ORDER BY u.name ASC", 
-					hints={@QueryHint(name="org.hibernate.CacheMode", value="NORMAL")}),
+					hints={@QueryHint(name="org.hibernate.CacheMode" value="NORMAL")}),
 		
 })
 @org.hibernate.annotations.NamedQueries({

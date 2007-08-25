@@ -22,6 +22,16 @@ import javax.persistence.Transient;
 @SequenceGenerator(name="SUBJECT_SEQ", 
 		initialValue=1, allocationSize=10)
 public abstract class Subject implements Serializable {
+
+	private ContactInfo contactInfo;	
+	
+	@OneToOne(cascade={CascadeType.ALL})
+	@JoinColumn(name="SUBJECT_CONTACT_INFO_ID")
+	public ContactInfo getContactInfo() {
+		return contactInfo;
+	}
+
+	
 	@Id @GeneratedValue (strategy=GenerationType.SEQUENCE)
 	@Column(name="SUBJECT_ID")
 	public Long getId() {
@@ -38,17 +48,11 @@ public abstract class Subject implements Serializable {
 		}
 		return roles;
 	}
-	@OneToOne(cascade={CascadeType.ALL})
-	@JoinColumn(name="SUBJECT_CONTACT_INFO_ID")
-	public ContactInfo getContactInfo() {
-		return contactInfo;
-	}
 
 	
 	private Long id;
 	private Set<Role> roles;
 	private String name;
-	private ContactInfo contactInfo;
 
 	public Subject (String name, ContactInfo contactInfo) {
 		this.name = name;

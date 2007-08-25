@@ -20,7 +20,9 @@ public class UserDaoImpl implements UserDao {
 	@Resource EJBContext ejbContext;
 
 	private EntityManager createEntityManager() {
-		EntityManager entityManager = (EntityManager) ejbContext.lookup("java:/EntityManagers/security-domain");
+		EntityManager entityManager = 
+			(EntityManager) ejbContext
+				.lookup("java:/EntityManagers/security-domain");
 		return entityManager;
 	}
 	

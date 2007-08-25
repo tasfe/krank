@@ -24,15 +24,13 @@ public class ContactInfo {
 	@GeneratedValue
 	private Long id;
 
+	@OneToOne(mappedBy="contactInfo")
+	private Subject subject;
+
 	@OneToMany(cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn(name="FK_CONTACT_INFO")
 	@MapKey(name="name")
 	private Map<String, PhoneNumber> phoneNumbers; 
-
-	@OneToOne(mappedBy="contactInfo")
-	private Subject subject;
-	
-	
 
 	public void addPhoneNumber(PhoneNumber phoneNumber){
 		if (phoneNumbers == null) {

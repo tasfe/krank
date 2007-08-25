@@ -13,13 +13,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Table(name="IN2_USER")
-@Entity(name="In2User")
+@Table(name="IN2_USER") @Entity(name="In2User")
 @AttributeOverrides (
 		value={@AttributeOverride(name="name", 
 				column=@Column(name="USER_NAME"))})
 public class User extends Subject {
-
 	private String email;	
 	private Group parentGroup;
 
@@ -34,10 +32,11 @@ public class User extends Subject {
 		return parentGroup;
 	}
 
-	@ManyToMany(fetch=FetchType.EAGER, targetEntity=Role.class)
+	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name="IN2_USER_ROLE", 
-			    joinColumns={@JoinColumn(name="FK_USER_ID")},
-				inverseJoinColumns={@JoinColumn(name="FK_U_ROLE_ID")})	
+       joinColumns={@JoinColumn(name="FK_USER_ID")},
+       inverseJoinColumns={@JoinColumn(
+    		                name="FK_U_ROLE_ID")})	
 	public Set<Role> getUserRoles() {
 		return super.getRoles();
 	}

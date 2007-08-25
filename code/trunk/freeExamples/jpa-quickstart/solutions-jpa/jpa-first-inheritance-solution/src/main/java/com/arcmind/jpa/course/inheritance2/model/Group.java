@@ -21,14 +21,13 @@ import javax.persistence.Table;
 @NamedQuery(name = "in2.loadGroup", 
 		query = "select group from In2Group "
 	+ " group where group.name = :name")	
+	
 @Table(name="IN2_GROUP")
 @Entity(name="In2Group")
 @AttributeOverrides (
 		value={@AttributeOverride(name="name", 
-				column=@Column(name="USER_NAME"))})
+				column=@Column(name="GROUP_NAME"))})
 public class Group extends Subject{
-
-
 	private Set<User> users;
 
 	@OrderBy("name ASC")
@@ -40,12 +39,6 @@ public class Group extends Subject{
 		}
 		return users;
 	}
-
-	public void setUsers(Set<User> users) {
-		this.users = users;
-	}
-
-	
 	@ManyToMany(fetch=FetchType.EAGER, targetEntity=Role.class)
 	@JoinTable(name="IN2_GROUP_ROLE", 
 			    joinColumns={@JoinColumn(name="FK_GROUP_ID")},
@@ -53,6 +46,12 @@ public class Group extends Subject{
 	public Set<Role> getGroupRoles() {
 		return super.getRoles();
 	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
+
+	
 
 	public void setGroupRoles(Set<Role> roles) {
 		super.setRoles(roles);

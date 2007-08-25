@@ -22,9 +22,15 @@ import javax.persistence.Table;
 @Entity(name="In2ContactInfo")
 public class ContactInfo {
 
+	private Subject subject;
+	
+	@OneToOne(mappedBy="contactInfo")
+	public Subject getSubject() {
+		return subject;
+	}
+	
 	private Long id;
 	private Map<String, PhoneNumber> phoneNumbers; 
-	private Subject subject;
 	private String firstName;
 	private String lastName;
 	private Address address;
@@ -117,10 +123,6 @@ public class ContactInfo {
 		this.workAddress = workAddress;
 	}
 
-	@OneToOne(mappedBy="contactInfo")
-	public Subject getSubject() {
-		return subject;
-	}
 
 	public void setSubject(Subject subject) {
 		this.subject = subject;

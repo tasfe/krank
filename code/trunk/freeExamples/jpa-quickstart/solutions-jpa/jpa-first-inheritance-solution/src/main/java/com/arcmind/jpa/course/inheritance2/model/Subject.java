@@ -15,17 +15,15 @@ import javax.persistence.Transient;
 
 @MappedSuperclass
 public abstract class Subject implements Serializable {
-
 	private Long id;
 	private Set<Role> roles;
 	private String name;
 	private ContactInfo contactInfo;
-
+	
 	@Id @GeneratedValue () @Column(name="SUBJECT_ID")
 	public Long getId() {
 		return id;
 	}
-	
 	@Column (name="SUBJECT_NAME")
 	public String getName() {
 		return name;

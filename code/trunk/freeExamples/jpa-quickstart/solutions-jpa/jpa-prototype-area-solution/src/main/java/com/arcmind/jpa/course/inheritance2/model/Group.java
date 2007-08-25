@@ -25,7 +25,7 @@ import javax.persistence.Table;
 @Entity(name="In2Group")
 @AttributeOverrides (
 		value={@AttributeOverride(name="name", 
-				column=@Column(name="USER_NAME"))})
+				column=@Column(name="GROUP_NAME"))})
 public class Group extends Subject{
 
 

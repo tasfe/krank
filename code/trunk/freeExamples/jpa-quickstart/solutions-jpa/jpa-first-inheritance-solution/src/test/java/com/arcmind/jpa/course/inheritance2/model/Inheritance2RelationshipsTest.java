@@ -19,7 +19,7 @@ public class Inheritance2RelationshipsTest extends TestCase {
 
 	private String[] roles = new String[] { "ADMIN", "USER", "SUPER_USER" };
 
-	private void crreateRoles() throws Exception {
+	private void createRoles() throws Exception {
 		/* Setup the roles. */
 		execute(new TransactionTemplate() {
 			public Object execute() {
@@ -43,7 +43,7 @@ public class Inheritance2RelationshipsTest extends TestCase {
 				.createEntityManagerFactory("security-domain");
 
 		deleteRoles();
-		crreateRoles();
+		createRoles();
 
 	}
 
@@ -78,7 +78,7 @@ public class Inheritance2RelationshipsTest extends TestCase {
 		try {
 			deleteRoles();
 		} catch (Exception ex) {
-			destroyDB();
+			//destroyDB();
 		}
 
 		entityManager = null;

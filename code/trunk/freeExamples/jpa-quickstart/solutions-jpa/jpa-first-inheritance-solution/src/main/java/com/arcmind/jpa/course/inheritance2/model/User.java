@@ -2,6 +2,8 @@ package com.arcmind.jpa.course.inheritance2.model;
 
 import java.util.Set;
 
+import javax.persistence.AssociationOverrides;
+import javax.persistence.AssociationOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
@@ -17,7 +19,13 @@ import javax.persistence.Table;
 @AttributeOverrides (
 		value={@AttributeOverride(name="name", 
 				column=@Column(name="USER_NAME"))})
+@AssociationOverrides (value={
+		   @AssociationOverride(name="contactInfo",
+		     joinColumns={@JoinColumn(name="USER_TO_CONTACT_INFO")})
+		  }
+		)
 public class User extends Subject {
+	
 	private String email;	
 	private Group parentGroup;
 

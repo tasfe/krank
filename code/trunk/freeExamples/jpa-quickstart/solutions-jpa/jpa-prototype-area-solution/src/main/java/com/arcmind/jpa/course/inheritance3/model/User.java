@@ -13,7 +13,6 @@ import javax.persistence.Table;
 public class User extends Subject {
 	@Column (name="USER_EMAIL")
 	private String email;
-	
 
 	@ManyToOne ()
 	@JoinColumn(name="FK_GROUP_ID")	
@@ -52,3 +51,8 @@ public class User extends Subject {
 		this.email = email;
 	}
 }
+//@AssociationOverrides (value={
+//		   @AssociationOverride(name="contactInfo",
+//		     joinColumns={@JoinColumn(name="USER_ID")})
+//		  }
+//		)

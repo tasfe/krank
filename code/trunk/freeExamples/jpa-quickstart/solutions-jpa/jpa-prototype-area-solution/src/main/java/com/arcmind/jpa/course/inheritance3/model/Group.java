@@ -15,13 +15,16 @@ import javax.persistence.Table;
 @NamedQuery(name = "in3.loadGroup", 
 		query = "select group from In3Group "
 	+ " group where group.name = :name")	
+
 @Table(name="IN3_GROUP")
 @Entity(name="In3Group")
 @PrimaryKeyJoinColumn(name="GROUP_ID")
 public class Group extends Subject{
 
-
-	//NOTE @OrderBy("name ASC") We add to remove this b/c the name is in the Subject table not the user table.
+	/* NOTE @OrderBy("name ASC") was removed
+	 * We had to remove this because name field is 
+	 * in the Subject table not the user table.
+	 */
 	@OneToMany(mappedBy="parentGroup",
 		cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	private Set<User> users;

@@ -21,22 +21,21 @@ import javax.persistence.Table;
 @Table (name="IN3_SUBJECT")
 @Inheritance (strategy=InheritanceType.JOINED)
 public abstract class Subject implements Serializable {
-
 	@Id @GeneratedValue @Column(name="SUBJECT_ID")
 	private Long id;
 	
-	@Column (name="SUBJECT_NAME")
-	private String name;
+	@OneToOne(cascade={CascadeType.ALL}, mappedBy="subject")
+	private ContactInfo contactInfo;
 	
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name="IN3_SUBJECT_ROLE", 
 			    joinColumns={@JoinColumn(name="FK_SUBJECT_ID")},
 				inverseJoinColumns={@JoinColumn(name="FK_ROLE_ID")})	
 	private Set<Role> roles;
+
+	@Column (name="SUBJECT_NAME")
+	private String name;
 	
-	@OneToOne(cascade={CascadeType.ALL})
-	@JoinColumn(name="SUBJECT_CONTACT_INFO_ID")
-	private ContactInfo contactInfo;
 	
 	public Subject (String name, ContactInfo contactInfo) {
 		this.name = name;

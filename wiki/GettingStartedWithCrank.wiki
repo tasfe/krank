@@ -23,12 +23,14 @@ Step 1: Clearing up the JSF FUD
  * [http://www-128.ibm.com/developerworks/library/j-jsf2/ JSF Lifecycle]
  * [http://www-128.ibm.com/developerworks/library/j-jsf3/ Conversion and Validation]
  * [http://www-128.ibm.com/developerworks/library/j-jsf4/ Intro to creating components]
+ * [http://www.arc-mind.com/courses/jsfCourse.html Shameless plug JSF Course might help as well]
 
 Then to come up to speed on Facelets read this:
 
 Step 2: Facelets: 
  * [http://www-128.ibm.com/developerworks/java/library/j-facelets/ Intro to Facelets]
  * [http://www-128.ibm.com/developerworks/web/library/j-facelets2.html Advanced Facelets]
+ * [http://www.arc-mind.com/courses/jsfCourse.html Shameless plug Facelets is covered in ArcMinds JSF course]
 
 The last two article are very important because they discuss the design principles that back Crank. (Crank improves on them quite a bit, thanks in large part to Paul Tabor, the king of composition components).
 

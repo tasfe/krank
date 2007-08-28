@@ -6,8 +6,9 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
        
+       <!-- 
        <bean id="ehCacheService" class="org.crank.crud.cache.EHCacheService">
             <property name="setupMBeans" value="true" />
        </bean>
-     
+         -->
 </beans>

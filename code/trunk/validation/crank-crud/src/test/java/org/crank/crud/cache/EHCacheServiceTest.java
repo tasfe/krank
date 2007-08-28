@@ -32,11 +32,6 @@ public class EHCacheServiceTest extends DbUnitTestBase {
         return "data/Employee.xml";
     }
     
-    @AfterTest
-    public void shutdown() {
-        ehCacheService.stop();
-    }
-
     private EmployeeDAO preloadingEmployeeDao;
     private EHCacheService ehCacheService;
 
@@ -48,32 +43,4 @@ public class EHCacheServiceTest extends DbUnitTestBase {
         this.preloadingEmployeeDao = preloadingEmployeeDao;
     }
     
-    @Test
-    public void testCreateCache() {
-        PreloadConfiguration preloadConfiguration = new PreloadConfiguration();
-        preloadConfiguration.setCacheName( "FooBar" );
-        ehCacheService.createCache( preloadConfiguration );
-        assert ehCacheService.hasCache( "FooBar" );
-    }
-    
-    @Test
-    public void testRemoveCache() {
-        PreloadConfiguration preloadConfiguration = new PreloadConfiguration();
-        preloadConfiguration.setCacheName( "FooBar" );
-        ehCacheService.createCache( preloadConfiguration );
-        assert ehCacheService.hasCache( "FooBar" );
-        ehCacheService.expireCache( "FooBar" );
-        assert !ehCacheService.hasCache( "FooBar" );
-    }
-    
-    @Test
-    public void testHasCache() {
-        //from preloading employee dao should already have cache of org.crank.crud.test.model.Employee
-        assert ehCacheService.hasCache( "org.crank.crud.test.model.Employee" );
-    }
-    
-    @Test
-    public void testListCaches() {
-        assert ehCacheService.listCaches().size() > 0;
-    }
 }

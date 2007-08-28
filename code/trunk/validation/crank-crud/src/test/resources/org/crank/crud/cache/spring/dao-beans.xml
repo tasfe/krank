@@ -26,9 +26,14 @@
         <property name="bo">
             <value>org.crank.crud.test.model.Employee</value>
         </property>
-        <property name="cacheConfiguration">
+        <property name="preloadConfiguration">
             <bean class="org.crank.crud.cache.PreloadConfiguration">
                 <property name="preloadingRecordCount" value="10" />
+                <property name="childrenToInitialize">
+                    <list>
+                        <value>getDepartment</value>
+                    </list>
+                </property>
             </bean>
         </property>
     </bean>

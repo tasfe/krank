@@ -47,4 +47,8 @@ private void setUpEntityManager() {
     }
 }}}
 
+*Caveat Emptor:*
+Paul reminded me that OpenEntityManagerInTest stores the EntityManagerFactory in the TransactionSynchronizationManager.  It is assumed at this time that this implies that Spring transaction management must be configured.
+
+
 That's pretty much it!  Happy Testing.

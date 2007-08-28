@@ -1,0 +1,22 @@
+#summary Crank Validation Design Document
+
+== Introduction ==
+
+This document discusses the current design of the Crank Validation framework.
+Specifically it covers the base framework. It does not discuss the Spring MVC or JSF bindings. These will be covered in a seperate document.
+
+
+== Overview ==
+
+One of the main design principles behind Crank Validation is to allow for a rich set of validation metadata that can be read from annotations, property files, and a database.
+
+The data to configure a validation rule is seperate than the implementation that consumes it. This allows us to swap implementations of design rules to fit a specific set of business requirements. The swapping of one implementation vs another is done primarily with Spring's IoC container, but could easily be done with Guice or some custom IoC/DI container. 
+
+This is a feature that we have use extensibly to customize validation rules based on client's specific requirements. It is felt by the team that this is the only way to go. We can't imagine not using this approach, and don't understand validation frameworks that do not have this seperation of concern (as they usually have less oppurtunity for reuse).
+
+There is not a one to one mapping between Validation Metadata and its corresponding validation rule. This allow us to use compostion to write validation rules.
+
+
+== Reading Validation Metadata ==
+
+IN PROGRESS

@@ -9,8 +9,8 @@ If you have some static data - or any data you would like to preload into a cach
 
 Purpose:
 	Preloads data into second level cache on container startup (per configuration).  Note that in the current implementation entities MUST be annotated with @Cache to get preloaded/cached.
-		(configurable generic dao's now support spring-configured caching setup).
-		Tested only with EHCache so far.  EHCache 1.3.0 is required for JMX MBean integration.
+	(configurable generic dao's now support spring-configured caching setup).
+	Tested only with EHCache so far.  EHCache 1.3.0 is required for JMX MBean integration.
 	
 	Use GenericDaoFactory
 	
@@ -23,8 +23,8 @@ Purpose:
 	        <property name="bo">
 	            <value>org.crank.crud.test.model.Employee</value>
 	        </property>
-	        <property name="cacheConfiguration">
-	            <bean class="org.crank.crud.cache.CacheConfiguration">
+	        <property name="preloadConfiguration">
+	            <bean class="org.crank.crud.cache.PreloadConfiguration">
 	                <property name="preloadingRecordCount" value="10" />
 	            </bean>
 	        </property>
@@ -32,17 +32,38 @@ Purpose:
 	}}}
 	It will get instanced as a PreloadableCacheableGenericDao rather than a standard GenericDao.
 	
-	From the above example, PreloadableCacheableGenericDao will load up the first ten records existing in the table the Employee pojo is mapped to.  Many other cache configuration options are available.
+	From the above example, PreloadableCacheableGenericDao will load up the first ten records existing in the table the Employee pojo is mapped to. 
 	
 	You can also configure the preload with some JQL.
 	{{{
-        <property name="cacheConfiguration">
-            <bean class="org.crank.crud.cache.CacheConfiguration">
+        <property name="preloadConfiguration">
+            <bean class="org.crank.crud.cache.PreloadConfiguration">
                 <property name="preloadingHQL" value="from Employee e where e." />
             </bean>
         </property>
 	}}}
-	
+
+        Finally, if you need to override the lazy-load behavior of one of your model objects, forcing a full load for the cached copies, you can use the initialize children option:
+        {{{
+        <bean id="preloadingEmployeeDao" parent="daoFactory" lazy-init="true">
+            <property name="interface">
+                 <value>org.crank.crud.test.dao.EmployeeDAO</value>
+            </property>
+            <property name="bo">
+                <value>org.crank.crud.test.model.Employee</value>
+            </property>
+            <property name="preloadConfiguration">
+                <bean class="org.crank.crud.cache.PreloadConfiguration">
+                    <property name="preloadingRecordCount" value="10" />
+                    <property name="childrenToInitialize">
+                        <list>
+                            <value>getDepartment</value>
+                        </list>
+                    </property>
+                </bean>
+            </property>
+        </bean>
+	}}}
 	EHCache support
 		To use with ehcache, you must configure your persistence.xml to use ehcache:
 {{{
@@ -59,12 +80,7 @@ Purpose:
 			
 [http://krank.googlecode.com/svn/code/trunk/validation/docs/images/caching_and_preload_base.jpg]
 
-  # TODO: Programatically create cache if no cache exists (meaning cache annotation was not available)
-  # TODO: Inspect POJO for @Cache annotation and overloaded cache name. (is this all hibernate specific?) 
-  # TODO: What to do if pojo has  @Cache annotation, and a cache name is specified that conflicts with the annotated cache name overload?
 	
-	
-
 
 
 

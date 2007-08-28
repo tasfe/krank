@@ -1,0 +1,62 @@
+#summary For people who are new to JSF
+
+= Introduction =
+
+This is a short guide to get you moving in the Crank direction and get the most out of Crank.
+
+= Details =
+
+First, thanks for looking into Crank. I think you will be pleasantly surprised.
+
+
+The idea is to come up to speed with Crank.
+
+Think of a simple object model and then map it to Crank. Make it up. This is a prototype. We plan on throwing it away. 
+
+
+Before you get started (proposed steps) you will want a little background on the Crank project. If you are using the JSF Crud development model, you need to understand JSF, Facelets, Crank and Ajax4JSF.
+
+To get an understanding of JSF read these four articles:
+
+Step 1: Clearing up the JSF FUD 
+[http://www-128.ibm.com/developerworks/library/j-jsf1/ Intro to JSF]
+[http://www-128.ibm.com/developerworks/library/j-jsf2/ JSF Lifecycle]
+[http://www-128.ibm.com/developerworks/library/j-jsf3/ Conversion and Validation]
+[http://www-128.ibm.com/developerworks/library/j-jsf4/ Intro to creating components]
+
+Then to come up to speed on Facelets read this:
+
+Step 2: Facelets: 
+http://www-128.ibm.com/developerworks/java/library/j-facelets/ 
+http://www-128.ibm.com/developerworks/web/library/j-facelets2.html
+
+The last two article are very important because they discuss the design principles that back Crank (they are written wrt Presto). (Crank improves on them quite a bit.)
+
+Once you have the above under your belt please read about Crank itself
+
+Step 3 Crank: 
+http://code.google.com/p/krank/ Home page
+http://code.google.com/p/krank/wiki/CrankCrudIntro Introduction (should make a lot of sense based on Facelets articles)
+http://code.google.com/p/krank/wiki/CrankCrudDesignDocs Design of Crank Crud 
+
+
+Step 4: Manage some objects
+Then once you read the above, try to map a Form domain object, and Field domain objects to a CRUD listings.
+
+You can download the code from svn at https://krank.googlecode.com/svn/code/trunk/validation/. (Don't use the binary snapshot)
+
+You need maven 2 to build any of our apps.
+
+Base you example on the sandbox http://krank.googlecode.com/svn/code/trunk/validation/crank-crud-webapp-sample/
+
+Step 5: Try to use tab panel and tree from rich faces (or tomakawk, or ice faces... start with richfaces since it builds on Ajax4JSF)
+
+https://ajax4jsf.dev.java.net/
+
+http://livedemo.exadel.com/richfaces-demo/
+
+Try managing the Forms as a node, with fields as child nodes. When you pick a form node it allows you to configure form properties (and the other stuff that is in the panel).
+
+Don't worry about the real object model. Simplify it as much as you need to and get familar with the technique.
+
+--Rick Hightower

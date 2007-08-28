@@ -1,4 +1,4 @@
-{{{OpenEntityManagerInTest complements OpenEntityManagerInView pattern}}}
+= {{{OpenEntityManagerInTest complements OpenEntityManagerInView pattern}}} =
 
 If you've felt the pain, you've seen the need.  Trying to get that unit test to pass with a lazy loading reference and it just won't do it?  parent.children.size() giving you endless grief in unit testing?  Here's the solution.
 

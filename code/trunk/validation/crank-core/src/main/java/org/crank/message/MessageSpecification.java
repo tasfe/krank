@@ -187,13 +187,7 @@ public class MessageSpecification implements Serializable {
     	if (key.startsWith(this.i18nMarker)) {
     		try {
     			key = key.substring(1, key.length()-1);
-                if (getSubject()!=null) {
-                    try {
-                        message = bundle.getString(key + "." + getSubject());
-                    } catch (MissingResourceException mre) {
-                        message = bundle.getString(key);                        
-                    }
-                }
+                message = lookupMessageInBundle(key, bundle, message);
     		} catch (MissingResourceException mre) {
     			message = key;
     		}
@@ -211,13 +205,7 @@ public class MessageSpecification implements Serializable {
     		if (key.contains(".")) {
                 try {
                     key = key.substring(1, key.length()-1);
-                    if (getSubject()!=null) {
-                        try {
-                            message = bundle.getString(key + "." + getSubject());
-                        } catch (MissingResourceException mre) {
-                            message = bundle.getString(key);                        
-                        }
-                    }
+                    message = lookupMessageInBundle(key, bundle, message);
                 } catch (MissingResourceException mre) {
                     message = key;
                 }
@@ -225,6 +213,20 @@ public class MessageSpecification implements Serializable {
     			message = key;
     		}
     	}
+		return message;
+	}
+
+	private String lookupMessageInBundle(String key, ResourceBundle bundle,
+			String message) {
+		if (getSubject()!=null) {
+		    try {
+		        message = bundle.getString(key + "." + getSubject());
+		    } catch (MissingResourceException mre) {
+		        message = bundle.getString(key);                        
+		    }
+		} else {
+			return bundle.getString(key);
+		}
 		return message;
 	}
 

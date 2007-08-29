@@ -46,7 +46,33 @@ Notice that the validation mappings are not mapped one to one with the number of
 	http://krank.googlecode.com/svn/wiki/img/annotation-validation.png
 	
 == Resolving Error Messages ==
-TBD
+
+The `ValidatorMessage` holds the detail and summary message for validation errors. A `FieldValidator` can produce many `ValidatorMessage`s and returns them via the `ValidatorMessageHolder` (ValidatorMessageHolder validate(Object fieldValue, String fieldLabel)). A `ValidatorMessageHolder` can be either a `ValidatorMessages` which is a group of `ValidationMessage`s or a `ValidationMessage` which is a single `ValidationMessage` illustrated in UML as follows:
+
+==== UML Class Diagram Showing Validation Annotations ====
+	http://krank.googlecode.com/svn/wiki/img/validation-message.png
+
+
+A `FieldValidator` produces `ValidationMessage`. Genereally classes that implement `FieldValidator` produces `ValidationMessage` by using a `MessageSpecification`. To simplify configuration, an `AbstractValidator` is a `MessageSpecification`. Most `FieldValidator` are subclasses of `AbstractValidator`. 
+
+The `MessageSpecification` contains information about how to generate a message.  The `MessageSpecification` knows how to create a message. The `MessageSpecification` will look up the message in the resource bundle if it starts with a "{" (called the I18n Marker). 
+
+The `MessageSpecification` uses `ResourceBundleLocator` to locate a `ResourceBundle`. How a `ResourceBundle` gets located varies for JSF, Spring and our internal custom work flow engine.
+
+If the `message` starts with an I18n Marker (`{`), generate the `key` into the `ResourceBundle`. The `key` is the `message` with the curly brackets pulled off (the '{' and '}' removed). Lookup `message` in the `ResourceBundle` using `subject` and the `key`, i.e., `subject.key`. If the `subject.key` is not found in the `ResourceBundle` then lookup up `message` just using the `key`. If the message key is still not found just return the key as the message. In the case of `FieldValidator`s the subject is the name of the field.
+
+Thus if the field is called `firstName` and the validator is called `required`. First the `message key` `firstName.validator.required` is looked up and then if the `message` is not found then the `message key` `validator.required` is looked up. 
+
+If the message does not have an I18n marker is not in the message, then the `MessageSpecification` still looks up the message in the `ResourceBundle` and if it is not found the original message is returned.
+
+If the `message` does not start with the I18n markers see if it has a '.' in it. If it has a dot, try to look it up using the same technique as before. If it is not found then just return the key as the message. If neither the I18n marker is found or a '.'. 
+
+The arguments for a `MessageSpecification` can be passed at runtime or configured in the application context (or the equivalent in Guice). If arguments are not passed at runtime, `MessageSpecification` checks to if there were arguments configured. If neither arguments are found, it generates an empty argument list. 
+
+The the argument list that is created is not the final argument list. If the subject is not null, a new argument list is created and the `subject`'s label is the first argument (for FieldValidators remember the subject is the field name). The `subject` label is looked up in the `ResourceBundle` and if it not found it is converted from a field name to a human readable name, i.e., if `firstName` is not found in the `ResourceBundle` it is automatically converted to `First Name`. (It gets converted with MessageUtils.getLabel(getSubject(), resourceBundleLocator.getBundle()));)) Lastly, the arguments are applied to the message to produce the I18n enabled message (MessageFormat.format(message, argumentList.toArray())).
+
+The following is illustrated with an activity diagram: 
+
 ==== UML Activity Diagram Showing Resolving Error Messages ====
 	http://krank.googlecode.com/svn/wiki/img/validation-error-message-resolution.png
 

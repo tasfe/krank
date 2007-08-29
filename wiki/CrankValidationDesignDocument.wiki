@@ -19,13 +19,15 @@ There is not a one to one mapping between Validation Metadata and its correspond
 
 == Reading Validation Metadata ==
 
-`ValidatorMetaDataReader` is an extention point for classes that need to read validation metadata.  There are currently three implmentations framework implementations for this, and a customer specific implementation (that reads the data out of a database for a custom workflow engine) as follows:
+`ValidatorMetaDataReader` is an extention point for reading validation metadata.  There are currently three implmentations framework implementations for this, and a customer specific implementation (that reads the data out of a database for a custom workflow engine) as follows:
 
  *  `PropertiesFileValidatorMetaDataReader` reads validation metadata from a Java properties file. 
  *  `AnnotationValidatorMetaDataReader` reads the validation metadata from Java 5 Annotation. 
  *  `ChainValidatorMetaDataReader` allows you to configure multiple readers
  
-We used `ChainValidatorMetaDataReader` on a project recently to allow validation rules to be written using Annotation, but overriden on a workflow basis based on validation metadata stored in a relational database.
 
-	http://code.google.com/p/krank/wiki/img/validation-metadata.png
+==== UML Diagram Showing Framework Readers ====
+	http://krank.googlecode.com/svn/wiki/img/validation-metadata.png
+	
+We used `ChainValidatorMetaDataReader` on a project recently to allow validation rules to be written using Annotation, but overriden on a workflow basis based on validation metadata stored in a relational database.
  

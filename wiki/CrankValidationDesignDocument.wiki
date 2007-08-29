@@ -77,17 +77,12 @@ The following is illustrated with an activity diagram:
 	http://krank.googlecode.com/svn/wiki/img/validation-error-message-resolution.png
 
 
+
 == Validation Metadata: Locating validation rules, Copying rule data from validation metadata to `FieldValidation` rules ==
 TBD
 ==== UML Activity Diagram Showing Validation Rule lookup ====
-	http://krank.googlecode.com/svn/wiki/img/validation-error-message-resolution.png
+	http://krank.googlecode.com/svn/wiki/img/validation-rule-resolution.png
 
 ==== UML Activity Diagram Showing Copying rule validation data to `FieldValidation` rules ====
 	http://krank.googlecode.com/svn/wiki/img/validation-data-to-field-validation.png
 
-
-== Composition validation logic ==
-TBD
-
-==== UML Activity Diagram Showing Composing Validation Rules ====
-	http://krank.googlecode.com/svn/wiki/img/validation-data-to-field-validation.png

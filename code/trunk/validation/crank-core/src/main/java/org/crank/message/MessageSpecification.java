@@ -198,7 +198,7 @@ public class MessageSpecification implements Serializable {
     			message = key;
     		}
     	} 
-    	/* If the message starts with the expresion marker
+    	/* If the message starts with the expression marker
     	 * resolve it as an Expression (Universal, JSF, OGNL, etc.)
     	 */
     	else if (key.startsWith(this.expressionMarker)) {

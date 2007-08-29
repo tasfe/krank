@@ -27,6 +27,5 @@ There is not a one to one mapping between Validation Metadata and its correspond
  
 We used `ChainValidatorMetaDataReader` on a project recently to allow validation rules to be written using Annotation, but overriden on a workflow basis based on validation metadata stored in a relational database.
 
-
- ./img/validation-metadata.png
-
+	http://code.google.com/p/krank/wiki/CrankValidationDesignDocument/img/validation-metadata.png
+ 

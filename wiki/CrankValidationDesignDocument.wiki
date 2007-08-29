@@ -26,8 +26,42 @@ There is not a one to one mapping between Validation Metadata and its correspond
  *  `ChainValidatorMetaDataReader` allows you to configure multiple readers
  
 
-==== UML Diagram Showing Framework Readers ====
+==== UML Class Diagram Showing Validaiton Framework Readers ====
 	http://krank.googlecode.com/svn/wiki/img/validation-metadata.png
 	
 We used `ChainValidatorMetaDataReader` on a project recently to allow validation rules to be written using Annotation, but overriden on a workflow basis based on validation metadata stored in a relational database.
  
+== Field Validation ==
+
+We designing field validation we first took a long hard look at other frameworks (WebWork, Tapestry, Spring etc.). None quite fit what we are trying to do and none fit our exact usage. That said, the `FieldValidation` framework relies heavily on the architecture and design of WebWork validation and Tapestry validations. It was inspired the most by those two frameworks. It adds the concept of composition validations. Out of the box it comes with many, many validation rules. One reason it has so many is because it leans on the DI container (Spring but could be Guice) and the composition pattern so you can configure many validation rules without writing code. 
+
+The heart of the Field validaiton framework is the `FieldValidation` interface and the `AbstractValidator` classes. The `CompositeValidator` implements the composition design pattern and let's you configure many validation rules out of other validation rules. There are several rules that simplify working with Regular expressions as well. Notice also the `CommonBridgeValidator` is a bridge to the Apache commons validation framework. You could easily write other bridges, thus allowing you favorite validation framework to use our flexible validation-metadata readers. Please read the comments in the UML diagram as follows:
+
+==== UML Class Diagram Showing Field Validation ====
+	http://krank.googlecode.com/svn/wiki/img/field-validation.png
+
+Notice that the validation mappings are not mapped one to one with the number of validation classes. 
+
+==== UML Class Diagram Showing Validation Annotations ====
+	http://krank.googlecode.com/svn/wiki/img/annotation-validation.png
+	
+== Resolving Error Messages ==
+TBD
+==== UML Activity Diagram Showing Resolving Error Messages ====
+	http://krank.googlecode.com/svn/wiki/img/validation-error-message-resolution.png
+
+
+== Validation Metadata: Locating validation rules, Copying rule data from validation metadata to `FieldValidation` rules ==
+TBD
+==== UML Activity Diagram Showing Validation Rule lookup ====
+	http://krank.googlecode.com/svn/wiki/img/validation-error-message-resolution.png
+
+==== UML Activity Diagram Showing Copying rule validation data to `FieldValidation` rules ====
+	http://krank.googlecode.com/svn/wiki/img/validation-data-to-field-validation.png
+
+
+== Composition validation logic ==
+TBD
+
+==== UML Activity Diagram Showing Composing Validation Rules ====
+	http://krank.googlecode.com/svn/wiki/img/validation-data-to-field-validation.png

@@ -14,9 +14,19 @@ The data to configure a validation rule is seperate than the implementation that
 
 This is a feature that we have use extensibly to customize validation rules based on client's specific requirements. It is felt by the team that this is the only way to go. We can't imagine not using this approach, and don't understand validation frameworks that do not have this seperation of concern (as they usually have less oppurtunity for reuse).
 
-There is not a one to one mapping between Validation Metadata and its corresponding validation rule. This allow us to use compostion to write validation rules.
+There is not a one to one mapping between Validation Metadata and its corresponding validation rule. This allows us to use compostion to write validation rules.
 
 
 == Reading Validation Metadata ==
 
-IN PROGRESS
+`ValidatorMetaDataReader` is an extention point for classes that need to read validation metadata.  There are currently three implmentations framework implementations for this, and a customer specific implementation (that reads the data out of a database for a custom workflow engine) as follows:
+
+ *  `PropertiesFileValidatorMetaDataReader` reads validation metadata from a Java properties file. 
+ *  `AnnotationValidatorMetaDataReader` reads the validation metadata from Java 5 Annotation. 
+ *  `ChainValidatorMetaDataReader` allows you to configure multiple readers
+ 
+We used `ChainValidatorMetaDataReader` on a project recently to allow validation rules to be written using Annotation, but overriden on a workflow basis based on validation metadata stored in a relational database.
+
+
+ ./img/validation-metadata.png
+

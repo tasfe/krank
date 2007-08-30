@@ -259,6 +259,8 @@ public class VersionAndLocksTest extends TestCase {
 		JpaUtils.commitTransactionAndCloseEntityManager();//commit here
 		
 		
+		
+		
 	}
 	
 	protected void setUp() throws Exception {

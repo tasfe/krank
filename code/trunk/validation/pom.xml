@@ -3,7 +3,7 @@
 	<groupId>org.crank</groupId>
 	<artifactId>crank-base</artifactId>
 	<packaging>pom</packaging>
-	<version>0.6</version>
+	<version>0.7-SNAPSHOT</version>
 	<name>Crank :: ROOT</name>
 	<url>http://maven.apache.org</url>
 	<prerequisites>
@@ -45,8 +45,8 @@
 	</developers>
 
 	<scm>
-		<connection>scm:svn:http://krank.googlecode.com/svn/code/tags/validation/mvn_release/crank-base-0.6</connection>
-		<developerConnection>scm:svn:https://krank.googlecode.com/svn/code/tags/validation/mvn_release/crank-base-0.6</developerConnection>
+		<connection>scm:svn:http://krank.googlecode.com/svn/code/trunk/validation</connection>
+		<developerConnection>scm:svn:https://krank.googlecode.com/svn/code/trunk/validation</developerConnection>
 	</scm>
 
 	<issueManagement>

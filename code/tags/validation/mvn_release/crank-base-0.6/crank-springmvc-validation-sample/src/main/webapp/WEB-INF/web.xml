@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+	<display-name>Spring MVC Crank Validation Example</display-name>
+	<description>Spring MVC Crank Validation Example</description>
+
+	<!--
+		- Note from Spring webapp-typical
+		- Location of the XML file that defines the root application context
+		- Applied by ContextLoaderListener.
+	-->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/applicationContext.xml</param-value>
+	</context-param>
+	<!--
+		- Note from Spring webapp-typical:
+		- Key of the system property that should specify the root directory of this
+		- web app. Applied by WebAppRootListener or Log4jConfigListener.
+	-->
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>web.root</param-value>
+	</context-param>
+
+	<!--
+		- Note from Spring webapp-typical	
+		- Loads the root application context of this web app at startup,
+		- by default from "/WEB-INF/applicationContext.xml".
+		- Use WebApplicationContextUtils.getWebApplicationContext(servletContext)
+		- to access it anywhere in the web application, outside of the framework.
+		-
+		- The root context is the parent of all servlet-specific contexts.
+		- This means that its beans are automatically available in these child contexts,
+		- both for getBean(name) calls and (external) bean references.
+	-->
+	<listener>
+		<listener-class>
+			org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>
+			org.springframework.web.context.request.RequestContextListener
+		</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>
+			org.crank.web.servlet.CrankListener
+		</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>Validator Servlet</servlet-name>
+		<servlet-class>
+			org.crank.web.validation.AjaxValidationServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<!--
+		- Note derived from Spring webapp-typical	 (slightly modified)
+		- Servlet that dispatches request to registered handlers (Controller implementations).
+		- Has its own application context, by default defined in "{servlet-name}-servlet.xml",
+		- i.e. "action-servlet.xml".
+		-
+		- A web app can contain any number of such servlets.
+		- Note that this web app has a shared root application context, serving as parent
+		- of all DispatcherServlet contexts.
+		- This is defined by the ContextLoaderListener above.
+	-->
+	<servlet>
+		<servlet-name>action</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>crankResource</servlet-name>
+		<servlet-class>
+			org.crank.web.validation.spring.support.ValidatorResourceLoaderServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>crankResource</servlet-name>
+		<url-pattern>*.crank</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>action</servlet-name>
+		<url-pattern>*.html</url-pattern>
+	</servlet-mapping>
+	
+	
+
+	
+
+
+	<servlet-mapping>
+		<servlet-name>Validator Servlet</servlet-name>
+		<url-pattern>*.validate</url-pattern>
+	</servlet-mapping>
+
+	<filter>
+		<filter-name>CrankWebContextFilter</filter-name>
+		<filter-class>org.crank.web.CrankWebContextFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>CrankWebContextFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<jsp-config>
+		<jsp-property-group>
+			<description></description>
+			<url-pattern>*.jspx</url-pattern>
+			<is-xml>true</is-xml>
+		</jsp-property-group>
+	</jsp-config>
+</web-app>

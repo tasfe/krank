@@ -42,7 +42,7 @@ The heart of the Field validation framework is the `FieldValidation` interface a
 ==== UML Class Diagram Showing Field Validation ====
 	http://krank.googlecode.com/svn/wiki/img/field-validation.png
 
-Notice that the validation annotations are not mapped one to one with the number of validation classes. 
+Notice that the validation annotations are not mapped one-to-one with the number of validation classes. 
 
 ==== UML Class Diagram Showing Validation Annotations ====
 	http://krank.googlecode.com/svn/wiki/img/annotation-validation.png

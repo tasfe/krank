@@ -10,15 +10,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 //import javax.persistence.Inheritance;
 //import javax.persistence.InheritanceType;
+import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
-@MappedSuperclass
+@Entity
 @Table (name="IN3_SUBJECT")
 //TODO Use Inheritance annotation with strategy JOINED
 public abstract class Subject implements Serializable {

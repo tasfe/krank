@@ -11,16 +11,16 @@ The document starts off talking about the Spring MVC and JSF neutral parts of th
 
 One of the main design principles behind Crank Validation is to allow for a rich set of validation metadata that can be read from annotations, property files, and a database.
 
-The data to configure a validation rule is separate than the implementation that consumes it. This allows us to swap implementations of design rules to fit a specific set of business requirements. The swapping of one implementation vs another is done primarily with Spring's IoC container, but could easily be done with Guice or some custom IoC/DI container. 
+The data to configure a validation rule is separate from the implementation that consumes it. This allows us to swap implementations of design rules to fit a specific set of business requirements. The swapping of one implementation for another is done primarily with Spring's IoC container, but could easily be done with Guice or some custom IoC/DI container. 
 
-This is a feature that we have used extensively to customize validation rules based on client's specific requirements. It is felt by the team that this is a good way to go. We rely heavily of the flexibility that this separation of concern provides.
+This is a feature that we have used extensively to customize validation rules based on client's specific requirements. It is felt by the team that this is a good way to go. We rely heavily on the flexibility that this separation of concern provides.
 
-There is not a one to one mapping between Validation Metadata and its corresponding validation rule. This allows us to use composition to write validation rules.
+There is not a one-to-one mapping between Validation Metadata and its corresponding validation rule. This allows us to use composition to write validation rules.
 
 
 == Reading Validation Metadata ==
 
-`ValidatorMetaDataReader` is an extension point for reading validation metadata.  There are currently three implementations framework, and a customer specific implementation (that reads the data out of a database for a custom workflow engine) as follows:
+`ValidatorMetaDataReader` is an extension point for reading validation metadata.  There are currently three implementations framework, (and a customer specific implementation that reads the data out of a database for a custom workflow engine) as follows:
 
  *  `PropertiesFileValidatorMetaDataReader` reads validation metadata from a Java properties file. 
  *  `AnnotationValidatorMetaDataReader` reads the validation metadata from Java 5 Annotation. 
@@ -30,7 +30,7 @@ There is not a one to one mapping between Validation Metadata and its correspond
 ==== UML Class Diagram Showing Validation Framework Readers ====
 	http://krank.googlecode.com/svn/wiki/img/validation-metadata.png
 	
-We used `ChainValidatorMetaDataReader` on a project recently to allow validation rules to be written using Annotation, but overridden on a workflow basis based on validation metadata stored in a relational database.
+We used `ChainValidatorMetaDataReader` on a project recently to allow validation rules to be written using Annotation, but overridden on a workflow basis, based on validation metadata stored in a relational database.
  
 == Field Validation ==
 

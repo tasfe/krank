@@ -10,6 +10,7 @@ import javax.persistence.EntityResult;
 import javax.persistence.FieldResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Version;
@@ -36,7 +37,6 @@ import javax.persistence.Version;
 				
 	)
 })
-
 public class DeletedTask implements Serializable {
 	
 	@Id @GeneratedValue

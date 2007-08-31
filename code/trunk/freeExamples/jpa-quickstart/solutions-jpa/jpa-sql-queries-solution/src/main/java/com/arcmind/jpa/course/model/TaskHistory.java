@@ -8,6 +8,7 @@ import javax.persistence.EntityResult;
 import javax.persistence.FieldResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Version;
@@ -37,6 +38,14 @@ import javax.persistence.Version;
 				
 	)
 })
+@NamedNativeQuery (name="peopleAndTasks",  resultSetMapping="TwoEntities",
+		query=" select p.id as pid, t.id as tid, p.name as pname, t.version as tversion, " +
+        " t.name as tname, t.estimate as est, t.actual as act " + 
+        " from Person p  " +
+        " inner join Person_Task tasks  on p.id=tasks.Person_id " +  
+        " inner join Task t  on tasks.tasks_id=t.id"
+
+)
 public class TaskHistory implements Serializable {
 	
 	@Id @GeneratedValue

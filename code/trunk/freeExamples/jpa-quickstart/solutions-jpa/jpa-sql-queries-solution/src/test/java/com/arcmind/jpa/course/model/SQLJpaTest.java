@@ -116,6 +116,19 @@ public class SQLJpaTest extends TestCase {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	public void testMoreThanOneEntityNamed() throws Exception {
+
+        
+		Query nativeQuery = entityManager.createNamedQuery("peopleAndTasks");
+
+		
+		List<Object[]> resultList = nativeQuery.getResultList();
+		for (Object[] row: resultList) {
+			System.out.printf("person=%s task=%s\n", row[0], row[1]);
+		}
+	}
+
 	protected void setUp() throws Exception {
 		createTasks();
 		JpaUtils.createEntityManagerAndStartTransaction();

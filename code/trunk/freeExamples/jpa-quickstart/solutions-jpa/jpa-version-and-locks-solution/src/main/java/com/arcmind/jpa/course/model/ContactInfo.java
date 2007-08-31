@@ -48,7 +48,7 @@ public class ContactInfo extends Identifiable {
 			@AttributeOverride(name = "line1", column = @Column(name = "work_Address_Line1")),
 			@AttributeOverride(name = "line2", column = @Column(name = "work_Address_Line2")),
 			@AttributeOverride(name = "zip", column = @Column(name = "work_Address_Zip")),
-			@AttributeOverride(name = "state", column = @Column(name = "work_Address_State")), })
+			@AttributeOverride(name = "state", column = @Column(name = "work_Address_State"))})
 	private Address workAddress;
 
 	private String firstName;

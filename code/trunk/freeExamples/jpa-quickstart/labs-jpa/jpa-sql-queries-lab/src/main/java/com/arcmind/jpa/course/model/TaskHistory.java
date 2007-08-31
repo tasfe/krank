@@ -25,22 +25,19 @@ import javax.persistence.Version;
 								@FieldResult(name = "name", column = "tname"),
 								@FieldResult(name = "version", column = "tversion")
 						}
-				),
-				@EntityResult(entityClass = Person.class, 
-						fields={
-								@FieldResult(name = "id", column = "pid"),
-								@FieldResult(name = "name", column = "pname")
-						}
-				),
+				)
+				//TODO Add @EntityResult Person.class
+				//HINT name = "id", column = "pid"
+				//HINT name = "name", column = "pname"
 	}	
 )})
-@NamedNativeQuery (name="peopleAndTasks",  resultSetMapping="TwoEntities",
-  query="select p.id as pid, t.id as tid, p.name as pname, " +
-	" t.version as tversion, t.name as tname, t.estimate as est, " +
-	" t.actual as act " + 
-    " from Person p inner join Person_Task tasks  on p.id=tasks.Person_id " +  
-    " inner join Task t  on tasks.tasks_id=t.id"
-)
+
+//TODO Add NamedNativeQuery named peopleAndTasks that uses TwoEntities result mappings
+//  query="select p.id as pid, t.id as tid, p.name as pname, " +
+//	" t.version as tversion, t.name as tname, t.estimate as est, " +
+//	" t.actual as act " + 
+//    " from Person p inner join Person_Task tasks  on p.id=tasks.Person_id " +  
+//    " inner join Task t  on tasks.tasks_id=t.id"
 public class TaskHistory implements Serializable {
 	
 	@Id @GeneratedValue

@@ -17,27 +17,22 @@ import javax.persistence.OneToOne;
 @Entity
 public class ContactInfo extends Identifiable {
 
-	@OneToMany(cascade={CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinColumn(name="FK_CONTACT_INFO")
-	@MapKey(name="name")
-	private Map<String, PhoneNumber> phoneNumbers; 
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@JoinColumn(name = "FK_CONTACT_INFO")
+	@MapKey(name = "name")
+	private Map<String, PhoneNumber> phoneNumbers;
 
 	@OneToOne()
-	@JoinColumn(name="SUBJECT_ID")
+	@JoinColumn(name = "SUBJECT_ID")
 	private Subject subject;
-	
-	
 
-	public void addPhoneNumber(PhoneNumber phoneNumber){
+	public void addPhoneNumber(PhoneNumber phoneNumber) {
 		if (phoneNumbers == null) {
 			phoneNumbers = new HashMap<String, PhoneNumber>();
 		}
 		phoneNumbers.put(phoneNumber.getName(), phoneNumber);
 	}
-	
-	
 
-	
 	public Map<String, PhoneNumber> getPhoneNumbers() {
 		return phoneNumbers;
 	}
@@ -46,23 +41,15 @@ public class ContactInfo extends Identifiable {
 		this.phoneNumbers = phones;
 	}
 
-	
-	
-	
 	private Address address;
 
 	@Embedded
 	@AttributeOverrides(value = {
-			@AttributeOverride(name = "line1", 
-					column = @Column(name = "work_Address_Line1")),
-			@AttributeOverride(name = "line2", 
-					column = @Column(name = "work_Address_Line2")),
-			@AttributeOverride(name = "zip", 
-					column = @Column(name = "work_Address_Zip")),
-			@AttributeOverride(name = "state", 
-					column = @Column(name = "work_Address_State")), })
+			@AttributeOverride(name = "line1", column = @Column(name = "work_Address_Line1")),
+			@AttributeOverride(name = "line2", column = @Column(name = "work_Address_Line2")),
+			@AttributeOverride(name = "zip", column = @Column(name = "work_Address_Zip")),
+			@AttributeOverride(name = "state", column = @Column(name = "work_Address_State")), })
 	private Address workAddress;
-
 
 	private String firstName;
 	private String lastName;
@@ -75,7 +62,6 @@ public class ContactInfo extends Identifiable {
 		this.address = address;
 		this.workAddress = workAddress;
 	}
-
 
 	public String getFirstName() {
 		return firstName;
@@ -127,12 +113,9 @@ public class ContactInfo extends Identifiable {
 		this.subject = subject;
 	}
 
-
-
-
 	@Override
 	protected String name() {
-		
+
 		return "contactInfo";
 	}
 

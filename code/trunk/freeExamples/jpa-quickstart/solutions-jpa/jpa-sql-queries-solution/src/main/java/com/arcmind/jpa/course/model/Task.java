@@ -6,7 +6,6 @@ import java.util.Formatter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.NamedNativeQuery;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.SqlResultSetMappings;
 import javax.persistence.EntityResult;
@@ -16,22 +15,20 @@ import javax.persistence.Version;
 
 
 @Entity
-@SqlResultSetMappings({
-		@SqlResultSetMapping(
-					name = "TaskToDeletedTask",
-					entities = {
-								@EntityResult(entityClass = Task.class, 
-										fields={@FieldResult(name = "estimate", column = "est"),
-												@FieldResult(name = "actual", column = "act"),
-												@FieldResult(name = "id", column = "id"),
-												@FieldResult(name = "name", column = "name"),
-												@FieldResult(name = "version", column = "version")
-										}
-								)
-					}
-					
-		)
-})
+@SqlResultSetMappings( 
+  { @SqlResultSetMapping(name = "TaskToDeletedTask", 
+     entities = { 
+	   @EntityResult(entityClass = Task.class, 
+         fields = {
+          @FieldResult(name = "estimate", column = "est"),
+          @FieldResult(name = "actual", column = "act"),
+          @FieldResult(name = "id", column = "id"),
+          @FieldResult(name = "name", column = "name"),
+          @FieldResult(name = "version", column = "version") 
+         }//end of fields
+        )//@EntityResult 
+     }//end of entities
+)/*end of @SqlResultSetMapping */})//end of @SqlResultSetMappings
 public class Task implements Serializable {
 	
 	@Id @GeneratedValue

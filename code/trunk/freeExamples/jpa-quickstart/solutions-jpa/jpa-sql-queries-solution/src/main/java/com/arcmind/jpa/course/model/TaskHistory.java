@@ -13,38 +13,33 @@ import javax.persistence.SqlResultSetMapping;
 import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Version;
 
-
 @Entity
 @SqlResultSetMappings({
-	@SqlResultSetMapping(
-				name = "TwoEntities",
-				entities = {
-							@EntityResult(entityClass = Task.class, 
-									fields={@FieldResult(name = "estimate", column = "est"),
-											@FieldResult(name = "actual", column = "act"),
-											@FieldResult(name = "id", column = "tid"),
-											@FieldResult(name = "name", column = "tname"),
-											@FieldResult(name = "version", column = "tversion")
-									}
-							),
-							@EntityResult(entityClass = Person.class, 
-									fields={
-											@FieldResult(name = "id", column = "pid"),
-											@FieldResult(name = "name", column = "pname")
-									}
-							),
-							
-				}
-				
-	)
-})
+@SqlResultSetMapping(
+	name = "TwoEntities",
+	entities = {
+				@EntityResult(entityClass = Task.class, 
+						fields={@FieldResult(name = "estimate", column = "est"),
+								@FieldResult(name = "actual", column = "act"),
+								@FieldResult(name = "id", column = "tid"),
+								@FieldResult(name = "name", column = "tname"),
+								@FieldResult(name = "version", column = "tversion")
+						}
+				),
+				@EntityResult(entityClass = Person.class, 
+						fields={
+								@FieldResult(name = "id", column = "pid"),
+								@FieldResult(name = "name", column = "pname")
+						}
+				),
+	}	
+)})
 @NamedNativeQuery (name="peopleAndTasks",  resultSetMapping="TwoEntities",
-		query=" select p.id as pid, t.id as tid, p.name as pname, t.version as tversion, " +
-        " t.name as tname, t.estimate as est, t.actual as act " + 
-        " from Person p  " +
-        " inner join Person_Task tasks  on p.id=tasks.Person_id " +  
-        " inner join Task t  on tasks.tasks_id=t.id"
-
+  query="select p.id as pid, t.id as tid, p.name as pname, " +
+	" t.version as tversion, t.name as tname, t.estimate as est, " +
+	" t.actual as act " + 
+    " from Person p inner join Person_Task tasks  on p.id=tasks.Person_id " +  
+    " inner join Task t  on tasks.tasks_id=t.id"
 )
 public class TaskHistory implements Serializable {
 	

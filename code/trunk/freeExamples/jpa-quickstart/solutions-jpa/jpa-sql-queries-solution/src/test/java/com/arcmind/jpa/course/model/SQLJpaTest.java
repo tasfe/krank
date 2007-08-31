@@ -60,13 +60,9 @@ public class SQLJpaTest extends TestCase {
 	public void testComplexDifferentTableDifferentColumns() throws Exception {
 		
 		String sQuery = "" +
-				"SELECT " +
-				" dt.id AS id, " +
-				" dt.version AS version," +
-				" dt.name AS name, " +
-				" dt.est  AS estimate, " +
-				" dt.act  AS actual " +
-				"FROM DeletedTask dt";
+				"SELECT dt.id AS id, dt.version AS version, " +
+				" dt.name AS name, dt.est  AS estimate, " +
+				" dt.act  AS actual FROM DeletedTask dt";
 		Query nativeQuery = entityManager.createNativeQuery(sQuery, Task.class);
 		List<Task> resultList = nativeQuery.getResultList();
 		for (Task task : resultList) {
@@ -90,7 +86,8 @@ public class SQLJpaTest extends TestCase {
 	public void testTypeWithScaler() throws Exception {
 		String sQuery = "" +
 				"SELECT  1 as foo, dt.deleteDate AS delDate, * FROM DeletedTask dt";
-		Query nativeQuery = entityManager.createNativeQuery(sQuery, "TaskToDeletedTaskPlusFooAndDelDate");
+		Query nativeQuery = entityManager.createNativeQuery(sQuery, 
+				"TaskToDeletedTaskPlusFooAndDelDate");
 		List<Object[]> resultList = nativeQuery.getResultList();
 		for (Object[] row: resultList) {
 			System.out.printf("foo=%s delDate=%s task=%s \n", row[0], row[1], row[2]);
@@ -103,14 +100,11 @@ public class SQLJpaTest extends TestCase {
 		String sqlQuery = 
 		" select p.id as pid, t.id as tid, p.name as pname, t.version as tversion, " +
         " t.name as tname, t.estimate as est, t.actual as act " + 
-        " from Person p  " +
-        " inner join Person_Task tasks  on p.id=tasks.Person_id " +  
+        " from Person p inner join Person_Task tasks  on p.id=tasks.Person_id " +  
         " inner join Task t  on tasks.tasks_id=t.id";
-        
 		Query nativeQuery = entityManager.createNativeQuery(sqlQuery, "TwoEntities");
-
-		
 		List<Object[]> resultList = nativeQuery.getResultList();
+
 		for (Object[] row: resultList) {
 			System.out.printf("person=%s task=%s\n", row[0], row[1]);
 		}
@@ -121,9 +115,8 @@ public class SQLJpaTest extends TestCase {
 
         
 		Query nativeQuery = entityManager.createNamedQuery("peopleAndTasks");
-
-		
 		List<Object[]> resultList = nativeQuery.getResultList();
+		
 		for (Object[] row: resultList) {
 			System.out.printf("person=%s task=%s\n", row[0], row[1]);
 		}

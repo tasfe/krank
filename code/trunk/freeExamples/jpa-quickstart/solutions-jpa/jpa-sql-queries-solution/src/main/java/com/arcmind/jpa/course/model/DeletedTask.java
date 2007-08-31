@@ -10,7 +10,6 @@ import javax.persistence.EntityResult;
 import javax.persistence.FieldResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.NamedNativeQuery;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Version;
@@ -19,23 +18,22 @@ import javax.persistence.Version;
 @Entity
 @SqlResultSetMappings({
 	@SqlResultSetMapping(
-				name = "TaskToDeletedTaskPlusFooAndDelDate",
-				entities = {
-							@EntityResult(entityClass = Task.class, 
-									fields={@FieldResult(name = "estimate", column = "est"),
-											@FieldResult(name = "actual", column = "act"),
-											@FieldResult(name = "id", column = "id"),
-											@FieldResult(name = "name", column = "name"),
-											@FieldResult(name = "version", column = "version")
-									}
-							)
-				}, 
-				columns = {
-						@ColumnResult(name="foo"),
-						@ColumnResult(name="delDate"),
-				}
-				
-	)
+	  name = "TaskToDeletedTaskPlusFooAndDelDate",
+	  entities = {
+			@EntityResult(entityClass = Task.class, 
+			 fields={@FieldResult(name = "estimate", column = "est"),
+					 @FieldResult(name = "actual", column = "act"),
+					 @FieldResult(name = "id", column = "id"),
+					 @FieldResult(name = "name", column = "name"),
+					 @FieldResult(name = "version", column = "version")
+			 }
+			)
+	  }, 
+	  columns = {
+				@ColumnResult(name="foo"),
+				@ColumnResult(name="delDate"),
+	  }			
+  )
 })
 public class DeletedTask implements Serializable {
 	

@@ -16,7 +16,8 @@ public class Task implements Serializable {
 	@Id @GeneratedValue
 	private Long id;
 
-	
+
+	//TODO Add version here
 	private int version;
 
 	private String name;

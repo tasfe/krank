@@ -27,6 +27,9 @@ public class Task implements Serializable {
 	private int estimate;
 	private int actual;
 	
+	@SuppressWarnings("unused")
+	private boolean complete;
+	
 	@Enumerated (value=EnumType.STRING)
 	private TimeUnit unit = TimeUnit.DAY;
 	

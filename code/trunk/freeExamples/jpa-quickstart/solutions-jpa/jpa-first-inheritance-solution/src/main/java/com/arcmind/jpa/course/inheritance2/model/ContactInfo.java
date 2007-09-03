@@ -106,7 +106,7 @@ public class ContactInfo {
 			@AttributeOverride(name = "zip", 
 					column = @Column(name = "work_Address_Zip")),
 			@AttributeOverride(name = "state", 
-					column = @Column(name = "work_Address_State")), })	
+					column = @Column(name = "work_Address_State"))})	
 	public Address getWorkAddress() {
 		return workAddress;
 	}

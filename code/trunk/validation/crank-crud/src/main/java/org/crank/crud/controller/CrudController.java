@@ -95,10 +95,18 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
     @SuppressWarnings("unchecked")
     public CrudOutcome read() {
         init();
-        entity = (T)getCurrentEntity();
+        PK id = null;
+        
+        String sId = this.retrieveId();
+        if (sId==null) {
+        	entity = (T)getCurrentEntity();
+        	id = (PK) propertyUtil.getPropertyValue( idPropertyName, entity );
+        } else {
+        	id = (PK) Long.valueOf(sId);
+        }
         state = CrudState.EDIT; 
         if (readPopulated) {
-            entity = dao.readPopulated( (PK) propertyUtil.getPropertyValue( idPropertyName, entity ));
+            entity = dao.readPopulated( id );
         }
         return CrudOutcome.FORM;
     }

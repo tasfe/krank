@@ -7,8 +7,6 @@ import org.crank.crud.relationships.RelationshipManager;
 public class DetailController<T, PK extends Serializable> extends CrudControllerBase<T, PK> {
     
     protected RelationshipManager relationshipManager = new RelationshipManager();
-    protected String idParam = "id";
-
     private boolean showDetails = false;
     
     public boolean isShowDetails() {
@@ -93,10 +91,6 @@ public class DetailController<T, PK extends Serializable> extends CrudController
         this.entity = relationshipManager.readEntityFromParent( parent.getEntity(), index );
         
         return null;
-    }
-
-    private String retrieveId() {
-        return this.requestParameterMapFinder.getMap().get( this.idParam )[0];
     }
 
     protected CrudOutcome doUpdate() {

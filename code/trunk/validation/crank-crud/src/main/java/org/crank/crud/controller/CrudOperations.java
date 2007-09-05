@@ -17,7 +17,7 @@ public interface CrudOperations {
 
     /** Load the form to create an object. */
     CrudOutcome loadCreate();
-    /** Load the form to edit an objectt. */
+    /** Load the form to edit an object. */
     CrudOutcome read();
     CrudOutcome delete();
     /** Expose object for creation and updating. Allows object to be edited in the form.*/
@@ -37,7 +37,7 @@ public interface CrudOperations {
     /** */
     void init();
     /** */
-    DetailController addChild (String name, DetailController detailController);
+    CrudControllerBase addChild (String name, DetailController detailController);
     /** */
     boolean isShowListing();
     /** */

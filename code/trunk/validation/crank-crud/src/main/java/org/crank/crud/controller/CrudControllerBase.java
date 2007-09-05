@@ -29,6 +29,7 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
     protected RequestParameterMapFinder requestParameterMapFinder = new RequestParameterMapFinderImpl();
     protected Map<String, Object> dynamicProperties = new HashMap<String, Object>();
     protected FileUploadHandler fileUploadHandler;
+	protected String idParam = "id";
     
 
 
@@ -122,7 +123,7 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
 
     private void initDetailChildren() {
         if (children!=null) {
-            for (DetailController detailController : children.values()) {
+            for (CrudControllerBase<T, PK> detailController : children.values()) {
                 detailController.init();
             }
         }
@@ -131,7 +132,7 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
     /** Inject this parent into all Children. It's fathers day. Give all the children a daddy. */
     private void parentChildren() {
         if (children!=null) {
-            for (DetailController detailController : children.values()) {
+            for (CrudControllerBase<T, PK> detailController : children.values()) {
                 detailController.setParent(this);
             }
         }
@@ -143,13 +144,13 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
      */
     protected void cancelChildren() {
         if (children!=null) {
-            for (DetailController detailController : children.values()) {
+            for (CrudControllerBase<T, PK> detailController : children.values()) {
                 detailController.cancel();
             }
         }
     }
 
-    public DetailController addChild( String name, DetailController detailController ) {
+    public CrudControllerBase<T, PK> addChild( String name, DetailController detailController ) {
         this.children.put(name, detailController);
         if (detailController.getRelationshipManager().getChildCollectionProperty() == null ) {
             detailController.getRelationshipManager().setChildCollectionProperty( name );
@@ -221,5 +222,14 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
 
     /** Load a form to update an object. */
     protected abstract CrudOutcome doUpdate();
+
+	protected String retrieveId() {
+		String[] params = this.requestParameterMapFinder.getMap().get( this.idParam );
+		if (params!=null && params.length > 0) {
+			return params[0];
+		} else {
+			return null;
+		}
+	}
     
 }

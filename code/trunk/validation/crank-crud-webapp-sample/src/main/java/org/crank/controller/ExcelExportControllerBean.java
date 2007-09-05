@@ -33,7 +33,7 @@ import org.apache.poi.hssf.usermodel.HSSFFooter;
  * 
  * @author Paul Tabor
  */
-public class ControllerBean {
+public class ExcelExportControllerBean {
 
 	private boolean showForm = true;
 	private boolean showListing = true;

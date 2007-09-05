@@ -224,15 +224,25 @@ public class CrankCrudExampleApplicationContext {
     @Bean (scope = DefaultScopes.SESSION)
     @ScopedProxy
     public TreeControllerBean treeControllerBean() throws Exception {
+    	/* Create TreeControllerBean. */
     	TreeControllerBean bean = new TreeControllerBean();
+    	
+    	/* Setup a datasource for the tree. */
     	DaoFilteringDataSource<Department, Long> dataSource = new DaoFilteringDataSource<Department, Long>();
     	dataSource.setDao(this.repositories().get("Department"));
-    	dataSource.setFetches(Fetch.leftJoinFetch("employees"));    	
+    	dataSource.setFetches(Fetch.leftJoinFetch("employees"));
+    	
+    	/* Create a tree builder for the tree model. */
     	RichFacesTreeModelBuilder treeBuilder = new RichFacesTreeModelBuilder();
+    	/* Inject build instructions for tree nodes. */
     	treeBuilder.setTreeBuildDirections("Departments->this.name->employees.firstName,lastName");
     	treeBuilder.setNoRoot(false);
+    	
+    	/* Inject dependencies in tree controller. */
     	bean.setDataSource(dataSource);
     	bean.setTreeBuilder(treeBuilder);
+    	bean.setEmployeeCrud(this.employeeCrud());
+    	bean.setDeptCrud(this.deptCrud());
     	return bean;
     }
 

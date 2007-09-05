@@ -20,15 +20,20 @@
 		<table>
 		<tr>
 		<td valign="top">
+			<rich:spacer height="100"/>
 			<h:form>
 				<div class="sample-container" >
 						<rich:tree style="width:300px" value="#{treeControllerBean.treeModel}" 
-									var="item" nodeFace="#{item.type}">
+									var="item" nodeFace="#{item.type}" componentState="#{treeControllerBean.componentState}">
 								<rich:treeNode type="Department">
-									<span style="font: large"><h:outputText value="#{item.title}" /></span>
+									<h:commandLink value="#{item.title}" action="#{treeControllerBean.selectDepartment}">
+										<f:param name="id" value="#{item.model.id}"/>
+									</h:commandLink>
 								</rich:treeNode>
 								<rich:treeNode type="Employee">
-									<span style="font: small"><h:outputText value="#{item.title}" /></span>
+									<h:commandLink value="#{item.title}" action="#{treeControllerBean.selectEmployee}">
+										<f:param name="id" value="#{item.model.id}"/>
+									</h:commandLink>
 								</rich:treeNode>
 								<rich:treeNode type="Folder">
 									<h:outputText value="#{item.title}" />
@@ -38,9 +43,7 @@
 			</h:form>		
 		</td>
 		<td valign="top">
-				<a4j:outputPanel>
 				<ui:insert name="content"/>
-				</a4j:outputPanel>
 		</td>
 		</tr>
 		</table>

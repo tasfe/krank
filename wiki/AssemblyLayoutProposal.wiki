@@ -1,3 +1,4 @@
+#labels Discussion,Maven,Build
 #This is a proposal for the way we will layout the download
 
 = The Assembly =

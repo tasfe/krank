@@ -19,17 +19,20 @@ import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
-import org.crank.controller.ControllerBean;
+import org.crank.controller.ExcelExportControllerBean;
+import org.crank.controller.TreeControllerBean;
 import org.crank.core.spring.support.SpringBeanWrapperPropertiesUtil;
 import org.crank.crud.controller.CrudController;
 import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.controller.FilteringPaginator;
+import org.crank.crud.controller.datasource.DaoFilteringDataSource;
 import org.crank.crud.controller.datasource.EnumDataSource;
 import org.crank.crud.controller.datasource.DaoFilteringPagingDataSource;
 import org.crank.crud.controller.support.tomahawk.TomahawkFileUploadHandler;
 import org.crank.crud.dao.DepartmentDAO;
 import org.crank.crud.dao.EmployeeDAO;
+import org.crank.crud.join.Fetch;
 import org.crank.crud.jsf.support.EntityConverter;
 import org.crank.crud.jsf.support.JsfCrudAdapter;
 import org.crank.crud.jsf.support.JsfDetailController;
@@ -41,10 +44,11 @@ import org.crank.crud.model.EmployeeStatus;
 import org.crank.crud.model.Task;
 import org.crank.crud.GenericDao;
 import org.crank.crud.GenericDaoFactory;
+import org.crank.model.jsf.support.RichFacesTreeModelBuilder;
 import org.crank.web.RequestParameterMapFinderImpl;
 
 @Configuration (defaultLazy=Lazy.TRUE)
-public class SampleConfiguration {
+public class CrankCrudExampleApplicationContext {
     
     private static List<CrudManagedObject> managedObjects = new ArrayList<CrudManagedObject>();
     
@@ -53,8 +57,6 @@ public class SampleConfiguration {
         
         managedObjects.add( new CrudManagedObject(Employee.class, EmployeeDAO.class) );
         managedObjects.add( new CrudManagedObject(Department.class, DepartmentDAO.class) );
-//        managedObjects.add( new CrudManagedObject(ContactInfo.class, ContactInfoDAO.class) );
-//        managedObjects.add( new CrudManagedObject(Task.class, TaskDAO.class) );
     }
     
     @Bean (scope = DefaultScopes.SESSION)
@@ -214,9 +216,24 @@ public class SampleConfiguration {
     
     @Bean (scope = DefaultScopes.SESSION)
     @ScopedProxy
-    public ControllerBean controllerBean() throws Exception {
-      ControllerBean bean = new ControllerBean();
+    public ExcelExportControllerBean controllerBean() throws Exception {
+      ExcelExportControllerBean bean = new ExcelExportControllerBean();
         return bean;
     }
     
+    @Bean (scope = DefaultScopes.SESSION)
+    @ScopedProxy
+    public TreeControllerBean treeControllerBean() throws Exception {
+    	TreeControllerBean bean = new TreeControllerBean();
+    	DaoFilteringDataSource<Department, Long> dataSource = new DaoFilteringDataSource<Department, Long>();
+    	dataSource.setDao(this.repositories().get("Department"));
+    	dataSource.setFetches(Fetch.leftJoinFetch("employees"));    	
+    	RichFacesTreeModelBuilder treeBuilder = new RichFacesTreeModelBuilder();
+    	treeBuilder.setTreeBuildDirections("Departments->this.name->employees.firstName,lastName");
+    	treeBuilder.setNoRoot(false);
+    	bean.setDataSource(dataSource);
+    	bean.setTreeBuilder(treeBuilder);
+    	return bean;
+    }
+
 }

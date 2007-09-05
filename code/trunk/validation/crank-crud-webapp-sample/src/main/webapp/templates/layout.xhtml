@@ -13,12 +13,35 @@
 	</head>
 
 	<body>
-		<a4j:outputPanel ajaxRendered="true">
 			<h:panelGrid columns="1" width="60%">
 				<h:graphicImage value="/images/crank-header.jpg" alt="CRANK!" border="0" />
-				<ui:insert name="content"/>
 			</h:panelGrid>
-		</a4j:outputPanel>
+
+		<table>
+		<tr>
+		<td>
+			<h:form>
+				<div class="sample-container" >
+						<rich:tree style="width:300px" value="#{treeControllerBean.treeModel}" 
+									var="item" nodeFace="#{item.type}">
+								<rich:treeNode type="Department">
+									<span style="font: large"><h:outputText value="#{item.title}" /></span>
+								</rich:treeNode>
+								<rich:treeNode type="Employee">
+									<span style="font: small"><h:outputText value="#{item.title}" /></span>
+								</rich:treeNode>
+								<rich:treeNode type="Folder">
+									<h:outputText value="#{item.title}" />
+								</rich:treeNode>
+						</rich:tree>
+				</div>
+			</h:form>		
+		</td>
+		<td>
+				<ui:insert name="content"/>
+		</td>
+		</tr>
+		</table>
 	</body>
 	<ui:debug hotkey="d" rendered="#{initParam['facelets.DEBUG']}"/>
 	

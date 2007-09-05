@@ -8,7 +8,4 @@
 
 	 <bean class="org.crank.sample.CrankCrudExampleApplicationContext"/>
 	 <bean class="org.springframework.config.java.process.ConfigurationPostProcessor"/>
-	 <import resource="/validationContext.xml"/>
-
-
 </beans>

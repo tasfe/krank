@@ -48,9 +48,16 @@ public abstract class SpringTestNGBase {
     public void classInit() {
         setUpSpring();
         setUpEntityManager();
+
         if (isSetupJndiContext()) {
             setUpJndiSpring();
         }
+
+        afterSetup();
+    }
+
+    protected void afterSetup() {
+        //template method for extenders
     }
 
     private void setUpEntityManager() {
@@ -64,6 +71,7 @@ public abstract class SpringTestNGBase {
             // There's probably a more Springy way to do this, but 
             // this exception swallow save adding more Springness to
             // this class.
+            logger.warn("NO OpenEntityManagerInTest defined in application context.  You may have lazy initialization errors!!");
         }
         
     }

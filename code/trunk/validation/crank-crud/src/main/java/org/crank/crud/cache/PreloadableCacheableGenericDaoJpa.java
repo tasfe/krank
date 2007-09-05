@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
 import org.crank.crud.GenericDaoJpa;
 
 /**
@@ -36,10 +39,13 @@ public class PreloadableCacheableGenericDaoJpa<T, PK extends Serializable> exten
 
     public void preload() {
         if (getPreloadConfiguration().getPreloadingHQL().length() > 0) {
+            logger.info( "Preloading cache for:" + type.getName() + " using hql:" + getPreloadConfiguration().getPreloadingHQL() );
             preload( getPreloadConfiguration().getPreloadingHQL() );
         } else if (getPreloadConfiguration().getPreloadingRecordCount() > 0) {
+            logger.info( "Preloading cache for:" + type.getName() + " with " + getPreloadConfiguration().getPreloadingRecordCount() + " records.");
             preload( getPreloadConfiguration().getPreloadingRecordCount() );
         } else {
+            logger.info( "Preloading cache for:" + type.getName() + " with " + defaultPreloadCacheSize + " records." );
             preloadDefault();
         }
         initializeChildren();
@@ -54,7 +60,9 @@ public class PreloadableCacheableGenericDaoJpa<T, PK extends Serializable> exten
     }
 
     public void preload( String hql ) {
-        preloadResults = getJpaTemplate().findByNamedQuery( hql );
+        EntityManager entityManager = getJpaTemplate().getEntityManagerFactory().createEntityManager();
+        Query query = entityManager.createQuery( hql );
+        preloadResults = query.getResultList();
     }
 
     private void initializeChildren() {
@@ -65,6 +73,7 @@ public class PreloadableCacheableGenericDaoJpa<T, PK extends Serializable> exten
                 try {
                     Method method = type.getMethod( methodName, null );
                     if (method.getParameterTypes().length == 0 && methodName.equals( method.getName() )) {
+                        logger.info("Initializing method " + methodName + " for " + preloadResults.size() + " preloads of type " + type.getName());
                         for (T instanceOfType : preloadResults) {
                             /* Has to be noarg method. */
                             method.invoke( instanceOfType, noargs );

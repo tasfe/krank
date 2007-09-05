@@ -38,22 +38,32 @@ public class PreloadableCacheableGenericDaoTestWithEHCache extends DbUnitTestBas
     public String getDataSetXml() {
         return "data/Employee.xml";
     }
-
+    
+    @Test
+    public void testPreloadWithCount() {
+        Employee employee = preloadingEmployeeDao.read( 1l );
+        employee.setNumberOfPromotions( 5 );
+        preloadingEmployeeDao.update( employee );
+        assert preloadingEmployeeDao.read( 1l ) != null;
+    }
+    
+    @Test
+    public void testPreloadWithHQL() {
+        //Validation of this in
+        Employee employee = preloadingWithHQLEmployeeDao.read( 1l );
+        assert employee != null;
+        assert employee.getDepartment() != null;
+    }
+    
     private EmployeeDAO preloadingEmployeeDao;
+    private EmployeeDAO preloadingWithHQLEmployeeDao;
 
     public void setPreloadingEmployeeDao( EmployeeDAO preloadingEmployeeDao ) {
         this.preloadingEmployeeDao = preloadingEmployeeDao;
     }
-    
-    @Test
-    public void testPreload() {
-        //Validation of this in
-        Employee employee = preloadingEmployeeDao.read( 1l );
-        employee.setNumberOfPromotions( 5 );
-        preloadingEmployeeDao.update( employee );
-        
-        assert preloadingEmployeeDao.read( 1l ) != null;
-        
+
+    public void setPreloadingWithHQLEmployeeDao( EmployeeDAO preloadingWithHQLEmployeeDao ) {
+        this.preloadingWithHQLEmployeeDao = preloadingWithHQLEmployeeDao;
     }
 
 }

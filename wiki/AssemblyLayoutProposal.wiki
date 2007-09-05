@@ -15,3 +15,7 @@ The Assembly is the thing that users will be able to download. It will have the 
   * Files
     * LICENSE.txt - the license text
     * README.txt - quick what is Krank
+
+= Assumptions -
+
+  * None of the testing stuff is required by users

@@ -37,14 +37,15 @@
 	
 		<h:outputText value="Employee" styleClass="pageTitle"/>
 
-		<a4j:region renderRegionOnly="false"> 
-			<a4j:form
+			<h:form
 				id="${daoName}DetailFormB"
-				rendered="#{(cruds['Employee'].controller.state == 'ADD') or (cruds['Employee'].controller.state == 'EDIT')}">
+				prependId="false"
+				rendered="#{(employeeCrud.controller.state == 'ADD') or (employeeCrud.controller.state == 'EDIT')}"
+				enctype="multipart/form-data">
 
 				<crank:form
 					id="${daoName}DetailForm" 
-					crud="${cruds['Employee'].controller}" 
+					crud="${employeeCrud.controller}" 
 					daoName="${daoName}"
 					parentForm="${daoName}DetailFormB"
 					reRender="${reRender}"
@@ -52,7 +53,7 @@
 					ajax="${true}"
 					propertyNames="firstName,lastName,status,active,dob,age,phone,email,department,description,file,numberOfPromotions">
 
-					<crank:compositePanel entity="${cruds['Employee'].controller.entity.address}" name="address" propertyNames="line_1,line2,zipCode"/>
+					<crank:compositePanel entity="${employeeCrud.controller.entity.address}" name="address" propertyNames="line_1,line2,zipCode"/>
 
 
 					<c:set var="taskDetailController" 
@@ -80,8 +81,7 @@
 						propertyNames="name,phone"/>
 
 				</crank:form>
-			</a4j:form>
-		</a4j:region>
+			</h:form>
 	</ui:define>
 </ui:composition>
 </html>

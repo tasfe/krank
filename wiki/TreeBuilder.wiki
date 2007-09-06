@@ -53,3 +53,16 @@ Departments ->
                     PRESTO2 -> 
                     ArcMind2
 }}}
+
+==== UML Class Diagram Showing TreeBuilders ====
+	http://krank.googlecode.com/svn/wiki/img/tree-builder.png
+	
+For some code examples and such read this (which is related):
+
+We need a way to easily create a tree model. I have a way already cooked up. We just need to add support for RichFaces tree. 
+
+See http://www.thearcmind.com/confluence/display/SpribernateSF/Working+with+Rollups,+Hibernate+and+Tree+model+generation+redux 
+and http://www.thearcmind.com/confluence/display/SpribernateSF/Tree+model+generation 
+
+http://www.thearcmind.com/confluence/display/SpribernateSF/Integrating+Hibernate+and+JSF+so+you+can+easily+pass+JSF+expressions+as+Hibernate+Query+params
+

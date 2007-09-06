@@ -64,7 +64,7 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
      * @retrun outcome
      */
     @SuppressWarnings("unchecked")    
-    public CrudOutcome delete() {
+    public CrudOutcome doDelete() {
         doDelete((T)getCurrentEntity());        
         fireToggle();
         return CrudOutcome.LISTING;
@@ -93,7 +93,7 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
      * @retrun outcome
      */
     @SuppressWarnings("unchecked")
-    public CrudOutcome read() {
+    public CrudOutcome doRead() {
         init();
         PK id = null;
         
@@ -124,7 +124,7 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
         this.entityLocator = entityLocator;
     }
 
-    public CrudOutcome cancel() {
+    public CrudOutcome doCancel() {
         state = CrudState.UNKNOWN;
         cancelChildren();
         return CrudOutcome.LISTING;

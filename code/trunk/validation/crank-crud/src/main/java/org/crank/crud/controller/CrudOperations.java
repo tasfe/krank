@@ -44,5 +44,9 @@ public interface CrudOperations {
     boolean isShowForm();
     /** */
     Map<String, Object> getDynamicProperties();
+    
+    void addCrudControllerListener(CrudControllerListener listener);
+    void removeCrudControllerListener(CrudControllerListener listener);
+    
 
 }

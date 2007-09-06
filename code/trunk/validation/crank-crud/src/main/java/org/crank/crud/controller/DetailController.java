@@ -56,7 +56,7 @@ public class DetailController<T, PK extends Serializable> extends CrudController
         return null;
     }
 
-    public CrudOutcome delete() {
+    public CrudOutcome doDelete() {
         /* Read the entity from the parent object. */
         this.entity = relationshipManager.readEntityFromParent( parent.getEntity(), retrieveId());
         /* Now kill it. This only succeeds if they don't click cancel.*/
@@ -77,7 +77,7 @@ public class DetailController<T, PK extends Serializable> extends CrudController
         return null;
     }
 
-    public CrudOutcome read() {
+    public CrudOutcome doRead() {
         /* Initialize this form and subForms to their initial state. */
         init();
 
@@ -99,7 +99,7 @@ public class DetailController<T, PK extends Serializable> extends CrudController
     }
 
     
-    public CrudOutcome cancel() {
+    public CrudOutcome doCancel() {
         state = CrudState.UNKNOWN;
         cancelChildren();
         return CrudOutcome.LISTING;

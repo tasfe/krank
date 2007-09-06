@@ -1,7 +1,9 @@
 package org.crank.crud.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.crank.annotations.design.AllowsConfigurationInjection;
@@ -27,7 +29,7 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
     private String name;
     protected CrudOperations parent;
     protected RequestParameterMapFinder requestParameterMapFinder = new RequestParameterMapFinderImpl();
-    protected Map<String, Object> dynamicProperties = new HashMap<String, Object>();
+    protected Map<String, Object> dynamicProperties = new CrankMap();
     protected FileUploadHandler fileUploadHandler;
 	protected String idParam = "id";
     
@@ -207,23 +209,61 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
         if (fileUploadHandler!=null) {
             fileUploadHandler.upload( this );
         }
-        return doCreate();
+        fireBeforeCreate();
+        CrudOutcome outcome = doCreate();
+        fireAfterCreate();
+        return outcome;
     }
-    /** Load a form to update an object. */
+    /** Update an object. */
     public CrudOutcome update() {
         if (fileUploadHandler!=null) {
             fileUploadHandler.upload( this );
         }
-        return doUpdate();
+        fireBeforeUpdate();
+        CrudOutcome outcome = doUpdate();
+        fireAfterUpdate();
+        return outcome;
     }
+
+    /** Update an object. */
+    public CrudOutcome delete() {
+        fireBeforeDelete();
+        CrudOutcome outcome = doDelete();
+        fireAfterDelete();
+        return outcome;
+    }
+
+    /** Update an object. */
+    public CrudOutcome read() {
+        fireBeforeRead();
+        CrudOutcome outcome = doRead();
+        fireAfterRead();
+        return outcome;
+    }
+
+    /** Update an object. */
+    public CrudOutcome cancel() {
+        fireBeforeCancel();
+        CrudOutcome outcome = doCancel();
+        fireAfterCancel();
+        return outcome;
+    }
+
+    protected abstract CrudOutcome doCancel();
 
     /** Create an object. */
     protected abstract CrudOutcome doCreate();
 
-    /** Load a form to update an object. */
+    /** Update an object. */
     protected abstract CrudOutcome doUpdate();
 
-	protected String retrieveId() {
+    /** Delete an object. */
+    protected abstract CrudOutcome doDelete();
+
+    /** Read an object. */
+    protected abstract CrudOutcome doRead();
+
+    protected String retrieveId() {
 		String[] params = this.requestParameterMapFinder.getMap().get( this.idParam );
 		if (params!=null && params.length > 0) {
 			return params[0];
@@ -231,5 +271,85 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
 			return null;
 		}
 	}
+	
+    private List<CrudControllerListener> listeners = new ArrayList<CrudControllerListener>();
+	
+    public void addCrudControllerListener(CrudControllerListener listener) {
+    		listeners.add(listener);
+    }
+    public void removeCrudControllerListener(CrudControllerListener listener) {
+    		listeners.remove(listener);
+    }
+
+    protected void fireAfterUpdate() {
+        CrudEvent event = new CrudEvent(this, this.entity);
+        for (CrudControllerListener ccl : listeners) {
+            ccl.afterUpdate(event);
+        }
+    }
+    protected void fireBeforeUpdate() {
+        CrudEvent event = new CrudEvent(this, this.entity);
+        for (CrudControllerListener ccl : listeners) {
+            ccl.beforeUpdate(event);
+        }
+    }
+
+    protected void fireBeforeCreate() {
+        CrudEvent event = new CrudEvent(this, this.entity);
+        for (CrudControllerListener ccl : listeners) {
+            ccl.beforeCreate(event);
+        }
+    }
+
+    protected void fireAfterCreate() {
+        CrudEvent event = new CrudEvent(this, this.entity);
+        for (CrudControllerListener ccl : listeners) {
+            ccl.afterCreate(event);
+        }
+    }
+
+    protected void fireBeforeRead() {
+        CrudEvent event = new CrudEvent(this, this.entity);
+        for (CrudControllerListener ccl : listeners) {
+            ccl.beforeRead(event);
+        }
+    }
+
+    protected void fireAfterRead() {
+        CrudEvent event = new CrudEvent(this, this.entity);
+        for (CrudControllerListener ccl : listeners) {
+            ccl.afterRead(event);
+        }
+    }
+
+    protected void fireBeforeDelete() {
+        CrudEvent event = new CrudEvent(this, this.entity);
+        for (CrudControllerListener ccl : listeners) {
+            ccl.beforeDelete(event);
+        }
+    }
+
+    protected void fireAfterDelete() {
+        CrudEvent event = new CrudEvent(this, this.entity);
+        for (CrudControllerListener ccl : listeners) {
+            ccl.afterDelete(event);
+        }
+    }
     
+
+
+    protected void fireBeforeCancel() {
+        CrudEvent event = new CrudEvent(this, this.entity);
+        for (CrudControllerListener ccl : listeners) {
+            ccl.beforeCancel(event);
+        }
+    }
+
+    protected void fireAfterCancel() {
+        CrudEvent event = new CrudEvent(this, this.entity);
+        for (CrudControllerListener ccl : listeners) {
+            ccl.afterCancel(event);
+        }
+    }
+
 }

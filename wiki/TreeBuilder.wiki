@@ -7,15 +7,26 @@ This is a base class whose subclasses can work with the two tree models from Tom
 The base classes just need to override the following:
 
 {{{
-protected abstract Object createTableModel(Object root); protected abstract void addToNode(Object parent, Object child); protected abstract Object createNode(String name);
+protected abstract Object createTableModel(Object root); 
+protected abstract void addToNode(Object parent, Object child); 
+protected abstract Object createNode(String name);
 }}}
 
 In addition, the class has several extention points (protected methods) for classes that want to process nodes a bit different than the default.
 
 Given the directions:
 {{{
-Departments ->this.name ->employees.name -> employees.pets.cuteName ->groups.title
+Departments->this.name->employees.name;groups.title->employees.pets.cuteName
 }}}
+
+It would build a tree like this:
+{{{
+ Departments
+  	     ->this.name
+          ->employees.name
+              -> employees.pets.cuteName
+          ->groups.title
+ }}}
 
 Thus this list:
 {{{
@@ -36,22 +47,22 @@ list.add(hrIt);
 
 Would produce a tree like this:
 {{{
-Departments -> 
-         cas -> 
-                 employees -> 
-                          Rick Hightower -> 
-                          David E. -> 
-                 groups -> 
-                          PRESTO -> 
-                          ArcMind -> 
-           hrIt -> 
-                 employees -> 
-                        Angelica W. -> 
-                                   Mooney -> 
-                       Gordon B. -> 
-            groups -> 
-                    PRESTO2 -> 
-                    ArcMind2
+ Departments
+ 	    	    -> cas
+ 	    	    	    -> employees
+ 	    	    	    	    -> Rick Hightower
+ 	    	    	    	    -> David E.
+ 	    	    	    -> groups
+ 	    	    	    	    -> PRESTO
+ 	    	    	    	    -> ArcMind
+ 	    	    -> hrIt
+ 	    	    	    -> employees
+	    	    	    	    -> Angelica W.
+                                  -> Mooney
+ 	    	    	    	    -> Gordon B.
+ 	    	    	    -> groups
+ 	    	    	    	    -> PRESTO2
+ 	    	    	    	    -> ArcMind2
 }}}
 
 ==== UML Class Diagram Showing TreeBuilders ====

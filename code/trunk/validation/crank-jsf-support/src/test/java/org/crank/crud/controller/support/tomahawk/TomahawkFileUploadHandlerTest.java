@@ -149,6 +149,24 @@ public class TomahawkFileUploadHandlerTest {
             // TODO Auto-generated method stub
             return null;
         }
+
+		@Override
+		protected CrudOutcome doCancel() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		protected CrudOutcome doDelete() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		protected CrudOutcome doRead() {
+			// TODO Auto-generated method stub
+			return null;
+		}
     } 
     
 }

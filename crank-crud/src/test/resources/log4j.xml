@@ -14,10 +14,6 @@
         <priority value="WARN" />
     </category>
 
-    <category name="org.jboss.cache">
-        <priority value="DEBUG" />
-    </category>
-
     <category name="org.hibernate.hql">
         <priority value="INFO" />
     </category>

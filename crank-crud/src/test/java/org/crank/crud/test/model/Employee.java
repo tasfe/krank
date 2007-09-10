@@ -1,6 +1,5 @@
 package org.crank.crud.test.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,10 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-@Entity(name="Employee")
+@Entity
 @NamedQueries( {
 	@NamedQuery(name="Employee.findEmployeesByDepartment",
 			query="from Employee employee where employee.department.name=?"),
@@ -29,7 +25,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 	)
 	
 })
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Employee {
 
     @Id
@@ -39,20 +34,14 @@ public class Employee {
 	private String firstName;
 	
 	private String lastName;
-    
-    @Column (length=81)
-    private String description;
 	
-    private boolean active;
+	private boolean active;
 	
 	private int age;
 	
-    @Column (nullable=false)
-    private Integer numberOfPromotions;
+	private Integer numberOfPromotions;
 	
 	private EmployeeStatus status;
-	
-	private Address address;
 	
 	private Integer rank;
 	
@@ -131,20 +120,4 @@ public class Employee {
 	public void setRank(Integer rank) {
 		this.rank = rank;
 	}
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription( String description ) {
-        this.description = description;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress( Address address ) {
-        this.address = address;
-    }
 }

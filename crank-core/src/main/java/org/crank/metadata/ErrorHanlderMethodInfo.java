@@ -14,11 +14,10 @@ import java.util.Set;
  *
  */
 public class ErrorHanlderMethodInfo implements Serializable{
-	private static final long serialVersionUID = 1L;
-
+	
 	public ErrorHanlderMethodInfo () {
-		exceptions = new HashSet<Class<?>>(10);
-		errorHandlerMap = new HashMap<Class<?>, ErrorHandlerData>(10);
+		exceptions = new HashSet<Class>(10);
+		errorHandlerMap = new HashMap<Class, ErrorHandlerData>(10);
 	}
 
 	public static ErrorHanlderMethodInfo getInstance(List<ErrorHandlerData> errorHandlerList) {
@@ -39,11 +38,11 @@ public class ErrorHanlderMethodInfo implements Serializable{
 	}
 	
 	/** All of the exceptions that are handled. */
-	private Set<Class<?>> exceptions; 
+	private Set<Class> exceptions; 
 	/** The method associated with this ErrorHanlderMethodInfo. */
 	private Method method; 
 	/**	Map of Exeption Classes to ErrorHandlers. */
-	private Map <Class<?>, ErrorHandlerData> errorHandlerMap;
+	private Map <Class, ErrorHandlerData> errorHandlerMap;
 	/**	Do we have a default handler? */
 	private boolean defaultHandlerPresent;
 	
@@ -62,16 +61,16 @@ public class ErrorHanlderMethodInfo implements Serializable{
 	public void setDefaultHandlerPresent(boolean defaultHandlerPresent) {
 		this.defaultHandlerPresent = defaultHandlerPresent;
 	}
-	public Map<Class<?>, ErrorHandlerData> getErrorHandlerMap() {
+	public Map<Class, ErrorHandlerData> getErrorHandlerMap() {
 		return errorHandlerMap;
 	}
-	public void setErrorHandlerMap(Map<Class<?>, ErrorHandlerData> errorHandlerMap) {
+	public void setErrorHandlerMap(Map<Class, ErrorHandlerData> errorHandlerMap) {
 		this.errorHandlerMap = errorHandlerMap;
 	}
-	public Set<Class<?>> getExceptions() {
+	public Set<Class> getExceptions() {
 		return exceptions;
 	}
-	public void setExceptions(Set<Class<?>> exceptions) {
+	public void setExceptions(Set<Class> exceptions) {
 		this.exceptions = exceptions;
 	}
 	public Method getMethod() {

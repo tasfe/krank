@@ -11,6 +11,8 @@
         </constructor-arg>
     </bean>
 
+
+
 	<bean id="daoFactory"
 		class="org.crank.crud.GenericDaoFactory"
 		abstract="true">
@@ -33,9 +35,9 @@
 		<property name="bo" >
 			<value>org.crank.crud.test.model.Employee</value>
 		</property>
-	</bean>
+	</bean>	
 
-    <bean id="departmentDao" parent="daoFactory">
+	<bean id="departmentDao" parent="daoFactory">
 		<property name="interface">
 			<value>org.crank.crud.test.dao.DepartmentDAO</value>
 		</property>
@@ -44,10 +46,10 @@
 		</property>
 	</bean>	
 	
-	<bean id="paginatableDataSource" class="org.crank.crud.controller.datasource.DaoPagingDataSource">
+	<bean id="paginatableDataSource" class="org.crank.crud.controller.datasource.JpaPagingDataSource">
 		<property name="dao" ref="employeeDao"/>
 	</bean>
-	<bean id="paginatableFilterableDataSource" class="org.crank.crud.controller.datasource.DaoFilteringPagingDataSource">
+	<bean id="paginatableFilterableDataSource" class="org.crank.crud.controller.datasource.JpaFilteringPagingDataSource">
 		<property name="dao" ref="employeeDao"/>
 	</bean>
 

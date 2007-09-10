@@ -2,7 +2,12 @@ package org.crank.crud.controller;
 
 import java.io.Serializable;
 import java.util.List;
+
+import org.crank.annotations.design.AllowsConfigurationInjection;
 import org.crank.annotations.design.ExpectsInjection;
+import org.crank.annotations.design.OptionalInjection;
+import org.crank.core.PropertiesUtil;
+import org.crank.crud.GenericDao;
 
 /**
  * Controls CRUD operations from an application.
@@ -13,34 +18,54 @@ import org.crank.annotations.design.ExpectsInjection;
  * @see CrudOperations
  * @see Toggleable
  */
-public class CrudController<T, PK extends Serializable> extends CrudControllerBase<T, PK>  {
+public class CrudController<T, PK extends Serializable> implements CrudOperations, Toggleable {
+    private GenericDao<T, PK> dao;
+    private EntityLocator entityLocator;
+    private PropertiesUtil propertyUtil;
+    private String idPropertyName = "id";
+    private boolean readPopulated;
+    private Class<T> entityClass;
+    private CrudState state;    
+    private T entity;
+
+    private ToggleSupport toggleSupport = new ToggleSupport();
+
+    /**
+     * @see Toggleable#addToggleListener(ToggleListener)
+     */
+    public void addToggleListener(ToggleListener listener) {
+        toggleSupport.addToggleListener( listener );
+    }
+    /**
+     * @see Toggleable#addToggleListener(ToggleListener)
+     */    
+    public void removeToggleListener(ToggleListener listener) {
+        toggleSupport.removeToggleListener( listener );
+    }
+
+    /**
+     * Fire and event to the listeners.
+     *
+     */
+    private void fireToggle() {
+        toggleSupport.fireToggle();
+    }
+
     public CrudController () {
         
-    }
-    
-    /**
-     * Update the entity in the data store. 
-     * Notify listeners that the entity was updated.
-     * @see CrudOperations#update()
-     * @return outcome
-     */
-    @SuppressWarnings("unchecked")
-    public CrudOutcome doUpdate() {
-        dao.update((T)entity);
-        state = CrudState.UNKNOWN; 
-        fireToggle();
-        return CrudOutcome.LISTING;
     }
     
     /**
      * Creates a new instance of the entity class and sets the entity to this new instance.
      * @see CrudOperations#loadCreate()
      */
-    @SuppressWarnings("unchecked")
-    public CrudOutcome doLoadCreate() {
-        init();
-        createEntity();
-        this.state = CrudState.ADD;
+    public CrudOutcome loadCreate() {
+        try {
+            entity = entityClass.newInstance();
+            this.state = CrudState.ADD;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
         return CrudOutcome.FORM;
     }
 
@@ -50,9 +75,8 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
      * @see CrudOperations#create()
      * @retrun outcome
      */
-    @SuppressWarnings("unchecked")
-    public CrudOutcome doCreate() {
-        dao.create((T)entity);
+    public CrudOutcome create() {
+        dao.create(entity);
         this.state = CrudState.UNKNOWN;
         fireToggle();
         return CrudOutcome.LISTING;
@@ -65,7 +89,7 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
      * @retrun outcome
      */
     @SuppressWarnings("unchecked")    
-    public CrudOutcome doDelete() {
+    public CrudOutcome delete() {
         doDelete((T)getCurrentEntity());        
         fireToggle();
         return CrudOutcome.LISTING;
@@ -94,20 +118,11 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
      * @retrun outcome
      */
     @SuppressWarnings("unchecked")
-    public CrudOutcome doRead() {
-        init();
-        PK id = null;
-        
-        String sId = this.retrieveId();
-        if (sId==null) {
-        	entity = (T)getCurrentEntity();
-        	id = (PK) propertyUtil.getPropertyValue( idPropertyName, entity );
-        } else {
-        	id = (PK) Long.valueOf(sId);
-        }
+    public CrudOutcome read() {
+        entity = (T)getCurrentEntity();
         state = CrudState.EDIT; 
         if (readPopulated) {
-            entity = dao.readPopulated( id );
+            entity = dao.readPopulated( (PK) propertyUtil.getPropertyValue( idPropertyName, entity ));
         }
         return CrudOutcome.FORM;
     }
@@ -120,16 +135,64 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
         return entityLocator.getSelectedEntities();
     }
 
+    /**
+     * Update the entity in the data store. 
+     * Notify listeners that the entity was updated.
+     * @see CrudOperations#update()
+     * @return outcome
+     */
+    public CrudOutcome update() {
+        dao.update(entity);
+        state = CrudState.UNKNOWN; 
+        fireToggle();
+        return CrudOutcome.LISTING;
+    }
+
+    /** 
+     * @see CrudOperations#getEntity()
+     */
+    public Serializable getEntity() {
+        return (Serializable) entity;
+    }
+
+
+
+    public void setDao( GenericDao<T, PK> dao ) {
+        this.dao = dao;
+    }
+
     @ExpectsInjection
     public void setEntityLocator( EntityLocator entityLocator ) {
         this.entityLocator = entityLocator;
     }
 
-    public CrudOutcome doCancel() {
-        state = CrudState.UNKNOWN;
-        cancelChildren();
-        return CrudOutcome.LISTING;
+    @ExpectsInjection    
+    public void setPropertyUtil( PropertiesUtil propertyUtil ) {
+        this.propertyUtil = propertyUtil;
+    }
+
+    @OptionalInjection
+    public void setIdPropertyName( String idPropertyName ) {
+        this.idPropertyName = idPropertyName;
+    }
+
+    @AllowsConfigurationInjection
+    public void setReadPopulated( boolean readPopulated ) {
+        this.readPopulated = readPopulated;
+    }
+
+    @AllowsConfigurationInjection
+    public void setEntityClass( Class<T> entityClass ) {
+        this.entityClass = entityClass;
     }
     
-    
+    public Class<T> getEntityClass() {
+        return entityClass;
+    }
+
+    public CrudState getState() {
+        return state;
+    }
+
+
 }

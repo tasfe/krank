@@ -8,8 +8,6 @@ import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 
 import org.crank.crud.controller.CrudController;
-import org.crank.crud.controller.CrudControllerBase;
-import org.crank.crud.controller.CrudOperations;
 import org.crank.crud.controller.EntityLocator;
 import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.controller.Row;
@@ -28,7 +26,7 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
     
     private FilterablePageable paginator;
     private DataModel model = new ListDataModel();
-    private CrudControllerBase<T, PK> controller;
+    private CrudController controller;
 
     public JsfCrudAdapter() {
         
@@ -76,7 +74,7 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
         this.model = model;
     }
 
-    public CrudOperations getController() {
+    public CrudController getController() {
         return controller;
     }
 

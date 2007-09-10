@@ -7,8 +7,6 @@ import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,18 +18,6 @@ import org.crank.crud.criteria.OrderBy;
 public class FilteringPaginator extends Paginator implements FilterablePageable, Serializable {
     private Map<String, FilterableProperty> filterableProperties = null;
     private Class type;
-    
-    private String name;
-    
-    private int sequence;
-
-    public String getName() {
-        return (name != null ? name : CrudUtils.getClassEntityName(type)) + "Paginator";
-    }
-
-    public void setName( String name ) {
-        this.name = name;
-    }
     
     public FilteringPaginator() {
         super();
@@ -46,69 +32,32 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         createFilterProperties();
     }
 
-    private void createFilterProperties( ) {
+    private void createFilterProperties(  ) {
         filterableProperties = new HashMap<String, FilterableProperty>();
-        createFilterProperties( type, null );
-    }
-
-    private class FPToggleListener implements ToggleListener, Serializable {
-        private String property;
-        public String getProperty() {
-            return property;
-        }
-        public void setProperty( String property ) {
-            this.property = property;
-        }
-        public FPToggleListener(String property) {
-            this.property = property;
-        }
-        public FPToggleListener() {
-        }
-        public void toggle( ToggleEvent event ) {
-            if (event.getSource() instanceof OrderBy) {
-                OrderBy orderBy = (OrderBy) event.getSource();
-                orderBy.setSequence( sequence );
-                sequence++;
-            }
-            filter();
-        }
-    } 
-    private void createFilterProperties( final Class theType, final String propertyName ) {
         BeanInfo beanInfo = null;
         try {
-            beanInfo = Introspector.getBeanInfo( theType );
+            beanInfo = Introspector.getBeanInfo( type );
         } catch (IntrospectionException ie) {
             throw new RuntimeException(ie);
         }
         PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
         for (PropertyDescriptor propertyDescriptor: propertyDescriptors) {
+            FilterableProperty filterableProperty = new FilterableProperty(propertyDescriptor.getName(), propertyDescriptor.getPropertyType());
+            filterableProperties.put( propertyDescriptor.getName(), filterableProperty );
             
-            String property = null;
-            if (propertyName != null) {
-                property = propertyName + "." +  propertyDescriptor.getName();
-            } else {
-                property = propertyDescriptor.getName();
-            }
-            FilterableProperty filterableProperty = new FilterableProperty(property, propertyDescriptor.getPropertyType());
-
-            filterableProperties.put( property, filterableProperty );
-            //!theType.equals( propertyDescriptor.getPropertyType() does not allow circular dependencies which plagues us.
-            if (CrudUtils.isEntity( propertyDescriptor.getPropertyType() ) && !theType.equals( propertyDescriptor.getPropertyType() )) {
-                createFilterProperties( propertyDescriptor.getPropertyType(), property );
-            } else if (CrudUtils.isEmbeddable( propertyDescriptor.getPropertyType() ) && !theType.equals( propertyDescriptor.getPropertyType() )) {
-                createFilterProperties( propertyDescriptor.getPropertyType(), property );                
-            }
-            
-            filterableProperty.addToggleListener(new FPToggleListener(property));
+            filterableProperty.addToggleListener( new ToggleListener() {
+                public void toggle( ToggleEvent event ) {
+                    filter();
+                }} );
         }
     }
 
     public void filter() {
-        /* Clear the comparison group b/c we are about to recreate it */
+        /* Clear the comparision group b/c we are about to recreate it */
         filterablePaginatableDataSource().group().clear();
         
         /* OrderBy collection list. */
-        List<OrderBy> orderBys = new ArrayList<OrderBy>();
+        List<OrderBy> orderBy = new ArrayList<OrderBy>();
         
         /* Iterator through the filters. */
         Collection<FilterableProperty> values = filterableProperties.values();
@@ -120,22 +69,17 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
             
             /* Add the order by clause to the list. */
             if (fp.getOrderBy().isEnabled()) {
-                orderBys.add( fp.getOrderBy() );
+                orderBy.add( fp.getOrderBy() );
             }
         }
         
-        Collections.sort( orderBys,  new Comparator<OrderBy> (){
-            public int compare( OrderBy ob1, OrderBy ob2 ) {
-                return ob1.getSequence().compareTo( ob2.getSequence() );
-            }});
         /* Set the orderBy list. */
-        filterablePaginatableDataSource().setOrderBy( orderBys.toArray(new OrderBy[orderBys.size()]) );
+        filterablePaginatableDataSource().setOrderBy( orderBy.toArray(new OrderBy[orderBy.size()]) );
         reset();
     }
     
     public void clearAll() {
         filterableProperties.clear();
-        sequence = 0;
         createFilterProperties(  );
         filter();
     }
@@ -160,7 +104,6 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
     }
 
     public void disableSorts() {
-        sequence = 0;
         Collection<FilterableProperty> values = filterableProperties.values();
         for (FilterableProperty fp : values) {
             fp.getOrderBy().setEnabled( false );

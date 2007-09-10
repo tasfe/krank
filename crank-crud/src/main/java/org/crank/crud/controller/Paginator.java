@@ -43,10 +43,6 @@ public class Paginator implements Pageable, Serializable {
         this.dataSource = dataSource;
     }
 
-    public int getItemsPerPage() {
-        return this.itemsPerPage;
-    }
-
     public void setItemsPerPage( int itemsPerPage ) {
         this.itemsPerPage = itemsPerPage;
     }

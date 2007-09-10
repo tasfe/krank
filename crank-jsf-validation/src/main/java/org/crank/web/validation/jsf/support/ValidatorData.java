@@ -25,14 +25,10 @@ class ValidatorData {
 	}
 	private Class parentClassOfTheField;
 
-	public ValidatorData  (String expressionString, FacesContext facesContext, Class parentClass, String fieldName) {
-        this.parentClassOfTheField = parentClass;
-        this.propertyNameOfTheField = fieldName;
+	public ValidatorData  (String expressionString, FacesContext facesContext) {
 		this.expressionString = expressionString;
 		extractParentObjectExpression();
-        if (fieldName==null) {
-            extractPropertyName();
-        }
+		extractPropertyName();
 		/* We need the parentObject so we can read its meta-data. Use the expression to look
 		 * up the parent object and then get its class. */
 		lookupParentObject(facesContext);
@@ -112,27 +108,24 @@ class ValidatorData {
 	@DependsOnJSF
 	@SuppressWarnings("deprecation")
 	protected Object lookupParentObject(FacesContext facesContext) {
-        if (parentClassOfTheField==null) {
-    		if (parentObject!=null) {
-    		    return parentObject;
-            }
-    		assert parentObjectExpression != null;
-    		try {
-    			parentObject = facesContext.getApplication().evaluateExpressionGet(facesContext, parentObjectExpression, Object.class);
-    			if (parentObject==null) {
-    				parentObject = facesContext.getApplication().createValueBinding(parentObjectExpression).getValue(facesContext);
-    			}
-    			assert parentObject !=null;
-    			
-    		} catch (Exception ex) {
-    			assert facesContext != null;
-    			parentObject = facesContext.getApplication().createValueBinding(parentObjectExpression).getValue(facesContext);
-    			assert parentObject !=null;
-    		}
-    		this.parentClassOfTheField = parentObject.getClass();
-    		return parentObject;
+		if (parentObject!=null) {
+		    return parentObject;
         }
-        return null;
+		assert parentObjectExpression != null;
+		try {
+			parentObject = facesContext.getApplication().evaluateExpressionGet(facesContext, parentObjectExpression, Object.class);
+			if (parentObject==null) {
+				parentObject = facesContext.getApplication().createValueBinding(parentObjectExpression).getValue(facesContext);
+			}
+			assert parentObject !=null;
+			
+		} catch (Exception ex) {
+			assert facesContext != null;
+			parentObject = facesContext.getApplication().createValueBinding(parentObjectExpression).getValue(facesContext);
+			assert parentObject !=null;
+		}
+		this.parentClassOfTheField = parentObject.getClass();
+		return parentObject;
 	}
 	public Class getParentClassOfTheField() {
 		return parentClassOfTheField;

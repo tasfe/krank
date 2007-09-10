@@ -32,11 +32,11 @@ public class TemplateUtils {
 	 * @param sSource the string to process for patterns to replace
 	 * @param dictReplace the dictionary used to look up patterns to replace
 	 */
-	public static String replaceAll(String sSource, Map<?,?> dictReplace) {
+	public static String replaceAll(String sSource, Map dictReplace) {
 		return replaceAll(sSource, dictReplace, DEFAULT_START_DELIMITER,
 				DEFAULT_STOP_DELIMITER);
 	}
-	public static String newReplaceAll(String sSource, Map<?,?> dictReplace) {
+	public static String newReplaceAll(String sSource, Map dictReplace) {
 		return newReplaceAll(sSource, dictReplace, DEFAULT_START_DELIMITER,
 				DEFAULT_STOP_DELIMITER);
 	}
@@ -49,7 +49,7 @@ public class TemplateUtils {
 	 * @param sStartDelim the string delimeter which indicates the start of a pattern to replace
 	 * @param sStopDelim the string delimeter which indicates the stop or end of a pattern to replace
 	 */
-	public static String newReplaceAll(String sSource, Map<?,?> dictReplace,
+	public static String newReplaceAll(String sSource, Map dictReplace,
 					String sStartDelim, String sStopDelim) {
 		char [] inputArray = sSource.toCharArray();
 		char [] startDelimArray = sStartDelim.toCharArray();
@@ -118,7 +118,7 @@ public class TemplateUtils {
 		return builder.toString();
 	}
 
-	public static String replaceAll(String sSource, Map<?,?> dictReplace,
+	public static String replaceAll(String sSource, Map dictReplace,
 			String sStartDelim, String sStopDelim) {
 		StringBuffer sb = new StringBuffer(sSource.length());
 
@@ -167,7 +167,7 @@ public class TemplateUtils {
 	 * @param dictReplace the dictionary used to look up patterns to replace
 	 */
 	public static void replaceAll(String sInFile, String sOutFile,
-			Map<?,?> dictReplace) throws FileNotFoundException, IOException {
+			Map dictReplace) throws FileNotFoundException, IOException {
 		replaceAll(sInFile, sOutFile, dictReplace, DEFAULT_START_DELIMITER,
 				DEFAULT_STOP_DELIMITER);
 	}
@@ -182,7 +182,7 @@ public class TemplateUtils {
 	 * @param sStopDelim the string delimeter which indicates the stop or end of a pattern to replace
 	 */
 	public static void replaceAll(String sInFile, String sOutFile,
-			Map<?,?> dictReplace, String sStartDelim, String sStopDelim)
+			Map dictReplace, String sStartDelim, String sStopDelim)
 			throws FileNotFoundException, IOException {
 		BufferedReader in = new BufferedReader(new FileReader(sInFile));
 		PrintWriter out = new PrintWriter(new FileOutputStream(sOutFile));
@@ -200,7 +200,7 @@ public class TemplateUtils {
 	 * @param fOut the File to write the processed output to
 	 * @param dictReplace the dictionary used to look up patterns to replace
 	 */
-	public static void replaceAll(File fIn, File fOut, Map<?,?> dictReplace)
+	public static void replaceAll(File fIn, File fOut, Map dictReplace)
 			throws FileNotFoundException, IOException {
 		replaceAll(fIn, fOut, dictReplace, DEFAULT_START_DELIMITER,
 				DEFAULT_STOP_DELIMITER);
@@ -215,7 +215,7 @@ public class TemplateUtils {
 	 * @param sStartDelim the string delimeter which indicates the start of a pattern to replace
 	 * @param sStopDelim the string delimeter which indicates the stop or end of a pattern to replace
 	 */
-	public static void replaceAll(File fIn, File fOut, Map<?,?> dictReplace,
+	public static void replaceAll(File fIn, File fOut, Map dictReplace,
 			String sStartDelim, String sStopDelim)
 			throws FileNotFoundException, IOException {
 		BufferedReader in = new BufferedReader(new FileReader(fIn));
@@ -235,7 +235,7 @@ public class TemplateUtils {
 	 * @param dictReplace the dictionary used to look up patterns to replace
 	 */
 	public static void replaceAll(BufferedReader in, PrintWriter out,
-			Map<?,?> dictReplace) throws IOException {
+			Map dictReplace) throws IOException {
 		replaceAll(in, out, dictReplace, DEFAULT_START_DELIMITER,
 				DEFAULT_STOP_DELIMITER);
 	}
@@ -250,7 +250,7 @@ public class TemplateUtils {
 	 * @param sStopDelim the string delimeter which indicates the stop or end of a pattern to replace
 	 */
 	public static void replaceAll(BufferedReader in, PrintWriter out,
-			Map<?,?> dictReplace, String sStartDelim, String sStopDelim)
+			Map dictReplace, String sStartDelim, String sStopDelim)
 			throws IOException {
 		String sLine = in.readLine();
 		while (sLine != null) {

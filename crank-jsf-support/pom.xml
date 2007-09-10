@@ -2,20 +2,15 @@
 	<parent>
 		<artifactId>crank-base</artifactId>
 		<groupId>org.crank</groupId>
-		<version>0.7-SNAPSHOT</version>
+		<version>0.4</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.crank</groupId>
 	<artifactId>crank-jsf-support</artifactId>
 	<name>crank-jsf-support</name>
-	<version>0.7-SNAPSHOT</version>
+	<version>0.4</version>
 	<url>http://maven.apache.org</url>
 	<dependencies>
-        <dependency>
-            <groupId>org.richfaces</groupId>
-            <artifactId>richfaces</artifactId>
-            <version>3.0.1</version>
-        </dependency>	
 		<dependency>
 			<groupId>org.crank</groupId>
 			<artifactId>crank-core</artifactId>
@@ -37,15 +32,6 @@
 			<groupId>javax.el</groupId>
 			<artifactId>el-api</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.apache.myfaces.tomahawk</groupId>
-            <artifactId>tomahawk</artifactId>
-            <version>1.1.6</version>
-        </dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-		</dependency>		        		
 		<dependency>
 			<groupId>el-impl</groupId>
 			<artifactId>el-impl</artifactId>

@@ -3,5 +3,5 @@ package org.crank.core;
 import java.util.Map;
 
 public interface RequestParameterMapFinder {
-    Map<String, String[]> getMap();
+    Map<String, String> getMap();
 }

@@ -14,6 +14,34 @@
 		<view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
 	</application>
 
+        <validator>
+    		<validator-id>JSFBridgeMetaDataDrivenValidator</validator-id>
+    		<validator-class>org.crank.web.validation.jsf.support.JSFBridgeMetaDataDrivenValidator</validator-class>
+  		</validator>
+  		
+  		<component>
+	  		<component-type>org.crank.ValidationScriptGenerator</component-type>
+  			<component-class>org.crank.web.validation.jsf.support.ValidationScriptGeneratorComponent</component-class>
+  		</component>
+  		
+  		<lifecycle>
+  			<phase-listener>org.crank.web.validation.jsf.support.ValidatorResourceLoaderPhaseListener</phase-listener>
+  			<!--  <phase-listener>org.crank.web.jsf.support.DebugPhaseListener</phase-listener> -->
+  		</lifecycle>
+
+<!-- 
+	<managed-bean>
+		<description>
+			The "backing file" bean that backs up the calculator webapp
+		</description>
+		<managed-bean-name>CalcBean</managed-bean-name>
+		<managed-bean-class>
+			com.arcmind.jsfquickstart.controller.CalculatorController
+		</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+ -->
+ 
 	<navigation-rule>
 		<from-view-id>/calculator.jspx</from-view-id>
 		<navigation-case>

@@ -497,7 +497,7 @@ public class SpringApplication extends Application {
 
             return converter;
         }
-        throw originalException;
+        return null;
     }
 
     /**

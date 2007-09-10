@@ -7,16 +7,28 @@
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:crank="http://www.googlecode.com/crank"
+	xmlns:crud="http://www.googlecode.com/crank/crud"
 	>
 <ui:composition template="/templates/layout.xhtml">
+	
 	<ui:define name="content">
+
+		<c:if test="${empty daoName}">
+			<c:set var="daoName" value="Specialty" />
+		</c:if>
+		<c:set var="listPropertyNames" value="name" />
+		
+		<h:outputText value="Export Departments Preview" styleClass="pageTitle"/>
+
 		<h:form>
-			<h:panelGrid columns="1">
-				<h:commandLink action="EMPLOYEES" value="Employees" styleClass="titleCommandLink"/>
-				<h:commandLink action="DEPARTMENTS" value="Departments" styleClass="titleCommandLink"/>
-				<h:commandLink action="SPECIALTY" value="Specialties" styleClass="titleCommandLink"/>
-			</h:panelGrid>
+			<crank:exportListing 
+				jsfCrudAdapter="#{cruds[daoName]}" 
+				propertyNames="${listPropertyNames}"
+				pageTitle="${daoName}"
+				daoName="${daoName}"
+				crud="#{deptCrud.controller}"/>
 		</h:form>
+
 	</ui:define>
 </ui:composition>
 </html>

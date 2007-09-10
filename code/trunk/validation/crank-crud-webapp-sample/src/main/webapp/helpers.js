@@ -127,3 +127,101 @@ function setExclusiveGroup(FormName, Caller, GroupId, ExclusiveValue) {
 			objCheckBoxes[i].checked = ExclusiveValue;
 }
 
+function setEnableGroup(FormName, Caller, GroupId) {
+	if(!document.forms[FormName])
+		return;
+
+	// Grab all the inputs and look for the one that controls the enable / disable
+	var objInputs = new Array();
+	var DisableValue = true;
+	var j=0;
+	var oInp = document.forms[FormName].getElementsByTagName('input');
+	for(var i=0;i<oInp.length;i++){
+		if (oInp[i].getAttribute('id').indexOf(FormName+":"+GroupId) == 0) {
+			if (oInp[i].getAttribute('id').indexOf(FormName+":"+GroupId+Caller) == -1) {
+				objInputs[j++] = oInp[i];
+			} else {
+				DisableValue = !oInp[i].checked; 		
+			}
+		}
+	}	
+	
+	if(!objInputs)
+		return;
+		
+	// Toggle the state of the remaining INPUT components
+	var countInputs = objInputs.length;
+	for(var i = 0; i < countInputs; i++)
+		objInputs[i].disabled = DisableValue;
+		
+
+	// Toggle the state of the remaining TEXTAREA components
+	objInputs = new Array();
+	j = 0;
+	oInp = document.forms[FormName].getElementsByTagName('textarea');
+	for(var i=0;i<oInp.length;i++){
+		if (oInp[i].getAttribute('id').indexOf(FormName+":"+GroupId) == 0) {
+			if (oInp[i].getAttribute('id').indexOf(FormName+":"+GroupId+Caller) == -1) {
+				objInputs[j++] = oInp[i];
+			}
+		}
+	}	
+
+	countInputs = objInputs.length;
+	for(var i = 0; i < countInputs; i++)
+		objInputs[i].disabled = DisableValue;
+		
+		
+	// Toggle the state of the remaining SELECT components
+	objInputs = new Array();
+	j = 0;
+	oInp = document.forms[FormName].getElementsByTagName('select');
+	for(var i=0;i<oInp.length;i++){
+		if (oInp[i].getAttribute('id').indexOf(FormName+":"+GroupId) == 0) {
+			if (oInp[i].getAttribute('id').indexOf(FormName+":"+GroupId+Caller) == -1) {
+				objInputs[j++] = oInp[i];
+			}
+		}
+	}	
+
+	countInputs = objInputs.length;
+	for(var i = 0; i < countInputs; i++)
+		objInputs[i].disabled = DisableValue;
+		
+		
+	// Toggle the state of the remaining BUTTON components
+	objInputs = new Array();
+	j = 0;
+	oInp = document.forms[FormName].getElementsByTagName('button');
+	for(var i=0;i<oInp.length;i++){
+		if (oInp[i].getAttribute('id').indexOf(FormName+":"+GroupId) == 0) {
+			if (oInp[i].getAttribute('id').indexOf(FormName+":"+GroupId+Caller) == -1) {
+				objInputs[j++] = oInp[i];
+			}
+		}
+	}	
+
+	countInputs = objInputs.length;
+	for(var i = 0; i < countInputs; i++)
+		objInputs[i].disabled = DisableValue;
+		
+		
+	// Toggle the state of the remaining IMG components
+	objInputs = new Array();
+	j = 0;
+	oInp = document.forms[FormName].getElementsByTagName('img');
+	for(var i=0;i<oInp.length;i++){
+		if (oInp[i].getAttribute('id').indexOf(FormName+":"+GroupId) == 0) {
+			if (oInp[i].getAttribute('id').indexOf(FormName+":"+GroupId+Caller) == -1) {
+				objInputs[j++] = oInp[i];
+			}
+		}
+	}	
+
+	countInputs = objInputs.length;
+	for(var i = 0; i < countInputs; i++)
+		objInputs[i].disabled = DisableValue;
+		
+		
+}
+

@@ -35,32 +35,105 @@
   		<c:set var="rendered" value="true"/>
   	</c:if>
 
-	<c:when test="${(not empty reRender) and ajax}">
-		<c:set var="reRenderers" value="${reRender},buttons${id}" />
+	<c:when test="${ajax}">
+		<c:set var="reRender" value="${reRender},buttons${id}" />
 	</c:when>
+	
+	<c:set var="addCreateMode" value="${(crud.state=='ADD') or (crud.state == null) or (crud.state=='UNKNOWN')}" />
+	<c:set var="editMode" value="${(crud.state=='EDIT')}" />
 	
 	<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
 	
-	<c:if test="${not empty exclusiveGroups}">
-		<c:set var="eGroups" value="${fn:split(exclusiveGroups, ',')}" />
-	</c:if>
-
 		<h:panelGrid id="formLayout${id}" columns="1" rendered="${rendered and ((crud.state=='ADD') or (crud.state == 'EDIT'))}">
 			<!-- Main for fields -->
-		    <h:panelGrid columns="3" rowClasses="formRowClass1, formRowClass2">
+		    <h:panelGrid columns="3" rowClasses="formRowClass1, formRowClass2" columnClasses="topLeft">
 				<c:forEach items="${pNames}" var="property">
 					<crank:field entity="#{crud.entity}" crud="${crud}" type="${crud.entityClass}" fieldName="${property}" daoName="${daoName}"/>
 				</c:forEach>			
 		    </h:panelGrid>
 		    
+			<!-- Enabled / Disabled Toggle Groups (jsf / a4j version - not working)  
+			<c:if test="${not empty enableGroups}">
+				<c:set var="enGroups" value="${fn:split(enableGroups, ',')}" />
+
+			    <h:panelGrid columns="1" rowClasses="radioGroup" cellspacing="5" width="100%">
+					<c:set var="counter" value="0"/>
+					<c:forEach items="${enGroups}" var="group">
+						<c:set var="groupIdEn" value="${daoName}GroupEn${counter}"/>
+
+						<crank:enableGroup 
+							id="${groupIdEn}"
+							useLabel="${false}"
+							propertyNames="${group}"
+							entity="${crud.entity}"
+							type="${crud.entityClass}"
+							crud="${crud}" 							
+							reRender="${reRender}" 
+							daoName="${daoName}"/>
+						
+						<c:set var="counter" value="${counter + 1}"/>
+					</c:forEach>	
+			    </h:panelGrid>
+			</c:if> -->
+					    
+			<!-- Enabled / Disabled Toggle Groups (javascript version) -->
+			<c:if test="${not empty enableGroups}">
+				<c:set var="enGroups" value="${fn:split(enableGroups, ',')}" />
+			    <h:panelGrid columns="1" rowClasses="radioGroup" cellspacing="5" width="100%">
+					<c:set var="counter" value="0"/>
+					<c:forEach items="${enGroups}" var="group">
+						<c:set var="groupId" value="${daoName}enGroup${counter}"/>
+						<c:set var="enableItems" value="${fn:split(group, ':')}"/>
+						<c:set var="i" value="0"/>
+						<c:set var="disabledDefault" value="${false}"/>
+						<h:panelGrid columns="3" columnClasses="topLeft">
+							<c:forEach items="${enableItems}" var="enableItem">
+							
+								<c:choose>
+									<c:when test="${i == 0}">
+							
+										<crank:field 
+											fieldId="${groupId}${enableItem}"
+										    onclick="setEnableGroup('${parentForm}','${enableItem}','${groupId}');"
+											crud="${crud}" 
+											entity="${crud.entity}" 
+											type="${crud.entityClass}" 
+											fieldName="${enableItem}" 
+											daoName="${daoName}"/>
+										<c:set var="disabledDefault" value="${not crud.entity[enableItem]}"/>
+									</c:when>
+									<c:otherwise>
+
+										<crank:field 
+											fieldId="${groupId}${enableItem}"
+											disabled="${disabledDefault}"
+											crud="${crud}" 
+											entity="${crud.entity}" 
+											type="${crud.entityClass}" 
+											fieldName="${enableItem}" 
+											daoName="${daoName}"/>
+
+									</c:otherwise>
+								</c:choose>
+								
+								<c:set var="i" value="${i + 1}"/>
+									
+							</c:forEach>
+						</h:panelGrid>
+						<c:set var="counter" value="${counter + 1}"/>
+					</c:forEach>	
+			    </h:panelGrid>
+			</c:if>
+					    
 			<!-- Radio Groups -->
 			<c:if test="${not empty exclusiveGroups}">
+				<c:set var="eGroups" value="${fn:split(exclusiveGroups, ',')}" />
 			    <h:panelGrid columns="1" rowClasses="radioGroup" cellspacing="5" width="100%">
 					<c:set var="counter" value="0"/>
 					<c:forEach items="${eGroups}" var="group">
 						<c:set var="groupId" value="${daoName}Group${counter}"/>
 						<c:set var="exclusiveBoxes" value="${fn:split(group, ':')}"/>
-						<h:panelGrid columns="3">
+						<h:panelGrid columns="3" columnClasses="topLeft">
 							<c:forEach items="${exclusiveBoxes}" var="exclusiveField">
 							    <c:if test="${crud:isBoolean(crud.entityClass,exclusiveField)}">
 									<crank:field 
@@ -111,22 +184,22 @@
 			    	  
 				<a4j:commandButton 
 					id="createAjaxB${id}" 
-					rendered="${(crud.state=='ADD') or (crud.state == null) or (crud.state=='UNKNOWN') }"
-					reRender="${reRenderers}" 
+					rendered="${addCreateMode}"
+					reRender="${reRender}" 
 					styleClass="${formButtonClass}"
 					value="Create" 
 					action="${crud.create}"/>		
 				<a4j:commandButton 
 					id="updateAjaxB${id}" 
-					rendered="${(crud.state=='EDIT')}" 
-					reRender="${reRenderers}" 
+					rendered="${editMode}" 
+					reRender="${reRender}" 
 					styleClass="${formButtonClass}" 
 					value="Update" 
 					action="${crud.update}"/>			
 				<a4j:commandButton 
 					id="resetAjaxB${id}" 
 					value="Reset"
-					reRender="${reRenderers}" 
+					reRender="${reRender}" 
 					styleClass="${formButtonClass}" 
 					type="reset"/>
 				<a4j:commandButton 
@@ -134,7 +207,7 @@
 					value="Cancel"
 					immediate="true"
 					rendered="${((crud.state=='ADD') or (crud.state == 'EDIT') or (cancelAlwaysOn)) and not hideCancel }"
-					reRender="${reRenderers}" 
+					reRender="${reRender}" 
 					styleClass="${formButtonClass}" 
 					type="button"
 					action="${crud.cancel}"/>

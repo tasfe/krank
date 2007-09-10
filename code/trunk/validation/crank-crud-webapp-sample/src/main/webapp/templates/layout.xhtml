@@ -20,27 +20,27 @@
 		<table>
 		<tr>
 		<td valign="top">
-			<rich:spacer height="100"/>
-			<h:form>
-				<div class="sample-container" >
-						<rich:tree style="width:300px" value="#{treeControllerBean.treeModel}" 
-									var="item" nodeFace="#{item.type}" componentState="#{treeControllerBean.componentState}">
-								<rich:treeNode type="Department">
-									<h:commandLink value="#{item.title}" action="#{treeControllerBean.selectDepartment}">
-										<f:param name="id" value="#{item.model.id}"/>
-									</h:commandLink>
-								</rich:treeNode>
-								<rich:treeNode type="Employee">
-									<h:commandLink value="#{item.title}" action="#{treeControllerBean.selectEmployee}">
-										<f:param name="id" value="#{item.model.id}"/>
-									</h:commandLink>
-								</rich:treeNode>
-								<rich:treeNode type="Folder">
-									<h:outputText value="#{item.title}" />
-								</rich:treeNode>
-						</rich:tree>
-				</div>
-			</h:form>		
+<!--			<rich:spacer height="100"/>-->
+<!--			<h:form>-->
+<!--				<div class="sample-container" >-->
+<!--						<rich:tree style="width:300px" value="#{treeControllerBean.treeModel}" -->
+<!--									var="item" nodeFace="#{item.type}" componentState="#{treeControllerBean.componentState}">-->
+<!--								<rich:treeNode type="Department">-->
+<!--									<h:commandLink value="#{item.title}" action="#{treeControllerBean.selectDepartment}">-->
+<!--										<f:param name="id" value="#{item.model.id}"/>-->
+<!--									</h:commandLink>-->
+<!--								</rich:treeNode>-->
+<!--								<rich:treeNode type="Employee">-->
+<!--									<h:commandLink value="#{item.title}" action="#{treeControllerBean.selectEmployee}">-->
+<!--										<f:param name="id" value="#{item.model.id}"/>-->
+<!--									</h:commandLink>-->
+<!--								</rich:treeNode>-->
+<!--								<rich:treeNode type="Folder">-->
+<!--									<h:outputText value="#{item.title}" />-->
+<!--								</rich:treeNode>-->
+<!--						</rich:tree>-->
+<!--				</div>-->
+<!--			</h:form>		-->
 		</td>
 		<td valign="top">
 				<ui:insert name="content"/>

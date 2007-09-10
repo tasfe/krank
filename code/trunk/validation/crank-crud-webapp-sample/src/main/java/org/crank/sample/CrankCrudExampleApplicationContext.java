@@ -30,13 +30,16 @@ import org.crank.crud.controller.datasource.DaoFilteringDataSource;
 import org.crank.crud.controller.datasource.EnumDataSource;
 import org.crank.crud.controller.datasource.DaoFilteringPagingDataSource;
 import org.crank.crud.controller.support.tomahawk.TomahawkFileUploadHandler;
+import org.crank.crud.dao.SpecialtyDAO;
 import org.crank.crud.dao.DepartmentDAO;
 import org.crank.crud.dao.EmployeeDAO;
 import org.crank.crud.join.Fetch;
+import org.crank.crud.jsf.support.AutocompleteController;
 import org.crank.crud.jsf.support.EntityConverter;
 import org.crank.crud.jsf.support.JsfCrudAdapter;
 import org.crank.crud.jsf.support.JsfDetailController;
 import org.crank.crud.jsf.support.SelectItemGenerator;
+import org.crank.crud.model.Specialty;
 import org.crank.crud.model.ContactInfo;
 import org.crank.crud.model.Department;
 import org.crank.crud.model.Employee;
@@ -57,6 +60,7 @@ public class CrankCrudExampleApplicationContext {
         
         managedObjects.add( new CrudManagedObject(Employee.class, EmployeeDAO.class) );
         managedObjects.add( new CrudManagedObject(Department.class, DepartmentDAO.class) );
+        managedObjects.add( new CrudManagedObject(Specialty.class, SpecialtyDAO.class) );
     }
     
     @Bean (scope = DefaultScopes.SESSION)
@@ -246,4 +250,31 @@ public class CrankCrudExampleApplicationContext {
     	return bean;
     }
 
+    @SuppressWarnings("unchecked")
+    @Bean (scope = DefaultScopes.SESSION) 
+    public Map<String, AutocompleteController> autocomplete () throws Exception {
+        Map<String, AutocompleteController> autocomplete = new HashMap<String, AutocompleteController>();
+
+        // Add the data source which contains the auto-complete data
+        DaoFilteringDataSource dataSource = new DaoFilteringDataSource();
+        dataSource.setDao( repositories().get( "Specialty" ));
+        
+        // Create the auto-complete controller for the particular property on the data source
+        // Arguments are:
+        //     dataSource - the datasource for the lookup values
+        //     propertyName - the property on the lookup results which will be used query against
+        //     fieldName - the field name of the associated entity which will be assigned the validated autocomplete entity upon successful lookup
+        AutocompleteController autoController = new AutocompleteController(dataSource, "name", "specialty");
+        
+        // Wire in the event handler to the associated controller for dealing with 
+        // conversion / validation from the Many to One association to the controller's entity
+        cruds().get("Employee").getController().addCrudControllerListener(autoController);
+        
+        // Add to the autocomplete map
+        autocomplete.put("Specialty", autoController);
+
+        return autocomplete;
+    }
+    
+    
 }

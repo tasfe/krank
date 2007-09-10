@@ -76,6 +76,9 @@ public class Employee extends Person {
 
     @ManyToOne( )
     private Department department;
+    
+    @ManyToOne()
+    private Specialty specialty;
 
     private PersistedFile file;
 
@@ -202,6 +205,8 @@ public class Employee extends Person {
         this.address = address;
     }
 
+    
+    
     public Set<ContactInfo> getContacts() {
         return contacts;
     }
@@ -209,4 +214,12 @@ public class Employee extends Person {
     public void setContacts( Set<ContactInfo> contacts ) {
         this.contacts = contacts;
     }
+
+	public Specialty getSpecialty() {
+		return specialty;
+	}
+
+	public void setSpecialty(Specialty specialty) {
+		this.specialty = specialty;
+	}
 }

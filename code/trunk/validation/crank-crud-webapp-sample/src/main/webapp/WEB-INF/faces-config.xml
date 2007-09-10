@@ -58,6 +58,13 @@
   </navigation-rule>
   
   <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>SPECIALTY</from-outcome>
+  		<to-view-id>/pages/crud/Specialty/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+  
+  <navigation-rule>
   	<from-view-id>/pages/crud/Employee/*</from-view-id>
   	<navigation-case>
   		<from-outcome>LISTING</from-outcome>
@@ -72,6 +79,7 @@
   		<to-view-id>/pages/crud/Employee/ExportListing.xhtml</to-view-id>
   	</navigation-case>  	
   </navigation-rule>
+  
   <navigation-rule>
   	<from-view-id>/pages/crud/Department/*</from-view-id>
   	<navigation-case>
@@ -81,6 +89,18 @@
   	<navigation-case>
   		<from-outcome>FORM</from-outcome>
   		<to-view-id>/pages/crud/Department/Form.xhtml</to-view-id>
+  	</navigation-case>  	
+  </navigation-rule>
+
+  <navigation-rule>
+  	<from-view-id>/pages/crud/Specialty/*</from-view-id>
+  	<navigation-case>
+  		<from-outcome>LISTING</from-outcome>
+  		<to-view-id>/pages/crud/Specialty/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  	<navigation-case>
+  		<from-outcome>FORM</from-outcome>
+  		<to-view-id>/pages/crud/Specialty/Form.xhtml</to-view-id>
   	</navigation-case>  	
   </navigation-rule>
 

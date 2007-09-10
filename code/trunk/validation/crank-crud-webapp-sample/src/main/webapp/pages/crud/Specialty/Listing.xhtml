@@ -10,31 +10,31 @@
 	>
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
-	
+
 		<h:form>
 			<h:panelGroup>
 				<h:commandLink action="HOME" value="Home" styleClass="paginationPageNumberLink"/>
 				<h:outputText value="|" styleClass="paginationPageNumberLink"/>
-				<h:outputText value="Employees" styleClass="paginationPageNumberLink"/>
+				<h:outputText value="Specialties" styleClass="paginationPageNumberLink"/>
 			</h:panelGroup>
 		</h:form>
 	
-		<h:outputText value="Employees" styleClass="pageTitle"/>
+		<h:outputText value="Specialties" styleClass="pageTitle"/>
 
 		<a4j:region renderRegionOnly="false"> 
 			<a4j:form id="${daoName}ListForm">
 				<crank:listing 
-					id="${daoName}Listing"
-					paginator="${paginators['Employee']}" 
-					jsfCrudAdapter="${cruds['Employee']}" 
-					propertyNames="firstName,lastName,status,active,dob,age,phone,department.name,address.zipCode,specialty.name"
+					paginator="${paginators['Specialty']}" 
+					jsfCrudAdapter="${cruds['Specialty']}" 
+					propertyNames="name"
 					pageTitle="${daoName}"
 					parentForm="${daoName}ListForm"
 					reRender="${daoName}ListForm"
-					crud="${cruds['Employee'].controller}"/>
+					crud="${cruds['Specialty'].controller}"/>
 			</a4j:form>
 		</a4j:region>
 				
+		
 	</ui:define>
 </ui:composition>
 </html>

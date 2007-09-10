@@ -36,8 +36,7 @@
 		</h:form>
 	
 		<h:outputText value="Employee" styleClass="pageTitle"/>
-
-			<h:form
+			<a4j:form
 				id="${daoName}DetailFormB"
 				prependId="false"
 				rendered="#{(employeeCrud.controller.state == 'ADD') or (employeeCrud.controller.state == 'EDIT')}"
@@ -51,10 +50,10 @@
 					reRender="${reRender}"
 					cancelAlwaysOn="true"
 					ajax="${true}"
-					propertyNames="firstName,lastName,status,active,dob,age,phone,email,department,description,file,numberOfPromotions">
+					propertyNames="firstName,lastName,department,description,file,age,numberOfPromotions,specialty:Specialty"
+					enableGroups="active:status:dob:phone:email">
 
 					<crank:compositePanel entity="${employeeCrud.controller.entity.address}" name="address" propertyNames="line_1,line2,zipCode"/>
-
 
 					<c:set var="taskDetailController" 
 						value="${employeeCrud.controller.children.tasks}" />
@@ -69,6 +68,7 @@
 						rendered="${renderListings}"
 						reRender="${daoName}DetailFormB"
 						parentForm="${daoName}DetailFormB"
+						enableGroups=""
 						propertyNames="name,startDate,endDate,complete"/>
 	
 					<crank:detailListing 
@@ -78,10 +78,11 @@
 						daoName="Contacts"
 						detailController="${contactDetailController}" 
 						parentForm="${daoName}DetailFormB"
+						enableGroups=""
 						propertyNames="name,phone"/>
 
 				</crank:form>
-			</h:form>
+			</a4j:form>
 	</ui:define>
 </ui:composition>
 </html>

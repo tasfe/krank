@@ -137,35 +137,26 @@
 							</c:otherwise>
 						</c:choose>
 					
-						<!--<c:if test="${not crud:contains(property, '.')}">
-							<h:outputText value="#{row.object[property]}" rendered="${not ((row.object[property] == 'true') or (row.object[property] == 'false'))}"/>
-							<h:graphicImage value="/images/check-sm.gif" rendered="${(row.object[property] == 'true')}" styleClass="imageCenter"/>
-						</c:if>
-						<c:if test="${crud:contains(property, '.')}">
-							<h:outputText value="#{row.map[property]}" rendered="${not ((row.map[property] == 'true') or (row.map[property] == 'false'))}"/>
-							<h:graphicImage value="/images/check-sm.gif" rendered="${(row.map[property] == 'true')}" styleClass="imageCenter"/>
-						</c:if>-->
 					</h:column>
 				</c:forEach>
 				
 				<h:column>
 					<h:panelGroup>
-						<a4j:commandLink 
+						<h:commandLink 
 							action="${crud.read}"
-							immediate="true"
 							onmouseout="popUp(event,'editTip')"
 							onmouseover="popUp(event,'editTip')"
 							onclick="${editFunction}" >
 								<h:graphicImage value="/images/edit-sm.gif" border="0" styleClass="${listingImageButtonClass}" />
-						</a4j:commandLink>
+						</h:commandLink>
 
-						<a4j:commandLink
+						<h:commandLink
 							action="${crud.delete}"  
 							onclick="if (!confirm('Are you sure you want to delete this item?')) return false"
 							onmouseout="popUp(event,'disableTip')" 
 							onmouseover="popUp(event,'disableTip')">
 								<h:graphicImage value="/images/del-sm.gif" border="0" styleClass="${listingImageButtonClass}"/>
-						</a4j:commandLink>
+						</h:commandLink>
 					</h:panelGroup>
 				</h:column>
 				

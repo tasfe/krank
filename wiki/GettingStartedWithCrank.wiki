@@ -43,7 +43,7 @@ Step 3 Crank:
 
 
 Step 4: Manage some objects
-You can download the sandbox code from svn at https://krank.googlecode.com/svn/code/trunk/validation/. (Don't use the binary snapshot)
+You can download the sandbox code from svn at https://krank.googlecode.com/svn/trunk/. (Don't use the binary snapshot)
 
 In order to manage objects you need to know a thing or two about JPA.
 [http://www.thearcmind.com/confluence/display/SpribernateSF/JPA+Resources Check out JPA Resources] and the best [http://www.thearcmind.com/confluence/display/ArcMindOutlines/JPA+QuickStart+Training+Course+Outline JPA training course]
@@ -51,7 +51,7 @@ In order to manage objects you need to know a thing or two about JPA.
 You need maven 2 to build any of our apps.
 
 Base you example on the sandbox
- * http://krank.googlecode.com/svn/code/trunk/validation/crank-crud-webapp-sample
+ * http://krank.googlecode.com/svn/trunk/crank-crud-webapp-sample
 
 Don't worry about the real object model. Simplify it as much as you need to and get familar with the technique.
 

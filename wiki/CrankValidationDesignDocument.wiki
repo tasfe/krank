@@ -6,7 +6,7 @@ This document discusses the current design of the Crank Validation framework. Sp
 
 The document starts off talking about the Spring MVC and JSF neutral parts of the framework. Later it does discusses the Spring MVC and JSF bindings just enough to understand how the base framework is used.
 
-This is not a getting started guide. If you are looking for a programming guide, the closest we have is [ExtendingCrankValidationWritingNewRules here]. There is also a [http://krank.googlecode.com/svn/code/trunk/validation/crank-jsf-validation-sample/ JSF example validation app] and a [http://krank.googlecode.com/svn/code/trunk/validation/crank-springmvc-validation-sample/ Spring MVC example validation app].
+This is not a getting started guide. If you are looking for a programming guide, the closest we have is [ExtendingCrankValidationWritingNewRules here]. There is also a [http://krank.googlecode.com/svn/trunk/crank-jsf-validation-sample/ JSF example validation app] and a [http://krank.googlecode.com/svn/trunk/crank-springmvc-validation-sample/ Spring MVC example validation app].
 
 == Overview of Crank Validations ==
 

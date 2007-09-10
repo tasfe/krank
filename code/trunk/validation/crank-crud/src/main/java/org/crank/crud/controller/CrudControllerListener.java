@@ -10,6 +10,9 @@ public interface CrudControllerListener extends EventListener {
     public void afterCreate(CrudEvent event);
     public void beforeCreate(CrudEvent event);
     
+    public void afterLoadCreate(CrudEvent event);
+    public void beforeLoadCreate(CrudEvent event);
+    
     public void afterRead(CrudEvent event);
     public void beforeRead(CrudEvent event);
     

@@ -70,7 +70,7 @@ public class DetailController<T, PK extends Serializable> extends CrudController
     }
 
 
-    public CrudOutcome loadCreate() {
+    public CrudOutcome doLoadCreate() {
         init();
         createEntity();
         this.state = CrudState.ADD;

@@ -36,7 +36,8 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
      * Creates a new instance of the entity class and sets the entity to this new instance.
      * @see CrudOperations#loadCreate()
      */
-    public CrudOutcome loadCreate() {
+    @SuppressWarnings("unchecked")
+    public CrudOutcome doLoadCreate() {
         init();
         createEntity();
         this.state = CrudState.ADD;

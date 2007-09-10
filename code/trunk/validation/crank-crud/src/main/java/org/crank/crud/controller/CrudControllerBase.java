@@ -9,6 +9,7 @@ import java.util.Map;
 import org.crank.annotations.design.AllowsConfigurationInjection;
 import org.crank.annotations.design.ExpectsInjection;
 import org.crank.annotations.design.OptionalInjection;
+import org.crank.core.CrankValidationException;
 import org.crank.core.PropertiesUtil;
 import org.crank.core.RequestParameterMapFinder;
 import org.crank.crud.GenericDao;
@@ -214,15 +215,34 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
         fireAfterCreate();
         return outcome;
     }
+
+    /** Load create an object. */
+    public CrudOutcome loadCreate() {
+    	try {
+	        fireBeforeLoadCreate();
+	        CrudOutcome outcome = doLoadCreate();
+	        fireAfterLoadCreate();
+	        return outcome;
+    	} catch (CrankValidationException e) {
+    		e.printStackTrace();
+    	}
+    	return null;
+    }
+    
     /** Update an object. */
     public CrudOutcome update() {
         if (fileUploadHandler!=null) {
             fileUploadHandler.upload( this );
         }
-        fireBeforeUpdate();
-        CrudOutcome outcome = doUpdate();
-        fireAfterUpdate();
-        return outcome;
+        try {
+	        fireBeforeUpdate();
+	        CrudOutcome outcome = doUpdate();
+	        fireAfterUpdate();
+	        return outcome;
+		} catch (CrankValidationException e) {
+			e.printStackTrace();
+		}
+		return null;
     }
 
     /** Update an object. */
@@ -262,6 +282,9 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
 
     /** Read an object. */
     protected abstract CrudOutcome doRead();
+
+    /** Read an object. */
+    protected abstract CrudOutcome doLoadCreate();
 
     protected String retrieveId() {
 		String[] params = this.requestParameterMapFinder.getMap().get( this.idParam );
@@ -305,6 +328,20 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
         CrudEvent event = new CrudEvent(this, this.entity);
         for (CrudControllerListener ccl : listeners) {
             ccl.afterCreate(event);
+        }
+    }
+
+    protected void fireBeforeLoadCreate() {
+        CrudEvent event = new CrudEvent(this, this.entity);
+        for (CrudControllerListener ccl : listeners) {
+            ccl.beforeLoadCreate(event);
+        }
+    }
+
+    protected void fireAfterLoadCreate() {
+        CrudEvent event = new CrudEvent(this, this.entity);
+        for (CrudControllerListener ccl : listeners) {
+            ccl.afterLoadCreate(event);
         }
     }
 

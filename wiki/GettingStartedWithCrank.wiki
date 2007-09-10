@@ -43,7 +43,7 @@ Step 3 Crank:
 
 
 Step 4: Manage some objects
-You can download the sandbox code from svn at https://krank.googlecode.com/svn/trunk/. (Don't use the binary snapshot)
+You can download the sandbox code from svn at https://krank.googlecode.com/svn/trunk
 
 In order to manage objects you need to know a thing or two about JPA.
 [http://www.thearcmind.com/confluence/display/SpribernateSF/JPA+Resources Check out JPA Resources] and the best [http://www.thearcmind.com/confluence/display/ArcMindOutlines/JPA+QuickStart+Training+Course+Outline JPA training course]

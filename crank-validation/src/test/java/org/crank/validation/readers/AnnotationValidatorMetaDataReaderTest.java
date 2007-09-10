@@ -2,6 +2,9 @@ package org.crank.validation.readers;
 
 import java.util.List;
 
+import org.crank.annotations.validation.LongRange;
+import org.crank.annotations.validation.Range;
+import org.crank.annotations.validation.Required;
 import org.crank.validation.ValidatorMetaData;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -45,7 +48,30 @@ public class AnnotationValidatorMetaDataReaderTest {
 		assertEquals(1L,range.getProperties().get("min"));
 		
 	}
-
-    
+	
 }
 
+class Employee {
+	int age;
+	long iq;
+
+	public long getIq() {
+		return iq;
+	}
+
+
+	@Required @LongRange(min=1L, max=100L)
+	public void setIq(long iq) {
+		this.iq = iq;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	@Required @Range (min="1", max="10")
+	public void setAge(int age) {
+		this.age = age;
+	}
+	
+}

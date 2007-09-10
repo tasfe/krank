@@ -19,11 +19,9 @@ import org.crank.core.ResourceBundleLocator;
  * starts with a "{". 
  * 
  * Future: It will look up the message in the 
- * EL context if it starts with a "#{"
+ * EL context if it starts wtih a "#{"
  * */
 public class MessageSpecification implements Serializable {
-	private static final long serialVersionUID = 1L;
-
 	Log log = Log.getLog(MessageSpecification.class);
     
 	/** The detailMessage part of the message. */
@@ -141,7 +139,6 @@ public class MessageSpecification implements Serializable {
      * @param actualArgs Arguments to the message.
      * @return
      */
-    @SuppressWarnings("unchecked")
     private String doCreateMessage(String message, Object [] actualArgs) {
     	
     	List argumentList = new ArrayList(Arrays.asList(actualArgs));
@@ -187,12 +184,18 @@ public class MessageSpecification implements Serializable {
     	if (key.startsWith(this.i18nMarker)) {
     		try {
     			key = key.substring(1, key.length()-1);
-                message = lookupMessageInBundle(key, bundle, message);
+                if (getSubject()!=null) {
+                    try {
+                        message = bundle.getString(key + "." + getSubject());
+                    } catch (MissingResourceException mre) {
+                        message = bundle.getString(key);                        
+                    }
+                }
     		} catch (MissingResourceException mre) {
     			message = key;
     		}
     	} 
-    	/* If the message starts with the expression marker
+    	/* If the message starts with the expresion marker
     	 * resolve it as an Expression (Universal, JSF, OGNL, etc.)
     	 */
     	else if (key.startsWith(this.expressionMarker)) {
@@ -205,7 +208,13 @@ public class MessageSpecification implements Serializable {
     		if (key.contains(".")) {
                 try {
                     key = key.substring(1, key.length()-1);
-                    message = lookupMessageInBundle(key, bundle, message);
+                    if (getSubject()!=null) {
+                        try {
+                            message = bundle.getString(key + "." + getSubject());
+                        } catch (MissingResourceException mre) {
+                            message = bundle.getString(key);                        
+                        }
+                    }
                 } catch (MissingResourceException mre) {
                     message = key;
                 }
@@ -213,20 +222,6 @@ public class MessageSpecification implements Serializable {
     			message = key;
     		}
     	}
-		return message;
-	}
-
-	private String lookupMessageInBundle(String key, ResourceBundle bundle,
-			String message) {
-		if (getSubject()!=null) {
-		    try {
-		        message = bundle.getString(key + "." + getSubject());
-		    } catch (MissingResourceException mre) {
-		        message = bundle.getString(key);                        
-		    }
-		} else {
-			return bundle.getString(key);
-		}
 		return message;
 	}
 
@@ -250,12 +245,11 @@ public class MessageSpecification implements Serializable {
 
 	/** Holds the current subject. This allows this class to be stateless
 	 * yet still allow us to change the subject on a per thread basis. */
-	private ThreadLocal<String> subjectHolder = new ThreadLocal<String>();
+	private ThreadLocal subjectHolder = new ThreadLocal();
 	
 	/** Allows client objects to set the subject for the current thread
 	 * per instance of the MessageSpecification. */
-	@SuppressWarnings("unchecked")
-    public void setCurrentSubject(String subject) {
+	public void setCurrentSubject(String subject) {
 		subjectHolder.set(subject);
 	}
 
@@ -263,7 +257,7 @@ public class MessageSpecification implements Serializable {
 	 * current subject is not found. */
     public String getSubject() {
 		if (subjectHolder.get()!=null) {
-			return subjectHolder.get();
+			return (String) subjectHolder.get();
 		}
 		return subject;
 	}

@@ -1,5 +1,11 @@
 package org.crank.validation.readers;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,8 +17,6 @@ import java.util.Set;
 import org.crank.annotations.design.AllowsConfigurationInjection;
 import org.crank.annotations.design.Implements;
 import org.crank.annotations.design.NeedsRefactoring;
-import org.crank.core.AnnotationData;
-import org.crank.core.AnnotationUtils;
 import org.crank.validation.ValidatorMetaData;
 import org.crank.validation.ValidatorMetaDataReader;
 
@@ -102,9 +106,11 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
         /* If the meta-data was not found, then generate it. */
         if (validatorMetaDataList == null) { // if not found
             /* Read the annotations from the class based on the property name. */
+            Annotation[] annotations = extractAllAnnotationsForProperty(clazz,
+                    propertyName);
             /* Extract the AnnotationData from the Java annotations. */ 
-            List<AnnotationData> annotationDataList =
-                AnnotationUtils.getAnnotationDataForProperty( clazz, propertyName, false, this.validationAnnotationPackages );
+            List<AnnotationData> annotationDataList = 
+                extractValidationAnnotationData(annotations);
 
             /* Extract the POJO based meta-data from the annotations. */
             validatorMetaDataList = 
@@ -120,9 +126,196 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
 
     }
 
+    /** This is a helper class that helps us extract annotation data
+     * from the Annotations. 
+     * @author Rick Hightower
+     *
+     */
+    @NeedsRefactoring("Break this out into a seperate class and put it in " +
+            "a utitlity package.")
+    class AnnotationData {
+        /** The actual Java annotation. */
+        private Annotation annotation;
 
+        /** The name of the classname of the annotation. */
+        private String annotationClassName;
 
+        /** The simple name of the annotation. */
+        private String annotationSimpleName;
 
+        /** The package of the annotation. */
+        private String annotationPackageName;
+        
+        
+
+        AnnotationData(Annotation annotation) {
+
+            this.annotationSimpleName = annotation.annotationType().getSimpleName();
+            this.annotationClassName = annotation.annotationType().getName();
+            this.annotationPackageName = annotationClassName.substring(0, annotationClassName.length()
+                    - annotationSimpleName.length() - 1);
+            this.annotation = annotation;
+        }
+
+        /** Determines if this is an annotation we care about. 
+         * Checks to see if the package name is in the set.
+         * */
+        @NeedsRefactoring("This would have to be changed if we move " +
+                "this class to a seperate class in another package.")
+        boolean isValidationAnnotation() {
+            return validationAnnotationPackages.contains(annotationPackageName);
+        }
+
+        /**
+         * Get the name of the annotation by lowercasing the first letter
+         * of the simple name, e.g., short name Required becomes required.
+         * @return
+         */
+        @NeedsRefactoring("Since this gets called a lot we should initialize the" +
+                " name in the constructor.")
+        String getName() {
+
+            return annotationSimpleName.substring(0, 1).toLowerCase() 
+            + annotationSimpleName.substring(1);
+        }
+
+        /**
+         * Get the values from the annotation.
+         * We use reflection to turn the annotation into a simple HashMap
+         * of values. 
+         * @return
+         */
+        @NeedsRefactoring("It seems like this would get called a lot," +
+                "perhaps we should cache this as well. Maybe only initialize it " +
+                "in the constructor as well. " + 
+                "There has got to be a better way to extract values using " +
+                "reflection and annotations")
+        Map<String, Object> getValues() {
+            /* Holds the value map. */
+            Map<String, Object> values = new HashMap<String, Object>();
+            /* Get the declared methods from the actual annotation. */
+            Method[] methods = annotation.annotationType().getDeclaredMethods();
+            
+            final Object [] noargs = (Object[]) null;
+            
+            /* Iterate through declared methods and extract values
+             * by invoking decalared methods if they are no arg methods.
+             */
+            for (Method method : methods) {
+                /* If it is a no arg method assume it is an annoation value. */
+                if (method.getParameterTypes().length == 0) {
+                    try {
+                        /* Get the value. */
+                        Object value = method.invoke(annotation, noargs);
+                        values.put(method.getName(), value);
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+            return values;
+
+        }
+
+    }
+
+    /**
+     * Create an annotation data list.
+     * 
+     * @param annotations list of annotations.
+     * @return
+     */
+    private List<AnnotationData> extractValidationAnnotationData(
+            Annotation[] annotations) {
+        List<AnnotationData> annotationsList = new ArrayList<AnnotationData>();
+        for (Annotation annotation : annotations) {
+            AnnotationData annotationData = new AnnotationData(annotation);
+            if (annotationData.isValidationAnnotation()) {
+                annotationsList.add(annotationData);
+            }
+        }
+        return annotationsList;
+    }
+
+    /**
+     * Extract all annotations for a given property.
+     * Searches current class and if none found searches
+     * super class for annotations. We do this because the class
+     * could be proxied with AOP.
+     * 
+     * @param clazz Class containing the property.
+     * @param propertyName The name of the property.
+     * @return
+     */
+    @NeedsRefactoring("There has to be a better way to do this. Read comments " +
+            "about potential bug.")
+    private Annotation[] extractAllAnnotationsForProperty(Class clazz, String propertyName) {
+        try {
+
+            Annotation[] annotations = findAnnotations(clazz, propertyName);
+
+            /* In the land of dynamic proxied AOP classes, 
+             * this class could be a proxy. This seems like a bug 
+             * waiting to happen. So far it has worked... */
+            if (annotations.length == 0) {
+                annotations = findAnnotations(clazz.getSuperclass(), propertyName);
+            }
+            return annotations;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+
+    }
+
+    /**
+     * Find annotations given a particular property name and clazz. This figures
+     * out the writeMethod for the property, and uses the write method 
+     * to look up the annotations.
+     * @param clazz The class that holds the property.
+     * @param propertyName The name of the property.
+     * @return
+     * @throws IntrospectionException
+     */
+    private Annotation[] findAnnotations(Class clazz, String propertyName)
+            throws IntrospectionException {
+        
+//        Exception ex = new Exception();
+//        ex.fillInStackTrace();
+//        ex.printStackTrace();
+//        System.ou.println("####### FIND ANNOTATION CLASS: " + clazz.getName());
+//        System.ou.println("####### FIND ANNOTATION CLASS: #" + propertyName + "#");
+        
+        /* Grab the bean info that has the write method info. */
+        BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
+        
+        /* Get the writeMethod and read its annotations. */
+        Method writeMethod = findWriteMethodForProperty(propertyName, beanInfo);
+        if (writeMethod!=null) {
+        Annotation[] annotations = writeMethod.getAnnotations();
+            return annotations;
+        } else {
+            return new Annotation[]{};
+        }
+    }
+
+    /**
+     * Finds a write method for a given property.
+     * @param propertyName
+     * @param beanInfo
+     * @return
+     */
+    private Method findWriteMethodForProperty(String propertyName, BeanInfo beanInfo) {
+        Method writeMethod = null;
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        for (PropertyDescriptor descriptor : propertyDescriptors) {
+            if (propertyName.equals(descriptor.getName())) {
+                writeMethod = descriptor.getWriteMethod();
+                break;
+            }
+        }
+//        assert writeMethod != null : "Found write method for " + propertyName;
+        return writeMethod;
+    }
 
     /**
      * Extract meta-data from the annotationData we collected thus far.

@@ -59,13 +59,6 @@ public interface GenericDao<T, PK extends Serializable> {
     void delete( PK id );
 
     /**
-     * Remove an object from persistent storage in the database.
-     * @param entity
-     *          The Primary Key of the object to delete.
-     */
-    void delete( T entity );
-    
-    /**
      * Allows geting an object using a map of the field and values
      * 
      * @param propertyValues
@@ -141,8 +134,6 @@ public interface GenericDao<T, PK extends Serializable> {
     List<T> searchOrdered (Criterion criteria, String... orderBy);
     
     List<T> find (List<Criterion> criteria, List<String> orderBy);
-    
-    List<T> find (List<Criterion> criteria, String[] orderBy);
     
     List<T> find(Fetch[] fetches, String[] orderBy, Criterion... criteria);
     

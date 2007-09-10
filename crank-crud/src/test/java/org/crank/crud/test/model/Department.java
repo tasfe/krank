@@ -8,13 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 //import org.hibernate.annotations.Proxy;
 
-@Entity(name="Department")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Entity
+//@Proxy (lazy=true)
 public class Department {
 
     @Id

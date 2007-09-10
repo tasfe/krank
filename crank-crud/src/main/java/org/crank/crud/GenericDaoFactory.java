@@ -5,9 +5,6 @@ import javax.persistence.EntityManagerFactory;
 import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
-import org.crank.crud.cache.PreloadConfiguration;
-import org.crank.crud.cache.PreloadableCacheableGenericDaoJpa;
-import org.crank.crud.cache.CachingAdvisor;
 
 /**
  * This simplifies Spring configuration.
@@ -22,23 +19,6 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
     private Class bo;
 
     private EntityManagerFactory entityManagerFactory;
-
-    private boolean preloadEnabled = false;
-    {
-    	if(preloadEnabled) {
-    		
-    	}
-    }
-    private PreloadConfiguration preloadConfiguration;
-
-
-    public void setPreloadEnabled(boolean preloadEnabled) {
-        this.preloadEnabled = preloadEnabled;
-    }
-
-    public void setPreloadConfiguration(PreloadConfiguration preloadConfiguration) {
-        this.preloadConfiguration = preloadConfiguration;
-    }
 
     public void setEntityManagerFactory( EntityManagerFactory entityManagerFactory ) {
         this.entityManagerFactory = entityManagerFactory;
@@ -62,40 +42,11 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
         }
 
         this.setInterfaces( new Class[] { intf } );
-
-        GenericDaoJpa dao = null;
-
-        if (isCachingEnabled()) {
-            dao = loadCachingDao();
-        } else {
-            dao = loadNonCachingDao();
-        }
-
+        GenericDaoJpa dao = new GenericDaoJpa( bo );
+        dao.setEntityManagerFactory( entityManagerFactory );
         this.setTarget( dao );
         this.addAdvisor( new FinderIntroductionAdvisor() );
 
-    }
-    
-    private GenericDaoJpa loadNonCachingDao() {
-        GenericDaoJpa dao = new GenericDaoJpa( bo );
-        dao.setEntityManagerFactory( entityManagerFactory );
-        return dao;
-    }
-
-    private GenericDaoJpa loadCachingDao() {
-        if (preloadConfiguration == null) {
-            throw new RuntimeException( "The Caching Configuration property must be set to use a caching dao." );
-        }
-        PreloadableCacheableGenericDaoJpa dao = new PreloadableCacheableGenericDaoJpa( bo );
-        dao.setPreloadConfiguration( preloadConfiguration );
-        dao.setEntityManagerFactory( entityManagerFactory );
-        dao.preload();
-        this.addAdvisor( new CachingAdvisor() );
-        return dao;
-    }
-
-    private boolean isCachingEnabled() {
-        return preloadConfiguration != null;
     }
 
     public void setBo( Class bo ) {

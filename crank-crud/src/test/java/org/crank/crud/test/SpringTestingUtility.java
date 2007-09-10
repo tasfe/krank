@@ -16,14 +16,12 @@ public class SpringTestingUtility {
 
     public static ConfigurableApplicationContext getContext( List<String> configs,
             Map<String, ConfigurableApplicationContext> contexts ) {
-        return getContext( null, configs, contexts, false );
+        return getContext( null, configs, contexts );
     }
 
     public static ConfigurableApplicationContext getContext( Object contextualizedObject, List<String> configs,
-            Map<String, ConfigurableApplicationContext> contexts, boolean isolateConfigs ) {
-        if (!isolateConfigs) {
-            configs.add( "applicationContext.xml" );
-        }
+            Map<String, ConfigurableApplicationContext> contexts ) {
+        configs.add( "applicationContext.xml" );
         String contextKey = getContextName( configs );
         String[] configLocations = new String[configs.size()];
         configs.toArray( configLocations );

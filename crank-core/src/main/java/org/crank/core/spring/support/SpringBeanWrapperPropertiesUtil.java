@@ -33,9 +33,4 @@ public class SpringBeanWrapperPropertiesUtil implements PropertiesUtil {
 		return properties;
 	}
 
-    public Object getPropertyValue( String propertyName, Object object ) {
-        BeanWrapper wrapper = new BeanWrapperImpl(object);
-        return wrapper.getPropertyValue( propertyName );
-    }
-
 }

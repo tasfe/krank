@@ -45,8 +45,6 @@ import org.crank.validation.validators.CompositeValidator;
 public class JSFBridgeMetaDataDrivenValidator extends
 		AbstractJSFBridgeValidator {
 	private ValidatorMetaDataReader jsfBridgeValidatorMetaDataReader = null;
-    private Class formClass;
-    private String fieldName;
 
 	private PropertiesUtil jsfBridgeValidatorPropertiesUtil = null;
 
@@ -73,7 +71,7 @@ public class JSFBridgeMetaDataDrivenValidator extends
          * Extract the parent object expression and the property name (field)
          * that we are validating.
          */
-        ValidatorData validatorData = new ValidatorData(expressionString, facesContext, formClass, fieldName);
+        ValidatorData validatorData = new ValidatorData(expressionString, facesContext);
 
         registerValidationContext(facesContext, inputComponent, validatorData);
 		fieldNameHolder[0] = validatorData.getPropertyNameOfTheField();
@@ -271,21 +269,5 @@ public class JSFBridgeMetaDataDrivenValidator extends
 		this.jsfBridgeValidatorPropertiesUtil = 
 			jsfBridgeValidatorPropertiesUtil;
 	}
-
-    public Class getFormClass() {
-        return formClass;
-    }
-
-    public void setFormClass( Class formClass ) {
-        this.formClass = formClass;
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public void setFieldName( String fieldName ) {
-        this.fieldName = fieldName;
-    }
 
 }

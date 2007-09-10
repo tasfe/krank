@@ -6,21 +6,11 @@ public class OrderBy implements Serializable{
 	private String name;
 	private OrderDirection direction;
     private boolean enabled = false;
-    private Integer sequence = 0;
 
-    public Integer getSequence() {
-        return sequence;
-    }
-    public void setSequence( Integer sequence ) {
-        this.sequence = sequence;
-    }
     public OrderBy () {
 	}
 	public OrderBy (final String aName, final OrderDirection aDirection) {
 		this.name = aName;
-        if (this.name.contains( "_" )) {
-            this.name = name.replace( '_', '.');
-        }
 		this.direction = aDirection;
 	}
 	public static OrderBy[] orderBy(OrderBy... orderBy) {
@@ -52,18 +42,6 @@ public class OrderBy implements Serializable{
     public void setEnabled( boolean enabled ) {
         this.enabled = enabled;
     }
-    public boolean isDesc() {
-        return direction == OrderDirection.DESC;
-    }
-    
-    public void setDesc( boolean desc ) {
-        if (desc) {
-            direction = OrderDirection.DESC;
-        } else {
-            direction = OrderDirection.ASC;
-        }
-    }
-
     public boolean isAsc() {
         return direction == OrderDirection.ASC;
     }

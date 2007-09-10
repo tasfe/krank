@@ -35,7 +35,7 @@ public class SpringApplicationContextObjectRegistry implements ObjectRegistry {
 		}
 	}
 
-	public Object getObject(String name, Class<?> clazz) {
+	public Object getObject(String name, Class clazz) {
 		initIfNeeded();		
 		return applicationContext.getBean(name, clazz);
 	}
@@ -47,7 +47,7 @@ public class SpringApplicationContextObjectRegistry implements ObjectRegistry {
 				AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, false);
 	}
 
-	public Object[] getObjectsByType(Class<?> clazz) {
+	public Object[] getObjectsByType(Class clazz) {
 		initIfNeeded();
 		return applicationContext.getBeansOfType(clazz).values().toArray();
 	}
@@ -61,7 +61,7 @@ public class SpringApplicationContextObjectRegistry implements ObjectRegistry {
         }
     }
 
-    public Object convertObject(Object value, Class<?> clazz) {
+    public Object convertObject(Object value, Class clazz) {
         
         if (clazz==String.class && value.getClass() == String.class){
             return value;

@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:crank="http://www.googlecode.com/crank">
+
+<ui:composition>
+
+	<!-- DEFINE VARIABLES -->
+	<c:if test="${empty paginatorCommandButtonClass}">
+		<c:set var="paginatorCommandButtonClass" value="paginationGroupButton" />
+	</c:if>
+	<c:if test="${empty paginatorImageButtonClass}">
+		<c:set var="paginatorImageButtonClass" value="paginationImageButton" />
+	</c:if>
+	<c:if test="${empty paginatorCommandButtonDisabledClass}">
+		<c:set var="paginatorCommandButtonDisabledClass" value="paginationGroupButtonDisabled" />
+	</c:if>
+	<c:if test="${empty paginatorCommandLinkClass}">
+		<c:set var="paginatorCommandLinkClass" value="paginationPageNumberLink" />
+	</c:if>
+	<c:if test="${empty paginatorOutputTextClass}">
+		<c:set var="paginatorOutputTextClass" value="paginationPageNumberPage" />
+	</c:if>
+	<c:if test="${empty paginatorCommandLinkPlainClass}">
+		<c:set var="paginatorCommandLinkPlainClass" value="paginationPageNumberPlain" />
+	</c:if>
+
+	<c:if test="${empty sortTip}">
+		<c:set var="sortTip" value="Click to toggle the sort direction"/>
+	</c:if>
+
+	<c:if test="${empty sortAscTip}">
+		<c:set var="sortAscTip" value="Ascending: Click for descending sort"/>
+	</c:if>
+
+	<c:if test="${empty sortDescTip}">
+		<c:set var="sortDescTip" value="Descending: Click for ascending sort"/>
+	</c:if>
+
+	<c:if test="${empty filterTip}">
+		<c:set var="filterTip" value="Click to create a filter for this column"/>
+	</c:if>
+
+	<c:if test="${empty filterRemTip}">
+		<c:set var="filterRemTip" value="Click to remove the column filter"/>
+	</c:if>
+
+	<c:if test="${empty pageTitle}">
+		<c:set var="pageTitle" value="Listing"/>
+	</c:if>
+	
+	<c:choose>
+		<c:when test="${not empty reRender}">
+			<c:set var="refreshPaginator" value="${reRender},paginator${id}" />
+		</c:when>
+		<c:otherwise>
+			<c:set var="refreshPaginator" value="paginator${id}" />
+		</c:otherwise>
+	</c:choose>
+
+	<!-- END DEFINE VARIABLES -->
+
+	<!-- HEADER TOOL TIPS -->
+	<div id="sortToggle" class="toolTip">${sortTip}</div>
+	<div id="sortImgAsc" class="toolTip">${sortAscTip}</div>
+	<div id="sortImgDesc" class="toolTip">${sortDescTip}</div>
+	<div id="filterOn" class="toolTip">${filterTip}</div>
+	<div id="filterOff1" class="toolTip">${filterRemTip}</div>
+	<div id="filterOff2" class="toolTip">${filterRemTip}</div>
+	<div id="exportTip" class="toolTip">Click to preview and export the current viewable listing to Excel(tm)</div>
+	
+	<h:panelGrid id="paginator${id}" columns="1" width="100%">
+	
+		<!-- TOOL BAR -->
+		<h:panelGroup>
+			<crank:commandLink 
+				id="addNewLink${id}"
+				entity="${crud}"
+				action="loadCreate"
+				toolTipText="Click to add a new record...">
+					<h:graphicImage value="/images/add-new.gif" border="0" styleClass="${listingImageButtonClass}"/>
+			</crank:commandLink>
+
+			<crank:commandLink 
+				id="applyFilter${id}"
+				entity="${paginator}"
+				action="filter"
+				rendered="#{paginator.filtering}"
+				toolTipText="Click to apply column filters"
+				reRender="${reRender}">
+					<h:graphicImage value="/images/filter.gif" border="0" styleClass="${listingImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage rendered="#{not paginator.filtering}" value="/images/filter-disabled.gif" border="0" styleClass="${listingImageButtonClass}"/>
+
+			<crank:commandLink 
+				id="clearFilters${id}"
+				entity="${paginator}"
+				action="disableFilters"
+				rendered="#{paginator.filtering}"
+				toolTipText="Click to clear table filters"
+				reRender="${reRender}">
+					<h:graphicImage value="/images/clear-filter.gif" border="0" styleClass="${listingImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage rendered="#{not paginator.filtering}" value="/images/clear-filter-disabled.gif" border="0" styleClass="${listingImageButtonClass}"/>
+			
+			<crank:commandLink 
+				id="clearSortss${id}"
+				entity="${paginator}"
+				action="disableSorts"
+				rendered="#{paginator.sorting}"
+				toolTipText="Click to clear table sorts"
+				reRender="${reRender}">
+					<h:graphicImage value="/images/clear-sorts.gif" border="0" styleClass="${listingImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage rendered="#{not paginator.sorting}" value="/images/clear-sorts-disabled.gif" border="0" styleClass="${listingImageButtonClass}"/>
+			
+			<crank:commandLink 
+				id="resetAll${id}"
+				entity="${paginator}"
+				action="clearAll"
+				rendered="#{paginator.sorting or paginator.filtering}"
+				toolTipText="Click to reset all filters and sorts"
+				reRender="${reRender}">
+					<h:graphicImage value="/images/reset.gif" border="0" styleClass="${listingImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage rendered="#{(not paginator.sorting) and (not paginator.filtering)}" value="/images/reset-disabled.gif" border="0" styleClass="${listingImageButtonClass}"/>
+
+			<h:commandLink 
+				id="export${id}"
+				onmouseout="popUp(event,'exportTip')"
+				onmouseover="popUp(event,'exportTip')"
+				action="EXPORT">
+					<h:graphicImage value="/images/excel(tm).gif" border="0" styleClass="${paginatorImageButtonClass}"/>
+			</h:commandLink>
+			
+		</h:panelGroup>
+
+		<!-- PAGINATOR -->
+		<h:panelGroup>
+			<crank:commandLink 
+				id="firstPage${id}"
+				entity="#{paginator}"
+				action="moveToStartPage"
+				rendered="#{paginator.moveToStartPageEnabled}"
+				toolTipText="Go to first page"
+				reRender="${reRender}">
+					<h:graphicImage value="/images/page_first_btn.gif" border="0" styleClass="${paginatorImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage value="/images/page_first_btn_disabled.gif" border="0" rendered="#{not paginator.moveToStartPageEnabled}" styleClass="${paginatorImageButtonClass}"/>
+
+			<crank:commandLink 
+				id="rewindPages${id}"
+				entity="#{paginator}"
+				action="rewindPages"
+				rendered="#{paginator.rewindPagesEnabled}"
+				toolTipText="Go to previous set of pages"
+				reRender="${reRender}" >
+					<h:graphicImage value="/images/page_rewind_btn.gif" border="0" styleClass="${paginatorImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage value="/images/page_rewind_btn_disabled.gif" border="0" rendered="#{not paginator.rewindPagesEnabled}" styleClass="${paginatorImageButtonClass}"/>
+
+			<crank:commandLink 
+				id="prevPage${id}"
+				entity="#{paginator}"
+				action="moveToPreviousPage"
+				rendered="#{paginator.moveToPreviousPageEnabled}"
+				toolTipText="Previous page"
+				reRender="${reRender}" >
+					<h:graphicImage value="/images/page_previous_btn.gif" border="0" styleClass="${paginatorImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage value="/images/page_previous_btn_disabled.gif" border="0" rendered="#{not paginator.moveToPreviousPageEnabled}" styleClass="${paginatorImageButtonClass}"/>
+
+			<a4j:repeat 
+				value="#{paginator.pageNumberList}"
+				var="num">
+				<a4j:commandLink 
+					value="#{num}"
+					rendered="${not (num == paginator.currentPageNumber+1) }"
+				    styleClass="${paginatorCommandLinkClass}"
+					action="#{paginator.moveToPage}"
+					reRender="${reRender}">
+					<f:param name="currentPage" value="#{num}" />
+				</a4j:commandLink>
+				<h:outputText
+					rendered="${(num == paginator.currentPageNumber+1) }"
+					styleClass="${paginatorOutputTextClass}"
+					value="#{num}" />
+			</a4j:repeat>
+
+			<h:outputText
+				id="lpDelim${id}"
+				rendered="#{paginator.showLastPageDelimiter}"
+				styleClass="${paginatorCommandLinkPlainClass}"
+				value="..." />
+			
+			<a4j:commandLink 
+				value="#{paginator.pageCount}"
+				rendered="#{paginator.showLastPageLink}"
+			    styleClass="${paginatorCommandLinkClass}"
+				action="#{paginator.moveToPage}"
+				reRender="${reRender}">
+				<f:param name="currentPage" value="#{paginator.pageCount}" />
+			</a4j:commandLink>
+			
+			<crank:commandLink 
+				id="nextPage${id}"
+				entity="#{paginator}"
+				action="moveToNextPage"
+				rendered="#{paginator.moveToNextPageEnabled}"
+				toolTipText="Next page"
+				reRender="${reRender}" >
+					<h:graphicImage value="/images/page_next_btn.gif" border="0" styleClass="${paginatorImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage value="/images/page_next_btn_disabled.gif" border="0" rendered="#{not paginator.moveToNextPageEnabled}" styleClass="${paginatorImageButtonClass}"/>
+
+			<crank:commandLink
+				id="fastFwdPages${id}"
+				entity="#{paginator}"
+				action="fastForwardPages"
+				rendered="#{paginator.fastForwardPagesEnabled}"
+				toolTipText="Go to next set of pages"
+				reRender="${reRender}" >
+					<h:graphicImage value="/images/page_forward_btn.gif" border="0" styleClass="${paginatorImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage value="/images/page_forward_btn_disabled.gif" border="0" rendered="#{not paginator.fastForwardPagesEnabled}" styleClass="${paginatorImageButtonClass}"/>
+
+			<crank:commandLink
+				id="lastPage${id}"
+				entity="#{paginator}"
+				action="moveToEndPage"
+				rendered="#{paginator.moveToEndPageEnabled}"
+				toolTipText="Go to last page"
+				reRender="${reRender}" >
+					<h:graphicImage value="/images/page_last_btn.gif" border="0" styleClass="${paginatorImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage value="/images/page_last_btn_disabled.gif" border="0" rendered="#{not paginator.moveToEndPageEnabled}" styleClass="${paginatorImageButtonClass}"/>
+			
+			<h:selectOneMenu value="#{paginator.itemsPerPage}" styleClass="dropdownSmall">
+				<f:selectItem itemLabel="10 rows" itemValue="10"/>
+				<f:selectItem itemLabel="20 rows" itemValue="20"/>
+				<f:selectItem itemLabel="50 rows" itemValue="50"/>
+				<f:selectItem itemLabel="100 rows" itemValue="100"/>
+				<f:selectItem itemLabel="All rows" itemValue="100000"/>
+				<a4j:support action="#{paginator.reset}" event="onchange" ajaxSingle="true" reRender="${refreshPaginator}" /> 
+			</h:selectOneMenu>
+			
+		</h:panelGroup>
+		
+	</h:panelGrid>
+
+</ui:composition>
+</html>

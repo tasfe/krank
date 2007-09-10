@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:crank="http://www.googlecode.com/crank"
+	>
+<ui:composition template="/templates/layout.xhtml">
+	<ui:define name="content">
+		<a4j:outputPanel>
+			<h:form id="pagForm">
+				<h:commandButton value="Add" action="${dataTableScrollerBean.crud.controller.loadCreate}"/>
+				<a4j:commandButton value="Delete Selected" action="${dataTableScrollerBean.crud.controller.deleteSelected}" reRender="${reRender}"/>
+				<crank:listing paginator="${dataTableScrollerBean.employeeDataPaginator}" 
+							   jsfCrudAdapter="${dataTableScrollerBean.crud}" 
+							   propertyNames="firstName,lastName,active,dob"
+							   actionProperties="firstName,lastName"
+							   parentForm="pagForm"
+							   reRender="${reRender}"
+							   crud="${dataTableScrollerBean.crud.controller}"/>
+							   
+				<br/><br/><br/><br/><br/><br/><br/><br/><br/>
+				<a4j:commandButton 
+					styleClass="${paginatorCommandButtonClass}"						
+					value="Fake Data" reRender="${reRender}"
+					action="#{dataTableScrollerBean.populate}" />
+			</h:form>
+		</a4j:outputPanel>
+	</ui:define>
+</ui:composition>
+</html>

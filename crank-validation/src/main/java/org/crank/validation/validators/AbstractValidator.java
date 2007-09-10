@@ -21,7 +21,6 @@ import org.crank.validation.ValidatorMessage;
  */
 public abstract class AbstractValidator extends MessageSpecification implements NameAware, FieldValidator {
 
-    
     public boolean noMessages = false;
     
     public boolean isNoMessages() {

@@ -25,8 +25,7 @@ public class TemplateUtilsTest {
 "	</SCRIPT> ";
 		
 
-	@SuppressWarnings("unchecked")
-    @Test
+	@Test
 	public void test() {
 		Map map = new HashMap ();
 		map.put("test", new Integer(1));

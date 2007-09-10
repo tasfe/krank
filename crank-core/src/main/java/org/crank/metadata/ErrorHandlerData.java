@@ -7,15 +7,14 @@ import java.io.Serializable;
 
 /** POJO that holds information on how we would like to handle an error. */
 public class ErrorHandlerData implements Serializable {
-	private static final long serialVersionUID = 1L;
-	/** The exception that we are handling. */
-	private Class<?> exceptionClass = Exception.class;
+	/** The exception that we are hanlding. */
+	private Class exceptionClass = Exception.class;
 	/**	The message we are going to send the end user */
 	private String messageDetail = "Problem"; 
 	/** The message we are going to send the end user. */
 	private String messageSummary = "Problem"; 
 	private String id = "";
-	/**	Handle all exceptions. */
+	/**	Handle all unhandled exceptions. */
 	private boolean defaultHandler = false; 
 	private boolean useMessageBundleForMessage =  false; //
 	private boolean useMessageBundleForArgs =  false; //
@@ -37,10 +36,10 @@ public class ErrorHandlerData implements Serializable {
 	public void setDefaultHandler(boolean defaultHandler) {
 		this.defaultHandler = defaultHandler;
 	}
-	public Class<?> getExceptionClass() {
+	public Class getExceptionClass() {
 		return exceptionClass;
 	}
-	public void setExceptionClass(Class<?> exceptionClass) {
+	public void setExceptionClass(Class exceptionClass) {
 		this.exceptionClass = exceptionClass;
 	}
 	public String getId() {

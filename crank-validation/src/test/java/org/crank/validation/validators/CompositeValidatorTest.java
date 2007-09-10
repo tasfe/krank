@@ -26,8 +26,6 @@ public class CompositeValidatorTest {
 
     private CompositeValidator validator = new CompositeValidator();
     private List<FieldValidator> validatorList = new ArrayList<FieldValidator>();
-    private int count = 0;
-    
 
     private FieldValidator pass1 = new FieldValidator() {
 
@@ -36,27 +34,15 @@ public class CompositeValidatorTest {
         }
 
     };
-    class Fail implements FieldValidator {
-
-        public ValidatorMessage validate(Object object, String fieldLabel) {
-            count ++;
-            ValidatorMessage message = new ValidatorMessage();
-            message.setHasError( true );
-            return message;
-        }
-
-    };
-    Fail fail = new Fail();
 
 
     @BeforeMethod
     protected void setUp() throws Exception {
-        count = 0;
         validator = new CompositeValidator();
         validatorList = new ArrayList<FieldValidator>();
         validatorList.add(pass1);
         validatorList.add(pass1);
-        validator.setValidatorList(validatorList);
+        validator.setList(validatorList);
     }
 
     @Test()
@@ -70,101 +56,6 @@ public class CompositeValidatorTest {
             assertFalse(message.hasError());
         }
 
-    }
-
-    @Test()
-    public void testCompositeWithRequired() {
-
-        RequiredValidator requiredValidator = new RequiredValidator();
-        StopOnRuleValidator onRuleValidator = new StopOnRuleValidator();
-        validatorList.add( requiredValidator );
-        validatorList.add( onRuleValidator );
-        validatorList.add( fail );
-        validatorList.add( fail );
-        validator.setValidatorList(validatorList);
-        
-        ValidatorMessages messages = (ValidatorMessages) validator.validate("crap", "fieldLabel");
-        assertNotNull(messages);
-
-        assertEquals( 1, count );
-    }
-    @Test
-    public void testCompositeWithRequired1() {
-
-        RequiredValidator requiredValidator = new RequiredValidator();
-        StopOnRuleValidator onRuleValidator = new StopOnRuleValidator();
-        onRuleValidator.setRuleName( "fail" );
-        validatorList.add( requiredValidator );
-        validatorList.add( onRuleValidator );
-        validatorList.add( fail );
-        validatorList.add( fail );
-        validator.setValidatorList(validatorList);
-        
-        ValidatorMessages messages = (ValidatorMessages) validator.validate("crap", "fieldLabel");
-        assertNotNull(messages);
-
-        assertEquals( 1, count );
-    }
-    @Test
-    public void testCompositeWithRequired2() {
-
-        StopOnRuleValidator onRuleValidator = new StopOnRuleValidator();
-        onRuleValidator.setRuleName( "fail" );
-        validatorList.add( onRuleValidator );
-        validatorList.add( fail );
-        validatorList.add( fail );
-        validator.setValidatorList(validatorList);
-        
-        ValidatorMessages messages = (ValidatorMessages) validator.validate("crap", "fieldLabel");
-        assertNotNull(messages);
-
-        assertEquals( 1, count );
-    }
-    @Test    
-    public void testCompositeWithRequired3() {
-
-        StopOnRuleValidator onRuleValidator = new StopOnRuleValidator();
-        onRuleValidator.setRuleName( "fail" );
-        validatorList.add( onRuleValidator );
-        validatorList.add( fail );
-        validatorList.add( fail );
-        validator.setValidatorList(validatorList);
-        
-        ValidatorMessages messages = (ValidatorMessages) validator.validate("", "fieldLabel");
-        assertNotNull(messages);
-
-        assertEquals( 0, count );
-    }
-    @Test
-    public void testCompositeWithRequired4() {
-
-        StopOnRuleValidator onRuleValidator = new StopOnRuleValidator();
-        onRuleValidator.setRuleName( "fail" );
-        validatorList.add( onRuleValidator );
-        validatorList.add( fail );
-        validatorList.add( fail );
-        validator.setValidatorList(validatorList);
-        
-        ValidatorMessages messages = (ValidatorMessages) validator.validate(null, "fieldLabel");
-        assertNotNull(messages);
-
-        assertEquals( 0, count );
-    }
-    @Test
-    public void testCompositeWithRequired5() {
-
-        StopOnRuleValidator onRuleValidator = new StopOnRuleValidator();
-        onRuleValidator.setRuleName( "fail" );
-        validatorList.add( onRuleValidator );
-        validatorList.add( fail );
-        validatorList.add( fail );
-        validator.setValidatorList(validatorList);
-        validator.setStopOnBlank( false );
-        
-        ValidatorMessages messages = (ValidatorMessages) validator.validate(null, "fieldLabel");
-        assertNotNull(messages);
-
-        assertEquals( 1, count );
     }
 
 }

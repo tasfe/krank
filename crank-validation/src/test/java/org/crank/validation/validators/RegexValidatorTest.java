@@ -89,33 +89,4 @@ public class RegexValidatorTest {
 
     }
 
-    @Test
-    public void testOurAddress() {
-        validator.setMatch("\\d+");
-        ValidatorMessage message = (ValidatorMessage) validator.validate("123", "");
-        assertFalse(message.hasError());
-        
-        validator.setMatch( "([a-zA-Z]|\\d+)+" );
-        message = (ValidatorMessage) validator.validate("abc", "");
-        assertFalse(message.hasError());
-
-//        validator.setMatch( "([a-zA-Z]|\\d+)+" );
-//        message = (ValidatorMessage) validator.validate("123 Main St", "");
-//        assertFalse(message.hasError());
-        
-    }
-
-    @Test
-    public void testEmail() {
-        validator.setMatch("^[_a-zA-Z0-9-]+(\\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.(([0-9]{1,3})|([a-zA-Z]{2,3})|(aero|coop|info|museum|name))$");
-        ValidatorMessage message = (ValidatorMessage) validator.validate("rick@arc-mind.com", "");
-        assertFalse(message.hasError());
-
-        validator.setMatch("^[_a-zA-Z0-9-]+(\\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.(([0-9]{1,3})|([a-zA-Z]{2,3})|(aero|coop|info|museum|name))$");
-        message = (ValidatorMessage) validator.validate("rick_arc-mind.com", "");
-        assertTrue(message.hasError());
-        
-        
-    }
-
 }

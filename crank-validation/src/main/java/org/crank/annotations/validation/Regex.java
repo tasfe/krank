@@ -12,7 +12,6 @@ public @interface Regex {
 	String match();
 	String detailMessage() default "";
 	String summaryMessage() default "";
-    boolean negate() default false;
 	
 
 }

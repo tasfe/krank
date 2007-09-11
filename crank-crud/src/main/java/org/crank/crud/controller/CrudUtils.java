@@ -138,6 +138,11 @@ public class CrudUtils {
         return map.get( "manyToOne" ) != null; 
     }
     
+    public static boolean isOneToOne(Class clazz, String propertyName) {
+        Map map = getAnnotationDataAsMap( clazz, propertyName );
+        return map.get( "oneToOne" ) != null; 
+    }
+    
     public static boolean isEnumerated(Class clazz, String propertyName) {
         Map map = getAnnotationDataAsMap( clazz, propertyName );
         return map.get( "enumerated" ) != null; 

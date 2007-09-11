@@ -117,6 +117,13 @@
 		</function-signature>
 	</function>
 	<function>
+		<function-name>isOneToOne</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isOneToOne(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
 		<function-name>isEnumerated</function-name>
 		<function-class>org.crank.crud.controller.CrudUtils</function-class>
 		<function-signature>

@@ -270,7 +270,7 @@ public class CrankCrudExampleApplicationContext {
         // conversion / validation from the Many to One association to the controller's entity
         cruds().get("Employee").getController().addCrudControllerListener(autoController);
         
-        // Add to the autocomplete map
+        // Add to the auto-complete map
         autocomplete.put("Specialty", autoController);
 
         return autocomplete;

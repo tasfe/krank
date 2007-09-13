@@ -23,36 +23,49 @@ public class CrudUtils {
     }
     
     public static boolean isRequired(Class clazz, String propertyName) {
-        
-        PropertyDescriptor descriptor = getPropertyDescriptor( clazz, propertyName);
-        if (descriptor.getPropertyType().isPrimitive()) {
-            return true;
-        }
-        
-        Map map = getAnnotationDataAsMap( clazz, propertyName );
-        
-        boolean found = map.get( "required" ) != null;
-        /* If you found an annotation called required, return true. */
-        if (found) {
-            return true;
-        } else {
-            /*Otherwise check to see if a column annotation data can be found. */
-            found = map.get( "column" ) != null;
-            if (found) {
-                /* If the column annotation data was found, see if the nullable flag was set. */
-                AnnotationData ad = (AnnotationData) map.get( "column" );
-                Object object = ad.getValues().get("nullable");
-                /* If the nullable flag was set, return its value. */
-                if (object != null) {
-                    Boolean bool = (Boolean) object;
-                    return !bool.booleanValue();
-                } else {
-                    /* Otherwise, if the nullable value was not set, then return false. */
-                    return false;
-                }
-            } else {
-                return false;
-            }
+    	
+    	if (clazz == null || propertyName == null) {
+    		throw new CrankException("CrankUtils.isRequired: Null arguments are not allowed " +
+    				" clazz = %s, propertyName = %s ", clazz, propertyName);
+    	}
+        try {
+	        PropertyDescriptor descriptor = getPropertyDescriptor( clazz, propertyName);
+	        if (descriptor==null) {
+	        	throw new CrankException("CrankUtils.isRequired: Unable to find property descriptor");
+	        }
+	        if (descriptor.getPropertyType().isPrimitive()) {
+	            return true;
+	        }
+	        
+	        Map map = getAnnotationDataAsMap( clazz, propertyName );
+	        
+	        boolean found = map.get( "required" ) != null;
+	        /* If you found an annotation called required, return true. */
+	        if (found) {
+	            return true;
+	        } else {
+	            /*Otherwise check to see if a column annotation data can be found. */
+	            found = map.get( "column" ) != null;
+	            if (found) {
+	                /* If the column annotation data was found, see if the nullable flag was set. */
+	                AnnotationData ad = (AnnotationData) map.get( "column" );
+	                Object object = ad.getValues().get("nullable");
+	                /* If the nullable flag was set, return its value. */
+	                if (object != null) {
+	                    Boolean bool = (Boolean) object;
+	                    return !bool.booleanValue();
+	                } else {
+	                    /* Otherwise, if the nullable value was not set, then return false. */
+	                    return false;
+	                }
+	            } else {
+	                return false;
+	            }
+	        }
+        } catch (Exception ex) {
+    		throw new CrankException(ex, "CrankUtils.isRequired: Problem %s" +
+    				" clazz = %s, propertyName = %s ", ex.getMessage(), clazz, propertyName);
+        	
         }
     }
 

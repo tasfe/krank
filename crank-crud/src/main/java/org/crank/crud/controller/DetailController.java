@@ -102,7 +102,7 @@ public class DetailController<T, PK extends Serializable> extends CrudController
     public CrudOutcome doCancel() {
         state = CrudState.UNKNOWN;
         cancelChildren();
-        return CrudOutcome.LISTING;
+        return null;
     }
         
     public CrudOutcome deleteSelected() {

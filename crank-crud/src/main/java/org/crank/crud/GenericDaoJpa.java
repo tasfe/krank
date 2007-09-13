@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import org.crank.crud.controller.CrudUtils;
 import org.crank.crud.criteria.Between;
 import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Criterion;
@@ -624,7 +625,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	@SuppressWarnings("unchecked")
     private T doReadPopulated(final PK id) {
-		final String queryName = type.getSimpleName() + ".readPopulated";
+		final String queryName = CrudUtils.getClassEntityName(type) + ".readPopulated";
 		return (T) getJpaTemplate().execute(new JpaCallback() {
 			public Object doInJpa(EntityManager em) throws PersistenceException {
 				Query query = em.createNamedQuery(queryName);

@@ -29,7 +29,7 @@ public class CrudManagedObject implements Serializable {
         this.daoInterface = daoInterface;
     }
     public String getName() {
-        return name == null ? entityType.getSimpleName() : name; 
+        return name == null ? CrudUtils.getClassEntityName(entityType) : name; 
     }
     public void setName( String name ) {
         this.name = name;

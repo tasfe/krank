@@ -95,7 +95,6 @@ public class UISelectOne extends javax.faces.component.UISelectOne {
      *  is <code>null</code>
      */
     protected void validateValue(FacesContext context, Object value) {
-        System.out.println("################################ " + value);
 
         // Skip validation if it is not necessary
         //super.validateValue(context, value);

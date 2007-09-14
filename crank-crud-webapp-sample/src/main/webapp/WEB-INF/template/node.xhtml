@@ -66,7 +66,8 @@
 			toolTipText="${expandToolTip}"
 			reRender="${reRenderers}"
 			rendered="${expandRendered and (not fixedBranch)}" 
-			styleClass="${toggleLinkClass}">
+			styleClass="${toggleLinkClass}"
+			ajax="true">
 			<h:outputText id="expand${id}Out" value="${expandText}" />
 			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
 		</crank:commandLink>
@@ -79,7 +80,8 @@
 			toolTipText="${closeToolTip}"
 			reRender="${reRenderers}"
 			rendered="#{closeRendered and (not fixedBranch)}" 
-			styleClass="${toggleLinkClass}">
+			styleClass="${toggleLinkClass}"
+			ajax="true">
 			<h:outputText id="close${id}Out" value="${collapseText}" />
 			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
 		</crank:commandLink>
@@ -92,7 +94,8 @@
 			toolTipText="${expandToolTip}"
 			reRender="${reRenderers}"
 			rendered="${expandRendered and fixedBranch}" 
-			styleClass="${toggleLinkClass}">
+			styleClass="${toggleLinkClass}"
+			ajax="true">
 			<h:outputText id="fixed${id}Out" value="${expandText}" />
 			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
 		</crank:commandLink>
@@ -105,7 +108,8 @@
 			toolTipText="${closeToolTip}"
 			reRender="${reRenderers}"
 			rendered="#{closeRendered and fixedBranch}" 
-			styleClass="${toggleLinkClass}">
+			styleClass="${toggleLinkClass}"
+			ajax="true">
 			<h:outputText id="fixedC${id}Out" value="${collapseText}" />
 			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
 		</crank:commandLink>

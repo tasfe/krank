@@ -14,6 +14,11 @@
 
 <ui:composition>
 
+		<c:if test="${empty ajax}">
+			<c:set var="ajax" value="true" />
+		</c:if>
+
+
 		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
 		
 		<f:verbatim id="${daoName}DetailTips">
@@ -48,7 +53,8 @@
 							rendered="#{not detailController.showForm}"
 							toolTipText="Click to add a new detail record..."
 							reRender="${reRender}"
-							styleClass="${toggleLinkClass}">
+							styleClass="${toggleLinkClass}"
+							ajax="${ajax}">
 								<h:outputText value="Add new..."/>
 						</crank:commandLink>							
 						<crank:form   
@@ -60,7 +66,7 @@
 							reRender="${reRender}"
 							parentForm="${parentForm}"
 							daoName="${daoName}"
-							ajax="${true}">
+							ajax="${ajax}">
 							<ui:insert/>
 						</crank:form>
 	
@@ -114,7 +120,7 @@
 							
 							<h:column>
 
-								<h:panelGrid columns="2">
+								<h:panelGrid columns="2" rendered="${ajax}">
 									<a4j:commandLink 
 										action="${detailController.read}" 
 										onmouseout="popUp(event,'editDetailTip')"
@@ -129,11 +135,31 @@
 										onclick="if (!confirm('Are you sure you want to delete this item?')) return false"
 										onmouseout="popUp(event,'deleteDetailTip')" 
 										onmouseover="popUp(event,'deleteDetailTip')"
-										reRender="detailPanel${daoName}">
+										reRender="${reRender},detail${daoName}">
 										<h:graphicImage value="/images/del-sm.gif" border="0" styleClass="${listingImageButtonClass}"/>
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
 									</a4j:commandLink>
 								</h:panelGrid>
+
+								<h:panelGrid columns="2" rendered="${not ajax}">
+									<h:commandLink 
+										action="${detailController.read}" 
+										onmouseout="popUp(event,'editDetailTip')"
+										onmouseover="popUp(event,'editDetailTip')">
+											<h:graphicImage value="/images/edit-sm.gif" border="0" styleClass="${listingImageButtonClass}" />
+										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
+									</h:commandLink>
+
+									<h:commandLink
+										action="${detailController.delete}"
+										onclick="if (!confirm('Are you sure you want to delete this item?')) return false"
+										onmouseout="popUp(event,'deleteDetailTip')" 
+										onmouseover="popUp(event,'deleteDetailTip')">
+										<h:graphicImage value="/images/del-sm.gif" border="0" styleClass="${listingImageButtonClass}"/>
+										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
+									</h:commandLink>
+								</h:panelGrid>
+
 							</h:column>
 							
 						</rich:dataTable>

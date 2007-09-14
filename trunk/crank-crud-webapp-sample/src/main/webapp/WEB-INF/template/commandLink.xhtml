@@ -20,6 +20,10 @@
 		<c:set var="rendered" value="true" />
 	</c:if>
 	
+	<c:if test="${empty ajax}">
+		<c:set var="ajax" value="true" />
+	</c:if>
+
 	<c:if test="${empty immediate}">
 		<c:set var="immediate" value="false" />
 	</c:if>
@@ -83,18 +87,35 @@
 			</h:outputLink>
 		</c:when>
 		<c:otherwise>
-			<a4j:commandLink
-			    id="cmdLink${id}" 
-			    styleClass="${styleClass}"
-				action="#{entity[action]}"
-				onclick="${onclick}"
-				immediate="${immediate}"
-				rendered="#{rendered}"
-				reRender="${reRenderers}"
-				onmouseout="${onmouseout}" 
-				onmouseover="${onmouseover}">
-					<ui:insert/>
-			</a4j:commandLink>
+		    <c:if test="${ajax}">
+				<a4j:commandLink
+				    id="cmdLinkAjax${id}" 
+				    styleClass="${styleClass}"
+					action="#{entity[action]}"
+					onclick="${onclick}"
+					immediate="${immediate}"
+					rendered="#{rendered}"
+					reRender="${reRenderers}"
+					onmouseout="${onmouseout}" 
+					onmouseover="${onmouseover}">
+						<ui:insert/>
+				</a4j:commandLink>
+			</c:if>
+		    <c:if test="${not ajax}">
+				<h:commandLink
+				    id="cmdLink${id}" 
+				    styleClass="${styleClass}"
+					action="#{entity[action]}"
+					onclick="${onclick}"
+					immediate="${immediate}"
+					rendered="#{rendered}"
+					reRender="${reRenderers}"
+					onmouseout="${onmouseout}" 
+					onmouseover="${onmouseover}">
+						<ui:insert/>
+				</h:commandLink>
+			</c:if>
+
 		</c:otherwise>
 	</c:choose>
 

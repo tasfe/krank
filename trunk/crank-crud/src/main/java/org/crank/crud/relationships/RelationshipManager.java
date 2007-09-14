@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.crank.core.CrankException;
 import org.crank.core.StringUtils;
+import org.crank.crud.controller.CrudUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -426,7 +427,7 @@ public class RelationshipManager implements Serializable {
     public void setEntityClass( Class entityClass ) {
         this.entityClass = entityClass;
         if (entityName == null) {
-            entityName = entityClass.getSimpleName();
+            entityName = CrudUtils.getClassEntityName(entityClass);
         }
     }
 

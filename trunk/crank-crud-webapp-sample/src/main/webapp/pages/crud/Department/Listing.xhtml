@@ -19,20 +19,14 @@
 			</h:panelGroup>
 		</h:form>
 	
-		<h:outputText value="Departments" styleClass="pageTitle"/>
+		<span class="pageTitle">Departments Listing</span>
 
-		<a4j:region renderRegionOnly="false"> 
-			<a4j:form id="${daoName}ListForm">
-				<crank:listing 
-					paginator="${paginators['Department']}" 
-					jsfCrudAdapter="${cruds['Department']}" 
-					propertyNames="name"
-					pageTitle="${daoName}"
-					parentForm="${daoName}ListForm"
-					reRender="${daoName}ListForm"
-					crud="${cruds['Department'].controller}"/>
-			</a4j:form>
-		</a4j:region>
+		<a4j:form id="departmentsListingForm">
+				<crank:listing  jsfCrudAdapter="${cruds['Department']}" 
+					parentForm="departmentsListingForm"
+					propertyNames="name"					
+				/>
+		</a4j:form>
 				
 		
 	</ui:define>

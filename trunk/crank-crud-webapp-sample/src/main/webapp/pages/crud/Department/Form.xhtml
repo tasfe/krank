@@ -36,7 +36,6 @@
 	
 		<h:outputText value="Department" styleClass="pageTitle"/>
 
-		<a4j:region renderRegionOnly="false"> 
 			<a4j:form
 				id="${daoName}DetailFormB"
 				rendered="#{(cruds['Department'].controller.state == 'ADD') or (cruds['Department'].controller.state == 'EDIT')}">
@@ -64,19 +63,19 @@
 						parentForm="${daoName}DetailFormB"
 						propertyNames="firstName,lastName,active,dob,age,numberOfPromotions">
 	
+						<a4j:outputPanel ajaxRendered="true">
 						<crank:detailListing 
 							id="${daoName}DetailList2"
 							reRender="${daoName}DetailFormB"
 							daoName="Tasks"
 							detailController="${taskDetailController}" 
 							parentForm="${daoName}DetailFormB"
-							propertyNames="name,startDate,endDate,complete"
-							ajax="${false}"/>
+							propertyNames="name,startDate,endDate,complete"/>
+						</a4j:outputPanel>
 							
 					</crank:detailListing>
 				</crank:form>
 			</a4j:form>
-		</a4j:region>
 
 	</ui:define>
 </ui:composition>

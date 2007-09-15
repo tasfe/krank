@@ -12,21 +12,13 @@
 <ui:composition template="/templates/layout.xhtml">
 	
 	<ui:define name="content">
-
-		<c:if test="${empty daoName}">
-			<c:set var="daoName" value="Department" />
-		</c:if>
-		<c:set var="listPropertyNames" value="name" />
 		
-		<h:outputText value="Export Departments Preview" styleClass="pageTitle"/>
+		<span class="pageTitle">Export Departments Preview</span>
 
 		<h:form>
 			<crank:exportListing 
-				jsfCrudAdapter="#{cruds[daoName]}" 
-				propertyNames="${listPropertyNames}"
-				pageTitle="${daoName}"
-				daoName="${daoName}"
-				crud="#{deptCrud.controller}"/>
+				jsfCrudAdapter="${cruds['Department']}" 
+				propertyNames="name"/>
 		</h:form>
 
 	</ui:define>

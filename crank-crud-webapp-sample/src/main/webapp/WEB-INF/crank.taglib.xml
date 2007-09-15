@@ -5,6 +5,10 @@
 <facelet-taglib>
 	<namespace>http://www.googlecode.com/crank</namespace>
 	<tag>
+		<tag-name>crudBreadCrumb</tag-name>
+		<source>template/crudBreadCrumb.xhtml</source>
+	</tag>	
+	<tag>
 		<tag-name>compositePanel</tag-name>
 		<source>template/compositePanel.xhtml</source>
 	</tag>

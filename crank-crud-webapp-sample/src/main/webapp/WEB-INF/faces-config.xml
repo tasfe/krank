@@ -97,6 +97,10 @@
   		<from-outcome>FORM</from-outcome>
   		<to-view-id>/pages/crud/Department/Form.xhtml</to-view-id>
   	</navigation-case>  	
+  	<navigation-case>
+  		<from-outcome>EXPORT</from-outcome>
+  		<to-view-id>/pages/crud/Department/ExportListing.xhtml</to-view-id>
+  	</navigation-case>  	
   </navigation-rule>
 
   <navigation-rule>
@@ -108,6 +112,10 @@
   	<navigation-case>
   		<from-outcome>FORM</from-outcome>
   		<to-view-id>/pages/crud/Specialty/Form.xhtml</to-view-id>
+  	</navigation-case>  	
+  	<navigation-case>
+  		<from-outcome>EXPORT</from-outcome>
+  		<to-view-id>/pages/crud/Specialty/ExportListing.xhtml</to-view-id>
   	</navigation-case>  	
   </navigation-rule>
 

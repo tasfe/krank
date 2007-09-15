@@ -12,75 +12,37 @@
 	
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
+		<c:set var="crud" value="${employeeCrud.controller}"/>
+		<c:set var="taskDetailController" 
+						value="${crud.children.tasks}" />
+		<c:set var="contactDetailController" 
+						value="${crud.children.contacts}" />						
 
-		<c:set var="daoName" value="Employee" />
-		<c:set var="renderListings" value="${(employeeCrud.controller.state=='ADD') or (employeeCrud.controller.state == 'EDIT') or (employeeCrud.controller.state == null) }" />
-		
-		<c:choose>
-			<c:when test="${empty reRender}">
-				<c:set var="reRender" value="${daoName}DetailFormB,${daoName}DetailList1,${daoName}DetailList2,${daoName}DetailForm"/>
-			</c:when>
-			<c:otherwise>
-				<c:set var="reRender" value="${reRender},${daoName}DetailFormB,${daoName}DetailList1,${daoName}DetailList2,${daoName}DetailForm"/>
-			</c:otherwise>
-		</c:choose>
-	
-		<h:form>
-			<h:panelGroup>
-				<h:commandLink action="HOME" value="Home" styleClass="paginationPageNumberLink"/>
-				<h:outputText value="|" styleClass="paginationPageNumberLink"/>
-				<h:commandLink action="EMPLOYEES" value="Employees" styleClass="paginationPageNumberLink"/>
-				<h:outputText value="|" styleClass="paginationPageNumberLink"/>
-				<h:outputText value="Employee (add, edit)" styleClass="paginationPageNumberLink"/>
-			</h:panelGroup>
-		</h:form>
-	
-		<h:outputText value="Employee" styleClass="pageTitle"/>
-			<a4j:form
-				id="${daoName}DetailFormB"
-				prependId="false"
-				rendered="#{(employeeCrud.controller.state == 'ADD') or (employeeCrud.controller.state == 'EDIT')}"
-				enctype="multipart/form-data">
 
-				<crank:form
-					id="${daoName}DetailForm" 
-					crud="${employeeCrud.controller}" 
-					daoName="${daoName}"
-					parentForm="${daoName}DetailFormB"
-					reRender="${reRender}"
-					cancelAlwaysOn="true"
-					ajax="${true}"
+		<crank:crudBreadCrumb crud="${crud}"/>
+
+	    <span class="pageTitle">Employee Entry</span>
+	
+		<a4j:form id="employeeForm" enctype="multipart/form-data">
+
+				<crank:form crud="${crud}"  parentForm="employeeForm"
 					propertyNames="firstName,lastName,department,description,file,age,numberOfPromotions,specialty:Specialty"
 					enableGroups="active:status:dob:phone:email">
 
-					<crank:compositePanel entity="${employeeCrud.controller.entity.address}" name="address" propertyNames="line_1,line2,zipCode"/>
+					<crank:compositePanel entity="${crud.entity.address}" 
+					                      name="address" propertyNames="line_1,line2,zipCode"/>
 
-					<c:set var="taskDetailController" 
-						value="${employeeCrud.controller.children.tasks}" />
-	
-					<c:set var="contactDetailController" 
-						value="${employeeCrud.controller.children.contacts}" />						
 
 					<crank:detailListing 
-						id="${daoName}DetailList1"
 						detailController="${taskDetailController}" 
-						daoName="Tasks"
-						rendered="${renderListings}"
-						reRender="${daoName}DetailFormB"
-						parentForm="${daoName}DetailFormB"
 						enableGroups=""
 						propertyNames="name,startDate,endDate,complete"/>
 	
 					<crank:detailListing 
-						id="${daoName}DetailList2"
-						rendered="${renderListings}"
-						reRender="${daoName}DetailFormB"
-						daoName="Contacts"
 						detailController="${contactDetailController}" 
-						parentForm="${daoName}DetailFormB"
 						enableGroups=""
 						propertyNames="name,phone"/>
-
+ 	
 				</crank:form>
 			</a4j:form>
 	</ui:define>

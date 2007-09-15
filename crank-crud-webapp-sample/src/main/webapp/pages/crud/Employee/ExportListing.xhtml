@@ -13,20 +13,11 @@
 	
 	<ui:define name="content">
 
-		<c:if test="${empty daoName}">
-			<c:set var="daoName" value="Employee" />
-		</c:if>
-		<c:set var="listPropertyNames" value="firstName,lastName,active,dob,age,phone" />
-		
-		<h:outputText value="Export Employees Preview" styleClass="pageTitle"/>
+		<span class="pageTitle">Export Employees Preview</span>
 
 		<h:form>
-			<crank:exportListing 
-				jsfCrudAdapter="#{cruds[daoName]}" 
-				propertyNames="${listPropertyNames}"
-				pageTitle="${daoName}"
-				daoName="${daoName}"
-				crud="#{employeeCrud.controller}"/>
+			<crank:exportListing  jsfCrudAdapter="#{cruds['Employee']}" 
+				propertyNames="${firstName,lastName,active,dob,age,phone}"/>
 		</h:form>
 
 	</ui:define>

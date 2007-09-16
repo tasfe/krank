@@ -4,7 +4,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:z="http://www.qualcomm.com/jsf/core"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
@@ -13,40 +12,44 @@
 	xmlns:crank="http://www.googlecode.com/crank">
 
 <ui:composition>
+<a4j:outputPanel ajaxRendered="true">
 
 		<c:if test="${empty ajax}">
 			<c:set var="ajax" value="true" />
 		</c:if>
 
+		<c:set var="entityName" value="${detailController.name}" />
+		<c:set var="entityNameLabel" value="${crud:createLabel(detailController.name)}" />
+
 
 		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
 		
-		<f:verbatim id="${daoName}DetailTips">
+		<f:verbatim id="${entityName}DetailTips">
 			<div id="editDetailTip" class="toolTip">Edit this record</div>
 			<div id="deleteDetailTip" class="toolTip">Delete this record</div>
 		</f:verbatim>
 
-		<h:panelGroup id="bindingPanel${daoName}" binding="${detailController.subForm}">
+		<h:panelGroup id="bindingPanel${entityName}" binding="${detailController.subForm}">
 			<crank:node
-			    id="detail${daoName}"
+			    id="detail${entityName}"
 				entity="#{detailController}"
 				expandAction="toggleShowDetails"
-				expandText="${daoName}..."
+				expandText="${entityNameLabel}..."
 				closeAction="toggleShowDetails"
-				collapseText="${daoName} (hide)"
+				collapseText="${entityNameLabel} (hide)"
 				fixedBranch="${true}"
 				layout="vertical"
 				reRender="${reRender}"
 				expandRendered="${not detailController.showDetails}"
 				closeRendered="${detailController.showDetails}"
-				expandToolTip="Click to show Add / Edit ${daoName}"
-				closeToolTip="Click to hide ${daoName}">
+				expandToolTip="Click to show Add / Edit ${entityNameLabel}"
+				closeToolTip="Click to hide ${entityNameLabel}">
 				
 				<h:panelGrid columns="2" rendered="${detailController.showDetails}" >
 					<rich:spacer width="10" height="10"/>
 					<h:panelGrid columns="1" styleClass="detailPanelGrid" >
 						<crank:commandLink 
-							id="addNewDetail${daoName}"
+							id="addNewDetail${entityName}"
 							entity="${detailController}"
 							action="loadCreate"
 							immediate="true"
@@ -58,14 +61,14 @@
 								<h:outputText value="Add new..."/>
 						</crank:commandLink>							
 						<crank:form   
-							id="${daoName}DetailSubForm"
+							id="${entityName}DetailSubForm"
 							crud="${detailController}" 
 							propertyNames="${propertyNames}"
 							immediate="true"
 							rendered="#{detailController.showForm}"
 							reRender="${reRender}"
 							parentForm="${parentForm}"
-							daoName="${daoName}"
+							entityName="${entityName}"
 							ajax="${ajax}">
 							<ui:insert/>
 						</crank:form>
@@ -125,7 +128,7 @@
 										action="${detailController.read}" 
 										onmouseout="popUp(event,'editDetailTip')"
 										onmouseover="popUp(event,'editDetailTip')"
-										reRender="${reRender},detail${daoName}">
+										reRender="${reRender},detail${entityName}">
 											<h:graphicImage value="/images/edit-sm.gif" border="0" styleClass="${listingImageButtonClass}" />
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
 									</a4j:commandLink>
@@ -135,7 +138,7 @@
 										onclick="if (!confirm('Are you sure you want to delete this item?')) return false"
 										onmouseout="popUp(event,'deleteDetailTip')" 
 										onmouseover="popUp(event,'deleteDetailTip')"
-										reRender="${reRender},detail${daoName}">
+										reRender="${reRender},detail${entityName}">
 										<h:graphicImage value="/images/del-sm.gif" border="0" styleClass="${listingImageButtonClass}"/>
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
 									</a4j:commandLink>
@@ -175,6 +178,6 @@
 
 			</crank:node>
 		</h:panelGroup>
-
+</a4j:outputPanel>
 </ui:composition>
 </html>

@@ -12,9 +12,13 @@
 	xmlns:crank="http://www.googlecode.com/crank">
 
 <ui:composition>
+	<c:set var="crud" value="${jsfCrudAdapter.controller}"/>
+	<c:set var="entityName" value="${crud.name}" />
+	<c:set var="entityNameLabel" value="${crud:createLabel(crud.name)}" />
+	<c:set var="paginator" value="${paginators[entityName]}"/>
 
-	<div id="editTip${daoName}" class="toolTip">Edit this record</div>
-	<div id="disableTip${daoName}" class="toolTip">Disable this record</div>
+	<div id="editTip${entityName}" class="toolTip">Edit this record</div>
+	<div id="disableTip${entityName}" class="toolTip">Disable this record</div>
 	
 	<!-- DEFINE VARIABLES -->
 	<c:if test="${empty id}">
@@ -52,6 +56,7 @@
 		<c:set var="listingImageButtonClass" value="paginationImageButton" />
 	</c:if>
 	<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
+	<a4j:outputPanel ajaxRendered="true">
 	
 		<h:panelGrid id="listPanel${id}" columns="1" width="${dataTableWidth}">
 			<crank:paginator paginator="${paginator}" reRender="${reRender}" />
@@ -163,6 +168,6 @@
 			</rich:dataTable>
 
 		</h:panelGrid>
-
+		</a4j:outputPanel>
 </ui:composition>
 </html>

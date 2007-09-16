@@ -14,6 +14,9 @@
 
 <ui:composition>
 
+	<c:set var="entityName" value="${crud:createLabel(detailController.name)}" />
+	<c:set var="crud" value="${jsfCrudAdapter.controller}"/>
+	
 	<!-- DEFINE VARIABLES -->
 	<c:if test="${empty id}">
 		<c:set var="id" value="ExportListing" />

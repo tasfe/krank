@@ -16,11 +16,11 @@
   <ui:composition>
 
   	<c:if test="${empty ajax}">
-  		<c:set var="ajax" value="false"/>
+  		<c:set var="ajax" value="true"/>
   	</c:if>
 
   	<c:if test="${empty cancelAlwaysOn}">
-  		<c:set var="cancelAlwaysOn" value="false"/>
+  		<c:set var="cancelAlwaysOn" value="true"/>
   	</c:if>
 
   	<c:if test="${empty hideCancel}">
@@ -41,17 +41,21 @@
 	
 	<c:set var="addCreateMode" value="${(crud.state=='ADD') or (crud.state == null) or (crud.state=='UNKNOWN')}" />
 	<c:set var="editMode" value="${(crud.state=='EDIT')}" />
+	<c:set var="entityName" value="${crud:createLabel(crud.name)}" />
+	
 	
 	<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
+	
+	
 	
 		<h:panelGrid id="formLayout${id}" columns="1" rendered="${rendered and ((crud.state=='ADD') or (crud.state == 'EDIT'))}">
 			<!-- Main for fields -->
 		    <h:panelGrid columns="3" rowClasses="formRowClass1, formRowClass2" columnClasses="topLeft">
 				<c:forEach items="${pNames}" var="property">
-					<crank:field entity="#{crud.entity}" crud="${crud}" type="${crud.entityClass}" fieldName="${property}" daoName="${daoName}"/>
+					<crank:field entity="#{crud.entity}" crud="${crud}" type="${crud.entityClass}" fieldName="${property}" entityName="${entityName}"/>
 				</c:forEach>			
 		    </h:panelGrid>
-		    
+			    
 			<!-- Enabled / Disabled Toggle Groups (jsf / a4j version - not working)  
 			<c:if test="${not empty enableGroups}">
 				<c:set var="enGroups" value="${fn:split(enableGroups, ',')}" />
@@ -59,7 +63,7 @@
 			    <h:panelGrid columns="1" rowClasses="radioGroup" cellspacing="5" width="100%">
 					<c:set var="counter" value="0"/>
 					<c:forEach items="${enGroups}" var="group">
-						<c:set var="groupIdEn" value="${daoName}GroupEn${counter}"/>
+						<c:set var="groupIdEn" value="${entityName}GroupEn${counter}"/>
 
 						<crank:enableGroup 
 							id="${groupIdEn}"
@@ -69,12 +73,13 @@
 							type="${crud.entityClass}"
 							crud="${crud}" 							
 							reRender="${reRender}" 
-							daoName="${daoName}"/>
+							entityName="${entityName}"/>
 						
 						<c:set var="counter" value="${counter + 1}"/>
 					</c:forEach>	
 			    </h:panelGrid>
 			</c:if> -->
+
 					    
 			<!-- Enabled / Disabled Toggle Groups (javascript version) -->
 			<c:if test="${not empty enableGroups}">
@@ -82,7 +87,7 @@
 			    <h:panelGrid columns="1" rowClasses="radioGroup" cellspacing="5" width="100%">
 					<c:set var="counter" value="0"/>
 					<c:forEach items="${enGroups}" var="group">
-						<c:set var="groupId" value="${daoName}enGroup${counter}"/>
+						<c:set var="groupId" value="${entityName}enGroup${counter}"/>
 						<c:set var="enableItems" value="${fn:split(group, ':')}"/>
 						<c:set var="i" value="0"/>
 						<c:set var="disabledDefault" value="${false}"/>
@@ -99,7 +104,7 @@
 											entity="${crud.entity}" 
 											type="${crud.entityClass}" 
 											fieldName="${enableItem}" 
-											daoName="${daoName}"/>
+											entityName="${entityName}"/>
 										<c:set var="disabledDefault" value="${not crud.entity[enableItem]}"/>
 									</c:when>
 									<c:otherwise>
@@ -111,7 +116,7 @@
 											entity="${crud.entity}" 
 											type="${crud.entityClass}" 
 											fieldName="${enableItem}" 
-											daoName="${daoName}"/>
+											entityName="${entityName}"/>
 
 									</c:otherwise>
 								</c:choose>
@@ -131,7 +136,7 @@
 			    <h:panelGrid columns="1" rowClasses="radioGroup" cellspacing="5" width="100%">
 					<c:set var="counter" value="0"/>
 					<c:forEach items="${eGroups}" var="group">
-						<c:set var="groupId" value="${daoName}Group${counter}"/>
+						<c:set var="groupId" value="${entityName}Group${counter}"/>
 						<c:set var="exclusiveBoxes" value="${fn:split(group, ':')}"/>
 						<h:panelGrid columns="3" columnClasses="topLeft">
 							<c:forEach items="${exclusiveBoxes}" var="exclusiveField">
@@ -143,7 +148,7 @@
 										type="${crud.entityClass}" 
 										crud="${crud}" 
 										fieldName="${exclusiveField}" 
-										daoName="${daoName}"/>
+										entityName="${entityName}"/>
 								</c:if>
 							</c:forEach>
 						</h:panelGrid>
@@ -153,6 +158,7 @@
 			</c:if>
 					    
 		    <ui:insert/>
+			<a4j:outputPanel ajaxRendered="true">
 		    
 		    <h:panelGrid id="buttonsPlain${id}" columns="4" rendered="${not ajax}">
 				<h:commandButton
@@ -213,8 +219,9 @@
 					action="${crud.cancel}"/>
 
 			</h:panelGrid>
-
+			</a4j:outputPanel>
 		</h:panelGrid>
+		
 
 </ui:composition>
 

@@ -57,7 +57,7 @@
     </c:if>
 	
 	<c:if test="${empty fieldId}">
-		<c:set var="fieldId" value="${daoName}${crud:replace(fieldName,'.','_')}"/>
+		<c:set var="fieldId" value="${entityName}${crud:replace(fieldName,'.','_')}"/>
 		<c:set var="fieldId" value="${crud:replace(fieldId,' ','_')}"/>
 	</c:if>
 
@@ -82,42 +82,20 @@
 	</c:choose>
 
 	<c:set var="simpleType" value="${true}"/>
-
+   <a4j:outputPanel ajaxRendered="true">
    <h:outputLabel 
    		id="${fieldId}Label"
    		rendered="${true}" 
    		value="${label}"
    		for="${fieldId}" 
    		styleClass="${formLabelStyleClasses}"/>
-
-<!--	<c:choose>-->
-<!--		<c:when test="${crud:contains(fieldName, '.')}">-->
-<!--			<c:set var="simpleType" value="${false}"/>-->
-<!--			<c:set var="complexProps" value="${crud:splitProperty(fieldName)}" />-->
-<!--			<c:set var="counter" value="0"/>-->
-<!--			<c:forEach items="${complexProps}" var="cProp">-->
-<!--				<c:if test="${counter == 0}">-->
-<!--					<c:set var="complexEntity" value="${cProp}"/>-->
-<!--				</c:if>-->
-<!--				<c:if test="${counter == 1}">-->
-<!--					<c:set var="complexProp" value="${cProp}"/>-->
-<!--				</c:if>-->
-<!--				<c:set var="counter" value="${counter + 1}"/>-->
-<!--			</c:forEach>-->
-<!--			${complexEntity}.${complexProp}-->
-			<!--
-			<crank:compositePanel entity="${entity[complexEntity]}" name="${complexEntity}" propertyNames="${complexProp}"/>
-			-->
-<!--		</c:when>-->
-<!--		<c:otherwise>-->
-<!--			<c:set var="simpleType" value="${true}"/>-->
-<!--		</c:otherwise>-->
-<!--	</c:choose>-->
+	</a4j:outputPanel>
 	
 	<c:if test="${simpleType}">
     <c:if test="${crud:isText(type,fieldName) or forceInputText}">
 		<c:choose>
 			<c:when test="${crud:isLargeText(type,fieldName)}">
+				<a4j:outputPanel ajaxRendered="true">
 			    <h:inputTextarea id="${fieldId}" 
 			    				 disabled="${disabled}"
 			                     value="#{entity[fieldName]}" 
@@ -129,6 +107,7 @@
 						<f:validateLength maximum="${crud:textSize(type,fieldName)}" />
 					</c:if>
 				</h:inputTextarea>
+				</a4j:outputPanel>
 			</c:when>
 			<c:otherwise>
 
@@ -154,10 +133,11 @@
 									<h:outputText value="#{result.name}" />
 								</h:column>
 							</rich:suggestionbox>
-						</h:panelGroup>
+					</h:panelGroup>
 
 					</c:when>
 					<c:otherwise>
+						<a4j:outputPanel ajaxRendered="true">
 					   	<h:inputText id="${fieldId}" 
 					    				 disabled="${disabled}"
 					                     value="#{entity[fieldName]}" 
@@ -168,6 +148,7 @@
 								<f:validateLength maximum="${crud:textSize(type,fieldName)}" />
 							</c:if>
 						</h:inputText>
+						</a4j:outputPanel>
 					</c:otherwise>
 				</c:choose>			
 			</c:otherwise>
@@ -179,6 +160,7 @@
 	<!--  If the value binding is a boolean, display a
            selectBooleanCheckbox field. -->
     <c:if test="${crud:isBoolean(type,fieldName)}">
+       <a4j:outputPanel ajaxRendered="true">
 	   <h:selectBooleanCheckbox  id="${fieldId}" 
 			    				 disabled="${disabled}"
 						 value="#{entity[fieldName]}"
@@ -186,6 +168,7 @@
 						 required="${required}" 
 						 styleClass="fieldSelectBooleanCheckbox">
 		</h:selectBooleanCheckbox>
+		</a4j:outputPanel>
 	</c:if>
 	</c:if>
 	
@@ -193,6 +176,7 @@
     <!--  If the value binding is a date, 
           display a t:inputDate field. -->
     <c:if test="${crud:isDate(type,fieldName)}">
+    	<a4j:outputPanel ajaxRendered="true">
 		<t:calendar id="${fieldId}" renderPopupButtonAsImage="true" 
 	   				 disabled="${disabled}"
 	                   renderAsPopup="true" value="#{entity[fieldName]}" 
@@ -201,26 +185,31 @@
 			<validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}"/> 
 	        <ui:insert />
 		</t:calendar>
+		</a4j:outputPanel>
 	</c:if>
 	</c:if>
 	
 	<c:if test="${simpleType}">
     <c:if test="${crud:isManyToOne(type,fieldName) and not forceInputText}">
         <c:set var="propEntityName" value="${crud:getPropertyEntityName(type,fieldName)}" />
+        <a4j:outputPanel ajaxRendered="true">        
 		<crud:select id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}">
 			<validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}"/> 
 			<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
 			<f:converter converterId="" binding="${converters[propEntityName]}"/>
 		</crud:select>
+		</a4j:outputPanel>		
     </c:if>
 	</c:if>
 	
 	<c:if test="${simpleType}">
     <c:if test="${crud:isEnum(type,fieldName)}">
         <c:set var="propEntityName" value="${crud:getPropertyEntityName(type,fieldName)}" />
+        <a4j:outputPanel ajaxRendered="true">
         <h:selectOneMenu id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}">
 			<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
 		</h:selectOneMenu>
+		</a4j:outputPanel>
     </c:if>
 	</c:if>
 	
@@ -237,11 +226,13 @@
             maxlength="${crud:columnSize(type,fieldName)}"/>
     </c:if>
 	</c:if>
+	<a4j:outputPanel ajaxRendered="true">
     <!--  Display any error messages that are found -->
     <h:message id="${fieldId}Msg"
     		   styleClass="fieldMessage"
     		   style="color: red; text-decoration: underline" 
                for="${fieldId}" />
+    </a4j:outputPanel>
 
 </ui:composition>
 

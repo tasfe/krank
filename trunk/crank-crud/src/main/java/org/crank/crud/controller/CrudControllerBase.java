@@ -44,6 +44,23 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
         return name != null ? name : CrudUtils.getClassEntityName(entityClass);
     }
 
+    public String getNameUpperCase() {
+        return getName().toUpperCase();
+    }
+
+    public String getNamePlural() {
+        String name = getName();
+        if (name.endsWith("s")) {
+        	return name + "es";
+        } else {
+        	return name + "s";
+        }
+    }
+    
+    public String getNamePluralAndUpperCase() {
+    	return getNamePlural().toUpperCase();
+    }
+    
     public void setName( String name ) {
         this.name = name;
     }

@@ -1,0 +1,61 @@
+#summary Crank Crud Tutorial
+
+= Introduction =
+
+There comes a time when writing a framework when you must explain to others how to use a framework. This is that time.
+
+Crank CRUD is part of the Crank project. It allows one to quickly create (C)reate-(R)ead-(U)pdate-(D)elete (CRUD) listings. 
+
+The Crank CRUD that currently works builds on top of JSF, Facelets, Spring and JPA. Many of the base classes of Crank CRUD do no rely on JSF or Spring or JPA so in theory it could be ported to other technology stacks (Spring MVC, JSP tagfiles, iBatis, EJB3, etc.). For this tutorial we will focus on JSF, Facelets, Spring and JPA.
+
+The JSF/Facelets support makes heavy use of Ajax4JSF so the forms and listings are Ajax enabled with no additional effort. This includes text auto completion, Ajax pagination, master detail managment, etc.
+
+Speaking of master detail managment, Crank provides support to work with object relationships via master detail forms, drop down support, text completion support and more.
+
+Instead of trying to explain these features, let's demonstrate how to use them. Working sample code is always better than a verbose description.
+
+== Crank CRUD Tutorial ==
+
+To start using Crank CRUD run its maven archetype. You can find directions to run the maven archetype here (CrankCrudMavenArchetype) (note this does not exist yet). Or you could use the sample project as a starting point. The sample project is called crank-crud-webapp-sample and it can be found in the svn repository. 
+
+== Configuration ==
+
+
+Crank Crud uses the Spring Java configuration module. If you have not used the Spring Java configuration module and you are a Spring user (and who isn't these days), then you must give Spring Java configuration a try. It allows you have the benefits of Spring without all of the hassle of XML.
+
+
+First we must register an Configuration object.
+
+====Setting up CrankCrudExampleApplicationContext====
+{{{
+@Configuration (defaultLazy=Lazy.TRUE)
+public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
+}}}
+
+
+Notice that the configuration object uses the `@Configuration` annotation (`org.springframework.config.java.annotation.Configuration`). The `@Configuration` annotation is from the Spring Java configuration module.
+
+Also note that the `CrankCrudExampleApplicationContext` subclasses the `CrudJSFConfig`. The `CrudJSFConfig` configures all of the `crudControllers` (backing beans for data entry forms), `paginators` (backing beans for listings), `selectItemGenerators` (backing beans for drop down and ajax text completion), and JSF `converters` that are needed to make you object model editable. To learn more about the `crudControllers`, `paginators`, `selectItemGenerators` and `converters` see CrankCrudDesignDocs.
+
+To manage an object, you must let the base class CrudJSFConfig know that it exists. You do this by registering the managed objects as follows:
+
+{{{
+@Configuration (defaultLazy=Lazy.TRUE)
+public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
+
+    private static List<CrudManagedObject> managedObjects;
+    
+	@Bean (scope = DefaultScopes.SINGLETON)    
+    public List<CrudManagedObject> managedObjects() {
+    	if (managedObjects==null) {
+	    	managedObjects = new ArrayList<CrudManagedObject>();
+	        managedObjects.add( new CrudManagedObject(Employee.class, EmployeeDAO.class) );
+    	}
+    	return managedObjects;
+		
+	}    
+}}}
+
+TBD
+
+

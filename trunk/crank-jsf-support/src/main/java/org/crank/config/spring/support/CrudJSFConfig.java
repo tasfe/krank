@@ -56,6 +56,7 @@ public abstract class CrudJSFConfig implements InitializingBean {
             
             /* Put the controller into the map. */
             cruds.put(StringUtils.unCapitalize(mo.getName()), jsfCrudAdapter);
+            cruds.put(mo.getName(), jsfCrudAdapter);
         }
         
         return cruds;
@@ -84,6 +85,7 @@ public abstract class CrudJSFConfig implements InitializingBean {
             FilteringPaginator dataPaginator = new FilteringPaginator(dataSource, mo.getEntityType());
             dataPaginator.setRequestParameterMapFinder(new RequestParameterMapFinderImpl());
             paginators.put(StringUtils.unCapitalize(mo.getName()), dataPaginator);
+            paginators.put(mo.getName(), dataPaginator);
         }
         return paginators;
     }
@@ -101,10 +103,10 @@ public abstract class CrudJSFConfig implements InitializingBean {
             dataSource.setDao( repos().get( mo.getName() ));
             selectItemGenerator.setDataSource( dataSource );
             selectItemGenerators.put(mo.getName(), selectItemGenerator);
+            selectItemGenerators.put(StringUtils.unCapitalize(mo.getName()), selectItemGenerator);
         }
         return selectItemGenerators;
     }
-    
     /**
      * Register JSF converters.
      * @return
@@ -118,11 +120,9 @@ public abstract class CrudJSFConfig implements InitializingBean {
             EntityConverter entityConverter = new EntityConverter();
             entityConverter.setManagedObject( mo );
             entityConverter.setDao( repos().get( mo.getName()) );
-            converters.put(mo.getName(), entityConverter);            
+            converters.put(mo.getName(), entityConverter);
+            converters.put(StringUtils.unCapitalize(mo.getName()), entityConverter);            
         }
         return converters;
     }
-    
-        
-    
 }

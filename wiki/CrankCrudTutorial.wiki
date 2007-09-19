@@ -153,3 +153,44 @@ Next we use an `a4j:form`:
 }}}
 
 The `a4j:form` is from the Ajax4JSF project. It allows you to send ajax requests from the JSF form. This will allow us to have master detail section on the form, etc.
+
+Inside of the `a4j:form` we use our own composition component as follows:
+
+{{{
+        <crank:form crud="${crud}"
+            propertyNames="firstName,lastName,department,dob,active,description,age,numberOfPromotions"/>
+}}}
+
+The above states that we will have a `firstName` property, a `lastName` property, a `department` property, a `description` property, an `age` property, and a `numberOfPromotions` on the form.
+
+The interesting thing is that `firstName`, `lastName`, `description` are Strings (java.lang.String) and `age` and `numberProperty are Integers while department is a `@OneToMany` relationship.
+
+Let's examine the Employee as follows:
+
+{{{
+public class Employee implements Serializable{
+
+    @Column( nullable = false, length = 32 )
+    private String firstName;
+    private String lastName;
+
+    @Id
+    @GeneratedValue( strategy = GenerationType.AUTO )
+    private Long id;
+
+    private boolean active;
+
+    private int age;
+
+    @Column (nullable=false)
+    private Integer numberOfPromotions;
+
+    private Date dob;
+    
+    @ManyToOne( )
+    private Department department;
+    
+
+}}}
+
+TBD

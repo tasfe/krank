@@ -31,6 +31,7 @@ import org.hibernate.annotations.Cascade;
                         "left outer join fetch employee.department " + 
                         "left outer join fetch employee.tasks " +
                         "left outer join fetch employee.contacts " +
+                        "left outer join fetch employee.directReports " +
                         "where employee.id=?" ),
         @NamedQuery( name = "Employee.findInEmployeeIds", query = "SELECT o FROM Employee o  WHERE  o.id in  ( ? )" ),
         @NamedQuery( name = "Employee.findSalaryEmployees", query = "SELECT o FROM Employee o  WHERE  o.status = org.crank.crud.model.EmployeeStatus.SALARY" ),
@@ -76,6 +77,16 @@ public class Employee extends Person {
 
     @ManyToOne( )
     private Department department;
+    
+    @ManyToOne( )
+    private Employee manager;
+    
+
+    @OneToMany( cascade = CascadeType.ALL )
+    @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})    
+    private Set<Employee> directReports = new HashSet<Employee>();
+    
+    
     
     @ManyToOne()
     private Specialty specialty;
@@ -204,7 +215,15 @@ public class Employee extends Person {
     public void setAddress( Address address ) {
         this.address = address;
     }
+    
+    public void addDirectReport(Employee employee) {
+    	employee.setManager(this);
+    	directReports.add(employee);
+    }
 
+    public void removeDirectReport(Employee employee) {
+    	directReports.remove(employee);
+    }
     
     
     public Set<ContactInfo> getContacts() {
@@ -221,5 +240,21 @@ public class Employee extends Person {
 
 	public void setSpecialty(Specialty specialty) {
 		this.specialty = specialty;
+	}
+
+	public Employee getManager() {
+		return manager;
+	}
+
+	public void setManager(Employee manager) {
+		this.manager = manager;
+	}
+
+	public Set<Employee> getDirectReports() {
+		return directReports;
+	}
+
+	public void setDirectReports(Set<Employee> directReports) {
+		this.directReports = directReports;
 	}
 }

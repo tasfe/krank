@@ -79,6 +79,13 @@ public class Comparison extends Criterion {
 	public static Comparison endsLike (final String name, final String value ) {
 		return new Comparison (name, Operator.LIKE_END, value);
 	}
+	public static Comparison isNull (final String name, final String value ) {
+		return new Comparison (name, Operator.IS_NULL, value);
+	}
+	public static Comparison isNotNull (final String name, final String value ) {
+		return new Comparison (name, Operator.IS_NOT_NULL, value);
+	}
+
 	public static Comparison endsLike (final String name, final boolean alias, final String value ) {
 		return new Comparison (name, Operator.LIKE_END, value, alias);
 	}

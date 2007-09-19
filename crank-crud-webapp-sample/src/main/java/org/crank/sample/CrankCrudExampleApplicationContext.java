@@ -18,6 +18,7 @@ import org.crank.controller.TreeControllerBean;
 import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.controller.datasource.DaoFilteringDataSource;
 import org.crank.crud.controller.datasource.EnumDataSource;
+import org.crank.crud.criteria.Comparison;
 import org.crank.crud.dao.SpecialtyDAO;
 import org.crank.crud.dao.DepartmentDAO;
 import org.crank.crud.dao.EmployeeDAO;
@@ -32,6 +33,7 @@ import org.crank.crud.model.Department;
 import org.crank.crud.model.Employee;
 import org.crank.crud.model.EmployeeStatus;
 import org.crank.crud.model.Task;
+import org.crank.crud.relationships.RelationshipManager;
 import org.crank.model.jsf.support.RichFacesTreeModelBuilder;
 
 
@@ -73,8 +75,21 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
     @Bean (scope = DefaultScopes.SESSION) 
     public JsfCrudAdapter employeeCrud() throws Exception {
         JsfCrudAdapter adapter = cruds().get( "Employee");
+        
+        adapter.getPaginator().addCriterion(Comparison.eq("manager",null));
+        adapter.getPaginator().filter();
+        
         adapter.getController().addChild( "tasks", new JsfDetailController(Task.class));
         adapter.getController().addChild( "contacts", new JsfDetailController(ContactInfo.class));
+
+        JsfDetailController directReports = new JsfDetailController(Employee.class);
+        RelationshipManager relationshipManager = directReports.getRelationshipManager();
+        relationshipManager.setChildCollectionProperty("directReports");
+        relationshipManager.setAddToParentMethodName("addDirectReport");
+        relationshipManager.setRemoveFromParentMethodName("removeDirectReport");
+        
+        
+        adapter.getController().addChild( "directReports", directReports);
         return adapter;
     }
 

@@ -27,6 +27,10 @@
   		<c:set var="hideCancel" value="false"/>
   	</c:if>
 
+  	<c:if test="${empty detail}">
+  		<c:set var="detail" value="false"/>
+  	</c:if>
+
   	<c:if test="${empty formButtonClass}">
   		<c:set var="formButtonClass" value="paginationGroupButton"/>
   	</c:if>
@@ -41,8 +45,15 @@
 	
 	<c:set var="addCreateMode" value="${(crud.state=='ADD') or (crud.state == null) or (crud.state=='UNKNOWN')}" />
 	<c:set var="editMode" value="${(crud.state=='EDIT')}" />
-	<c:set var="entityName" value="${crud:createLabel(crud.name)}" />
+	<!--<c:set var="entityName" value="${crud:createLabel(crud.name)}" />-->
 	
+	<c:if test="${detail}">
+		<c:set var="entityName" value="${crud.name}_${crud.relationshipManager.childCollectionProperty}" />
+	</c:if>
+	
+	<c:if test="${not detail}">
+		<c:set var="entityName" value="${crud.name}" />
+	</c:if>
 	
 	<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
 	
@@ -55,31 +66,6 @@
 					<crank:field entity="#{crud.entity}" crud="${crud}" type="${crud.entityClass}" fieldName="${property}" entityName="${entityName}"/>
 				</c:forEach>			
 		    </h:panelGrid>
-			    
-			<!-- Enabled / Disabled Toggle Groups (jsf / a4j version - not working)  
-			<c:if test="${not empty enableGroups}">
-				<c:set var="enGroups" value="${fn:split(enableGroups, ',')}" />
-
-			    <h:panelGrid columns="1" rowClasses="radioGroup" cellspacing="5" width="100%">
-					<c:set var="counter" value="0"/>
-					<c:forEach items="${enGroups}" var="group">
-						<c:set var="groupIdEn" value="${entityName}GroupEn${counter}"/>
-
-						<crank:enableGroup 
-							id="${groupIdEn}"
-							useLabel="${false}"
-							propertyNames="${group}"
-							entity="${crud.entity}"
-							type="${crud.entityClass}"
-							crud="${crud}" 							
-							reRender="${reRender}" 
-							entityName="${entityName}"/>
-						
-						<c:set var="counter" value="${counter + 1}"/>
-					</c:forEach>	
-			    </h:panelGrid>
-			</c:if> -->
-
 					    
 			<!-- Enabled / Disabled Toggle Groups (javascript version) -->
 			<c:if test="${not empty enableGroups}">

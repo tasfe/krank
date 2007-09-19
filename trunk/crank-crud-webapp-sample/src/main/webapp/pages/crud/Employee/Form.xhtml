@@ -4,10 +4,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
-	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:crank="http://www.googlecode.com/crank"
-	xmlns:validation="http://code.google.com/p/krank/validation"
 	xmlns:t="http://myfaces.apache.org/tomahawk">
 	
 <ui:composition template="/templates/layout.xhtml">
@@ -17,6 +15,8 @@
 						value="${crud.children.tasks}" />
 		<c:set var="contactDetailController" 
 						value="${crud.children.contacts}" />						
+		<c:set var="directReportDetailController" 
+						value="${crud.children.directReports}" />						
 
 
 		<crank:crudBreadCrumb crud="${crud}"/>
@@ -32,6 +32,11 @@
 					<crank:compositePanel entity="${crud.entity.address}" 
 					                      name="address" propertyNames="line_1,line2,zipCode"/>
 
+
+					<crank:detailListing 
+						detailController="${directReportDetailController}" 
+						enableGroups=""
+						propertyNames="firstName,lastName,description,age,numberOfPromotions"/>
 
 					<crank:detailListing 
 						detailController="${taskDetailController}" 

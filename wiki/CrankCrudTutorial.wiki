@@ -21,12 +21,12 @@ To start using Crank CRUD run its maven archetype. You can find directions to ru
 == Configuration ==
 
 
-Crank Crud uses the Spring Java configuration module. If you have not used the Spring Java configuration module and you are a Spring user (and who isn't these days), then you must give Spring Java configuration a try. It allows you have the benefits of Spring without all of the hassle of XML.
+Crank Crud uses the [http://www.springframework.org/javaconfig Spring Java configuration module]. If you have not used the [http://www.springframework.org/javaconfig Spring Java configuration module] and you are a Spring user (and who isn't these days), then you must give [http://www.springframework.org/javaconfig Spring Java configuration module] a try. It allows you have the benefits of Spring without all of the hassle of XML.
 
 
 First we must register an Configuration object.
 
-====Setting up CrankCrudExampleApplicationContext====
+====Setting up `CrankCrudExampleApplicationContext`====
 {{{
 @Configuration (defaultLazy=Lazy.TRUE)
 public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
@@ -37,7 +37,7 @@ Notice that the configuration object uses the `@Configuration` annotation (`org.
 
 Also note that the `CrankCrudExampleApplicationContext` subclasses the `CrudJSFConfig`. The `CrudJSFConfig` configures all of the `crudControllers` (backing beans for data entry forms), `paginators` (backing beans for listings), `selectItemGenerators` (backing beans for drop down and ajax text completion), and JSF `converters` that are needed to make you object model editable. To learn more about the `crudControllers`, `paginators`, `selectItemGenerators` and `converters` see CrankCrudDesignDocs.
 
-To manage an object in a CRUD listing (or as a drop down), you must let the base class CrudJSFConfig know that it exists. You do this by registering the managed objects as follows:
+To manage an object in a CRUD listing (or as a drop down), you must let the base class `CrudJSFConfig` know that it exists. You do this by registering the managed objects as follows:
 
 {{{
 @Configuration (defaultLazy=Lazy.TRUE)
@@ -45,18 +45,17 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 
     private static List<CrudManagedObject> managedObjects;
     
-	@Bean (scope = DefaultScopes.SINGLETON)    
+    @Bean (scope = DefaultScopes.SINGLETON)    
     public List<CrudManagedObject> managedObjects() {
     	if (managedObjects==null) {
 	    	managedObjects = new ArrayList<CrudManagedObject>();
 	        managedObjects.add( new CrudManagedObject(Employee.class, EmployeeDAO.class) );
     	}
-    	return managedObjects;
-		
+        return managedObjects;
 	}    
 }}}
 
-The above manages registers the Employee.class as a managed object. If you have not defined a DAO yet, then you just pass a null for the second argument of the `CrudManagedObject` as follows:
+The above manages registers the `Employee.class` as a managed object. If you have not defined a DAO yet, then you just pass a `null` for the second argument of the `CrudManagedObject` as follows:
 
 
 {{{
@@ -65,15 +64,14 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 
     private static List<CrudManagedObject> managedObjects;
     
-	@Bean (scope = DefaultScopes.SINGLETON)    
+    @Bean (scope = DefaultScopes.SINGLETON)    
     public List<CrudManagedObject> managedObjects() {
-    	if (managedObjects==null) {
-	    	managedObjects = new ArrayList<CrudManagedObject>();
-	        managedObjects.add( new CrudManagedObject(Employee.class, null) );
-    	}
-    	return managedObjects;
-		
-	}    
+        if (managedObjects==null) {
+            managedObjects = new ArrayList<CrudManagedObject>();
+            managedObjects.add( new CrudManagedObject(Employee.class, null) );
+        }
+        return managedObjects;
+    }    
 }}}
 
 Note the `new CrudManagedObject(Employee.class, null)` replaces the `new CrudManagedObject(Employee.class, EmployeeDAO.class)`. If you do not pass a DAO then a GenericJpaDAO will be created for you. See UsingDAO for more details.
@@ -94,17 +92,16 @@ Once the Employee object is managed then we can create a listing for it as follo
 	
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
-		<c:set var="crud" value="${cruds.employee.controller}"/>
+        <c:set var="crud" value="${cruds.employee.controller}"/>
 
-		<crank:crudBreadCrumb crud="${crud}"/>
+        <crank:crudBreadCrumb crud="${crud}"/>
 
-	    <span class="pageTitle">Employee Entry</span>
+        <span class="pageTitle">Employee Entry</span>
 	
-		<a4j:form id="employeeForm">
-				<crank:form crud="${crud}"
-					propertyNames="firstName,lastName,department,description,age,numberOfPromotions"/>
-
-		</a4j:form>
+        <a4j:form id="employeeForm">
+            <crank:form crud="${crud}"
+                propertyNames="firstName,lastName,department,description,age,numberOfPromotions"/>
+        </a4j:form>
 	</ui:define>
 </ui:composition>
 </html>
@@ -115,18 +112,16 @@ If the above makes no sense at all, then you probably are new to JSF or Facelets
 The above uses a page template called /templates/layout.xhtml. Most of the above that we care about is defined in the `content` definiton. Here are the interesting bits:
 
 {{{
-		<c:set var="crud" value="${cruds.employee.controller}"/>
+        <c:set var="crud" value="${cruds.employee.controller}"/>
 
-		<crank:crudBreadCrumb crud="${crud}"/>
+        <crank:crudBreadCrumb crud="${crud}"/>
 
-	    <span class="pageTitle">Employee Entry</span>
+        <span class="pageTitle">Employee Entry</span>
 	
-		<a4j:form id="employeeForm">
-				<crank:form crud="${crud}"
-					propertyNames="firstName,lastName,department,description,age,numberOfPromotions"/>
-
-		</a4j:form>
-
+        <a4j:form id="employeeForm">
+                <crank:form crud="${crud}"
+                    propertyNames="firstName,lastName,department,description,age,numberOfPromotions"/>
+        </a4j:form>
 }}}
 
 Let's step through this step by step. The first line as follows:

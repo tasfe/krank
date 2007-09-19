@@ -19,7 +19,7 @@
 		</c:if>
 
 		<c:set var="entityName" value="${detailController.name}" />
-		<c:set var="entityNameLabel" value="${crud:createLabel(detailController.name)}" />
+		<c:set var="entityNameLabel" value="${crud:createLabel(detailController.relationshipManager.childCollectionProperty)}" />
 
 
 		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
@@ -69,7 +69,8 @@
 							reRender="${reRender}"
 							parentForm="${parentForm}"
 							entityName="${entityName}"
-							ajax="${ajax}">
+							ajax="${ajax}"
+							detail="${true}">
 							<ui:insert/>
 						</crank:form>
 	

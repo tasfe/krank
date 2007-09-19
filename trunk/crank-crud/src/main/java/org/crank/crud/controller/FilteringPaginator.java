@@ -15,10 +15,12 @@ import java.util.Map;
 
 import org.crank.crud.controller.datasource.FilteringPagingDataSource;
 import org.crank.crud.controller.datasource.PagingDataSource;
+import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.OrderBy;
 
 public class FilteringPaginator extends Paginator implements FilterablePageable, Serializable {
     private Map<String, FilterableProperty> filterableProperties = null;
+    private List<Criterion> criteria;
     private Class type;
     
     private String name;
@@ -130,6 +132,14 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
             }});
         /* Set the orderBy list. */
         filterablePaginatableDataSource().setOrderBy( orderBys.toArray(new OrderBy[orderBys.size()]) );
+        
+        
+        if (criteria!=null && criteria.size() >0) {
+        	for (Criterion criterion : criteria) {
+        		filterablePaginatableDataSource().group().add(criterion);
+        	}
+        }
+        
         reset();
     }
     
@@ -187,5 +197,16 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
     public void setType( Class type ) {
         this.type = type;
     }
+
+    public void addCriterion(Criterion criterion) {
+    	List<Criterion> criteriaList = getCriteria();
+    	criteriaList.add(criterion);
+    }
+	public List<Criterion> getCriteria() {
+		if (criteria==null) {
+			criteria = new ArrayList<Criterion>();
+		}
+		return criteria;
+	}
 
 }

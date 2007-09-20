@@ -337,7 +337,30 @@ public class Employee implements Serializable {
 }
 }}}
 
-Adding `employeeCrud` to `CrankCrudExampleApplicationContext`.
+
+The `Employee.readPopulated` named query needs to be updates as follows:
+
+{{{
+@NamedQueries( {
+        @NamedQuery( name = "Employee.readPopulated", 
+                query = "select distinct employee from Employee employee " +
+                        "left outer join fetch employee.department " + 
+                        "left outer join fetch employee.tasks " +
+                        "where employee.id=?" )
+
+} )
+public class Employee ...
+
+}}}
+
+We added a fetch clause to `employee.tasks` as follows:
+{{{
+left outer join fetch employee.tasks
+}}}
+
+This is needed so we can manage the collection of tasks in the employee form.
+
+Next we need to add `employeeCrud` to `CrankCrudExampleApplicationContext` as follows:
 
 {{{
     @SuppressWarnings("unchecked")
@@ -424,4 +447,28 @@ public class Employee implements Serializable {
 
 If there is no `addContact` method or `removeContact` method then the `relationshipManager` will add/remove directly to the `contacts` `Set`.
 
-TBD More to come....
+The `Employee.readPopulated` named query needs to be updates as follows:
+
+{{{
+@NamedQueries( {
+        @NamedQuery( name = "Employee.readPopulated", 
+                query = "select distinct employee from Employee employee " +
+                        "left outer join fetch employee.department " + 
+                        "left outer join fetch employee.tasks " +
+                        "left outer join fetch employee.contacts " +
+                        "where employee.id=?" )
+
+} )
+public class Employee ...
+
+}}}
+
+We added a fetch clause to `employee.contacts` as follows:
+{{{
+left outer join fetch employee.contacts
+}}}
+
+This is needed so we can manage the collection of `contacts` in the employee form.
+
+
+This is it for now. We are giong to add other entries for specific features. You have a basic introduction to Crank CRUD. You should be able to write some CRUD listings.

@@ -1,0 +1,58 @@
+#summary Crank Crud Tutorial for Referential Entities and Custom Listings
+
+= Overview =
+
+If you are new to Crank, this document may not be for you, please see CrankCrudTutorial, GettingStartedWithCrank and CrankCrudDesignDocs first, then come back here.
+
+This document described a more advanced case, we create a self referential entity called `Employee`. `Employee` now has a property called `directReports` (of type `Employee`) and a property called `manager`. We want to change the listing so that only `Employee` who do not have `manager`s show up on the listing.
+
+Here is our task list:
+ # Update `Employee` object, add `directReports` and manager property
+ # Changed the `Employee` listing to only show `Employee`'s who do not have managers, i.e., managers are null
+ # Add the `crank:detailListing` tag to the Employee form.xhtml.
+ 
+First we make the changes to `Employee` as follows:
+{{{
+public class Employee extends Person {
+
+	...
+	    
+    @ManyToOne( )
+    private Employee manager;
+    
+
+    @OneToMany( cascade = CascadeType.ALL )
+    @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})    
+    private Set<Employee> directReports = new HashSet<Employee>();
+    
+    
+    
+    @ManyToOne()
+    private Specialty specialty;
+    
+}}}
+
+The `Employee.readPopulated` named query needs to be updates as follows:
+
+{{{
+@NamedQueries( {
+        @NamedQuery( name = "Employee.readPopulated", 
+                query = "select distinct employee from Employee employee " +
+                        "left outer join fetch employee.department " + 
+                        "left outer join fetch employee.tasks " +
+                        "left outer join fetch employee.contacts " +
+                        "left outer join fetch employee.directReports " +
+                        "where employee.id=?" )
+
+} )
+public class Employee extends Person {
+
+}}}
+
+We added a fetch clause to `employee.directReports` as follows:
+{{{
+left outer join fetch employee.directReports
+}}}
+
+
+TBD

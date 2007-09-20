@@ -24,6 +24,9 @@
 	<c:if test="${empty id}">
 		<c:set var="id" value="PaginatedListing" />
 	</c:if>
+	<c:if test="${empty autoLink}">
+		<c:set var="autoLink" value="${true}" />
+	</c:if>
 	<c:if test="${empty reRender}">
 		<c:set var="reRender" value="panelGroup${id}" />
 	</c:if>
@@ -138,19 +141,21 @@
 				</h:column>
 				
 				<c:forEach items="${pNames}" var="property">
+					<c:set var="renderAsText" value="${true}"/>
+					<c:set var="outputText" value=""/>
 					<h:column>
-					
 						<c:choose>
 							<c:when test="${crud:contains(property, '.')}">
 								<c:choose>
 									<c:when test="${crud:isBoolean(crud.entityClass,property)}">
 										<h:graphicImage value="${booleanImg}" rendered="${(row.map[property] == 'true')}" styleClass="imageCenter"/>
+										<c:set var="renderAsText" value="${false}"/>
 									</c:when>
 									<c:when test="${crud:isEnum(crud.entityClass,property)}">
-										<h:outputText value="#{crud:createEnumLabel(row.map[property])}" />
+										<c:set var="outputText" value="#{crud:createEnumLabel(row.map[property])}"/>
 									</c:when>
 									<c:otherwise>
-										<h:outputText value="#{row.map[property]}" />
+										<c:set var="outputText" value="#{row.map[property]}"/>
 									</c:otherwise>
 								</c:choose>
 							</c:when>
@@ -158,17 +163,26 @@
 								<c:choose>
 									<c:when test="${crud:isBoolean(crud.entityClass,property)}">
 										<h:graphicImage value="${booleanImg}" rendered="${(row.object[property] == 'true')}" styleClass="imageCenter"/>
+										<c:set var="renderAsText" value="${false}"/>
 									</c:when>
 									<c:when test="${crud:isEnum(crud.entityClass,property)}">
-										<h:outputText value="#{crud:createEnumLabel(row.object[property])}" />
+										<c:set var="outputText" value="#{crud:createEnumLabel(row.object[property])}"/>
 									</c:when>
 									<c:otherwise>
-										<h:outputText value="#{row.object[property]}" />
+										<c:set var="outputText" value="#{row.object[property]}"/>
 									</c:otherwise>
 								</c:choose>
 							</c:otherwise>
 						</c:choose>
-					
+						<h:outputLink 
+							rendered="${renderAsText and autoLink and crud:isUrl(outputText)}"
+							value="${crud:formatAsUrl(outputText)}" 
+							title="Go to ${outputText}">
+							<h:outputText value="${outputText}" />
+						</h:outputLink>
+						<h:outputText
+							rendered="${renderAsText and not (autoLink and crud:isUrl(outputText))}" 
+							value="${outputText}" />
 					</h:column>
 				</c:forEach>
 				

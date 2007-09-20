@@ -39,4 +39,17 @@ public abstract class CrudUtils {
     	return count;
     }
     
+    public static String formatAsUrl( String value ) {
+    	StringBuilder result = new StringBuilder();
+    	
+    	if (value != null) {
+    		if (!value.toLowerCase().startsWith("http")) {
+    			result.append("http://");
+    		}
+    		result.append(value);
+    	}
+
+    	return result.toString();
+    }
+    
 }

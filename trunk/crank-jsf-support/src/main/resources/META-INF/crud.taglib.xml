@@ -165,6 +165,20 @@
 			java.lang.Long getNumRowsToDisplay(java.lang.Long, java.lang.Integer) 
 		</function-signature>
 	</function>
+	<function>
+		<function-name>isUrl</function-name>
+		<function-class>org.crank.core.TypeUtils</function-class>
+		<function-signature>
+			boolean isUrl(java.lang.String) 
+		</function-signature>
+	</function>
+	<function>
+		<function-name>formatAsUrl</function-name>
+		<function-class>org.crank.crud.jsf.support.CrudUtils</function-class>
+		<function-signature>
+			java.lang.String formatAsUrl(java.lang.String)
+		</function-signature>
+	</function>
 	<tag>
 		<tag-name>select</tag-name>
 		<component>

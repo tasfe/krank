@@ -3,6 +3,7 @@ package org.crank.crud.controller.support.tomahawk;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.List;
 
 import org.apache.myfaces.custom.fileupload.UploadedFile;
 import org.crank.crud.controller.CrudControllerBase;
@@ -170,6 +171,11 @@ public class TomahawkFileUploadHandlerTest {
 
 		@Override
 		protected CrudOutcome doLoadCreate() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public List getSelectedEntities() {
 			// TODO Auto-generated method stub
 			return null;
 		}

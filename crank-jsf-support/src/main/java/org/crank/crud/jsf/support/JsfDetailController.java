@@ -66,14 +66,18 @@ public class JsfDetailController extends DetailController{
      *
      */
     private void blankOutInputComponentFields() {
-        Iterator<UIComponent> iterator = subForm.getChildren().iterator();
-        while (iterator.hasNext()) {
-            Object comp = iterator.next();
-            if (comp instanceof UIInput) {
-                /* Reset the submittedValue for this component. */
-                ((UIInput) comp).setSubmittedValue(null);
-            }
-        }
+    	if (subForm != null){
+    		if (subForm.getChildren() != null) {
+    	        Iterator<UIComponent> iterator = subForm.getChildren().iterator();
+    	        while (iterator.hasNext()) {
+    	            Object comp = iterator.next();
+    	            if (comp instanceof UIInput) {
+    	                /* Reset the submittedValue for this component. */
+    	                ((UIInput) comp).setSubmittedValue(null);
+    	            }
+    	        }
+    		}
+    	}
     }
     
     @Override

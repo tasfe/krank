@@ -17,6 +17,10 @@ public interface CrudOperations {
 
     /** Load the form to create an object. */
     CrudOutcome loadCreate();
+    
+    /** Load the list. */
+    CrudOutcome loadListing();
+    
     /** Load the form to edit an object. */
     CrudOutcome read();
     CrudOutcome delete();

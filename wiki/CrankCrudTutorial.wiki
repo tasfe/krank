@@ -374,3 +374,54 @@ Now add a `crank:detailListing` as follows:
 }}}
 
 The `taskDetailController` is defined as `crud.children.tasks`. The `crud.children.tasks` was setup in the `CrankCrudExampleApplicationContext`. The `taskDetailController` is the backing bean for the `crank:detailListing` composition component.
+
+You may recall that the `Employee` class has a `addTask` method and a `removeTask` method as follows:
+
+{{{
+public class Employee implements Serializable {
+	...
+    @OneToMany( cascade = CascadeType.ALL )
+    @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})    
+    private Set<Task> tasks = new HashSet<Task>();
+
+	...tasks getter/setter omitted
+	
+    public void addTask( Task task ) {
+        this.tasks.add( task );
+    }
+
+    public void removeTask( Task task ) {
+        this.tasks.remove( task );
+    }
+	
+}
+}}}
+
+The `taskDetailController` finds these methods and calls them when you hit the add link for the detailContoller and the remove icon (respectively, logically). This is done in case the `addTask` maintains the relationship (child.setParent). If you don't have these methods, by default the `DetailController`s `relationshipManager` will try to add the tasks directly to the Map, List or Set property, e.g., Employee.tasks.
+
+Thus for example we had a Set of Contacts as follows:
+
+{{{
+@Entity
+public class ContactInfo implements Serializable {
+    
+    @Id
+    @GeneratedValue( strategy=GenerationType.AUTO )
+    private Long id;
+    
+    private String name;
+    ...
+
+public class Employee implements Serializable {
+	...
+    @OneToMany( cascade = CascadeType.ALL )
+    @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})    
+    private Set<ContactInfo> contacts = new HashSet<ContactInfo>();
+
+	//no addContact or removeContact
+
+}}}
+
+If there is no `addContact` method or `removeContact` method then the `relationshipManager` will add/remove directly to the `contacts` `Set`.
+
+TBD More to come....

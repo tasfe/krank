@@ -19,7 +19,7 @@
 			<h:panelGroup>
 				<h:commandLink action="HOME" value="Home" styleClass="paginationPageNumberLink"/>
 				<h:outputText value="|" styleClass="paginationPageNumberLink"/>
-				<h:commandLink action="${crud.namePluralAndUpperCase}" value="${crud:createLabel(crud.namePlural)}" styleClass="paginationPageNumberLink"/>
+				<h:commandLink action="${crud.loadListing}" value="${crud:createLabel(crud.namePlural)}" styleClass="paginationPageNumberLink"/>
 				<h:outputText value="|" styleClass="paginationPageNumberLink"/>
 				<h:outputText value="${crud:createLabel(crud.name)} (add, edit)" styleClass="paginationPageNumberLink"/>
 			</h:panelGroup>

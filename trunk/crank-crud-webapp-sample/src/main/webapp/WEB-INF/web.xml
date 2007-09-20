@@ -10,7 +10,7 @@
 	<context-param>
 		<param-name>facelets.LIBRARIES</param-name>
 		<param-value>
-			/WEB-INF/crank.taglib.xml;/WEB-INF/tomahawk.taglib.xml
+			/WEB-INF/tomahawk.taglib.xml
 		</param-value>
 	</context-param>	
 	<context-param>

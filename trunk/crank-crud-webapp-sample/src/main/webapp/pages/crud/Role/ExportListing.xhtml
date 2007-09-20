@@ -14,11 +14,11 @@
 	<ui:define name="content">
 
 		<c:if test="${empty daoName}">
-			<c:set var="daoName" value="Specialty" />
+			<c:set var="daoName" value="Role" />
 		</c:if>
 		<c:set var="listPropertyNames" value="name" />
 		
-		<h:outputText value="Export Specialties Preview" styleClass="pageTitle"/>
+		<h:outputText value="Export Roles Preview" styleClass="pageTitle"/>
 
 		<h:form>
 			<crank:exportListing 

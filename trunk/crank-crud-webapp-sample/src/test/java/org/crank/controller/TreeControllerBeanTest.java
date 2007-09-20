@@ -39,16 +39,16 @@ public class TreeControllerBeanTest extends TestCase {
 	}
 
 	private void processNode(TreeNodeImpl node) {
-		Iterator children = node.getChildren();
-		while (children.hasNext()) {
-			
-			Map.Entry<Object, Object> entry =  (Map.Entry<Object, Object>) children.next();
-			TreeNodeImpl childNode = (TreeNodeImpl) entry.getValue();
-			System.out.println("key " + entry.getKey());
-			System.out.println("title " + childNode.getTitle());
-			System.out.println("type #" + childNode.getType() + "#");
-			processNode(childNode);
-		}		
+//		Iterator children = node.getChildren();
+//		while (children.hasNext()) {
+//			
+//			Map.Entry<Object, Object> entry =  (Map.Entry<Object, Object>) children.next();
+//			TreeNodeImpl childNode = (TreeNodeImpl) entry.getValue();
+//			System.out.println("key " + entry.getKey());
+//			System.out.println("title " + childNode.getTitle());
+//			System.out.println("type #" + childNode.getType() + "#");
+//			processNode(childNode);
+//		}		
 	}
 
 }

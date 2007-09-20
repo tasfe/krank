@@ -11,6 +11,7 @@
         <class>org.crank.crud.model.Employee</class>
         <class>org.crank.crud.model.Department</class>
         <class>org.crank.crud.model.Specialty</class>
+        <class>org.crank.crud.model.Role</class>
 
         <properties>
             <!-- Hibernate settings -->

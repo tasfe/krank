@@ -8,9 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -44,9 +46,6 @@ public class Employee extends Person {
     @GeneratedValue( strategy = GenerationType.AUTO )
     private Long id;
 
-
-
-
     private boolean active;
 
     private int age;
@@ -75,6 +74,9 @@ public class Employee extends Person {
     @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})    
     private Set<ContactInfo> contacts = new HashSet<ContactInfo>();
 
+    @ManyToMany( mappedBy="employees", cascade = CascadeType.REFRESH, fetch=FetchType.EAGER)
+    private Set<Role> roles = new HashSet<Role>();
+
     @ManyToOne( )
     private Department department;
     
@@ -90,10 +92,18 @@ public class Employee extends Person {
     
     @ManyToOne()
     private Specialty specialty;
-
+    
     private PersistedFile file;
 
-    public PersistedFile getFile() {
+    public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
+	public PersistedFile getFile() {
         return file;
     }
 
@@ -103,6 +113,14 @@ public class Employee extends Person {
 
     public void addTask( Task task ) {
         this.tasks.add( task );
+    }
+    
+    public void addRole(Role role) {
+    	this.roles.add(role);
+    }
+    
+    public void removeRole(Role role) {
+    	this.roles.remove(role);
     }
 
     public void removeTask( Task task ) {

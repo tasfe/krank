@@ -179,6 +179,12 @@ public class TomahawkFileUploadHandlerTest {
 			// TODO Auto-generated method stub
 			return null;
 		}
+
+		@Override
+		protected CrudOutcome doLoadListing() {
+			// TODO Auto-generated method stub
+			return null;
+		}
     } 
     
 }

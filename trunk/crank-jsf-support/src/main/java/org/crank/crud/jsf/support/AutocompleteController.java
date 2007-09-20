@@ -194,4 +194,14 @@ public class AutocompleteController implements CrudControllerListener {
         return dataSource.list();
 	}
 
+	public void afterLoadListing(CrudEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void beforeLoadListing(CrudEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

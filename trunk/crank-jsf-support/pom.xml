@@ -12,9 +12,9 @@
 	<url>http://maven.apache.org</url>
 	<dependencies>
         <dependency>
-            <groupId>org.richfaces</groupId>
-            <artifactId>richfaces</artifactId>
-            <version>3.0.1</version>
+            <groupId>org.richfaces.ui</groupId>
+            <artifactId>richfaces-ui</artifactId>
+            <version>3.1.0</version>
                 <exclusions>
                     <exclusion>
 			        	<groupId>xerces</groupId>
@@ -29,8 +29,46 @@
 		                <artifactId>xmlParserAPIs</artifactId>
                     </exclusion>
                 </exclusions>
-        </dependency>	
-		<dependency>
+        </dependency>
+        <dependency>
+            <groupId>org.richfaces.framework</groupId>
+            <artifactId>richfaces-api</artifactId>
+            <version>3.1.0</version>
+                <exclusions>
+                    <exclusion>
+			        	<groupId>xerces</groupId>
+						<artifactId>xercesImpl</artifactId>
+                    </exclusion>
+                    <exclusion>
+		                <groupId>xml-apis</groupId>
+		                <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                    <exclusion>
+		                <groupId>xerces</groupId>
+		                <artifactId>xmlParserAPIs</artifactId>
+                    </exclusion>
+                </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.richfaces.framework</groupId>
+            <artifactId>richfaces-impl</artifactId>
+            <version>3.1.0</version>
+                <exclusions>
+                    <exclusion>
+			        	<groupId>xerces</groupId>
+						<artifactId>xercesImpl</artifactId>
+                    </exclusion>
+                    <exclusion>
+		                <groupId>xml-apis</groupId>
+		                <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                    <exclusion>
+		                <groupId>xerces</groupId>
+		                <artifactId>xmlParserAPIs</artifactId>
+                    </exclusion>
+                </exclusions>
+        </dependency>
+   		<dependency>
 			<groupId>org.crank</groupId>
 			<artifactId>crank-core</artifactId>
 		</dependency>

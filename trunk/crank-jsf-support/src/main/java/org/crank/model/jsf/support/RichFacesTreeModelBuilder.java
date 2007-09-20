@@ -42,12 +42,12 @@ public class RichFacesTreeModelBuilder extends AbstractTreeModelBuilder{
 		TreeNodeImpl childNode = (TreeNodeImpl)child;
 		Object identifier = null;
 		
-		if (childNode.getModel()!=null) {
-			identifier = new BeanWrapperImpl(childNode.getModel()).getPropertyValue(idProperty);
-		} else {
-			identifier = childNode.getTitle();
-		}
-		parentNode.addChild(identifier, childNode);
+//		if (childNode.getModel()!=null) {
+//			identifier = new BeanWrapperImpl(childNode.getModel()).getPropertyValue(idProperty);
+//		} else {
+//			identifier = childNode.getTitle();
+//		}
+//		parentNode.addChild(identifier, childNode);
 
 	}
 
@@ -57,17 +57,17 @@ public class RichFacesTreeModelBuilder extends AbstractTreeModelBuilder{
 	 */
 	protected Object createFolder(String name) {
 		TreeNodeImpl treeNode = new TreeNodeImpl();
-		treeNode.setTitle(name);
-		treeNode.setType("Folder");
-		treeNode.setModel(null);
+//		treeNode.setTitle(name);
+//		treeNode.setType("Folder");
+//		treeNode.setModel(null);
 		return treeNode;
 	}
 
 	protected Object createNode(String name, Object data) {
 		TreeNodeImpl treeNode = new TreeNodeImpl();
-		treeNode.setTitle(name);
-		treeNode.setType(data.getClass().getSimpleName());
-		treeNode.setModel(data);
+//		treeNode.setTitle(name);
+//		treeNode.setType(data.getClass().getSimpleName());
+//		treeNode.setModel(data);
 		return treeNode;
 	}
 

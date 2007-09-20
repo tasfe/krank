@@ -2,13 +2,13 @@
 	<parent>
 		<artifactId>crank-base</artifactId>
 		<groupId>org.crank</groupId>
-		<version>0.7</version>
+		<version>0.8-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.crank</groupId>
 	<artifactId>crank-jsf-validation-sample</artifactId>
 	<name>crank-jsf-validation-sample</name>
-	<version>0.7</version>
+	<version>0.8-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<url>http://maven.apache.org</url>
 

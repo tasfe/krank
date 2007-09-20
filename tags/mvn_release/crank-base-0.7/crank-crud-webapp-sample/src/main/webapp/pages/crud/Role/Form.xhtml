@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:crank="http://www.googlecode.com/crank"
+	xmlns:validation="http://code.google.com/p/krank/validation"
+	>
+	
+<ui:composition template="/templates/layout.xhtml">
+	<ui:define name="content">
+	
+		<c:set var="daoName" value="Role" />
+		
+		<c:choose>
+			<c:when test="${empty reRender}">
+				<c:set var="reRender" value="${daoName}DetailFormB,${daoName}DetailList1,${daoName}DetailList2,${daoName}DetailForm"/>
+			</c:when>
+			<c:otherwise>
+				<c:set var="reRender" value="${reRender},${daoName}DetailFormB,${daoName}DetailList1,${daoName}DetailList2,${daoName}DetailForm"/>
+			</c:otherwise>
+		</c:choose>
+	
+		<h:form>
+			<h:panelGroup>
+				<h:commandLink action="HOME" value="Home" styleClass="paginationPageNumberLink"/>
+				<h:outputText value="|" styleClass="paginationPageNumberLink"/>
+				<h:commandLink action="ROLES" value="Roles" styleClass="paginationPageNumberLink"/>
+				<h:outputText value="|" styleClass="paginationPageNumberLink"/>
+				<h:outputText value="Role (add, edit)" styleClass="paginationPageNumberLink"/>
+			</h:panelGroup>
+		</h:form>
+	
+		<h:outputText value="Role" styleClass="pageTitle"/>
+
+		<a4j:region renderRegionOnly="false"> 
+			<a4j:form
+				id="${daoName}DetailFormB"
+				rendered="#{(cruds['Role'].controller.state == 'ADD') or (cruds['Role'].controller.state == 'EDIT')}">
+
+				<crank:form
+					id="${daoName}DetailForm" 
+					crud="${cruds['Role'].controller}" 
+					daoName="${daoName}"
+					parentForm="${daoName}DetailFormB"
+					reRender="${reRender}"
+					cancelAlwaysOn="true"
+					ajax="${false}"
+					propertyNames="name">
+
+				</crank:form>
+			</a4j:form>
+		</a4j:region>
+
+	</ui:define>
+</ui:composition>
+</html>

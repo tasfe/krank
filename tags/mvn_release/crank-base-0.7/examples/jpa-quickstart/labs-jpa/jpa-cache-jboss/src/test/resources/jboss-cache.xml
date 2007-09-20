@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ===================================================================== -->
+<!--  Notes from jboss site http://wiki.jboss.org/wiki/Wiki.jsp?page=JBossCacheHibernate  -->
+<!--   -->
+<!-- ===================================================================== -->
+
+<server>
+   <mbean code="org.jboss.cache.TreeCache"
+        name="jboss.cache:service=TreeCache">
+
+        <depends>jboss:service=Naming</depends>
+        <depends>jboss:service=TransactionManager</depends>
+
+        <!--
+        Configure the TransactionManager
+    -->
+        <attribute name="TransactionManagerLookupClass">org.jboss.cache.transaction.JBossTransactionManagerLookup</attribute>
+
+
+        <!--
+            Node locking scheme:
+                OPTIMISTIC
+                PESSIMISTIC (default)
+        -->
+        <attribute name="NodeLockingScheme">OPTIMISTIC</attribute>
+
+        <!--
+            Note that this attribute is IGNORED if your NodeLockingScheme above is OPTIMISTIC.
+
+            Isolation level : SERIALIZABLE
+                              REPEATABLE_READ (default)
+                              READ_COMMITTED
+                              READ_UNCOMMITTED
+                              NONE
+        -->
+        <attribute name="IsolationLevel">REPEATABLE_READ</attribute>
+
+        <!--
+             Valid modes are LOCAL
+                             REPL_ASYNC
+                             REPL_SYNC
+                             INVALIDATION_ASYNC
+                             INVALIDATION_SYNC
+        -->
+
+       <!-- This should ideally be set to INVALIDATION_ASYNC but due to JBCACHE-806 this has to be REPL_ASYNC for now -->
+        <attribute name="CacheMode">REPL_ASYNC</attribute>
+
+        <!--
+        Just used for async repl: use a replication queue
+        -->
+        <attribute name="UseReplQueue">false</attribute>
+
+        <!-- Max number of milliseconds to wait for a lock acquisition -->
+        <attribute name="LockAcquisitionTimeout">15000</attribute>
+
+        <!--
+            The max amount of time (in milliseconds) we wait until the
+            initial state (ie. the contents of the cache) are retrieved from
+            existing members in a clustered environment
+        -->
+        <attribute name="InitialStateRetrievalTimeout">20000</attribute>
+        
+        <!-- Name of the eviction policy class. -->
+        <attribute name="EvictionPolicyClass"></attribute>
+       
+       <!--
+          Indicate whether to use region based marshalling or not. Set this to true if you are running under a scoped
+          class loader, e.g., inside an application server. Default is "false".
+       -->
+       <attribute name="UseRegionBasedMarshalling">false</attribute>
+
+    </mbean>
+   
+</server>

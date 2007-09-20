@@ -72,26 +72,38 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
     }
     
     @SuppressWarnings("unchecked")
-    @Bean (scope = DefaultScopes.SESSION) 
-    public JsfCrudAdapter employeeCrud() throws Exception {
-        JsfCrudAdapter adapter = cruds().get( "Employee");
-        
-        adapter.getPaginator().addCriterion(Comparison.eq("manager",null));
-        adapter.getPaginator().filter();
-        
-        adapter.getController().addChild( "tasks", new JsfDetailController(Task.class));
-        adapter.getController().addChild( "contacts", new JsfDetailController(ContactInfo.class));
+    @Bean(scope = DefaultScopes.SESSION)
+	public JsfCrudAdapter employeeCrud() throws Exception {
+		JsfCrudAdapter adapter = cruds().get("Employee");
 
-        JsfDetailController directReports = new JsfDetailController(Employee.class);
-        RelationshipManager relationshipManager = directReports.getRelationshipManager();
-        relationshipManager.setChildCollectionProperty("directReports");
-        relationshipManager.setAddToParentMethodName("addDirectReport");
-        relationshipManager.setRemoveFromParentMethodName("removeDirectReport");
-        
-        
-        adapter.getController().addChild( "directReports", directReports);
-        return adapter;
-    }
+		/*
+		 * Filter out employees who do not have a manager. This will create a
+		 * "where employee.manager is null" to the query.
+		 */
+		adapter.getPaginator().addCriterion(Comparison.eq("manager", null));
+		adapter.getPaginator().filter();
+
+		/* Setup tasks and contacts DetailControllers. */
+		adapter.getController().addChild("tasks",
+				new JsfDetailController(Task.class));
+		adapter.getController().addChild("contacts",
+				new JsfDetailController(ContactInfo.class));
+
+		/*
+		 * Setup directReports detail controller. Make sure framework calls
+		 * add/remove methods.
+		 */
+		JsfDetailController directReports = new JsfDetailController(
+				Employee.class);
+		RelationshipManager relationshipManager = directReports
+				.getRelationshipManager();
+		relationshipManager.setChildCollectionProperty("directReports");
+		relationshipManager.setAddToParentMethodName("addDirectReport");
+		relationshipManager.setRemoveFromParentMethodName("removeDirectReport");
+
+		adapter.getController().addChild("directReports", directReports);
+		return adapter;
+	}
 
     
     

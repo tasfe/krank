@@ -19,6 +19,21 @@ public class TypeUtils {
         }
         return false;
     }
+    
+    public static boolean isUrl( String value ) {
+
+        if (value != null) {
+        	if  ( 
+        			(value.toLowerCase().indexOf(".com") > -1) ||
+        			(value.toLowerCase().indexOf(".net") > -1)
+        		) {
+        		return true;
+        	}
+            return false;
+        } else {
+            return false;
+        }
+    }
 
     public static boolean isText( Class<?> type, String propertyName ) {
         PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );

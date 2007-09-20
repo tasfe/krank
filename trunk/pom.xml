@@ -1,11 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.crank</groupId>
     <artifactId>crank-base</artifactId>
     <packaging>pom</packaging>
-    <version>0.7-SNAPSHOT</version>
+    <version>0.7</version>
     <name>Crank :: ROOT</name>
     <url>http://code.google.com/p/krank</url>
     <prerequisites>
@@ -53,12 +51,8 @@
     </developers>
 
     <scm>
-        <connection>
-            scm:svn:http://krank.googlecode.com/svn/code/trunk/validation
-        </connection>
-        <developerConnection>
-            scm:svn:https://krank.googlecode.com/svn/code/trunk/validation
-        </developerConnection>
+        <connection>scm:svn:http://krank.googlecode.com/svn/tags/mvn_release/crank-base-0.7</connection>
+        <developerConnection>scm:svn:https://krank.googlecode.com/svn/tags/mvn_release/crank-base-0.7</developerConnection>
     </scm>
 
     <issueManagement>

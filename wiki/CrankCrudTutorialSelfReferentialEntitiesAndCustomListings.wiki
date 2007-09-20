@@ -11,6 +11,7 @@ Here is our task list:
  # Changed the `Employee` listing to only show `Employee`'s who do not have managers, i.e., managers are null
  # Add the `crank:detailListing` tag to the Employee form.xhtml.
  
+== Update `Employee` object, add `directReports` and manager property ==
 First we make the changes to `Employee` as follows:
 {{{
 public class Employee extends Person {
@@ -24,12 +25,19 @@ public class Employee extends Person {
     @OneToMany( cascade = CascadeType.ALL )
     @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})    
     private Set<Employee> directReports = new HashSet<Employee>();
-    
-    
-    
-    @ManyToOne()
-    private Specialty specialty;
-    
+	
+	...//getter/setters omitted
+	
+	public void addDirectReport(Employee employee) {
+    	employee.setManager(this);
+    	directReports.add(employee);
+    }
+
+    public void removeDirectReport(Employee employee) {
+    	directReports.remove(employee);
+    }
+
+        
 }}}
 
 The `Employee.readPopulated` named query needs to be updates as follows:
@@ -54,5 +62,79 @@ We added a fetch clause to `employee.directReports` as follows:
 left outer join fetch employee.directReports
 }}}
 
+
+This completes the changes we needed to make to the `Employee` class.
+
+== Changed the `Employee` listing to only show `Employee`'s who do not have managers, i.e., managers are null ==
+
+Now we have to configure the listing so it will only show `Employee`s who do not have managers. In order to do this we need to configure the `paginator` of the `JSFCrudAdapter`. The `paginator` property is a `FilteringPaginator` so it has a list of `Criteria` that we can configure (you may want to refer to what the CrankCrudDesignDocs says about `FilteringPaginator` if you have not already).
+
+Let's configure the Criteria as follows:
+
+{{{
+
+        JsfCrudAdapter adapter = cruds().get( "Employee");
+        
+        adapter.getPaginator().addCriterion(Comparison.eq("manager",null));
+        adapter.getPaginator().filter();
+
+}}}
+
+The above conifgures that backing bean for the listing to exclude `Employee`'s who `manager`'s are not `null`.
+
+Now we configure a `DetailController` for `directReports` as follows:
+
+{{{
+        JsfDetailController directReports = new JsfDetailController(Employee.class);
+        RelationshipManager relationshipManager = directReports.getRelationshipManager();
+        relationshipManager.setChildCollectionProperty("directReports");
+        relationshipManager.setAddToParentMethodName("addDirectReport");
+        relationshipManager.setRemoveFromParentMethodName("removeDirectReport");
+        
+        
+        adapter.getController().addChild( "directReports", directReports);
+
+}}}
+
+Putting it all together yields (`CrankCrudExampleApplicationContext`):
+
+{{{
+    @Bean(scope = DefaultScopes.SESSION)
+	public JsfCrudAdapter employeeCrud() throws Exception {
+		JsfCrudAdapter adapter = cruds().get("Employee");
+
+		/*
+		 * Filter out employees who do not have a manager. This will create a
+		 * "where employee.manager is null" to the query.
+		 */
+		adapter.getPaginator().addCriterion(Comparison.eq("manager", null));
+		adapter.getPaginator().filter();
+
+		/* Setup tasks and contacts DetailControllers. */
+		adapter.getController().addChild("tasks",
+				new JsfDetailController(Task.class));
+		adapter.getController().addChild("contacts",
+				new JsfDetailController(ContactInfo.class));
+
+		/*
+		 * Setup directReports detail controller. Make sure framework calls
+		 * add/remove methods.
+		 */
+		JsfDetailController directReports = new JsfDetailController(
+				Employee.class);
+		RelationshipManager relationshipManager = directReports
+				.getRelationshipManager();
+		relationshipManager.setChildCollectionProperty("directReports");
+		relationshipManager.setAddToParentMethodName("addDirectReport");
+		relationshipManager.setRemoveFromParentMethodName("removeDirectReport");
+
+		adapter.getController().addChild("directReports", directReports);
+		return adapter;
+	}
+
+}}}
+
+== Add the `crank:detailListing` tag to the Employee form.xhtml ==
+Lastly we need to add the `crank:detailListing` to the form.xthml.
 
 TBD

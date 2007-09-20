@@ -300,8 +300,23 @@ You can change the listing to sort on the `employee.address.zip` as follows:
 Now `address.zip` in the `Employee` listing is sortable and filterable. Thus `@ManyToOne` is sortable as well as the `@Embedded` property.
 
 
-====Adding a List of Task object to Employee (@OneToMany) ====
+====Master/Detail form, Adding a List of Task object to Employee (@OneToMany) ====
+
+Crank CRUD can manage master details using a composition component called `crank:detailListing`.
+
+Let's say we add a `List` of `Task`s to `Employee` as follows:
+
 {{{
+public class Task implements Serializable {
+    @Id
+    @GeneratedValue( strategy = GenerationType.AUTO )   
+    private Long id;
+    private Date startDate;
+    private Date endDate;
+    private String name;
+    private String description;
+    private boolean complete;
+
 ...
 public class Employee implements Serializable {
 	...
@@ -335,3 +350,27 @@ Adding `employeeCrud` to `CrankCrudExampleApplicationContext`.
 
 }}}
 
+The base `CrudJSFConfig` configures a map of `JsfCrudAdapter`s (adapter). The adapter has a `controller` property which is a `CrudController`. A `CrudController` has a map of `DetailController`s which can have a map of `DetailController`s ad infinitum (see CrankCrudDesignDocs for more details). The above adds a `JsfDetailController` (a subclass of `DetailController`) that manages the `Task` List. A `DetailController` can map Lists, Arrays, Sets or Maps. The `DetailController` created above (and added to the employeeCrud.controller) is the backing bean for the `crank:detailListing`.
+
+Now add a `crank:detailListing` as follows:
+
+{{{
+
+		<c:set var="crud" value="${employeeCrud.controller}" />
+		<c:set var="taskDetailController" value="${crud.children.tasks}" />
+		...
+		
+			<crank:form crud="${crud}" parentForm="employeeForm"
+				propertyNames="firstName,lastName,department,description,age,numberOfPromotions,status,dob">
+
+				<crank:compositePanel entity="${crud.entity.address}" name="address"
+					propertyNames="line_1,line2,zipCode" />
+
+				<crank:detailListing detailController="${taskDetailController}"
+					propertyNames="name,startDate,endDate,complete" />
+
+			</crank:form>
+
+}}}
+
+The `taskDetailController` is defined as `crud.children.tasks`. The `crud.children.tasks` was setup in the `CrankCrudExampleApplicationContext`. The `taskDetailController` is the backing bean for the `crank:detailListing` composition component.

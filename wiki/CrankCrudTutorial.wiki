@@ -50,6 +50,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
     	if (managedObjects==null) {
 	    	managedObjects = new ArrayList<CrudManagedObject>();
 	        managedObjects.add( new CrudManagedObject(Employee.class, EmployeeDAO.class) );
+			managedObjects.add( new CrudManagedObject(Employee.class, DepartmentDAO.class) );
     	}
         return managedObjects;
 	}    
@@ -69,12 +70,13 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
         if (managedObjects==null) {
             managedObjects = new ArrayList<CrudManagedObject>();
             managedObjects.add( new CrudManagedObject(Employee.class, null) );
+			managedObjects.add( new CrudManagedObject(Department.class, null) );
         }
         return managedObjects;
     }    
 }}}
 
-Note the `new CrudManagedObject(Employee.class, null)` replaces the `new CrudManagedObject(Employee.class, EmployeeDAO.class)`. If you do not pass a DAO then a GenericJpaDAO will be created for you. See UsingDAO for more details.
+Note the `new CrudManagedObject(Employee.class, null)` replaces the `new CrudManagedObject(Employee.class, EmployeeDAO.class)`. If you do not pass a DAO then a GenericJpaDAO will be created for you. See UsingDAO for more details. (Note UsingDAO should show up as a link, there is a WIKI entry for UsingDAO).
 
 Once the Employee object is managed then we can create a listing for it as follows (listing.xhtml):
 
@@ -120,7 +122,7 @@ The above uses a page template called /templates/layout.xhtml. Most of the above
 	
         <a4j:form id="employeeForm">
                 <crank:form crud="${crud}"
-                    propertyNames="firstName,lastName,department,description,age,numberOfPromotions"/>
+                    propertyNames="firstName,lastName,department,dob,active,description,age,numberOfPromotions"/>
         </a4j:form>
 }}}
 
@@ -161,22 +163,23 @@ Inside of the `a4j:form` we use our own composition component as follows:
             propertyNames="firstName,lastName,department,dob,active,description,age,numberOfPromotions"/>
 }}}
 
-The above states that we will have a `firstName` property, a `lastName` property, a `department` property, a `description` property, an `age` property, and a `numberOfPromotions` on the form.
+The above states that we will have a `firstName` property, a `lastName` property, a `department` property, a 'dob' property, an `active` property,a `description` property, an `age` property, and a `numberOfPromotions` on the form.
 
-The interesting thing is that `firstName`, `lastName`, `description` are Strings (java.lang.String) and `age` and `numberProperty are Integers while department is a `@OneToMany` relationship.
+The interesting thing is that `firstName`, `lastName`, `description` are Strings (java.lang.String) and `age` and `numberProperty are Integers, `dob` is a Date, `active` is a boolean, while department is a `@OneToMany` relationship. They all get rendered correctly.
 
 Let's examine the Employee as follows:
 
 {{{
 public class Employee implements Serializable{
+    @Id
+    @GeneratedValue( strategy = GenerationType.AUTO )
+    private Long id;
 
+    ...
     @Column( nullable = false, length = 32 )
     private String firstName;
     private String lastName;
 
-    @Id
-    @GeneratedValue( strategy = GenerationType.AUTO )
-    private Long id;
 
     private boolean active;
 
@@ -189,8 +192,146 @@ public class Employee implements Serializable{
     
     @ManyToOne( )
     private Department department;
-    
+    ...
 
 }}}
 
-TBD
+Now we have form, let's add a listing as follows:
+
+{{{
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:crank="http://www.googlecode.com/crank"
+	>
+<ui:composition template="/templates/layout.xhtml">
+	<ui:define name="content">
+	
+	
+	    <span class="pageTitle">Employee Listing</span>
+
+
+		<a4j:form id="employeeListingForm">
+				<crank:listing  jsfCrudAdapter="${cruds.employee}" 
+					propertyNames="firstName,lastName,status,active,dob,age,department.name"
+					parentForm="employeeListingForm"/>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>
+
+}}}
+
+The above adds a listing that allows `firstName,lastName,status,active,dob,age,department.name` properties to be sortable and filterable. Notice that not only properties can be sortable but also properties as properties like `employee.department.name`. See the screen shots in the design doc at CrankCrudDesignDocs.
+
+====Adding a Composite object (Address to Employee) @Embedded====
+One of the goals of Crank CRUD is to be able to edit from GUI perspective anything you can configure in JPA. So let's say that you add an `Address` object to `Employee` as follows:
+
+{{{
+@Embeddable
+public class Address {
+
+    private String line_1;
+    private String line2;
+    private String zipCode;
+
+	public String getZipCode() {
+        return zipCode;
+    }
+    public void setZipCode( String zipCode ) {
+        this.zipCode = zipCode;
+    }
+	public String getLine_1() {
+		return line_1;
+	}
+	public void setLine_1(String line_1) {
+		this.line_1 = line_1;
+	}
+	public String getLine2() {
+		return line2;
+	}
+	public void setLine2(String line2) {
+		this.line2 = line2;
+	}
+    
+}
+}}}
+
+`Employee` has a composite relationship with `Address`.
+
+{{{
+public class Employee  implements Serializable {
+
+	...
+    @Embedded
+    private Address address;
+
+	...
+
+}}}
+
+
+
+Then you add a `crank:compositePanel' inside of the `crank:form`.
+
+{{{
+        ...
+				<crank:form crud="${crud}"  parentForm="employeeForm"
+					propertyNames="firstName,lastName,department,dob,active,description,age,numberOfPromotions">
+
+					<crank:compositePanel entity="${crud.entity.address}" 
+					                      name="address" propertyNames="line_1,line2,zipCode"/>
+ 	
+				</crank:form>
+}}}
+
+You can change the listing to sort on the `employee.address.zip` as follows:
+{{{
+				<crank:listing  jsfCrudAdapter="${cruds.employee}" 
+					propertyNames="firstName,lastName,status,active,dob,age,department.name,address.zip"
+					parentForm="employeeListingForm"/>
+}}}
+
+Now `address.zip` in the `Employee` listing is sortable and filterable. Thus `@ManyToOne` is sortable as well as the `@Embedded` property.
+
+
+====Adding a List of Task object to Employee (@OneToMany) ====
+{{{
+...
+public class Employee implements Serializable {
+	...
+    @OneToMany( cascade = CascadeType.ALL )
+    @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})    
+    private Set<Task> tasks = new HashSet<Task>();
+
+	...tasks getter/setter omitted
+	
+    public void addTask( Task task ) {
+        this.tasks.add( task );
+    }
+
+    public void removeTask( Task task ) {
+        this.tasks.remove( task );
+    }
+	
+}
+}}}
+
+Adding `employeeCrud` to `CrankCrudExampleApplicationContext`.
+
+{{{
+    @SuppressWarnings("unchecked")
+    @Bean (scope = DefaultScopes.SESSION) 
+    public JsfCrudAdapter employeeCrud() throws Exception {
+        JsfCrudAdapter adapter = cruds().get( "Employee");
+        adapter.getController().addChild( "tasks", new JsfDetailController(Task.class));
+        return adapter;
+    }
+
+}}}
+

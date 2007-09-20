@@ -21,5 +21,7 @@ public interface CrudControllerListener extends EventListener {
     
     public void afterCancel(CrudEvent event);
     public void beforeCancel(CrudEvent event);
+	public void afterLoadListing(CrudEvent event);
+	public void beforeLoadListing(CrudEvent event);
 
 }

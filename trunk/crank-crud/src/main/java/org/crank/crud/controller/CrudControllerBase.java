@@ -278,7 +278,16 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
         return outcome;
     }
 
-    /** Update an object. */
+    /** Load Listing. */
+    public CrudOutcome loadListing() {
+        fireBeforeLoadListing();
+        CrudOutcome outcome = doLoadListing();
+        fireAfterLoadListing();
+        return outcome;
+    }
+
+
+	/** Update an object. */
     public CrudOutcome cancel() {
         fireBeforeCancel();
         CrudOutcome outcome = doCancel();
@@ -302,6 +311,10 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
 
     /** Read an object. */
     protected abstract CrudOutcome doLoadCreate();
+    
+    /** Read an object. */
+    protected abstract CrudOutcome doLoadListing();
+    
 
     protected String retrieveId() {
 		String[] params = this.requestParameterMapFinder.getMap().get( this.idParam );
@@ -405,5 +418,20 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
             ccl.afterCancel(event);
         }
     }
+    
+    private void fireAfterLoadListing() {
+        CrudEvent event = new CrudEvent(this, this.entity);
+        for (CrudControllerListener ccl : listeners) {
+            ccl.afterLoadListing(event);
+        }
+	}
+
+	private void fireBeforeLoadListing() {
+        CrudEvent event = new CrudEvent(this, this.entity);
+        for (CrudControllerListener ccl : listeners) {
+            ccl.beforeLoadListing(event);
+        }
+	}
+    
 
 }

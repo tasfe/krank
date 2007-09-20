@@ -130,6 +130,11 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
         cancelChildren();
         return CrudOutcome.LISTING;
     }
+
+	@Override
+	protected CrudOutcome doLoadListing() {
+		return CrudOutcome.LISTING;
+	}
     
     
 }

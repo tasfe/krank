@@ -113,4 +113,9 @@ public class DetailController<T, PK extends Serializable> extends CrudController
     	showDetails = !showDetails;
     }
 
+	@Override
+	protected CrudOutcome doLoadListing() {
+		return CrudOutcome.LISTING;
+	}
+    
 }

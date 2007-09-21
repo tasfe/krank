@@ -43,7 +43,7 @@
 	<c:set var="editMode" value="${(crud.state=='EDIT')}" />
 	
 	<c:if test="${empty entityName}">
-		<c:set var="entityName" value="${crud:createLabel(crud.name)}" />
+		<c:set var="entityName" value="${crud.name}" />
 	</c:if>
 	
 	<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />

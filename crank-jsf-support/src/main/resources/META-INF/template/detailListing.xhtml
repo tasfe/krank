@@ -32,8 +32,8 @@
 			<c:set var="delImg" value="/images/del-sm.gif" />
 		</c:if>
 
-		<c:set var="entityName" value="${detailController.name}" />
-		<c:set var="entityNameLabel" value="${crud:createLabel(detailController.name)}" />
+		<c:set var="entityName" value="${detailController.relationshipManager.childCollectionProperty}" />
+		<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
 
 
 		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />

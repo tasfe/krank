@@ -59,7 +59,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	@Transactional
 	public void create(final T newInstance) {
-		getJpaTemplate().persist(newInstance);
+		getJpaTemplate().merge(newInstance);
 	}
 
 	@Transactional

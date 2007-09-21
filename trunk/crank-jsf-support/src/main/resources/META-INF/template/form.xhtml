@@ -41,8 +41,10 @@
 	
 	<c:set var="addCreateMode" value="${(crud.state=='ADD') or (crud.state == null) or (crud.state=='UNKNOWN')}" />
 	<c:set var="editMode" value="${(crud.state=='EDIT')}" />
-	<c:set var="entityName" value="${crud:createLabel(crud.name)}" />
 	
+	<c:if test="${empty entityName}">
+		<c:set var="entityName" value="${crud:createLabel(crud.name)}" />
+	</c:if>
 	
 	<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
 	
@@ -156,7 +158,8 @@
 					</c:forEach>	
 			    </h:panelGrid>
 			</c:if>
-					    
+					  
+		    <c:set var="entityName" value="" />
 		    <ui:insert/>
 			<a4j:outputPanel ajaxRendered="true">
 		    

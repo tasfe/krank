@@ -57,8 +57,7 @@
     </c:if>
 	
 	<c:if test="${empty fieldId}">
-		<c:set var="fieldId" value="${entityName}${crud:replace(fieldName,'.','_')}"/>
-		<c:set var="fieldId" value="${crud:replace(fieldId,' ','_')}"/>
+		<c:set var="fieldId" value="${entityName}_${crud:replace(fieldName,'.','_')}"/>
 	</c:if>
 
     <!--  The label is optional. Generate it if it is missing.  Decorate it if required -->

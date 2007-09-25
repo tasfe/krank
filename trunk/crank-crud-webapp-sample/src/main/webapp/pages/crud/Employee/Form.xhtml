@@ -40,6 +40,12 @@
 
 				<crank:detailListing detailController="${contactDetailController}"
 					enableGroups="" propertyNames="name,phone" />
+					
+				<crank:selectMany jsfSelectManyController="${employeeToRoleController}" 
+					propertyNames="name"
+					parentForm="employeeForm"
+					/>
+					
 
 			</crank:form>
 		</a4j:form>

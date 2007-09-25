@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.config.java.annotation.Bean;
 import org.springframework.config.java.annotation.Configuration;
+import org.springframework.config.java.annotation.ExternalBean;
 import org.springframework.config.java.annotation.Lazy;
 import org.springframework.config.java.annotation.aop.ScopedProxy;
 import org.springframework.config.java.util.DefaultScopes;
@@ -19,6 +20,7 @@ import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.controller.datasource.DaoFilteringDataSource;
 import org.crank.crud.controller.datasource.EnumDataSource;
 import org.crank.crud.criteria.Comparison;
+import org.crank.crud.dao.RoleDAO;
 import org.crank.crud.dao.SpecialtyDAO;
 import org.crank.crud.dao.DepartmentDAO;
 import org.crank.crud.dao.EmployeeDAO;
@@ -26,7 +28,9 @@ import org.crank.crud.join.Fetch;
 import org.crank.crud.jsf.support.AutocompleteController;
 import org.crank.crud.jsf.support.JsfCrudAdapter;
 import org.crank.crud.jsf.support.JsfDetailController;
+import org.crank.crud.jsf.support.JsfSelectManyController;
 import org.crank.crud.jsf.support.SelectItemGenerator;
+import org.crank.crud.model.Role;
 import org.crank.crud.model.Specialty;
 import org.crank.crud.model.ContactInfo;
 import org.crank.crud.model.Department;
@@ -34,6 +38,7 @@ import org.crank.crud.model.Employee;
 import org.crank.crud.model.EmployeeStatus;
 import org.crank.crud.model.Task;
 import org.crank.crud.relationships.RelationshipManager;
+import org.crank.crud.relationships.SelectManyRelationshipManager;
 import org.crank.model.jsf.support.RichFacesTreeModelBuilder;
 
 
@@ -49,6 +54,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	        managedObjects.add( new CrudManagedObject(Employee.class, EmployeeDAO.class) );
 	        managedObjects.add( new CrudManagedObject(Department.class, DepartmentDAO.class) );
 	        managedObjects.add( new CrudManagedObject(Specialty.class, SpecialtyDAO.class) );
+	        managedObjects.add( new CrudManagedObject(Role.class, RoleDAO.class) );
     	}
     	return managedObjects;
 		
@@ -72,7 +78,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
     }
     
     @SuppressWarnings("unchecked")
-    @Bean(scope = DefaultScopes.SESSION)
+    @Bean(scope = DefaultScopes.SESSION, aliases = "empCrud")
 	public JsfCrudAdapter employeeCrud() throws Exception {
 		JsfCrudAdapter adapter = cruds().get("Employee");
 
@@ -102,10 +108,19 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		relationshipManager.setRemoveFromParentMethodName("removeDirectReport");
 
 		adapter.getController().addChild("directReports", directReports);
+		
+		
 		return adapter;
 	}
 
-    
+    @ExternalBean
+    abstract JsfCrudAdapter empCrud();
+
+    @Bean(scope = DefaultScopes.SESSION)
+	public JsfSelectManyController employeeToRoleController() throws Exception {
+		JsfSelectManyController controller = new JsfSelectManyController(Role.class, paginators().get("Role"), empCrud().getController()); 
+    	return controller;
+    }
     
     @SuppressWarnings("unchecked")
     @Bean (scope = DefaultScopes.SINGLETON)

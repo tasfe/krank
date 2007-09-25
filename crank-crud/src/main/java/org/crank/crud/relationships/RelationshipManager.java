@@ -224,7 +224,7 @@ public class RelationshipManager implements Serializable {
 
 
 
-    private Object getChildCollection( Object parent ) {
+    protected Object getChildCollection( Object parent ) {
         /*
          * Invoke the method and return the list type thing (it can be an
          * Array, List, Set or Map)
@@ -565,6 +565,10 @@ public class RelationshipManager implements Serializable {
     public void setChildCollectionProperty( String childCollectionProperty ) {
         this.childCollectionProperty = childCollectionProperty;
     }
+
+	public Class getEntityClass() {
+		return entityClass;
+	}
     
     
 }

@@ -26,7 +26,7 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
      */
     @SuppressWarnings("unchecked")
     public CrudOutcome doUpdate() {
-        dao.update((T)entity);
+        entity = dao.update((T)entity);
         state = CrudState.UNKNOWN; 
         fireToggle();
         return CrudOutcome.LISTING;

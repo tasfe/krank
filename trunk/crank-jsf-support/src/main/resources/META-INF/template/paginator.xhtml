@@ -194,7 +194,7 @@
 
 			<h:commandLink 
 				id="export${id}"
-				rendered="${not disableExport}"
+				rendered="${not disableExport and not readOnly}"
 				title="Click to preview and export the current viewable listing to Excel(tm)"
 				action="EXPORT">
 					<h:graphicImage value="${exportImg}" border="0" styleClass="${paginatorImageButtonClass}"/>

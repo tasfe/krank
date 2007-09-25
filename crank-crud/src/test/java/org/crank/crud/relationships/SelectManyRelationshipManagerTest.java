@@ -1,7 +1,9 @@
 package org.crank.crud.relationships;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+
 
 import junit.framework.TestCase;
 
@@ -28,10 +30,27 @@ public class SelectManyRelationshipManagerTest extends TestCase {
 		List<RoleMock> list = new ArrayList<RoleMock>();
 		list.add(new RoleMock(1L, "su"));
 		list.add(new RoleMock(2L, "foo"));
-		manager.process(list);
+		manager.process(new LinkedHashSet<Object>(list), new LinkedHashSet<Object>());
 		
 		assertEquals(2, user.getRoles().size());
 		assertEquals("su, foo", manager.getCollectionLabelString());
+	}
+
+	public void testProcessComplex() {
+		user.addRole(new RoleMock(1L, "su"));
+		
+		List<RoleMock> selectedList = new ArrayList<RoleMock>();
+		selectedList.add(new RoleMock(1L, "su"));
+		
+		List<RoleMock> window = new ArrayList<RoleMock>();
+		window.add(new RoleMock(1L, "su"));
+		window.add(new RoleMock(2L, "bar"));
+
+		
+		manager.process(new LinkedHashSet<Object>(selectedList), new LinkedHashSet<Object>(window));
+		
+		assertEquals(1, user.getRoles().size());
+		assertEquals("su", manager.getCollectionLabelString());
 	}
 
 	public void testIsSelected() {
@@ -101,6 +120,31 @@ public class SelectManyRelationshipManagerTest extends TestCase {
 		public void setName(String name) {
 			this.name = name;
 		}
+		
+		public boolean equals(Object other) {
+			if (!(other instanceof RoleMock)) {
+				return false;
+			}
+			RoleMock otherRole = (RoleMock)other;
+			if (otherRole.id!=null && this.id  == null) {
+				return false;
+			}
+			if (this.id !=null && otherRole.id == null) {
+				return false;
+			}
+			
+			if (this.id != null) {
+				return this.id.equals(otherRole.id);
+			} else {
+				return this.name.equals(otherRole.name);
+			}
+			
+		}
+		
+		public int hashCode() {
+			return ("" + id + ":" + name).hashCode();
+		}
+	
 	}
 	
 

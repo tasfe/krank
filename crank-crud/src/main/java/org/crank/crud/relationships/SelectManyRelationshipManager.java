@@ -1,9 +1,11 @@
 package org.crank.crud.relationships;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -14,17 +16,29 @@ public class SelectManyRelationshipManager extends RelationshipManager {
 	private String labelProperty="name";
 
 	@SuppressWarnings("unchecked")
-	public void process(List selectedRelatedEntities) {
+	public void process(Set<Object> selectedRelatedEntities, Set<Object> entitiesInView) {
 		Object collection = getChildCollection(parentObject);
+		Iterator<Object> iterator = iterator(collection);
 		
-		if (collection instanceof Map) {
-			((Map)collection).clear();
-		} else {
-			((Collection)collection).clear();
+		Set currentValues = toSet(collection);
+		
+		
+		while (iterator.hasNext()) {
+			Object currentObject = iterator.next();
+			
+			/* If the current object is in the view, operate on it. */
+			if (entitiesInView.contains(currentObject)) {
+				/* If the current object was in the view but not selected then remove it. */
+				if (! selectedRelatedEntities.contains(currentObject)) {
+					removeFromParent(parentObject, currentObject);
+				}
+			}			
 		}
 		
-		for (Object object : selectedRelatedEntities) {
-			addToParent(parentObject, object);
+		for (Object selected : selectedRelatedEntities) {
+			if (!currentValues.contains(selected)) {
+				addToParent(parentObject, selected);
+			}
 		}
 	}
 	
@@ -56,11 +70,21 @@ public class SelectManyRelationshipManager extends RelationshipManager {
 	private Iterator iterator(Object collection) {
 		Iterator iterator = null;
 		if (collection instanceof Map) {
-			iterator = ((Map)collection).values().iterator();
+			iterator = new ArrayList(((Map)collection).values()).iterator();
 		} else {
-			iterator = ((Collection)collection).iterator();
+			iterator = new ArrayList(((Collection)collection)).iterator();
 		}
 		return iterator;
+	}
+
+	private Set toSet(Object collection) {
+		if (collection instanceof Map) {
+			return new LinkedHashSet(((Map)collection).values());
+		} else if (collection instanceof Set) {
+			return new LinkedHashSet((Set)collection);
+		} else {
+			return new LinkedHashSet((Collection)collection);
+		}
 	}
 
 	public Object getParentObject() {

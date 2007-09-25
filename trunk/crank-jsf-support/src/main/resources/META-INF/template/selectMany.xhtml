@@ -22,6 +22,11 @@
 	<div id="disableTip${entityName}" class="toolTip">Disable this record</div>
 	
 	<!-- DEFINE VARIABLES -->
+	
+	<c:if test="${empty selectManyClass}">
+		<c:set var="selectManyClass" value="paginationPageNumberLink" />
+	</c:if>
+	
 	<c:if test="${empty id}">
 		<c:set var="id" value="${entityName}PaginatedListing" />
 	</c:if>
@@ -87,14 +92,22 @@
 
 	<a4j:outputPanel ajaxRendered="true">
 
-		<span>${jsfSelectManyController.manager.collectionLabelString}</span><a4j:commandLink action="${jsfSelectManyController.showSelection}" value="..."/>
+		<span class="${selectManyClass}">${entityNameLabel}: ${jsfSelectManyController.manager.collectionLabelString}</span>
+		<a4j:commandLink rendered="${not jsfSelectManyController.show}" 
+		                 action="${jsfSelectManyController.showSelection}" 
+		                 value="..."
+		                 title="Show the selection window for ${entityNameLabel}"/>
 
 
-		<h:panelGrid id="listPanel${id}" columns="1" width="${dataTableWidth}" rendered="${jsfSelectManyController.show}">
+		<h:panelGrid id="listPanel${id}" columns="1" width="${dataTableWidth}" 
+		             rendered="${jsfSelectManyController.show}">
 			<crank:paginator paginator="${paginator}" 
 							 reRender="${reRender}" 
 							 ajaxSingle="${ajaxSingle}" 
-							 readOnly="${readOnly}"/>
+							 readOnly="true"
+							 />
+							 
+			<!-- imgAdjust="-xs"  -->
 
 			<rich:dataTable width="${dataTableWidth}" id="dataTable${id}"
 				rows="#{paginator.itemsPerPage}" columnClasses="${listingDataTableColumnClasses}"
@@ -128,9 +141,6 @@
 							<crank:header fieldName="${property}" paginator="${paginator}"
 								reRender="${reRender}" />
 						</c:forEach>
-						<h:column>
-							<h:outputText value="Action" />
-						</h:column>
 					</rich:columnGroup>
 	
 				</f:facet>
@@ -194,8 +204,18 @@
 				</c:forEach>				
 			</rich:dataTable>
 		</h:panelGrid>
-		<a4j:commandLink action="${jsfSelectManyController.process}" value="Process"/>
-		<a4j:commandLink action="${jsfSelectManyController.cancel}" value="Cancel"/>
+		<a4j:commandLink action="${jsfSelectManyController.process}" 
+						 rendered="${jsfSelectManyController.show}"
+						 value="Update"
+						 styleClass="${selectManyClass}"
+						 title="Add/Remove items to ${entityNameLabel}"
+						 />
+		<a4j:commandLink action="${jsfSelectManyController.cancel}"
+						 rendered="${jsfSelectManyController.show}"
+						 value="Cancel"
+						 styleClass="${selectManyClass}"
+						 title="Hides the ${entityNameLabel} selection window"
+						 />
 		</a4j:outputPanel>
 </ui:composition>
 </html>

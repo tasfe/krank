@@ -62,7 +62,13 @@ public class TypeUtils {
     }
 
     public static boolean isBoolean( final Class<?> type, final String propertyName ) {
+    	if (type==null || propertyName==null) {
+    		throw new CrankException("Class type and propertyName must not be null, type=%s, propertyName=%s", type, propertyName );
+    	}
         PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
+        if (pd==null) {
+        	throw new CrankException("The Property was not found!, type=%s, propertyName=%s", type, propertyName );
+        }
         Class<?> propertyType = pd.getPropertyType();
         if (propertyType == Boolean.class) {
             return true;
@@ -73,7 +79,11 @@ public class TypeUtils {
     }
 
     public static PropertyDescriptor getPropertyDescriptor( final Class<?> type, final String propertyName ) {
-        if (!propertyName.contains( "." )) {
+    	if (type==null || propertyName==null) {
+    		throw new CrankException("Class type and propertyName must not be null, type=%s, propertyName=%s", type, propertyName );
+    	}
+
+    	if (!propertyName.contains( "." )) {
             return doGetPropertyDescriptor( type, propertyName );
         } else {
             String [] propertyNames = propertyName.split( "[.]" );

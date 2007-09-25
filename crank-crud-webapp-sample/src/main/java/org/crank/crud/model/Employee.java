@@ -12,6 +12,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -34,6 +36,7 @@ import org.hibernate.annotations.Cascade;
                         "left outer join fetch employee.tasks " +
                         "left outer join fetch employee.contacts " +
                         "left outer join fetch employee.directReports " +
+                        "left outer join fetch employee.roles " +
                         "where employee.id=?" ),
         @NamedQuery( name = "Employee.findInEmployeeIds", query = "SELECT o FROM Employee o  WHERE  o.id in  ( ? )" ),
         @NamedQuery( name = "Employee.findSalaryEmployees", query = "SELECT o FROM Employee o  WHERE  o.status = org.crank.crud.model.EmployeeStatus.SALARY" ),
@@ -74,7 +77,10 @@ public class Employee extends Person {
     @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})    
     private Set<ContactInfo> contacts = new HashSet<ContactInfo>();
 
-    @ManyToMany( mappedBy="employees", cascade = CascadeType.REFRESH, fetch=FetchType.EAGER)
+	@ManyToMany()
+	@JoinTable(name="EMPLOYEE_ROLE", 
+			    joinColumns={@JoinColumn(name="FK_EMPLOYEE_ID")},
+				inverseJoinColumns={@JoinColumn(name="FK_ROLE_ID")})	    
     private Set<Role> roles = new HashSet<Role>();
 
     @ManyToOne( )

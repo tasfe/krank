@@ -2,7 +2,9 @@ package org.crank.crud.jsf.support;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
@@ -125,7 +127,7 @@ public class JsfSelectManyController<T, PK extends Serializable> {
 	
 	public void process () {
 		this.manager.setParentObject(controller.getEntity());
-		this.manager.process(getSelectedEntities());
+		this.manager.process(getSelectedEntities(), getEntitiesInView());
 		this.show = false;
 	}
 	
@@ -138,13 +140,23 @@ public class JsfSelectManyController<T, PK extends Serializable> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List getSelectedEntities() {
+	public Set<Object> getSelectedEntities() {
         List<Row> list = (List<Row>) model.getWrappedData();
-        List selectedList = new ArrayList(10);
+        Set<Object> selectedList = new LinkedHashSet<Object>(10);
         for (Row row : list){
             if (row.isSelected()) {
                 selectedList.add( row.getObject() );
             }
+        }
+        return selectedList;
+    }
+
+	@SuppressWarnings("unchecked")
+	public Set<Object> getEntitiesInView() {
+        List<Row> list = (List<Row>) model.getWrappedData();
+        Set<Object> selectedList = new LinkedHashSet<Object>(10);
+        for (Row row : list){
+           selectedList.add( row.getObject() );
         }
         return selectedList;
     }

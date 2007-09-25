@@ -17,9 +17,6 @@
 	<c:set var="entityNameLabel" value="${crud:createLabel(crud.name)}" />
 	<c:set var="paginator" value="${paginators[entityName]}"/>
 
-	<div id="editTip${entityName}" class="toolTip">Edit this record</div>
-	<div id="disableTip${entityName}" class="toolTip">Disable this record</div>
-	
 	<!-- DEFINE VARIABLES -->
 	<c:if test="${empty id}">
 		<c:set var="id" value="PaginatedListing" />
@@ -59,6 +56,22 @@
 	</c:if>
 	<c:if test="${empty delAllImg}">
 		<c:set var="delAllImg" value="/images/del-alt-sm.gif" />
+	</c:if>
+
+	<c:if test="${empty sortTip}">
+		<c:set var="sortTip" value="Click to toggle the sort direction"/>
+	</c:if>
+	<c:if test="${empty sortAscTip}">
+		<c:set var="sortAscTip" value="Ascending: Click for descending sort"/>
+	</c:if>
+	<c:if test="${empty sortDescTip}">
+		<c:set var="sortDescTip" value="Descending: Click for ascending sort"/>
+	</c:if>
+	<c:if test="${empty filterTip}">
+		<c:set var="filterTip" value="Click to create a filter for this column"/>
+	</c:if>
+	<c:if test="${empty filterRemTip}">
+		<c:set var="filterRemTip" value="Click to remove the column filter"/>
 	</c:if>
 
 	<!-- Style classes -->
@@ -190,19 +203,34 @@
 					<h:panelGroup>
 						<h:commandLink 
 							action="${crud.read}"
-							onmouseout="popUp(event,'editTip')"
-							onmouseover="popUp(event,'editTip')"
+							title="Edit this record"
 							onclick="${editFunction}" >
 								<h:graphicImage value="${editImg}" border="0" styleClass="${listingImageButtonClass}" />
 						</h:commandLink>
 
 						<h:commandLink
 							action="${crud.delete}"  
-							onclick="if (!confirm('Are you sure you want to delete this item?')) return false"
-							onmouseout="popUp(event,'disableTip')" 
-							onmouseover="popUp(event,'disableTip')">
+							title="Delete this record"
+							onclick="if (!confirm('Are you sure you want to delete this item?')) return false" >
 								<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
 						</h:commandLink>
+
+<!--						<h:commandLink -->
+<!--							action="${crud.read}"-->
+<!--							onmouseout="popUp(event,'editTip')"-->
+<!--							onmouseover="popUp(event,'editTip')"-->
+<!--							onclick="${editFunction}" >-->
+<!--								<h:graphicImage value="${editImg}" border="0" styleClass="${listingImageButtonClass}" />-->
+<!--						</h:commandLink>-->
+<!---->
+<!--						<h:commandLink-->
+<!--							action="${crud.delete}"  -->
+<!--							onclick="if (!confirm('Are you sure you want to delete this item?')) return false"-->
+<!--							onmouseout="popUp(event,'disableTip')" -->
+<!--							onmouseover="popUp(event,'disableTip')">-->
+<!--								<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>-->
+<!--						</h:commandLink>-->
+
 					</h:panelGroup>
 				</h:column>
 				

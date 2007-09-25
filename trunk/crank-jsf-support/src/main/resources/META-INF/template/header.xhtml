@@ -59,7 +59,7 @@
 
 				<a4j:commandLink styleClass="${headerLinkClass}" 
 				    value="${label}" reRender="${reRender}"
-					onmouseout="popUp(event,'sortToggle')" onmouseover="popUp(event,'sortToggle')"
+				    title="${sortTip}"
 					action="#{orderBy.toggle}"/>
 
 				<br />
@@ -73,7 +73,7 @@
 					styleClass="${headerLinkClass}"
 					reRender="${reRender}"
 					rendered="#{orderBy.asc and orderBy.enabled}"
-					onmouseout="popUp(event,'sortImgAsc')" onmouseover="popUp(event,'sortImgAsc')"
+					title="${sortAscTip}"
 					action="#{orderBy.toggle}">
 					
 					<h:graphicImage value="${sortDescImg}" border="0" />
@@ -84,7 +84,7 @@
 					styleClass="${headerLinkClass}"
 				    reRender="${reRender}"
 					rendered="#{orderBy.desc and orderBy.enabled}"
-					onmouseout="popUp(event,'sortImgDesc')" onmouseover="popUp(event,'sortImgDesc')"
+					title="${sortDescTip}"
 					action="#{orderBy.toggle}">
 					<h:graphicImage value="${sortAscImg}" border="0"/>
 				</a4j:commandLink>
@@ -93,7 +93,7 @@
 					reRender="${reRender}"
 					action="#{comparison.enable}"
 					rendered="#{not comparison.enabled and (not crud:isEnum(paginator.type,fieldName))}"
-					onmouseout="popUp(event,'filterOn')" onmouseover="popUp(event,'filterOn')"
+					title="${filterTip}"
 					styleClass="${headerLinkClass}">
 					<h:graphicImage value="${filterOnImg}" border="0"/>
 				</a4j:commandLink>
@@ -123,7 +123,7 @@
 						rendered="${not crud:isEnum(paginator.type,fieldName)}"
 						reRender="${reRender}"
 						action="#{comparison.disable}"
- 						onmouseout="popUp(event,'filterOff1')" onmouseover="popUp(event,'filterOff1')"
+						title="${filterRemTip}"
 						styleClass="${headerLinkClass}">
 						<h:graphicImage value="${filterOffImg}" border="0"/>
 					</a4j:commandLink>
@@ -144,7 +144,7 @@
 					    </t:calendar>
 						<a4j:commandLink  reRender="${reRender}"
 										  action="#{comparison.disable}"
-	 									  onmouseout="popUp(event,'filterOff2')" onmouseover="popUp(event,'filterOff2')"
+										  title="${filterRemTip}"
 										  styleClass="${headerLinkClass}"								  
 										  >
 							<h:graphicImage value="${filterOffImg}" border="0"/>

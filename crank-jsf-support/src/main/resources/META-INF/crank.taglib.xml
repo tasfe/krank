@@ -5,6 +5,10 @@
 <facelet-taglib>
 	<namespace>http://www.googlecode.com/crank</namespace>
 	<tag>
+		<tag-name>selectMany</tag-name>
+		<source>template/selectMany.xhtml</source>
+	</tag>	
+	<tag>
 		<tag-name>crudBreadCrumb</tag-name>
 		<source>template/crudBreadCrumb.xhtml</source>
 	</tag>	

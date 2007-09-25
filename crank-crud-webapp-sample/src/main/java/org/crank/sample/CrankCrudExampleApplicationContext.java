@@ -38,7 +38,6 @@ import org.crank.crud.model.Employee;
 import org.crank.crud.model.EmployeeStatus;
 import org.crank.crud.model.Task;
 import org.crank.crud.relationships.RelationshipManager;
-import org.crank.crud.relationships.SelectManyRelationshipManager;
 import org.crank.model.jsf.support.RichFacesTreeModelBuilder;
 
 
@@ -118,7 +117,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 
     @Bean(scope = DefaultScopes.SESSION)
 	public JsfSelectManyController employeeToRoleController() throws Exception {
-		JsfSelectManyController controller = new JsfSelectManyController(Role.class, paginators().get("Role"), empCrud().getController()); 
+		JsfSelectManyController controller = new JsfSelectManyController(Role.class, "roles", paginators().get("Role"), empCrud().getController()); 
     	return controller;
     }
     

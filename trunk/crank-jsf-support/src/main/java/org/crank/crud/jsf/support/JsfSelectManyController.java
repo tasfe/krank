@@ -25,12 +25,13 @@ public class JsfSelectManyController<T, PK extends Serializable> {
     private CrudControllerBase<T, PK> controller;
     private boolean show;
 	
-    public JsfSelectManyController (Class clazz, FilterablePageable pageable, CrudOperations crudController) {
+    public JsfSelectManyController (Class clazz, String propertyName, FilterablePageable pageable, CrudOperations crudController) {
     	this.paginator = pageable;
     	this.controller = (CrudControllerBase<T, PK>) crudController;
     	
 		manager = new SelectManyRelationshipManager();
 		manager.setEntityClass(clazz);
+		manager.setChildCollectionProperty(propertyName);
 		
 		controller.addCrudControllerListener(new CrudControllerListener() {
 

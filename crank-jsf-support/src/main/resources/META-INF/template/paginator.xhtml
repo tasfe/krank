@@ -99,26 +99,6 @@
 		<c:set var="paginatorCommandLinkPlainClass" value="paginationPageNumberPlain" />
 	</c:if>
 
-	<c:if test="${empty sortTip}">
-		<c:set var="sortTip" value="Click to toggle the sort direction"/>
-	</c:if>
-
-	<c:if test="${empty sortAscTip}">
-		<c:set var="sortAscTip" value="Ascending: Click for descending sort"/>
-	</c:if>
-
-	<c:if test="${empty sortDescTip}">
-		<c:set var="sortDescTip" value="Descending: Click for ascending sort"/>
-	</c:if>
-
-	<c:if test="${empty filterTip}">
-		<c:set var="filterTip" value="Click to create a filter for this column"/>
-	</c:if>
-
-	<c:if test="${empty filterRemTip}">
-		<c:set var="filterRemTip" value="Click to remove the column filter"/>
-	</c:if>
-
 	<c:if test="${empty pageTitle}">
 		<c:set var="pageTitle" value="Listing"/>
 	</c:if>
@@ -146,14 +126,6 @@
 
 	<!-- END DEFINE VARIABLES -->
 
-	<!-- HEADER TOOL TIPS -->
-	<div id="sortToggle" class="toolTip">${sortTip}</div>
-	<div id="sortImgAsc" class="toolTip">${sortAscTip}</div>
-	<div id="sortImgDesc" class="toolTip">${sortDescTip}</div>
-	<div id="filterOn" class="toolTip">${filterTip}</div>
-	<div id="filterOff1" class="toolTip">${filterRemTip}</div>
-	<div id="filterOff2" class="toolTip">${filterRemTip}</div>
-	<div id="exportTip" class="toolTip">Click to preview and export the current viewable listing to Excel(tm)</div>
 	<a4j:outputPanel ajaxRendered="true">
 	
 	<h:panelGrid id="paginator${id}" columns="1" width="100%">
@@ -223,8 +195,7 @@
 			<h:commandLink 
 				id="export${id}"
 				rendered="${not disableExport}"
-				onmouseout="popUp(event,'exportTip')"
-				onmouseover="popUp(event,'exportTip')"
+				title="Click to preview and export the current viewable listing to Excel(tm)"
 				action="EXPORT">
 					<h:graphicImage value="${exportImg}" border="0" styleClass="${paginatorImageButtonClass}"/>
 			</h:commandLink>
@@ -339,7 +310,7 @@
 			</crank:commandLink>
 			<h:graphicImage value="${pageLastDisabledImg}" border="0" rendered="#{not paginator.moveToEndPageEnabled}" styleClass="${paginatorImageButtonClass}"/>
 			
-			<h:selectOneMenu value="#{paginator.itemsPerPage}" styleClass="dropdownSmall">
+			<h:selectOneMenu value="#{paginator.itemsPerPage}" styleClass="dropdownSmall" title="Click to select the number of items per page">
 				<f:selectItem itemLabel="10 rows" itemValue="10"/>
 				<f:selectItem itemLabel="20 rows" itemValue="20"/>
 				<f:selectItem itemLabel="50 rows" itemValue="50"/>

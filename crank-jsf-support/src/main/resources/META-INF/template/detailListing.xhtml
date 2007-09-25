@@ -38,11 +38,6 @@
 
 		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
 		
-		<f:verbatim id="${entityName}DetailTips">
-			<div id="editDetailTip" class="toolTip">Edit this record</div>
-			<div id="deleteDetailTip" class="toolTip">Delete this record</div>
-		</f:verbatim>
-
 		<h:panelGroup id="bindingPanel${entityName}" binding="${detailController.subForm}">
 			<crank:node
 			    id="detail${entityName}"
@@ -141,8 +136,7 @@
 								<h:panelGrid columns="2" rendered="${ajax}">
 									<a4j:commandLink 
 										action="${detailController.read}" 
-										onmouseout="popUp(event,'editDetailTip')"
-										onmouseover="popUp(event,'editDetailTip')"
+										title="Edit this record"
 										reRender="${reRender},detail${entityName}">
 											<h:graphicImage value="${editImg}" border="0" styleClass="${listingImageButtonClass}" />
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
@@ -151,8 +145,7 @@
 									<a4j:commandLink
 										action="${detailController.delete}"
 										onclick="if (!confirm('Are you sure you want to delete this item?')) return false"
-										onmouseout="popUp(event,'deleteDetailTip')" 
-										onmouseover="popUp(event,'deleteDetailTip')"
+										title="Delete this record"
 										reRender="${reRender},detail${entityName}">
 										<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
@@ -162,8 +155,7 @@
 								<h:panelGrid columns="2" rendered="${not ajax}">
 									<h:commandLink 
 										action="${detailController.read}" 
-										onmouseout="popUp(event,'editDetailTip')"
-										onmouseover="popUp(event,'editDetailTip')">
+										title="Edit this record">
 											<h:graphicImage value="${editImg}" border="0" styleClass="${listingImageButtonClass}" />
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
 									</h:commandLink>
@@ -171,8 +163,7 @@
 									<h:commandLink
 										action="${detailController.delete}"
 										onclick="if (!confirm('Are you sure you want to delete this item?')) return false"
-										onmouseout="popUp(event,'deleteDetailTip')" 
-										onmouseover="popUp(event,'deleteDetailTip')">
+										title="Delete this record">
 										<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
 									</h:commandLink>

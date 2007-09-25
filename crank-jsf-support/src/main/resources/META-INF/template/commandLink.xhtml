@@ -73,10 +73,6 @@
 	
 	<!-- END DEFINE VARIABLES -->
 	
-	<f:verbatim rendered="${(not empty onmouseout) and (not empty onmouseover) and (not empty toolTipText)}">
-		<div id="${id}tip" class="${toolTipClass}">${toolTipText}</div>
-	</f:verbatim>
-	
 	<c:choose>
 		<c:when test="${empty action}">
 			<h:outputLink
@@ -84,9 +80,8 @@
 			    styleClass="${styleClass}"
 				onclick="${onclick}"
 				value="${value}"
-				rendered="#{rendered}"
-				onmouseout="${onmouseout}" 
-				onmouseover="${onmouseover}">
+				title="${toolTipText}"
+				rendered="#{rendered}">
 					<ui:insert/>
 			</h:outputLink>
 		</c:when>
@@ -96,10 +91,9 @@
 			    styleClass="${styleClass}"
 				onclick="${onclick}"
 				value="${value}"
+				title="${toolTipText}"
 				ajaxSingle="${ajaxSingle}"
-				rendered="#{rendered}"
-				onmouseout="${onmouseout}" 
-				onmouseover="${onmouseover}">
+				rendered="#{rendered}">
 					<ui:insert/>
 			</a4j:commandLink>
 		</c:when>
@@ -109,13 +103,12 @@
 				    id="cmdLinkAjax${id}" 
 				    styleClass="${styleClass}"
 					action="#{entity[action]}"
+					title="${toolTipText}"
 					ajaxSingle="${ajaxSingle}"
 					onclick="${onclick}"
 					immediate="${immediate}"
 					rendered="#{rendered}"
-					reRender="${reRenderers}"
-					onmouseout="${onmouseout}" 
-					onmouseover="${onmouseover}">
+					reRender="${reRenderers}">
 						<ui:insert/>
 				</a4j:commandLink>
 			</c:if>
@@ -124,12 +117,11 @@
 				    id="cmdLink${id}" 
 				    styleClass="${styleClass}"
 					action="#{entity[action]}"
+					title="${toolTipText}"
 					onclick="${onclick}"
 					immediate="${immediate}"
 					rendered="#{rendered}"
-					reRender="${reRenderers}"
-					onmouseout="${onmouseout}" 
-					onmouseover="${onmouseover}">
+					reRender="${reRenderers}">
 						<ui:insert/>
 				</h:commandLink>
 			</c:if>

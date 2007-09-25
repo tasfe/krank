@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+
 
 @Entity
 @NamedQueries( {
@@ -66,4 +66,28 @@ public class Role implements Serializable {
 		this.employees.remove(this);
 	}
 
+	public boolean equals(Object other) {
+		if (!(other instanceof Role)) {
+			return false;
+		}
+		Role otherRole = (Role)other;
+		if (otherRole.id!=null && this.id  == null) {
+			return false;
+		}
+		if (this.id !=null && otherRole.id == null) {
+			return false;
+		}
+		
+		if (this.id != null) {
+			return this.id.equals(otherRole.id);
+		} else {
+			return this.name.equals(otherRole.name);
+		}
+		
+	}
+	
+	public int hashCode() {
+		return ("" + id + ":" + name).hashCode();
+	}
+	
 }

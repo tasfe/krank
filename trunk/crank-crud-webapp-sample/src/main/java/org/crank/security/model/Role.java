@@ -45,5 +45,33 @@ public class Role {
 
 	public Role() {
 	}
+	
+	public String toString() {
+		return name;
+	}
+	
+	public boolean equals(Object other) {
+		if (!(other instanceof Role)) {
+			return false;
+		}
+		Role otherRole = (Role)other;
+		if (otherRole.id!=null && this.id  == null) {
+			return false;
+		}
+		if (this.id !=null && otherRole.id == null) {
+			return false;
+		}
+		
+		if (this.id != null) {
+			return this.id.equals(otherRole.id);
+		} else {
+			return this.name.equals(otherRole.name);
+		}
+		
+	}
+	
+	public int hashCode() {
+		return ("" + id + ":" + name).hashCode();
+	}
 
 }

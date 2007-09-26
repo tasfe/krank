@@ -250,6 +250,7 @@ One final point, in order for this to work the `Role` object needs to have `equa
 
 {{{
 public class Role {
+	...
 	public boolean equals(Object other) {
 		if (!(other instanceof Role)) {
 			return false;

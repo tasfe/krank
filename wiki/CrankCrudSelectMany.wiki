@@ -8,12 +8,22 @@ This document described the `selectMany` tag. The `selectMany` tag is used to ed
 
 Enter stage left, the `selectMany` tag (and its underlying controllers) provide an Ajax enabled, filterable, paginateable listing that allows us to manage a many to many relationship.
 
+Here is what the `selectMany` tag looks like when it is closed:
+
+/img/selectManyClosed.png
+
+Here is what the `selectMany` tag looks like when it is open:
+
+/img/selectManyOpen.png
+
+There are no screen refreshes as we are using Ajax for all operations. It has a very rich client feel to it.
+
+
 Here is our task list:
  # Add the many to many relationship to `Employee` to `Role`
  # Configure the controllers needed for the `selectMany` tag
  # Use the `selectMany` tag on the `Employee` form.
  
-Then we discuss the underlying design of the `selectMany` tag.
 
 == Add the many to many relationship to `Employee` to `Role` ==
 First we make the changes to `Employee` as follows:
@@ -224,7 +234,7 @@ Here is the `selectMany isolated as follows:
 
 }}}
 
-Notice that the we can pass a list of property names to show up in the listing. Let's say the `Role` had an enum called  type (RoleType) and a description (String), and you wanted the end user to be able filter on these. Also it might be nice when picking a `Role` if the end user could see a description for that `Role`. You would change the tag as follows:
+Notice that the we can pass a list of property names to show up in the listing. Let's say the `Role` had an enum called  type (`RoleType`) and a description (`String`), and you wanted the end user to be able filter on these. Also it might be nice when picking a `Role` if the end user could see a description for that `Role`. You would change the tag as follows:
 
 {{{
 				<crank:selectMany jsfSelectManyController="${employeeToRoleController}" 

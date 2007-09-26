@@ -13,47 +13,19 @@
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
 	
-		<c:set var="daoName" value="Role" />
 		
-		<c:choose>
-			<c:when test="${empty reRender}">
-				<c:set var="reRender" value="${daoName}DetailFormB,${daoName}DetailList1,${daoName}DetailList2,${daoName}DetailForm"/>
-			</c:when>
-			<c:otherwise>
-				<c:set var="reRender" value="${reRender},${daoName}DetailFormB,${daoName}DetailList1,${daoName}DetailList2,${daoName}DetailForm"/>
-			</c:otherwise>
-		</c:choose>
 	
-		<h:form>
-			<h:panelGroup>
-				<h:commandLink action="HOME" value="Home" styleClass="paginationPageNumberLink"/>
-				<h:outputText value="|" styleClass="paginationPageNumberLink"/>
-				<h:commandLink action="ROLES" value="Roles" styleClass="paginationPageNumberLink"/>
-				<h:outputText value="|" styleClass="paginationPageNumberLink"/>
-				<h:outputText value="Role (add, edit)" styleClass="paginationPageNumberLink"/>
-			</h:panelGroup>
-		</h:form>
+		<crank:crudBreadCrumb crud="${cruds.role.controller}"/>
+		<span class="pageTitle">Role Entry</span>
 	
-		<h:outputText value="Role" styleClass="pageTitle"/>
-
-		<a4j:region renderRegionOnly="false"> 
 			<a4j:form
-				id="${daoName}DetailFormB"
-				rendered="#{(cruds['Role'].controller.state == 'ADD') or (cruds['Role'].controller.state == 'EDIT')}">
+				id="roleForm">
 
 				<crank:form
-					id="${daoName}DetailForm" 
-					crud="${cruds['Role'].controller}" 
-					daoName="${daoName}"
-					parentForm="${daoName}DetailFormB"
-					reRender="${reRender}"
-					cancelAlwaysOn="true"
+					crud="${cruds.role.controller}" 
 					ajax="${false}"
-					propertyNames="name">
-
-				</crank:form>
+					propertyNames="name"/>
 			</a4j:form>
-		</a4j:region>
 
 	</ui:define>
 </ui:composition>

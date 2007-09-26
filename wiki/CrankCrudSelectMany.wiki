@@ -10,11 +10,11 @@ Enter stage left, the `selectMany` tag (and its underlying controllers) provide 
 
 Here is what the `selectMany` tag looks like when it is closed:
 
-./img/selectManyClosed.png
+http://krank.googlecode.com/svn/wiki/img/selectManyClosed.png
 
 Here is what the `selectMany` tag looks like when it is open:
 
-./img/selectManyOpen.png
+http://krank.googlecode.com/svn/wiki/img/selectManyOpen.png
 
 There are no screen refreshes as we are using Ajax for all operations. It has a very rich client feel to it.
 

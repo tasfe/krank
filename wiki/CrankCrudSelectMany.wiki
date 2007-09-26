@@ -69,7 +69,7 @@ We added a fetch clause to `employee.roles` as follows:
 left outer join fetch employee.roles 
 }}}
 
-Note that you can alternatively make the Role relationship eager, but the JPA QL query allows us more flexibility in loading strategies. (A third option that we are exploring is a Seam style conversation scope either using Seam or implementing our own using Spring scope support. This would simplify the framework a bit, but is not a top priority at this point.)
+Note that you can alternatively make the `Role` relationship eager, but the JPA QL query allows us more flexibility in loading strategies. (A third option that we are exploring is a Seam style conversation scope either using Seam or implementing our own using Spring scope support. This would simplify the framework a bit, but is not a top priority at this point.)
 
 This completes the changes we needed to make to the `Employee` class.
 
@@ -124,9 +124,12 @@ So based on the above list, we have a new domain object called `Role` that we ne
 
 {{{
     public List<CrudManagedObject> managedObjects() {
-			...
+            ...
 	        managedObjects.add( new CrudManagedObject(Role.class, RoleDAO.class) ); //added this
-	}    
+            ...
+            return managedObjects;
+
+    }    
 
 }}}
 
@@ -148,7 +151,7 @@ Next we expose the configured `employeeCrud`, which was configured with detail c
 
 }}}
 
-Now you may wonder, why would we expose a bean name only to catch it. The answer is if we used `employeeCrud` method directly then we would not get the proxied version. We want the same session to use the same `employeeCrud` so it has the same state and can listen to events. Thus we use the empCrud to get the proxied version of `employeeCrud` to configure our new controller as follows:
+Now you may wonder, why would we expose a bean name only to catch it in the same class. The answer is if we used `employeeCrud` method directly then we would not get the proxied version. We want the same session to use the same `employeeCrud` so it has the same state and can listen to events. Thus we use the empCrud to get the proxied version of `employeeCrud` to configure our new controller as follows:
 
 {{{
     @Bean(scope = DefaultScopes.SESSION)
@@ -156,7 +159,7 @@ Now you may wonder, why would we expose a bean name only to catch it. The answer
 		JsfSelectManyController<Role, Long> controller = 
 		 new JsfSelectManyController<Role, Long>(Role.class, "roles", 
 		                                         paginators().get("Role"), 
-												 empCrud().getController()); 
+		                                         empCrud().getController()); 
     	return controller;
     }
 
@@ -225,7 +228,7 @@ Lastly we need to add the `crank:selectMany` to the form.xthml as follows:
 
 }}}
 
-Here is the `selectMany isolated as follows:
+Here is the `selectMany` isolated as follows:
 
 {{{
 				<crank:selectMany jsfSelectManyController="${employeeToRoleController}" 
@@ -242,4 +245,36 @@ Notice that the we can pass a list of property names to show up in the listing. 
 					parentForm="employeeForm"/>
 
 }}}
+
+One final point, in order for this to work the `Role` object needs to have `equals` and `hashCode` implemented. Here is a quick and dirty implementation as follows:
+
+{{{
+public class Role {
+	public boolean equals(Object other) {
+		if (!(other instanceof Role)) {
+			return false;
+		}
+		Role otherRole = (Role)other;
+		if (otherRole.id!=null && this.id  == null) {
+			return false;
+		}
+		if (this.id !=null && otherRole.id == null) {
+			return false;
+		}
+		
+		if (this.id != null) {
+			return this.id.equals(otherRole.id);
+		} else {
+			return this.name.equals(otherRole.name);
+		}
+		
+	}
+	
+	public int hashCode() {
+		return ("" + id + ":" + name).hashCode();
+	}
+
+}}}
+
+If you are using Eclipse there are several plugins that will genearate `equals` and `hashCode` for you. If you are using IntelliJ, equals and hashCode generation are built it. The above works for our purposes but is not the best implementation.
 

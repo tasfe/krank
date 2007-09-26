@@ -16,7 +16,7 @@
   <ui:composition>
 
   	<c:if test="${empty ajax}">
-  		<c:set var="ajax" value="true"/>
+  		<c:set var="ajax" value="false"/>
   	</c:if>
 
   	<c:if test="${empty cancelAlwaysOn}">
@@ -160,7 +160,11 @@
 			</c:if>
 					  
 		    <c:set var="entityName" value="" />
+		    <c:set var="ajaxOrg" value="${ajax}" />
+		    <c:set var="ajax" value="" />
 		    <ui:insert/>
+		    <c:set var="ajax" value="${ajaxOrg}" />
+		    
 			<a4j:outputPanel ajaxRendered="true">
 		    
 		    <h:panelGrid id="buttonsPlain${id}" columns="4" rendered="${not ajax}">
@@ -225,7 +229,7 @@
 			</a4j:outputPanel>
 		</h:panelGrid>
 		
-
+		<c:set var="ajax" value="" />
 </ui:composition>
 
 </html>

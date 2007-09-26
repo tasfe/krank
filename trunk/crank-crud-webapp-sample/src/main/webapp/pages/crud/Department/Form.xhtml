@@ -18,11 +18,11 @@
 		<c:set var="taskDetailController" value="${crud.children.employees.children.tasks}" />
 	
 		<crank:crudBreadCrumb crud="${crud}"/>
-		<span class="pageTitle">Department Entry</span>
+		<span class="pageTitle">Department Entry Form</span>
 
 		<a4j:form id="departmentForm">
 
-				<crank:form crud="${crud}" propertyNames="name">
+				<crank:form crud="${crud}" propertyNames="name" ajax="${false}">
 
 					<crank:detailListing 
 						detailController="${employeeDetailController}" 

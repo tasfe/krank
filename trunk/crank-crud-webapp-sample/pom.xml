@@ -189,6 +189,14 @@
             <version>1.0-m2</version>
             <exclusions>
                 <exclusion>
+                    <groupId>asm</groupId>
+                    <artifactId>asm-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-support</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.aopalliance</groupId>
                     <artifactId>aopalliance</artifactId>
                 </exclusion>

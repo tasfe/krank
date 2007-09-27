@@ -75,8 +75,6 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
     private void createFilterProperties( final Class theType, final String propertyName ) {
         String key = null;
 
-        try {
-
         BeanInfo beanInfo = null;
         try {
             beanInfo = Introspector.getBeanInfo( theType );
@@ -92,7 +90,7 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
             } else {
                 property = propertyDescriptor.getName();
             }
-            String parentClassName = theType.getClass().getName();
+            String parentClassName = theType.getName();
             String childClassName = propertyDescriptor.getPropertyType().getName();
             key = parentClassName + "." + childClassName + "." + propertyDescriptor.getName();
 
@@ -102,19 +100,19 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
 
                 filterableProperties.put( property, filterableProperty );
                 //!theType.equals( propertyDescriptor.getPropertyType() does not allow circular dependencies which plagues us.
-                if (CrudUtils.isEntity( propertyDescriptor.getPropertyType() ) && !theType.equals( propertyDescriptor.getPropertyType() )) {
-                    createFilterProperties( propertyDescriptor.getPropertyType(), property );
-                } else if (CrudUtils.isEmbeddable( propertyDescriptor.getPropertyType() ) && !theType.equals( propertyDescriptor.getPropertyType() )) {
-                    createFilterProperties( propertyDescriptor.getPropertyType(), property );
-                }
+//                if (CrudUtils.isEntity( propertyDescriptor.getPropertyType() ) && !theType.equals( propertyDescriptor.getPropertyType() )) {
+//                    createFilterProperties( propertyDescriptor.getPropertyType(), property );
+//                } else if (CrudUtils.isEmbeddable( propertyDescriptor.getPropertyType() ) && !theType.equals( propertyDescriptor.getPropertyType() )) {
+//                    createFilterProperties( propertyDescriptor.getPropertyType(), property );
+//                }
 
+                if (CrudUtils.isEntity(propertyDescriptor.getPropertyType()) || CrudUtils.isEmbeddable(propertyDescriptor
+						.getPropertyType())) {
+                    visitorSet.add(key);
+                	createFilterProperties(propertyDescriptor.getPropertyType(), property);
+				}
                 filterableProperty.addToggleListener(new FPToggleListener(property));
-                visitorSet.add(key);
             }
-        }
-        } catch (Exception ce) {
-             String message  = (new Formatter()).format("Problem Calling createFilterProperties args=(theType=%s, propertyName=%s), key=%s", new Object[]{theType, propertyName, key}).toString();
-             throw new RuntimeException(message, ce);
         }
     }
 

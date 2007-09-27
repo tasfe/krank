@@ -24,10 +24,17 @@ public class TypeUtils {
 
         if (value != null) {
         	if ( value instanceof String) {
-            	if  ( 
-            			(value.toString().toLowerCase().indexOf(".com") > -1) ||
-            			(value.toString().toLowerCase().indexOf(".net") > -1)
-            		) {
+            	if  (
+                        (value.toString().toLowerCase().indexOf(".com") > -1)  ||
+                        (value.toString().toLowerCase().indexOf(".org") > -1)  ||
+                        (value.toString().toLowerCase().indexOf(".edu") > -1)  ||
+                        (value.toString().toLowerCase().indexOf(".biz") > -1)  ||
+                        (value.toString().toLowerCase().indexOf(".info") > -1) ||
+                        (value.toString().toLowerCase().indexOf(".mobi") > -1) ||
+                        (value.toString().toLowerCase().indexOf(".us") > -1)   ||
+                        (value.toString().toLowerCase().indexOf(".ca") > -1)   ||
+                        (value.toString().toLowerCase().indexOf(".net") > -1)
+                    ) {
             		return true;
             	}
         	}

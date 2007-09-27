@@ -18,6 +18,13 @@
 			<c:set var="ajax" value="true" />
 		</c:if>
 
+		<c:if test="${empty autoLink}">
+			<c:set var="autoLink" value="true" />
+		</c:if>
+		<c:if test="${empty renderAsText}">
+			<c:set var="renderAsText" value="true" />
+		</c:if> 
+
 		<c:if test="${empty manyToMany}">
 			<c:set var="manyToMany" value="false" />
 		</c:if>
@@ -97,7 +104,7 @@
 							</f:facet>				
 							<c:forEach items="${pNames}" var="property">
 								<h:column>
-
+									<c:set var="outputText" value=""/>
 									<c:choose>
 										<c:when test="${crud:contains(property, '.')}">
 											<c:choose>
@@ -106,10 +113,10 @@
 													<h:graphicImage value="${booleanImg}" rendered="${(row.map[property] == 'true')}" styleClass="imageCenter"/>
 												</c:when>
 												<c:when test="${crud:isEnum(detailController.entityClass,property)}">
-													<h:outputText value="#{crud:createEnumLabel(row.map[property])}" />
+													<c:set var="outputText" value="#{crud:createEnumLabel(row.map[property])}"/>
 												</c:when>
 												<c:otherwise>
-													<h:outputText value="#{row.map[property]}" />
+													<c:set var="outputText" value="#{row.map[property]}"/>
 												</c:otherwise>
 											</c:choose>
 										</c:when>
@@ -119,15 +126,24 @@
 													<h:graphicImage value="${booleanImg}" rendered="${(row[property] == 'true')}" styleClass="imageCenter"/>
 												</c:when>
 												<c:when test="${crud:isEnum(detailController.entityClass,property)}">
-													<h:outputText value="#{crud:createEnumLabel(row[property])}" />
+													<c:set var="outputText" value="#{crud:createEnumLabel(row[property])}"/>
 												</c:when>
 												<c:otherwise>
-													<h:outputText value="#{row[property]}" />
+													<c:set var="outputText" value="#{row[property]}"/>
 												</c:otherwise>
 											</c:choose>
 										</c:otherwise>
 									</c:choose>
 
+									<h:outputLink 
+										rendered="${renderAsText and autoLink and crud:isUrl(outputText)}"
+										value="${crud:formatAsUrl(outputText)}" 
+										title="Go to ${outputText}">
+										<h:outputText value="${outputText}" />
+									</h:outputLink>
+									<h:outputText
+										rendered="${renderAsText and not (autoLink and crud:isUrl(outputText))}" 
+										value="${outputText}" />
 								</h:column>
 							</c:forEach>
 							

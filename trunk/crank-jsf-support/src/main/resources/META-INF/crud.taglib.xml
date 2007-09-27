@@ -169,7 +169,7 @@
 		<function-name>isUrl</function-name>
 		<function-class>org.crank.core.TypeUtils</function-class>
 		<function-signature>
-			boolean isUrl(java.lang.String) 
+			boolean isUrl(java.lang.Object) 
 		</function-signature>
 	</function>
 	<function>

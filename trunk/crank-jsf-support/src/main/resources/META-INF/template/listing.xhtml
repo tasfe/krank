@@ -215,23 +215,9 @@
 								<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
 						</h:commandLink>
 
-<!--						<h:commandLink -->
-<!--							action="${crud.read}"-->
-<!--							onmouseout="popUp(event,'editTip')"-->
-<!--							onmouseover="popUp(event,'editTip')"-->
-<!--							onclick="${editFunction}" >-->
-<!--								<h:graphicImage value="${editImg}" border="0" styleClass="${listingImageButtonClass}" />-->
-<!--						</h:commandLink>-->
-<!---->
-<!--						<h:commandLink-->
-<!--							action="${crud.delete}"  -->
-<!--							onclick="if (!confirm('Are you sure you want to delete this item?')) return false"-->
-<!--							onmouseout="popUp(event,'disableTip')" -->
-<!--							onmouseover="popUp(event,'disableTip')">-->
-<!--								<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>-->
-<!--						</h:commandLink>-->
+                        <ui:insert />
 
-					</h:panelGroup>
+                    </h:panelGroup>
 				</h:column>
 				
 			</rich:dataTable>

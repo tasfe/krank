@@ -29,6 +29,7 @@ import org.crank.crud.jsf.support.AutocompleteController;
 import org.crank.crud.jsf.support.JsfCrudAdapter;
 import org.crank.crud.jsf.support.JsfDetailController;
 import org.crank.crud.jsf.support.JsfSelectManyController;
+import org.crank.crud.jsf.support.JsfSelectOneListingController;
 import org.crank.crud.jsf.support.SelectItemGenerator;
 import org.crank.crud.model.Role;
 import org.crank.crud.model.Specialty;
@@ -121,6 +122,13 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
     	return controller;
     }
     
+
+    @Bean(scope = DefaultScopes.SESSION)
+	public JsfSelectOneListingController<Specialty, Long> employeeToSpecialtyController() throws Exception {
+    	JsfSelectOneListingController<Specialty, Long> controller = new JsfSelectOneListingController<Specialty, Long>(Specialty.class, "specialty", paginators().get("Specialty"), empCrud().getController()); 
+    	return controller;
+    }
+
     @SuppressWarnings("unchecked")
     @Bean (scope = DefaultScopes.SINGLETON)
     public Map<String, SelectItemGenerator> selectItemGenerators() throws Exception {

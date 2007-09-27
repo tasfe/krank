@@ -112,7 +112,12 @@
 	</c:if>
 	
 	<c:if test="${empty readOnly}">
-		<c:set var="readOnly" value="${false}"/>
+		<c:set var="readOnly" value="false"/>
+	</c:if>
+	<!-- By default, we want the export behavior to be tied to the readOnly flag.  
+	     Otherwise, it can be overridden. -->
+	<c:if test="${empty allowExport}">
+		<c:set var="allowExport" value="${not disableExport and not readOnly}" />
 	</c:if>
 	
 	<c:choose>
@@ -194,7 +199,7 @@
 
 			<h:commandLink 
 				id="export${id}"
-				rendered="${not disableExport and not readOnly}"
+				rendered="${allowExport}"
 				title="Click to preview and export the current viewable listing to Excel(tm)"
 				action="EXPORT">
 					<h:graphicImage value="${exportImg}" border="0" styleClass="${paginatorImageButtonClass}"/>

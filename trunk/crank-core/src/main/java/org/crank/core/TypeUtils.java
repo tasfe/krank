@@ -20,14 +20,16 @@ public class TypeUtils {
         return false;
     }
     
-    public static boolean isUrl( String value ) {
+    public static boolean isUrl( Object value ) {
 
         if (value != null) {
-        	if  ( 
-        			(value.toLowerCase().indexOf(".com") > -1) ||
-        			(value.toLowerCase().indexOf(".net") > -1)
-        		) {
-        		return true;
+        	if ( value instanceof String) {
+            	if  ( 
+            			(value.toString().toLowerCase().indexOf(".com") > -1) ||
+            			(value.toString().toLowerCase().indexOf(".net") > -1)
+            		) {
+            		return true;
+            	}
         	}
             return false;
         } else {

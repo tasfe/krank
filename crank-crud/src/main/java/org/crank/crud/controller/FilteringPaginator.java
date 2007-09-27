@@ -5,18 +5,13 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.crank.crud.controller.datasource.FilteringPagingDataSource;
 import org.crank.crud.controller.datasource.PagingDataSource;
 import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.OrderBy;
+import org.crank.core.CrankException;
 
 public class FilteringPaginator extends Paginator implements FilterablePageable, Serializable {
     private Map<String, FilterableProperty> filterableProperties = null;
@@ -75,7 +70,13 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
             filter();
         }
     } 
+    private Set visitorSet = new HashSet();
+
     private void createFilterProperties( final Class theType, final String propertyName ) {
+        String key = null;
+
+        try {
+
         BeanInfo beanInfo = null;
         try {
             beanInfo = Introspector.getBeanInfo( theType );
@@ -84,24 +85,36 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         }
         PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
         for (PropertyDescriptor propertyDescriptor: propertyDescriptors) {
-            
+
             String property = null;
             if (propertyName != null) {
                 property = propertyName + "." +  propertyDescriptor.getName();
             } else {
                 property = propertyDescriptor.getName();
             }
-            FilterableProperty filterableProperty = new FilterableProperty(property, propertyDescriptor.getPropertyType());
+            String parentClassName = theType.getClass().getName();
+            String childClassName = propertyDescriptor.getPropertyType().getName();
+            key = parentClassName + "." + childClassName + "." + propertyDescriptor.getName();
 
-            filterableProperties.put( property, filterableProperty );
-            //!theType.equals( propertyDescriptor.getPropertyType() does not allow circular dependencies which plagues us.
-            if (CrudUtils.isEntity( propertyDescriptor.getPropertyType() ) && !theType.equals( propertyDescriptor.getPropertyType() )) {
-                createFilterProperties( propertyDescriptor.getPropertyType(), property );
-            } else if (CrudUtils.isEmbeddable( propertyDescriptor.getPropertyType() ) && !theType.equals( propertyDescriptor.getPropertyType() )) {
-                createFilterProperties( propertyDescriptor.getPropertyType(), property );                
+            if (!visitorSet.contains(key)) {
+
+                FilterableProperty filterableProperty = new FilterableProperty(property, propertyDescriptor.getPropertyType());
+
+                filterableProperties.put( property, filterableProperty );
+                //!theType.equals( propertyDescriptor.getPropertyType() does not allow circular dependencies which plagues us.
+                if (CrudUtils.isEntity( propertyDescriptor.getPropertyType() ) && !theType.equals( propertyDescriptor.getPropertyType() )) {
+                    createFilterProperties( propertyDescriptor.getPropertyType(), property );
+                } else if (CrudUtils.isEmbeddable( propertyDescriptor.getPropertyType() ) && !theType.equals( propertyDescriptor.getPropertyType() )) {
+                    createFilterProperties( propertyDescriptor.getPropertyType(), property );
+                }
+
+                filterableProperty.addToggleListener(new FPToggleListener(property));
+                visitorSet.add(key);
             }
-            
-            filterableProperty.addToggleListener(new FPToggleListener(property));
+        }
+        } catch (Exception ce) {
+             String message  = (new Formatter()).format("Problem Calling createFilterProperties args=(theType=%s, propertyName=%s), key=%s", new Object[]{theType, propertyName, key}).toString();
+             throw new RuntimeException(message, ce);
         }
     }
 

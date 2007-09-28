@@ -15,13 +15,13 @@ For example, the department listing has a link to the employee listing, when the
 To do this we will do the following:
 
 === TODO List ===
-# Create a new controller called `SelectEmployeeListingController`
-# Inject a `FilteringPaginator` into `SelectEmployeeListingController` to programatically adjust what shows up in the employee listing.
-# Define an action method called `SelectEmployeeListingController.showListingForDepartment()` that shows the department's employees that was selected
-# Define an action method called `SelectEmployeeListingController.showListing()` that shows all employees
-# Register the SelectEmployeeListingController with the `CrankCrudExampleApplicationContext` in `REQUEST` scope.
-# Define the commandLink to our new controller action on the `.../Department/Listing.xhtml`
-# Define the commandLink to our new controller action on the `/Home.xhtml`
+ # Create a new controller called `SelectEmployeeListingController`
+ # Inject a `FilteringPaginator` into `SelectEmployeeListingController` to programatically adjust what shows up in the employee listing.
+ # Define an action method called `SelectEmployeeListingController.showListingForDepartment()` that shows the department's employees that was selected
+ # Define an action method called `SelectEmployeeListingController.showListing()` that shows all employees
+ # Register the SelectEmployeeListingController with the `CrankCrudExampleApplicationContext` in `REQUEST` scope.
+ # Define the commandLink to our new controller action on the `.../Department/Listing.xhtml`
+ # Define the commandLink to our new controller action on the `/Home.xhtml`
 
 
 === Create a new controller called `SelectEmployeeListingController` === 

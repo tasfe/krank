@@ -6,7 +6,7 @@ If you are new to Crank, this document may not be for you, please see CrankCrudT
 
 The listings are very flexible. At times you may need to add extra links or you need to limit the results that show up. 
 
-This is a bit tricky if you want to programatically add filters that the end users can't not modify. We added another set of filters to the `FilteringPaginator` to faciliate this. These filters are applied programatically to limit what shows up in the listing. You use our Criteria DSL (see UsingDAO).
+This is a bit tricky if you want to programmatically add filters that the end users can't not modify. We added another set of filters to the `FilteringPaginator` to facilitate this. These filters are applied programmatically to limit what shows up in the listing. You use our Criteria DSL (see UsingDAO).
 
 JD (Jason) and I found the need for this when we were working together. Walter and I refined the implementation so you can pass addition links to the listing. Walter and I also refined the `readOnly` support that Paul T started. Now when you use `readOnly` on the listing, it disables the add button (as before), the edit button and the delete button.
 
@@ -16,7 +16,7 @@ To do this we will do the following:
 
 === TODO List ===
  # Create a new controller called `SelectEmployeeListingController`
- # Inject a `FilteringPaginator` into `SelectEmployeeListingController` to programatically adjust what shows up in the employee listing.
+ # Inject a `FilteringPaginator` into `SelectEmployeeListingController` to programmatically adjust what shows up in the employee listing.
  # Define an action method called `SelectEmployeeListingController.showListingForDepartment()` that shows the department's employees that was selected
  # Define an action method called `SelectEmployeeListingController.showListing()` that shows all employees
  # Register the SelectEmployeeListingController with the `CrankCrudExampleApplicationContext` in `REQUEST` scope.
@@ -38,7 +38,7 @@ public class SelectEmployeeListingController {
 
 }}}
 
-=== Inject a `FilteringPaginator` into `SelectEmployeeListingController` to programatically adjust what shows up in the employee listing === 
+=== Inject a `FilteringPaginator` into `SelectEmployeeListingController` to programmatically adjust what shows up in the employee listing === 
 
 {{{
 public class SelectEmployeeListingController {

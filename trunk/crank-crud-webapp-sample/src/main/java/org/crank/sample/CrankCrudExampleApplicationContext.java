@@ -1,45 +1,34 @@
 package org.crank.sample;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-
+import org.crank.config.spring.support.CrudJSFConfig;
+import org.crank.controller.ExcelExportControllerBean;
+import org.crank.controller.SelectEmployeeListingController;
+import org.crank.controller.TreeControllerBean;
+import org.crank.crud.controller.CrudManagedObject;
+import org.crank.crud.controller.datasource.DaoFilteringDataSource;
+import org.crank.crud.controller.datasource.EnumDataSource;
+import org.crank.crud.criteria.Comparison;
+import org.crank.crud.dao.DepartmentDAO;
+import org.crank.crud.dao.EmployeeDAO;
+import org.crank.crud.dao.RoleDAO;
+import org.crank.crud.dao.SpecialtyDAO;
+import org.crank.crud.join.Fetch;
+import org.crank.crud.jsf.support.*;
+import org.crank.crud.model.*;
+import org.crank.crud.relationships.RelationshipManager;
+import org.crank.model.jsf.support.RichFacesTreeModelBuilder;
 import org.springframework.config.java.annotation.Bean;
 import org.springframework.config.java.annotation.Configuration;
 import org.springframework.config.java.annotation.ExternalBean;
 import org.springframework.config.java.annotation.Lazy;
 import org.springframework.config.java.annotation.aop.ScopedProxy;
 import org.springframework.config.java.util.DefaultScopes;
-import org.crank.config.spring.support.CrudJSFConfig;
-import org.crank.controller.ExcelExportControllerBean;
-import org.crank.controller.TreeControllerBean;
-import org.crank.crud.controller.CrudManagedObject;
-import org.crank.crud.controller.datasource.DaoFilteringDataSource;
-import org.crank.crud.controller.datasource.EnumDataSource;
-import org.crank.crud.criteria.Comparison;
-import org.crank.crud.dao.RoleDAO;
-import org.crank.crud.dao.SpecialtyDAO;
-import org.crank.crud.dao.DepartmentDAO;
-import org.crank.crud.dao.EmployeeDAO;
-import org.crank.crud.join.Fetch;
-import org.crank.crud.jsf.support.AutocompleteController;
-import org.crank.crud.jsf.support.JsfCrudAdapter;
-import org.crank.crud.jsf.support.JsfDetailController;
-import org.crank.crud.jsf.support.JsfSelectManyController;
-import org.crank.crud.jsf.support.JsfSelectOneListingController;
-import org.crank.crud.jsf.support.SelectItemGenerator;
-import org.crank.crud.model.Role;
-import org.crank.crud.model.Specialty;
-import org.crank.crud.model.ContactInfo;
-import org.crank.crud.model.Department;
-import org.crank.crud.model.Employee;
-import org.crank.crud.model.EmployeeStatus;
-import org.crank.crud.model.Task;
-import org.crank.crud.relationships.RelationshipManager;
-import org.crank.model.jsf.support.RichFacesTreeModelBuilder;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Configuration (defaultLazy=Lazy.TRUE)
@@ -67,10 +56,20 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
         bean.setEmployeeDAO(repos().get("Employee"));
         return bean;
     }
-        
     @SuppressWarnings("unchecked")
-    @Bean (scope = DefaultScopes.SESSION) 
-    public JsfCrudAdapter deptCrud() throws Exception {
+    @Bean (scope = DefaultScopes.SESSION)
+    public SelectEmployeeListingController selectEmployeeListingController() throws Exception {
+           SelectEmployeeListingController controller = new SelectEmployeeListingController(repos().get("Department"), empCrud());
+           return controller;
+    }
+
+
+    @ExternalBean
+    public abstract JsfCrudAdapter deptCrud();
+
+    @SuppressWarnings("unchecked")
+    @Bean (scope = DefaultScopes.SESSION, aliases = "deptCrud") 
+    public JsfCrudAdapter deptCrudController() throws Exception {
         JsfCrudAdapter adapter = cruds().get( "Department");
         adapter.getController().addChild( "employees", new JsfDetailController(Employee.class))
         .addChild( "tasks", new JsfDetailController(Task.class) );

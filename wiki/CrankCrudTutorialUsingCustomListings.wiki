@@ -87,9 +87,9 @@ The key take away is the following code:
 }}}
 
 The above does the following:
-# Gets the `id` from the HttpRequest
-# Add a `Criterion` to the `paginator` to only show the employees for the department that was selected
-# Apply the filter
+ # Gets the `id` from the HttpRequest
+ # Add a `Criterion` to the `paginator` to only show the employees for the department that was selected
+ # Apply the filter
 
 If you wanted to clear past filters you could do this:
 
@@ -188,15 +188,17 @@ Noitce that this controller maintains no state so it is registered in the `REQUE
 Now that we have our controller registerd we can use it from our pages.
 
 {{{
-				<crank:listing  jsfCrudAdapter="${cruds.department}" 
+			<crank:listing  jsfCrudAdapter="${cruds.department}" 
 					parentForm="departmentsListingForm"
 					propertyNames="name">
-                    <h:commandLink 
+                    
+					<h:commandLink 
 					          action="${selectEmployeeListingController.showListingForDepartment}" 
 							  value="employees...">
                         <f:param name="id" value="${row.object.id}"/>
                     </h:commandLink>
-                </crank:listing>
+					
+            </crank:listing>
 
 }}}
 

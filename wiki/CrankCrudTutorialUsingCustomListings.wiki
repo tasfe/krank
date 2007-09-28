@@ -188,13 +188,12 @@ Noitce that this controller maintains no state so it is registered in the `REQUE
 Now that we have our controller registerd we can use it from our pages.
 
 {{{
-			<crank:listing  jsfCrudAdapter="${cruds.department}" 
+            <crank:listing  jsfCrudAdapter="${cruds.department}" 
 					parentForm="departmentsListingForm"
 					propertyNames="name">
                     
-					<h:commandLink 
-                             action="${selectEmployeeListingController.showListingForDepartment}" 
-                             value="employees...">
+                    <h:commandLink action="${selectEmployeeListingController.showListingForDepartment}" 
+                                   value="employees...">
                          <f:param name="id" value="${row.object.id}"/>
                     </h:commandLink>
 
@@ -233,7 +232,7 @@ We also want to change the home page link so that it calls an action instead of 
 				<h:commandLink action="DEPARTMENTS" value="Departments" styleClass="titleCommandLink"/>
 				<h:commandLink action="SPECIALTY" value="Specialties" styleClass="titleCommandLink"/>
 				<h:commandLink action="ROLES" value="Roles" styleClass="titleCommandLink"/>
-			</h:panelGrid>
+            </h:panelGrid>
 
 }}}
 

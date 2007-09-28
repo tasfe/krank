@@ -387,7 +387,20 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		employeeDao.find();
 	}
 
-	public void setEmployeeDao(final GenericDao<Employee, Long> baseJpaDao) {
+    @Test
+    public void testEntityEquals () {
+        Department department = departmentDao.update(new Department("r&d"));
+        department = departmentDao.read(department.getId());
+        Employee employee = new Employee("Rick", "Hightower");
+        employee.setDepartment(department);
+        department.getEmployees().add(employee);
+        departmentDao.update(department);
+        List<Employee> find = employeeDao.find(Comparison.eq("department", department));
+        String firstname = find.get(0).getFirstName();
+        AssertJUnit.assertEquals("Rick", firstname);
+    }
+
+    public void setEmployeeDao(final GenericDao<Employee, Long> baseJpaDao) {
 		this.employeeDao = baseJpaDao;
 	}
 

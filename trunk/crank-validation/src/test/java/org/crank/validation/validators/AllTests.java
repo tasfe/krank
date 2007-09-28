@@ -28,11 +28,6 @@ public final class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.crank.validation");
 		//$JUnit-BEGIN$
-		suite.addTestSuite(CompositeValidatorTest.class);
-		suite.addTestSuite(RequiredValidatorTest.class);
-		suite.addTestSuite(RegexValidatorTest.class);
-		suite.addTestSuite(CommonBridgeValidatorTest.class);
-		suite.addTestSuite(ValidatorIntegrationTest.class);
 		//$JUnit-END$
 		return suite;
 	}

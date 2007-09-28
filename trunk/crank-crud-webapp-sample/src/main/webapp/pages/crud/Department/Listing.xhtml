@@ -22,10 +22,10 @@
 		<span class="pageTitle">Departments Listing</span>
 
 		<a4j:form id="departmentsListingForm">
-				<crank:listing  jsfCrudAdapter="${cruds['Department']}" 
+				<crank:listing  jsfCrudAdapter="${cruds.department}" 
 					parentForm="departmentsListingForm"
 					propertyNames="name">
-                    <h:commandLink action="${selectEmployeeListingController.process}" value="process">
+                    <h:commandLink action="${selectEmployeeListingController.showListingForDepartment}" value="employees...">
                         <f:param name="id" value="${row.object.id}"/>
                     </h:commandLink>
                 </crank:listing>

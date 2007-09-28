@@ -1,9 +1,8 @@
 package org.crank.controller;
 
-import org.crank.crud.GenericDao;
+import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.criteria.Comparison;
 import org.crank.crud.jsf.support.JsfCrudAdapter;
-import org.crank.crud.model.Department;
 
 import javax.faces.context.FacesContext;
 
@@ -15,25 +14,25 @@ import javax.faces.context.FacesContext;
  * To change this template use File | Settings | File Templates.
  */
 public class SelectEmployeeListingController {
-    private JsfCrudAdapter employeeCrud;
-    private GenericDao<Department, Long> departmentDao;
+    private FilterablePageable employeePaginator;
 
-    public SelectEmployeeListingController(GenericDao<Department, Long> departmentDao, JsfCrudAdapter employeeCrud) {
-        this.employeeCrud = employeeCrud;
-        this.departmentDao = departmentDao;
+    public SelectEmployeeListingController(FilterablePageable employeePaginator) {
+        this.employeePaginator = employeePaginator;
     }
 
-    public String process () {
+    public String showListingForDepartment () {
+        employeePaginator.disableFilters();
+        employeePaginator.disableSorts();
+        employeePaginator.clearAll();
         String sId = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
-        Department department = departmentDao.read(Long.valueOf(sId));
-        employeeCrud.getPaginator().addCriterion(Comparison.eq("department",department));
-        employeeCrud.getPaginator().filter();
+        employeePaginator.addCriterion(Comparison.eq("department.id",Long.valueOf(sId)));
+        employeePaginator.filter();
         return "EMPLOYEES";
     }
 
     public String showListing() {
-        employeeCrud.getPaginator().getCriteria().clear();
-        employeeCrud.getPaginator().filter();        
+        employeePaginator.getCriteria().clear();
+        employeePaginator.filter();
         return "EMPLOYEES";
     }
 }

@@ -57,9 +57,9 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
         return bean;
     }
     @SuppressWarnings("unchecked")
-    @Bean (scope = DefaultScopes.SESSION)
+    @Bean (scope = DefaultScopes.REQUEST)
     public SelectEmployeeListingController selectEmployeeListingController() throws Exception {
-           SelectEmployeeListingController controller = new SelectEmployeeListingController(repos().get("Department"), empCrud());
+           SelectEmployeeListingController controller = new SelectEmployeeListingController(paginators().get("Employee"));
            return controller;
     }
 

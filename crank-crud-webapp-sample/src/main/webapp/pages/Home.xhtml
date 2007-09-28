@@ -12,7 +12,7 @@
 	<ui:define name="content">
 		<h:form>
 			<h:panelGrid columns="1">
-				<h:commandLink action="EMPLOYEES" value="Employees" styleClass="titleCommandLink"/>
+				<h:commandLink action="${selectEmployeeListingController.showListing}" value="Employees" styleClass="titleCommandLink"/>
 				<h:commandLink action="DEPARTMENTS" value="Departments" styleClass="titleCommandLink"/>
 				<h:commandLink action="SPECIALTY" value="Specialties" styleClass="titleCommandLink"/>
 				<h:commandLink action="ROLES" value="Roles" styleClass="titleCommandLink"/>

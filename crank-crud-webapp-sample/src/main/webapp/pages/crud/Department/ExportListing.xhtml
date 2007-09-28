@@ -12,15 +12,16 @@
 <ui:composition template="/templates/layout.xhtml">
 	
 	<ui:define name="content">
-		
-		<span class="pageTitle">Export Departments Preview</span>
+
+        
+        <span class="pageTitle">Export Departments Preview</span>
 
 		<h:form>
 			<crank:exportListing 
 				jsfCrudAdapter="${cruds['Department']}" 
 				propertyNames="name"/>
-		</h:form>
+        </h:form>
 
-	</ui:define>
+    </ui:define>
 </ui:composition>
 </html>

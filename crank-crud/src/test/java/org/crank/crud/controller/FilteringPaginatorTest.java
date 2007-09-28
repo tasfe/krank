@@ -1,49 +1,43 @@
 package org.crank.crud.controller;
 
-import java.util.List;
-
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-
+import junit.framework.TestCase;
 import org.crank.crud.controller.datasource.FilteringPagingDataSource;
+import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.OrderBy;
 
-import junit.framework.TestCase;
+import javax.persistence.Embeddable;
+import javax.persistence.OneToOne;
+import java.util.List;
 
+@SuppressWarnings({"JpaModelErrorInspection"})
 public class FilteringPaginatorTest extends TestCase {
 	private FilteringPaginator paginator;
 	private FilteringPagingDataSource dataSource = new FilteringPagingDataSource() {
 
-		public int getCount() {
-			// TODO Auto-generated method stub
+        private Group group = new Group();
+
+        public int getCount() {
 			return 0;
 		}
 
 		public List list(int startItem, int numItems) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		public List list() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		public Group group() {
-			// TODO Auto-generated method stub
-			return null;
+			return group;
 		}
 
 		public OrderBy[] orderBy() {
-			// TODO Auto-generated method stub
-			return null;
-		}
+            return new OrderBy[]{};
+        }
 
 		public void setOrderBy(OrderBy[] orderBy) {
-			// TODO Auto-generated method stub
-			
 		}
 
 		
@@ -56,13 +50,31 @@ public class FilteringPaginatorTest extends TestCase {
 	public void testOneToOne() {
 		paginator = new FilteringPaginator(dataSource, A.class);
 	}
-	protected void tearDown() throws Exception {
+
+    public void testClearCriteria() {
+        paginator = new FilteringPaginator(dataSource, A.class);
+        paginator.addCriterion(Comparison.eq("name", "foo"));
+        paginator.getCriteria().clear();
+        paginator.filter();
+        assertEquals(0, paginator.getCriteria().size());
+        assertEquals("(AND [])", dataSource.group().toString());
+
+        paginator.addCriterion(Comparison.eq("name", "foo"));
+        paginator.filter();
+        assertEquals(1, paginator.getCriteria().size());
+        assertEquals("(AND [name_EQ_foo])", dataSource.group().toString());
+
+
+    }
+
+    protected void tearDown() throws Exception {
 		super.tearDown();
 	}
-	
-	@Embeddable
+
+	@SuppressWarnings({"JpaModelErrorInspection"})
+    @Embeddable
 	class A {
-		
+
 		@OneToOne
 		private B b;
 
@@ -75,8 +87,9 @@ public class FilteringPaginatorTest extends TestCase {
 		}
 
 	}
-	
-	@Embeddable
+
+	@SuppressWarnings({"JpaModelErrorInspection"})
+    @Embeddable
 	class B {
 		@OneToOne
 		private A a;

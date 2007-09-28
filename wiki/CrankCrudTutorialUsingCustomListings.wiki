@@ -193,11 +193,11 @@ Now that we have our controller registerd we can use it from our pages.
 					propertyNames="name">
                     
 					<h:commandLink 
-					          action="${selectEmployeeListingController.showListingForDepartment}" 
-							  value="employees...">
-                        <f:param name="id" value="${row.object.id}"/>
+                             action="${selectEmployeeListingController.showListingForDepartment}" 
+                             value="employees...">
+                         <f:param name="id" value="${row.object.id}"/>
                     </h:commandLink>
-					
+
             </crank:listing>
 
 }}}
@@ -206,8 +206,8 @@ The key to the above is the following:
 
 {{{
                     <h:commandLink 
-					          action="${selectEmployeeListingController.showListingForDepartment}" 
-							  value="employees...">
+                            action="${selectEmployeeListingController.showListingForDepartment}" 
+                            value="employees...">
                         <f:param name="id" value="${row.object.id}"/>
                     </h:commandLink>
 
@@ -216,7 +216,7 @@ The key to the above is the following:
 Notice that we pass the `Department` id as follows:
 
 {{{
-                        <f:param name="id" value="${row.object.id}"/>
+                    <f:param name="id" value="${row.object.id}"/>
 
 }}}
 

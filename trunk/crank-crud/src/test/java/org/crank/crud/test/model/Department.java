@@ -1,7 +1,9 @@
 package org.crank.crud.test.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,14 +19,21 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Department {
 
+    public Department() {
+        
+    }
+    public Department(String name) {
+        this.name = name;
+    }
+
     @Id
-    @GeneratedValue( strategy = GenerationType.AUTO )	
+    @GeneratedValue( strategy = GenerationType.AUTO )
 	private Long id;
     private String name;
-    
+
     
     //@org.hibernate.annotations.BatchSize(size = 20)
-    @OneToMany (mappedBy="department")
+    @OneToMany (mappedBy="department", cascade={CascadeType.ALL})
 //    , fetch=FetchType.EAGER)
 //    @org.hibernate.annotations.Fetch (
 //    		org.hibernate.annotations.FetchMode.JOIN
@@ -32,6 +41,10 @@ public class Department {
     private List<Employee> employees;
 
 	public List<Employee> getEmployees() {
+		
+		if (employees==null) {
+			employees = new ArrayList<Employee>();
+		}
 		return employees;
 	}
 

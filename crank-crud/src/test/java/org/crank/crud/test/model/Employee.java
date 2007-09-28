@@ -32,6 +32,15 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Employee {
 
+    public Employee() {
+        
+    }
+    
+    public Employee(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )	
 	private Long id;
@@ -48,7 +57,7 @@ public class Employee {
 	private int age;
 	
     @Column (nullable=false)
-    private Integer numberOfPromotions;
+    private Integer numberOfPromotions = 0;
 	
 	private EmployeeStatus status;
 	

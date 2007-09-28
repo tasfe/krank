@@ -201,7 +201,8 @@
 				
 				<h:column>
 					<h:panelGroup>
-						<h:commandLink 
+                        <c:if test="${not readOnly}">
+                        <h:commandLink
 							action="${crud.read}"
 							title="Edit this record"
 							onclick="${editFunction}" >
@@ -214,7 +215,7 @@
 							onclick="if (!confirm('Are you sure you want to delete this item?')) return false" >
 								<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
 						</h:commandLink>
-
+                           </c:if> 
                         <ui:insert />
 
                     </h:panelGroup>

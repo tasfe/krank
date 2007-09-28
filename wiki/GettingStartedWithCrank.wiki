@@ -58,6 +58,7 @@ Don't worry about the real object model. Simplify it as much as you need to and 
 Now that you have all that under your belt, it is time to start the Crank tutorials as follows:
 
 [http://code.google.com/p/krank/wiki/CrankCrudTutorial Crank Crud Tutorial]
+[CrankCrudTutorialUsingCustomListings Customize what shows up in a listing]
 [http://code.google.com/p/krank/wiki/CrankCrudTutorialSelfReferentialEntitiesAndCustomListings More Advanced Tutorial]
 [http://code.google.com/p/krank/wiki/CrankCrudSelectMany Crank Select Many Tutorial]
 

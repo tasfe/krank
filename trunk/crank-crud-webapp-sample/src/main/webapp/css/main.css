@@ -1,6 +1,5 @@
 html, body {
-	background : #ffffff url(../images/bg.jpg) repeat-y top right;
-	height: 100%;
+	background : #ffffff;
 }
 a:link, a:visited {
 	text-decoration : none;
@@ -25,7 +24,6 @@ a:hover, a:active {
 	padding: 10px 10px 10px 10px;
 }
 #header {
-	background-image: url("../images/presto_bg_slice.gif");
 	width: 100%;
 }
 .columnHeaderSimple {
@@ -95,7 +93,6 @@ a:hover, a:active {
 .evenRow {background-color: #EFEFEF;}
 .radioGroup {background-color: #DFDFDF;}
 .tableHeader {
-    background-image: url("../images/table_header_bg.gif");
     background-repeat: repeat-x;
     vertical-align: baseline;
     white-space: nowrap;
@@ -103,14 +100,12 @@ a:hover, a:active {
 	padding: 4px 0px 4px 0px;
 }
 .tableHeaderLocked {
-    background-image: url("../images/table_header_bg.gif");
     background-repeat: repeat-x;
     vertical-align: baseline;
     white-space: nowrap;
 	padding: 4px 0px 4px 0px;
 }
 .tableHeaderInline {
-    background-image: url("../images/table_header_bg.gif");
     background-repeat: repeat-x;
     vertical-align: baseline;
     white-space: nowrap;
@@ -118,7 +113,6 @@ a:hover, a:active {
 	padding: 4px 5px 4px 0px;
 }
 .tableHeaderInlineLocked {
-    background-image: url("../images/table_header_bg.gif");
     background-repeat: repeat-x;
     vertical-align: baseline;
     white-space: nowrap;
@@ -274,10 +268,6 @@ a:hover, a:active {
 	font-size: xx-small;
 	color: Black;
 }
-.dataTableColumnHeader {
-	background-color: #6699ff;
-	vertical-align: top;
-}
 .paginationImageButton {
 	vertical-align: middle;
 	padding: 0px 1px 0px 1px;
@@ -417,7 +407,7 @@ a:hover, a:active {
 	padding-top: 10px;
 }
 
-.lt_navigation ul li { padding: 0px 0px 2px; list-style: url(../images/arrow.gif) none inside; }
+.lt_navigation ul li { padding: 0px 0px 2px; }
 
 .lt_navigation a:link, .lt_navigation a:visited {
 	font-family: Verdana, Arial, Helvetica, sans-serif;

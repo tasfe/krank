@@ -36,6 +36,9 @@
 	<c:if test="${empty readOnly}">
 		<c:set var="readOnly" value="false" />
 	</c:if>
+	<c:if test="${empty isSelectableColumn}">
+	    <c:set var="isSelectableColumn" value="true"/>
+	</c:if>
 	<c:if test="${empty crud}">
 		<c:set var="crud" value="${jsfCrudAdapter.controller}" />
 	</c:if>
@@ -109,6 +112,7 @@
 				value="#{jsfCrudAdapter.model}" var="row">
 				<f:facet name="header">
 					<rich:columnGroup>
+						<c:if test="${isSelectableColumn}">
 						<h:column>
 							<crank:commandLink id="selectAll${id}"
 											   onclick="toggleAllCheckBoxes('${parentForm}',true);"
@@ -130,6 +134,7 @@
 								<h:graphicImage id="disableSelected${id}Img" value="${delAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
 							</crank:commandLink>
 						</h:column>
+					    </c:if>
 						<c:forEach items="${pNames}" var="property">
 							<crank:header fieldName="${property}" paginator="${paginator}"
 								reRender="${reRender}" />
@@ -138,7 +143,6 @@
 							<h:outputText value="Action" />
 						</h:column>
 					</rich:columnGroup>
-	
 				</f:facet>
 				
 				<f:facet name="footer">
@@ -148,11 +152,11 @@
 							value="Page #{paginator.currentPageNumber+1} of #{paginator.pageCount}" />
 					</h:panelGroup>
 				</f:facet>
-				
+				<c:if test="${isSelectableColumn}">
 				<h:column>
 	   				<h:selectBooleanCheckbox value="#{row.selected}" styleClass="imageCenter"/>
 				</h:column>
-				
+				</c:if>
 				<c:forEach items="${pNames}" var="property">
 					<c:set var="renderAsText" value="${true}"/>
 					<c:set var="outputText" value=""/>

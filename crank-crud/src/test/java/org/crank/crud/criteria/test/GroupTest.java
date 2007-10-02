@@ -63,7 +63,7 @@ public class GroupTest {
 		assertEquals("(AND [firstName_EQ_Rick, lastName_EQ_Hightower, (OR [foo_EQ_bar, baz_EQ_foo])])", group.toString());
 	}
 
-	@Test ()
+	@Test(groups={"broken"})
 	public void example () {
 		Employee employee = new Employee();
 		employee.setActive(true);

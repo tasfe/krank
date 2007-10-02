@@ -7,7 +7,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 public class Example extends Group {
+    protected final Logger log = Logger.getLogger( this.getClass() );
 	private Object example;
 	private Set<String> excludedProperties = new HashSet<String>();
 	{
@@ -92,11 +95,18 @@ public class Example extends Group {
 			
 				
 				if (excludedProperties.contains(name)) {
+					log.debug("Excluding: " + name + " from the list of considered properties.");
 					continue;
 				}
 				Object value = pd.getReadMethod().invoke(example, (Object[]) null);
 				boolean primitive = pd.getPropertyType().isPrimitive();
 				String className = pd.getPropertyType().getName();
+
+				if(excludeNulls && value != null) {
+					log.debug("Including: " + name + " of class: " + className + " with value: " + value + " is primitive: " + primitive);
+				} else {
+					log.debug("Excluding: " + name + " of class: " + className + " becaues of null value");
+				}
 
 				boolean isNull = value == null;
 				boolean isString = value instanceof String;
@@ -110,6 +120,7 @@ public class Example extends Group {
 			throw new RuntimeException ("Unable to use example object " + example, ex);
 		}
 	}
+	
 	private void handlePrimitives(String name, Object value, String className) {
 		if (!"boolean".equals(className)) {
 			if (excludeZeroes) {
@@ -117,7 +128,7 @@ public class Example extends Group {
 				if (number.intValue()!=0) {
 					this.eq(name, value);	
 				} else {
-					//ystem.out.println("EXCLUDED");
+					log.debug("Excluding primitive value: " + value + " for property named: " + name + " of class: " + className);
 				}
 			} else {
 				this.eq(name, value);

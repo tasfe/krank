@@ -66,7 +66,6 @@ public class Employee {
 	private Integer rank;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-    //@ManyToOne()
 	private Department department;
     
 	public Long getId() {

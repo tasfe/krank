@@ -80,6 +80,11 @@
 	<!-- 
 	-->
 	<filter>
+		<filter-name>Spring OpenEntityManagerInViewFilter</filter-name>
+		<filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
+	</filter>
+	
+	<filter>
 		<display-name>Ajax4jsf Filter</display-name>
 		<filter-name>ajax4jsf</filter-name>
 		<filter-class>org.ajax4jsf.Filter</filter-class>
@@ -110,6 +115,12 @@
 			<param-value>100k</param-value>
 		</init-param>
 	</filter>
+
+
+	<filter-mapping>
+		<filter-name>Spring OpenEntityManagerInViewFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>ajax4jsf</filter-name>

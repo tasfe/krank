@@ -1,6 +1,7 @@
 package org.crank.crud;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.Id;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
@@ -64,7 +66,16 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	@Transactional
 	public void delete(final PK id) {
-		getJpaTemplate().remove(read(id));
+        getJpaTemplate().execute(
+                new JpaCallback() {
+                    public Object doInJpa(EntityManager entityManager) throws PersistenceException {
+                    	String queryString = "DELETE FROM " + getEntityName() + " WHERE " + getPrimaryKeyName() + " = " + id;
+                        Query query = entityManager.createQuery(queryString);
+                        query.executeUpdate();
+                        return null;
+                    }
+                }
+        );
 	}
 
 	public T read(PK id) {
@@ -84,6 +95,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		getJpaTemplate().refresh(transientObject);
 	}
 
+    @Transactional
     public void flushAndClear() {
         getJpaTemplate().execute(
                 new JpaCallback() {
@@ -562,6 +574,55 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 					"The type must be set to use this method.");
 		}
 		return getEntityName(this.type);
+	}
+
+	private String searchFieldsForPK(Class<T> aType) {
+		String pkName = null;
+		Field[] fields = aType.getDeclaredFields();
+		for(Field field : fields) {
+			Id id = field.getAnnotation(Id.class);
+			if(id != null) {
+				pkName = field.getName();
+				break;
+			}
+		}
+		if(pkName == null && aType.getSuperclass() != null) {
+			pkName = searchFieldsForPK(aType);
+		}
+		return pkName;
+	}
+	
+	private String searchMethodsForPK(Class<T> aType) {
+		String pkName = null;
+		Method[] methods = aType.getDeclaredMethods();
+		for(Method method : methods) {
+			Id id = method.getAnnotation(Id.class);
+			if(id != null) {
+				pkName = method.getName().substring(4);
+				pkName = method.getName().substring(3,4).toLowerCase() + pkName;
+				break;
+			}
+		}
+		if(pkName == null && aType.getSuperclass() != null) {
+			pkName = searchMethodsForPK(aType);
+		}
+		return pkName;
+	}
+
+	protected String getPrimaryKeyName(Class<T> aType) {
+		String pkName = searchFieldsForPK(aType);
+		if(null == pkName) {
+			pkName = searchMethodsForPK(aType);
+		}
+		return pkName;
+	}
+
+	protected String getPrimaryKeyName() {
+		if (type == null) {
+			throw new UnsupportedOperationException(
+					"The type must be set to use this method.");
+		}
+		return getPrimaryKeyName(this.type);
 	}
 
 	private String constructOrderBy(OrderBy[] orderBy) {

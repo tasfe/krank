@@ -15,16 +15,8 @@
 		class="org.crank.crud.GenericDaoFactory"
 		abstract="true">
 		<constructor-arg ref="transactionInterceptor"></constructor-arg>
-		<property name="entityManagerFactory"
-			ref="entityManagerFactory" />
-	</bean>
-	
-	<!-- 
-	<bean id="genericDao" class="org.crank.crud.GenericDaoJpa">
-		<property name="type" value="org.crank.crud.test.model.Employee"/>
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
- 	-->
  	
 	<bean id="employeeDao" parent="daoFactory">
 		<property name="interface">

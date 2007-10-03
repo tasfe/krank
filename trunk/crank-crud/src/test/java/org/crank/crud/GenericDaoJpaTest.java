@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-
 import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Group;
@@ -31,8 +29,6 @@ import org.crank.crud.test.dao.EmployeeDAO;
 import org.crank.crud.test.model.Department;
 import org.crank.crud.test.model.Employee;
 import org.testng.AssertJUnit;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -59,35 +55,39 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		assert employees.size() > 0;
 	}
 
-	@Test(groups={"broken"})
+	@Test
 	public void testDeleteObject() throws Exception {
-		//Employee employee = (Employee) employeeDao.read(1L);
-		//AssertJUnit.assertNotNull(employee);
-		//AssertJUnit.assertEquals(((Employee) employee).getId(), new Long(1));
-		employeeDao.delete(1L);
 		Employee employee = (Employee) employeeDao.read(1L);
+		AssertJUnit.assertNotNull(employee);
+		AssertJUnit.assertEquals(((Employee) employee).getId(), new Long(1));
+		employeeDao.delete(1L);
+		employeeDao.flushAndClear();
+		employee = (Employee) employeeDao.read(1L);
 		AssertJUnit.assertNull(employee);
+		employeeDao.flushAndClear();
 		initPersistenceStuff();
 		employee = (Employee) employeeDao.read(1L);
 		AssertJUnit.assertNotNull(employee);
 	}
 
-	@Test(groups = { "broken" })
+	@Test
 	public void testFetchWithOrderBy() throws Exception {
 		Employee employee = new Employee();
 		employee.setFirstName("Rick");
 		employee.setNumberOfPromotions(1);
 		employeeDao.update(employee);
 		Map<String, Object> params = new HashMap<String, Object>();
-		List employees = employeeDao.find(params, new String[] { "firstName" });
+		List<Employee> employees = employeeDao.find(params,
+				new String[] { "firstName" });
 		AssertJUnit.assertEquals(((Employee) employees.get(0)).getFirstName(),
 				"Bob");
 		AssertJUnit.assertEquals(((Employee) employees.get(1)).getFirstName(),
 				"Carlos");
+		employeeDao.flushAndClear();
 		initPersistenceStuff();
 	}
 
-	@Test(groups={"broken"})
+	@Test
 	public void testGetObject() {
 		Employee employee = employeeDao.read(new Long(1));
 		AssertJUnit.assertNotNull(employee);
@@ -95,9 +95,9 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertEquals("Rick", employee.getFirstName());
 	}
 
-	@Test(groups={"broken"})
+	@Test
 	public void testGetObjects() {
-		List employees = employeeDao.find();
+		List<Employee> employees = employeeDao.find();
 		AssertJUnit.assertNotNull(employees);
 		AssertJUnit.assertEquals(9, employees.size());
 	}
@@ -109,8 +109,6 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertEquals(9, employees.size());
 		for (Employee employee : employees) {
 			employee.setFirstName(employee.getFirstName() + "Gak");
-		}
-		for (Employee employee : employees) {
 			employeeDao.update(employee);
 		}
 
@@ -119,21 +117,26 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		for (Employee employee : employees) {
 			AssertJUnit.assertTrue(employee.getFirstName().contains("Gak"));
 		}
+		employeeDao.flushAndClear();
 		initPersistenceStuff();
+		employees = employeeDao.find();
+		for (Employee employee : employees) {
+			AssertJUnit.assertTrue(!employee.getFirstName().contains("Gak"));
+		}
 	}
 
 	@Test
 	public void testParameterQuery() {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("firstName", "Rick");
-		List employees = employeeDao.find(params);
+		List<Employee> employees = employeeDao.find(params);
 		AssertJUnit.assertNotNull(employees);
 		AssertJUnit.assertTrue(employees.size() > 0);
 	}
 
 	@Test
 	public void testSingleParameterQuery() {
-		List employees = employeeDao.find("firstName", "Rick");
+		List<Employee> employees = employeeDao.find("firstName", "Rick");
 		AssertJUnit.assertNotNull(employees);
 		AssertJUnit.assertTrue(employees.size() > 0);
 	}
@@ -218,7 +221,8 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		Department department = new Department();
 		department.setName("Eng");
 		employee.setDepartment(department);
-		group = like(employee).excludeProperty("employees").excludeProperty("numberOfPromotions");
+		group = like(employee).excludeProperty("employees").excludeProperty(
+				"numberOfPromotions");
 		string = dao.constructWhereClauseString(group, false);
 		AssertJUnit
 				.assertEquals(
@@ -274,7 +278,8 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		employee.setFirstName("Rick");
 		employee.setLastName("Rick");
 
-		List<Employee> employees = employeeDao.find(like(employee).excludeProperty("lastName"));
+		List<Employee> employees = employeeDao.find(like(employee)
+				.excludeProperty("lastName"));
 		AssertJUnit.assertTrue(employees.size() > 0);
 
 		employee = new Employee();
@@ -286,7 +291,8 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		Department department = new Department();
 		department.setName("Eng%");
 		employee.setDepartment(department);
-		employees = employeeDao.find(like(employee).excludeProperty("employees"));
+		employees = employeeDao.find(like(employee)
+				.excludeProperty("employees"));
 		AssertJUnit.assertTrue(employees.size() > 0);
 
 	}
@@ -308,7 +314,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertEquals(6, result.size());
 	}
 
-	@Test(groups={"broken"})
+	@Test
 	public void testFetch() {
 		List<Employee> result = employeeDao.find(join(joinFetch("department")),
 				orderBy("firstName"), and());
@@ -346,7 +352,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
 	}
 
-	@Test(groups = { "broken" })
+	@Test
 	public void testOrderBy() {
 		List<Employee> employees = employeeDao.find(orderBy(asc("firstName")));
 		AssertJUnit.assertNotNull(employees);
@@ -391,20 +397,21 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		employeeDao.find();
 	}
 
-    @Test
-    public void testEntityEquals () {
-        Department department = departmentDao.update(new Department("r&d"));
-        department = departmentDao.read(department.getId());
-        Employee employee = new Employee("Rick", "Hightower");
-        employee.setDepartment(department);
-        department.getEmployees().add(employee);
-        departmentDao.update(department);
-        List<Employee> find = employeeDao.find(Comparison.eq("department", department));
-        String firstname = find.get(0).getFirstName();
-        AssertJUnit.assertEquals("Rick", firstname);
-    }
+	@Test
+	public void testEntityEquals() {
+		Department department = departmentDao.update(new Department("r&d"));
+		department = departmentDao.read(department.getId());
+		Employee employee = new Employee("Rick", "Hightower");
+		employee.setDepartment(department);
+		department.getEmployees().add(employee);
+		departmentDao.update(department);
+		List<Employee> find = employeeDao.find(Comparison.eq("department",
+				department));
+		String firstname = find.get(0).getFirstName();
+		AssertJUnit.assertEquals("Rick", firstname);
+	}
 
-    public void setEmployeeDao(final GenericDao<Employee, Long> baseJpaDao) {
+	public void setEmployeeDao(final GenericDao<Employee, Long> baseJpaDao) {
 		this.employeeDao = baseJpaDao;
 	}
 

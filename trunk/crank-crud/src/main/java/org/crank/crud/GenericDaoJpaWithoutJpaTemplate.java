@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
@@ -111,6 +112,20 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable> impleme
     @SuppressWarnings( "unchecked" )
     public T read( Class clazz, PK id ) {
         return (T) getEntityManager().find( clazz, id );
+    }
+    
+    public T readExclusive( PK id ) {
+        if (type == null) {
+            throw new UnsupportedOperationException( "The type must be set to use this method." );
+        }
+        return readExclusive( type, id );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public T readExclusive( Class clazz, PK id ) {
+    	Object entity = (T) getEntityManager().find( clazz, id );
+    	getEntityManager().lock(entity, LockModeType.READ);
+        return (T) entity;
     }
 
     public void refresh( final T transientObject ) {

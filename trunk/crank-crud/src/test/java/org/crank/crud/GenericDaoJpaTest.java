@@ -21,6 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.transaction.TransactionManager;
 import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Group;
@@ -28,6 +31,12 @@ import org.crank.crud.test.DbUnitTestBase;
 import org.crank.crud.test.dao.EmployeeDAO;
 import org.crank.crud.test.model.Department;
 import org.crank.crud.test.model.Employee;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
@@ -39,12 +48,13 @@ import org.testng.annotations.Test;
 public class GenericDaoJpaTest extends DbUnitTestBase {
 	private GenericDao<Employee, Long> employeeDao;
 	private GenericDao<Department, Long> departmentDao;
+	private PlatformTransactionManager transactionManager;
 
 	@Override
 	public String getDataSetXml() {
 		return "data/Employee.xml";
 	}
-
+ 
 	@Test
 	public void testLazy() {
 		List<Department> departments = departmentDao.find();
@@ -396,20 +406,46 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 	public void testEmployees() {
 		employeeDao.find();
 	}
-
+	
 	@Test
-	public void testEntityEquals() {
-		Department department = departmentDao.update(new Department("r&d"));
-		department = departmentDao.read(department.getId());
-		Employee employee = new Employee("Rick", "Hightower");
-		employee.setDepartment(department);
-		department.getEmployees().add(employee);
-		departmentDao.update(department);
-		List<Employee> find = employeeDao.find(Comparison.eq("department",
-				department));
-		String firstname = find.get(0).getFirstName();
-		AssertJUnit.assertEquals("Rick", firstname);
+	public void testReadExclusive() {
+		
+		TransactionTemplate transactionTemplate = 
+			new TransactionTemplate(transactionManager);
+		
+		transactionTemplate.execute(
+				new TransactionCallback() {
+					public Object doInTransaction(TransactionStatus ts) {
+						Employee employee =  employeeDao.readExclusive(1L);
+//	This code blocks for 30 seconds so that the fact that the row is 
+//  locked can be proven outside of Java.						
+//						System.out.println("Nighty Night!!");
+//						try {
+//							Thread.sleep(30000);
+//						} catch (InterruptedException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//						System.out.println("YAWN!!");
+						AssertJUnit.assertNotNull("Employee for id=1 not read.", employee);
+						return null;
+					}
+				});		
+
 	}
+
+    @Test
+    public void testEntityEquals () {
+        Department department = departmentDao.update(new Department("r&d"));
+        department = departmentDao.read(department.getId());
+        Employee employee = new Employee("Rick", "Hightower");
+        employee.setDepartment(department);
+        department.getEmployees().add(employee);
+        departmentDao.update(department);
+        List<Employee> find = employeeDao.find(Comparison.eq("department", department));
+        String firstname = find.get(0).getFirstName();
+        AssertJUnit.assertEquals("Rick", firstname);
+    }
 
 	public void setEmployeeDao(final GenericDao<Employee, Long> baseJpaDao) {
 		this.employeeDao = baseJpaDao;
@@ -419,4 +455,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		this.departmentDao = departmentDao;
 	}
 
+	public void setTransactionManager(PlatformTransactionManager transactionManager) {
+		this.transactionManager = transactionManager;
+	}
 }

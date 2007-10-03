@@ -32,6 +32,17 @@ public interface GenericDao<T, PK extends Serializable> {
     T read( PK id );
 
     /**
+     * Retrieves an entity that was previously persisted to the database using
+     * the parameter as the primary key, and maintain an exclusive lock on that
+     * entity's database row(s) until the transaction is committed.  Note that 
+     * this method must be executed with the bounds of a transaction.
+     * @param id
+     *          The Primary Key of the entity to retrieve.
+     * @return Type
+     */
+    T readExclusive( PK id );
+
+    /**
      * Save changes made to a persistent object.
      * @param transientObject
      *          The Object to update.
@@ -40,14 +51,14 @@ public interface GenericDao<T, PK extends Serializable> {
     T update( T transientObject );
 
     /**
-     * Refresh a persistant object that may have changed in another thread/transaction.
+     * Refresh a persistent object that may have changed in another thread/transaction.
      * @param transientObject
      *          The Object to refresh.
      */
     void refresh( T transientObject );
 
     /**
-     * Write anything to db that is pending oporation and clear it.
+     * Write anything to db that is pending operation and clear it.
      */
     void flushAndClear();
 
@@ -66,7 +77,7 @@ public interface GenericDao<T, PK extends Serializable> {
     void delete( T entity );
     
     /**
-     * Allows geting an object using a map of the field and values
+     * Allows getting an object using a map of the field and values
      * 
      * @param propertyValues
      *            properties of VO to use as filters, values matching properties
@@ -75,7 +86,7 @@ public interface GenericDao<T, PK extends Serializable> {
     List<T> find( Map<String, Object> propertyValues );
 
     /**
-     * Allows geting an object using a map of the field and values
+     * Allows getting an object using a map of the field and values
      * @param propertyNames
      *          Names of the fields on which to search.
      * @param values

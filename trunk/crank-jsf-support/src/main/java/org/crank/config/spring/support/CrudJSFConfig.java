@@ -70,14 +70,18 @@ public abstract class CrudJSFConfig implements InitializingBean {
     @SuppressWarnings("unchecked")
     @ExternalBean
     public abstract Map<String, JsfCrudAdapter> cruds() ; 
-    
+
+    @SuppressWarnings("unchecked")
+    @ExternalBean
+    public abstract Map<String, FilterablePageable> pagers() ;
+
     /**
      * Paginators used to paginate listings.
      * @return
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-    @Bean (scope = DefaultScopes.SESSION) 
+    @Bean (scope = DefaultScopes.SESSION, aliases="pagers") 
     public Map<String, FilterablePageable> paginators () throws Exception {
         Map<String, FilterablePageable> paginators = new HashMap<String, FilterablePageable>();
         for (CrudManagedObject mo : managedObjects()) {

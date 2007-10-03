@@ -38,4 +38,6 @@ public int getNextSerialNumber() {
 }
 
 // Upon commitment of the transaction, the entity's row
-// is persisted and the lock is released. }}}
+// is persisted and the lock is released. 
+
+}}}

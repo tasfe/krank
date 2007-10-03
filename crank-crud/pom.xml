@@ -9,7 +9,7 @@
     <artifactId>crank-crud</artifactId>
     <name>crank-crud</name>
     <version>0.8-SNAPSHOT</version>
-    <url>http://maven.apache.org</url>
+    <url>http://code.google.com/p/krank</url>
     <build>
         <plugins>
             <plugin>

@@ -10,9 +10,32 @@
     <name>crank-cache-web-test</name>
     <version>0.8-SNAPSHOT</version>
     <packaging>war</packaging>
-    <url>http://maven.apache.org</url>
     <build>
-        <finalName>crank-cache</finalName>
+      <finalName>crank-cache</finalName>
+      <plugins>
+	<plugin>
+	  <groupId>org.mortbay.jetty</groupId>
+	  <artifactId>maven-jetty-plugin</artifactId>
+	  <dependencies>
+	    <dependency>
+	      <groupId>log4j</groupId>
+	      <artifactId>log4j</artifactId>
+	      <version>1.2.13</version>
+	      <type>jar</type>
+	    </dependency>
+	    <dependency>
+	      <groupId>javax.faces</groupId>
+	      <artifactId>jsf-api</artifactId>
+	      <version>1.2_04</version>
+	    </dependency>
+	    <dependency>
+	      <groupId>javax.faces</groupId>
+	      <artifactId>jsf-impl</artifactId>
+	      <version>1.2_04</version>
+	    </dependency>
+	  </dependencies>
+	</plugin>
+      </plugins>
     </build>
     <dependencies>
         <dependency>
@@ -41,14 +64,6 @@
             <artifactId>spring-webmvc</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jsp-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-mock</artifactId>
         </dependency>
@@ -58,22 +73,6 @@
             <classifier>jdk15</classifier>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-tools</artifactId>
-        </dependency>
-        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
@@ -81,47 +80,5 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
         </dependency>
-
-        <!-- JBoss cache dependencies. -->
- 		<!-- 
-        <dependency>
-            <groupId>jboss</groupId>
-            <artifactId>jboss-cache</artifactId>
-        </dependency>
-               <dependency>
-            <groupId>jboss</groupId>
-            <artifactId>jboss-j2ee</artifactId>
-            </dependency>
-        
-        <dependency>
-            <groupId>jboss</groupId>
-            <artifactId>jboss-common-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jboss</groupId>
-            <artifactId>jboss-system</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jboss</groupId>
-            <artifactId>jboss-jmx</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jboss</groupId>
-            <artifactId>jboss-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jgroups</groupId>
-            <artifactId>jgroups</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>jboss</groupId>
-            <artifactId>jbossall-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jboss</groupId>
-            <artifactId>jboss-test</artifactId>
-        </dependency>
-        -->
     </dependencies>
 </project>

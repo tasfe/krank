@@ -12,9 +12,10 @@ In Crank CRUD this kind of exclusive lock can be obtained by using the GenericCr
 
 There are a few things to bear in mind when using this method:
 
+  # The entity being retrieved must implement JPA version control (@Version tag on one of its properties.)  
   # The method must be called from within a transaction.
   # The entity is locked until the transaction commits/rolls back.
-  # Because the method is in a transaction, the state of the entity will be persisted to the database when the application is committed, unless, of course, the transaction is rolled back.
+  # Because the method is in a transaction, the state of the entity will be persisted to the database when the transaction is committed, unless, of course, the transaction is rolled back.
 
 
 

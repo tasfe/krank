@@ -37,14 +37,6 @@
 	    <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
             <version>2.2</version>
@@ -81,5 +73,15 @@
             <groupId>javax.faces</groupId>
             <artifactId>jsf-impl</artifactId>
         </dependency>
+
+	<dependency>
+	  <groupId>org.apache.geronimo.specs</groupId>
+	  <artifactId>geronimo-jpa_3.0_spec</artifactId>
+	</dependency>
+	<dependency>
+	  <groupId>org.apache.geronimo.specs</groupId>
+	  <artifactId>geronimo-jta_1.1_spec</artifactId>
+	</dependency>
+
     </dependencies>
 </project>

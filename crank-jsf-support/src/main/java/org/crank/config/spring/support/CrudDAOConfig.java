@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 
 import org.crank.crud.GenericDao;
 import org.crank.crud.GenericDaoFactory;
@@ -15,14 +16,21 @@ import org.springframework.config.java.annotation.Bean;
 import org.springframework.config.java.annotation.ExternalBean;
 import org.springframework.config.java.util.DefaultScopes;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+//import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationContext;
 
-public abstract class CrudDAOConfig implements InitializingBean {
 
-	public void afterPropertiesSet() throws Exception {
+public abstract class CrudDAOConfig implements InitializingBean{
+
+
+    private DataSource dataSource;
+
+    public void afterPropertiesSet() throws Exception {
 	}
 
     @SuppressWarnings("unchecked")
@@ -64,9 +72,13 @@ public abstract class CrudDAOConfig implements InitializingBean {
      * @return
      * @throws Exception
      */
-    public LocalEntityManagerFactoryBean entityManagerFactoryFactory() throws Exception {
-        LocalEntityManagerFactoryBean entityManagerFactoryFactory = new LocalEntityManagerFactoryBean();
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryFactory() throws Exception {
+        LocalContainerEntityManagerFactoryBean entityManagerFactoryFactory = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryFactory.setPersistenceUnitName(persistenceUnitName());
+        if (dataSource != null) {
+            entityManagerFactoryFactory.setDataSource(dataSource);
+        }
+
         entityManagerFactoryFactory.afterPropertiesSet();
         return entityManagerFactoryFactory;
     }
@@ -74,7 +86,8 @@ public abstract class CrudDAOConfig implements InitializingBean {
     @ExternalBean
     public abstract String persistenceUnitName();
 
-	/**
+
+    /**
      * Create an entity manager factory.
      * @return
      * @throws Exception
@@ -111,5 +124,9 @@ public abstract class CrudDAOConfig implements InitializingBean {
         genericDaoFactory.afterPropertiesSet();
         return (GenericDao) genericDaoFactory.getObject();    
     }
-    
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
 }

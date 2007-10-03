@@ -31,7 +31,7 @@ import javax.persistence.Version;
 	  }, 
 	  columns = {
 				@ColumnResult(name="foo"),
-				@ColumnResult(name="delDate"),
+				@ColumnResult(name="delDate")
 	  }			
   )
 })

@@ -61,7 +61,7 @@
             <classifier>jdk15</classifier>
         </dependency>
         <dependency>
-            <groupId>easymock</groupId>
+            <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
         </dependency>
         <dependency>

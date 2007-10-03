@@ -24,9 +24,10 @@
 		<a4j:form id="employeeForm" enctype="multipart/form-data">
 
 			<crank:form crud="${crud}" parentForm="employeeForm"
-				propertyNames="firstName,lastName,department,description,file,age,numberOfPromotions"
+				propertyNames="firstName,lastName,department,description,file,age,numberOfPromotions,specialty:Specialty"
 				enableGroups="active:status:dob:phone:email">
-				<!--  specialty:Specialty -->
+				
+				
 
 				<crank:compositePanel entity="${crud.entity.address}" name="address"
 					propertyNames="line_1,line2,zipCode" />
@@ -47,11 +48,10 @@
 					parentForm="employeeForm"
 					/>
 
-				<crank:selectOneListing jsfSelectOneController="${employeeToSpecialtyController}" 
+				<!-- <crank:selectOneListing jsfSelectOneController="${employeeToSpecialtyController}" 
 					propertyNames="name"
 					parentForm="employeeForm"
-					/>
-					
+					/> -->
 
 			</crank:form>
 		</a4j:form>

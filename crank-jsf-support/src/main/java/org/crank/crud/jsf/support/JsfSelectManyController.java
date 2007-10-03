@@ -45,6 +45,7 @@ public class JsfSelectManyController<T, PK extends Serializable> {
 			}
 
 			public void afterLoadCreate(CrudEvent event) {
+                initEntity();
 			}
 
 			public void afterLoadListing(CrudEvent event) {

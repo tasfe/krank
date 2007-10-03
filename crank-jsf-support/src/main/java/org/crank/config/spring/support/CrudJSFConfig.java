@@ -24,6 +24,7 @@ import org.springframework.config.java.annotation.Bean;
 import org.springframework.config.java.annotation.ExternalBean;
 import org.springframework.config.java.util.DefaultScopes;
 
+
 public abstract class CrudJSFConfig implements InitializingBean {
 
 	public void afterPropertiesSet() throws Exception {

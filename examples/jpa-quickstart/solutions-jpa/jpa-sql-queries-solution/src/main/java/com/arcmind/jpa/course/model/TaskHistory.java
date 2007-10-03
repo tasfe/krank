@@ -31,7 +31,7 @@ import javax.persistence.Version;
 								@FieldResult(name = "id", column = "pid"),
 								@FieldResult(name = "name", column = "pname")
 						}
-				),
+				)
 	}	
 )})
 @NamedNativeQuery (name="peopleAndTasks",  resultSetMapping="TwoEntities",

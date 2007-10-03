@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.Id;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -25,10 +26,12 @@ import org.crank.crud.criteria.OrderDirection;
 import org.crank.crud.criteria.VerifiedBetween;
 import org.crank.crud.join.Fetch;
 import org.crank.crud.join.Join;
+import org.springframework.orm.jpa.EntityManagerHolder;
 import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.orm.jpa.support.JpaDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
  * @param <T>
@@ -91,7 +94,23 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return (T) getJpaTemplate().find(clazz, id);
 	}
 
-    public void refresh(final T transientObject) {
+	@SuppressWarnings("unchecked")
+    public T readExclusive(Class clazz, PK id) {
+		EntityManager em = getTransactionEntityManager();
+		Object entity =  getJpaTemplate().find(clazz, id);
+		em.lock(entity, LockModeType.READ);
+		return (T) entity;
+	}
+
+	public T readExclusive(PK id) {
+		if (type == null) {
+			throw new UnsupportedOperationException(
+					"The type must be set to use this method.");
+		}
+		return readExclusive(type, id);
+	}
+
+	public void refresh(final T transientObject) {
 		getJpaTemplate().refresh(transientObject);
 	}
 
@@ -313,6 +332,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public List<T> find(Class clazz, String[] orderBy, Criterion... criteria) {
 		return doFind(clazz, orderBy, criteria, null);
 	}
+	
 
 	private String constuctWhereClause (final Group group) {
 		String whereClause = "";
@@ -707,6 +727,11 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
     public void delete( T entity ) {
         getJpaTemplate().remove(entity);        
     }
-
+    
+    private EntityManager getTransactionEntityManager() {
+    	EntityManagerHolder emHolder = (EntityManagerHolder)
+    	TransactionSynchronizationManager.getResource(getJpaTemplate().getEntityManagerFactory());
+    	return emHolder.getEntityManager();
+    }
 
 }

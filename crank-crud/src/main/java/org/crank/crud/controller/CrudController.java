@@ -112,11 +112,11 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
         return CrudOutcome.FORM;
     }
 
-    private Object getCurrentEntity() {
+    protected Object getCurrentEntity() {
         return entityLocator.getEntity();
     }
 
-    private List getSelectedEntities() {
+    protected List getSelectedEntities() {
         return entityLocator.getSelectedEntities();
     }
 

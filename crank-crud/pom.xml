@@ -69,11 +69,6 @@
             <artifactId>dbunit</artifactId>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-	    <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
         </dependency>
@@ -89,30 +84,4 @@
 
     </dependencies>
 
-    <profiles>
-      <profile>
-	<id>hibernate</id>
-	<activation>
-	  <activeByDefault>true</activeByDefault>
-	</activation>
-	<dependencies>
-	  <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-          </dependency>
-          <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-          </dependency>
-          <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-          </dependency>
-          <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-tools</artifactId>
-          </dependency>
-	</dependencies>
-      </profile>
-    </profiles>
 </project>

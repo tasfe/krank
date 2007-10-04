@@ -109,21 +109,21 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 	public void testGetObjects() {
 		List<Employee> employees = employeeDao.find();
 		AssertJUnit.assertNotNull(employees);
-		AssertJUnit.assertEquals(9, employees.size());
+		AssertJUnit.assertEquals(13, employees.size());
 	}
 
 	@Test
 	public void testGetUpdateObjects() throws Exception {
 		List<Employee> employees = employeeDao.find();
 		AssertJUnit.assertNotNull(employees);
-		AssertJUnit.assertEquals(9, employees.size());
+		AssertJUnit.assertEquals(13, employees.size());
 		for (Employee employee : employees) {
 			employee.setFirstName(employee.getFirstName() + "Gak");
 			employeeDao.update(employee);
 		}
 
 		AssertJUnit.assertNotNull(employees);
-		AssertJUnit.assertEquals(9, employees.size());
+		AssertJUnit.assertEquals(13, employees.size());
 		for (Employee employee : employees) {
 			AssertJUnit.assertTrue(employee.getFirstName().contains("Gak"));
 		}
@@ -321,17 +321,17 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("lastName", null);
 		List<Employee> result = employeeDao.find(attributes);
-		AssertJUnit.assertEquals(6, result.size());
+		AssertJUnit.assertEquals(9, result.size());
 	}
 
 	@Test
 	public void testFetch() {
 		List<Employee> result = employeeDao.find(join(joinFetch("department")),
 				orderBy("firstName"), and());
-		AssertJUnit.assertEquals(9, result.size());
+		AssertJUnit.assertEquals(13, result.size());
 		result = employeeDao.find(join(leftJoinFetch("department")),
 				orderBy("firstName"), and());
-		AssertJUnit.assertEquals(9, result.size());
+		AssertJUnit.assertEquals(13, result.size());
 
 	}
 
@@ -371,33 +371,19 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		employees = employeeDao.find(orderBy(desc("firstName")));
 		AssertJUnit.assertNotNull(employees);
 		AssertJUnit.assertEquals("Scott", employees.get(0).getFirstName());
-
 	}
 
 	@Test
 	public void testIn() {
-		// EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(1L);
 		ids.add(2L);
-		// List<Employee> employees = employeeDAO.findInEmployeeIds(ids);
-		// List<Employee> employees = employeeDAO.findInEmployeeIds(new Long[]
-		// {1L, 2L});
-		// List<Employee> employees = employeeDao.find(Comparison.in("id",
-		// (Object) new Long [] {1L,2L}));
-		// Seems like named param works but positional does not.
 		List<Employee> employees = employeeDao.find(Comparison.in("id", ids));
 		AssertJUnit.assertNotNull(employees);
 	}
 
 	@Test
 	public void testEagerNplusOne() {
-		// List<Department> depts = departmentDao.find();
-		// AssertJUnit.assertNotNull(depts);
-
-		// Department department = departmentDao.read(1L);
-		// AssertJUnit.assertNotNull(department);
-
 		List<Department> depts = departmentDao.find(leftJoinFetch("employees"));
 		AssertJUnit.assertNotNull(depts);
 	}
@@ -417,16 +403,6 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 				new TransactionCallback() {
 					public Object doInTransaction(TransactionStatus ts) {
 						Employee employee =  employeeDao.readExclusive(1L);
-//	This code blocks for 30 seconds so that the fact that the row is 
-//  locked can be proven outside of Java.						
-//						System.out.println("Nighty Night!!");
-//						try {
-//							Thread.sleep(30000);
-//						} catch (InterruptedException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//						System.out.println("YAWN!!");
 						AssertJUnit.assertNotNull("Employee for id=1 not read.", employee);
 						return null;
 					}
@@ -448,11 +424,24 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     }
 
     @Test
-    public void testStartsLike() {
+    public void testStartsLike() throws Exception {
+	initPersistenceStuff();
+	employeeDao.flushAndClear();
         List<Employee> list = employeeDao.find(
         		Comparison.startsLike("firstName", "Ri")        );
-        
+        AssertJUnit.assertEquals(5, list.size());
+        list = employeeDao.find(
+        		Comparison.startsLike("firstName", "C")        );
+        AssertJUnit.assertEquals(2, list.size());
+        list = employeeDao.find(
+        		Comparison.startsLike("lastName", "High")        );
+	for(Employee emp : list) {
+	    System.err.println("id = " + emp.getId());
+        }
         AssertJUnit.assertEquals(4, list.size());
+        list = employeeDao.find(
+        		Comparison.startsLike("firstName", "FizBot")        );
+        AssertJUnit.assertEquals(0, list.size());
     }
 
     public void setEmployeeDao(final GenericDao<Employee, Long> baseJpaDao) {

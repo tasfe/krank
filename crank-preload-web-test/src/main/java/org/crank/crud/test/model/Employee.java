@@ -10,9 +10,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 @Entity(name="Employee")
 @NamedQueries( {
 	@NamedQuery(name="Employee.findEmployeesByDepartment",
@@ -29,7 +26,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 	)
 	
 })
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Employee {
 
     @Id

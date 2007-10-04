@@ -10,26 +10,22 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 @Entity(name="Employee")
 @NamedQueries( {
 	@NamedQuery(name="Employee.findEmployeesByDepartment",
-			query="from Employee employee where employee.department.name=?"),
+			query="SELECT employee FROM Employee employee WHERE employee.department.name=?1"),
 	@NamedQuery(name="Employee.readPopulated",
-					query="from Employee employee join fetch employee.department where employee.id=?"),
+			query="SELECT employee FROM  Employee employee JOIN FETCH employee.department WHERE employee.id=?1"),
 	@NamedQuery(name="Employee.findInEmployeeIds",
-							query="SELECT o FROM Employee o  WHERE  o.id in  ( ? )"),
+			query="SELECT o FROM Employee o  WHERE  o.id in  ( ?1 )"),
     @NamedQuery(name="Employee.findSalaryEmployees",
 				query="SELECT o FROM Employee o  WHERE  o.status = org.crank.crud.test.model.EmployeeStatus.SALARY")
 				,
 	@NamedQuery(name="Employee.findExcellentEmployees",
-						query="SELECT o FROM Employee o  WHERE  o.rank = org.crank.crud.test.model.EmployeeRank.EXCELLENT"
+				query="SELECT o FROM Employee o  WHERE  o.rank = org.crank.crud.test.model.EmployeeRank.EXCELLENT"
 	)
 	
 })
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Employee {
 
     public Employee() {

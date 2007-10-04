@@ -24,10 +24,9 @@ import java.sql.SQLException;
 
 
 /**
-*
-*  @version $Revision$
-*  @author Rick Hightower
-*/
+ *  @version $Revision$
+ *  @author Rick Hightower
+ */
 public abstract class DbUnitTestBase extends SpringTestNGBase {
 
     protected EntityManagerFactory entityManagerFactory;

@@ -447,7 +447,15 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         AssertJUnit.assertEquals("Rick", firstname);
     }
 
-	public void setEmployeeDao(final GenericDao<Employee, Long> baseJpaDao) {
+    @Test
+    public void testStartsLike() {
+        List<Employee> list = employeeDao.find(
+        		Comparison.startsLike("firstName", "Ri")        );
+        
+        AssertJUnit.assertEquals(4, list.size());
+    }
+
+    public void setEmployeeDao(final GenericDao<Employee, Long> baseJpaDao) {
 		this.employeeDao = baseJpaDao;
 	}
 

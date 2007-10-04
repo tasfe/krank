@@ -56,6 +56,7 @@ public class Paginator implements Pageable, Serializable {
         if (currentPage > numberOfPages) {
             currentPage = numberOfPages;
         }
+        firePagination();
     }
 
     public void rewindPages() {
@@ -63,6 +64,7 @@ public class Paginator implements Pageable, Serializable {
         if (currentPage < 0) {
             currentPage = 0;
         }
+        firePagination();
     }
 
     public int getCurrentPageNumber() {
@@ -78,10 +80,12 @@ public class Paginator implements Pageable, Serializable {
             currentPage = 0;
         }
         currentPage = numberOfPages-1;
+        firePagination();
     }
 
     public void moveToStartPage() {
         currentPage = 0;
+        firePagination();
     }
 
     public void moveToNextPage() {
@@ -89,6 +93,7 @@ public class Paginator implements Pageable, Serializable {
         if (currentPage > numberOfPages) {
             currentPage = numberOfPages;
         }
+        firePagination();
     }
 
     public void moveToPreviousPage() {
@@ -96,6 +101,7 @@ public class Paginator implements Pageable, Serializable {
         if (currentPage < 0) {
             currentPage = 0;
         }
+        firePagination();
     }
 
     public boolean isFastForwardPagesEnabled() {
@@ -154,6 +160,7 @@ public class Paginator implements Pageable, Serializable {
         }
         int currentPage = Integer.parseInt( sCurrentPage );
         moveToPage(currentPage-1);
+        firePagination();
     }
     
     public void moveToPage( int pageNumber ) {
@@ -220,4 +227,25 @@ public class Paginator implements Pageable, Serializable {
     public void setRequestParameterMapFinder( RequestParameterMapFinder requestParameterMapFinder ) {
         this.requestParameterMapFinder = requestParameterMapFinder;
     }
+
+    private List<PaginationListener> listeners = new ArrayList<PaginationListener>();
+
+    public void addPaginationListener(PaginationListener listener) {
+        listeners.add( listener );
+    }
+    public void removePaginationListener(PaginationListener listener) {
+        listeners.remove( listener );
+    }
+
+    /**
+     * Fire and event to the listeners.
+     *
+     */
+    private void firePagination() {
+        PaginationEvent pe = new PaginationEvent(this, currentPage);
+        for (PaginationListener pl : listeners) {
+            pl.pagination( pe );
+        }
+    }
+
 }

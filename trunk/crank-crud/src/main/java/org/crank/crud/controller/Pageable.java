@@ -52,4 +52,10 @@ public interface Pageable {
     /** Move to the the current page. Can only be used with CrankListener. */
     void moveToPage();
 
+    /* Register for notifcation of page changes (pagination events). */
+    void addPaginationListener(PaginationListener listener);
+    /* Unregister for notifcation of page changes. */
+    void removePaginationListener(PaginationListener listener);
+
+
 }

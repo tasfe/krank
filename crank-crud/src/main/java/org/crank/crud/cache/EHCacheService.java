@@ -1,18 +1,18 @@
 package org.crank.crud.cache;
 
-import java.lang.management.ManagementFactory;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.management.MBeanServer;
-
-import org.apache.log4j.Logger;
-
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.management.ManagementService;
-import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
+//import java.lang.management.ManagementFactory;
+//import java.util.ArrayList;
+//import java.util.Arrays;
+//import java.util.List;
+//
+//import javax.management.MBeanServer;
+//
+//import org.apache.log4j.Logger;
+//
+//import net.sf.ehcache.Cache;
+//import net.sf.ehcache.CacheManager;
+//import net.sf.ehcache.management.ManagementService;
+//import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 
 public class EHCacheService implements CacheService {
 //

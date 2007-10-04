@@ -1,17 +1,17 @@
 package org.crank.crud.controller;
 
+import org.crank.crud.controller.datasource.FilteringPagingDataSource;
+import org.crank.crud.controller.datasource.PagingDataSource;
+import org.crank.crud.criteria.Criterion;
+import org.crank.crud.criteria.Group;
+import org.crank.crud.criteria.OrderBy;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.util.*;
-
-import org.crank.crud.controller.datasource.FilteringPagingDataSource;
-import org.crank.crud.controller.datasource.PagingDataSource;
-import org.crank.crud.criteria.Criterion;
-import org.crank.crud.criteria.OrderBy;
-import org.crank.core.CrankException;
 
 public class FilteringPaginator extends Paginator implements FilterablePageable, Serializable {
     private Map<String, FilterableProperty> filterableProperties = null;
@@ -117,6 +117,7 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
     }
 
     public void filter() {
+        fireBeforeFilter(filterablePaginatableDataSource().group());
         /* Clear the comparison group b/c we are about to recreate it */
         filterablePaginatableDataSource().group().clear();
         
@@ -150,7 +151,7 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         		filterablePaginatableDataSource().group().add(criterion);
         	}
         }
-        
+        fireAfterFilter(filterablePaginatableDataSource().group());        
         reset();
     }
     
@@ -219,5 +220,36 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
 		}
 		return criteria;
 	}
+
+    private List<FilteringListener> listeners = new ArrayList<FilteringListener>();
+
+    public void addFilteringListener(FilteringListener listener) {
+        listeners.add( listener );
+    }
+    public void removeFilteringListener(FilteringListener listener) {
+        listeners.remove( listener );
+    }
+
+    /**
+     * Fire and event to the listeners.
+     *
+     */
+    private void fireBeforeFilter(Group group) {
+        FilteringEvent fe = new FilteringEvent(this, group);
+        for (FilteringListener fl : listeners) {
+            fl.beforeFilter( fe );
+        }
+    }
+
+    /**
+     * Fire and event to the listeners.
+     *
+     */
+    private void fireAfterFilter(Group group) {
+        FilteringEvent fe = new FilteringEvent(this, group);
+        for (FilteringListener fl : listeners) {
+            fl.afterFilter( fe );
+        }
+    }
 
 }

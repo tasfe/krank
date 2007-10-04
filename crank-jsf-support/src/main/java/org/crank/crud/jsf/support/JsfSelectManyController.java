@@ -1,21 +1,15 @@
 package org.crank.crud.jsf.support;
 
+import org.crank.crud.controller.*;
+import org.crank.crud.relationships.SelectManyRelationshipManager;
+
+import javax.faces.model.DataModel;
+import javax.faces.model.ListDataModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
-
-import org.crank.crud.controller.CrudControllerBase;
-import org.crank.crud.controller.CrudControllerListener;
-import org.crank.crud.controller.CrudEvent;
-import org.crank.crud.controller.CrudOperations;
-import org.crank.crud.controller.FilterablePageable;
-import org.crank.crud.controller.Row;
-import org.crank.crud.relationships.SelectManyRelationshipManager;
 
 public class JsfSelectManyController<T, PK extends Serializable> {
 	
@@ -82,7 +76,27 @@ public class JsfSelectManyController<T, PK extends Serializable> {
 				initEntity();
 			}}
 		);
+
+        paginator.addPaginationListener(new PaginationListener(){
+            public void pagination(PaginationEvent pe) {
+                processPaginationEvent();
+            }
+        });
+
+        paginator.addFilteringListener(new FilteringListener(){
+            public void beforeFilter(FilteringEvent fe) {
+                processPaginationEvent();
+            }
+
+            public void afterFilter(FilteringEvent fe) {
+            }
+        });
     	
+    }
+
+    public void processPaginationEvent() {
+        this.manager.setParentObject(controller.getEntity());
+        this.manager.process(getSelectedEntities(), getEntitiesInView());
     }
 
     public void initEntity() {

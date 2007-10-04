@@ -17,4 +17,7 @@ public interface FilterablePageable extends Pageable {
     Class getType();
     void addCriterion(Criterion criterion);
     List<Criterion> getCriteria();
+    void addFilteringListener(FilteringListener listener);
+    void removeFilteringListener(FilteringListener listener);
+
 }

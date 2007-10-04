@@ -6,12 +6,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.crank</groupId>
-    <artifactId>crank-cache-web-test</artifactId>
-    <name>crank-cache-web-test</name>
+    <artifactId>crank-preload-web-test</artifactId>
+    <name>crank-preload-web-test</name>
     <version>0.8-SNAPSHOT</version>
     <packaging>war</packaging>
     <build>
-      <finalName>crank-cache</finalName>
+      <finalName>crank-preload</finalName>
       <plugins>
 	<plugin>
 	  <groupId>org.mortbay.jetty</groupId>

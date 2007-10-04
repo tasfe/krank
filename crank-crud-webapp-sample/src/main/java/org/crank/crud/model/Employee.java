@@ -24,22 +24,25 @@ import org.crank.annotations.validation.LongRange;
 import org.crank.annotations.validation.Phone;
 import org.crank.annotations.validation.Required;
 import org.crank.crud.model.PersistedFile;
-import org.hibernate.annotations.Cascade;
 
 @Entity
 @NamedQueries( {
-        @NamedQuery( name = "Employee.findEmployeesByDepartment", query = "from Employee employee where employee.department.name=?" ),
+        @NamedQuery( name = "Employee.findEmployeesByDepartment", 
+		     query = "SELECT employee FROM Employee employee WHERE employee.department.name=?1" ),
         @NamedQuery( name = "Employee.readPopulated", 
-                query = "select distinct employee from Employee employee " +
-                        "left outer join fetch employee.department " + 
-                        "left outer join fetch employee.tasks " +
-                        "left outer join fetch employee.contacts " +
-                        "left outer join fetch employee.directReports " +
-                        "left outer join fetch employee.roles " +
-                        "where employee.id=?" ),
-        @NamedQuery( name = "Employee.findInEmployeeIds", query = "SELECT o FROM Employee o  WHERE  o.id in  ( ? )" ),
-        @NamedQuery( name = "Employee.findSalaryEmployees", query = "SELECT o FROM Employee o  WHERE  o.status = org.crank.crud.model.EmployeeStatus.SALARY" ),
-        @NamedQuery( name = "Employee.findExcellentEmployees", query = "SELECT o FROM Employee o  WHERE  o.rank = org.crank.crud.model.EmployeeRank.EXCELLENT" )
+                query = "SELECT DISTINCT employee FROM Employee employee " +
+                        "LEFT OUTER JOIN FETCH employee.department " + 
+                        "LEFT OUTER JOIN FETCH employee.tasks " +
+                        "LEFT OUTER JOIN FETCH employee.contacts " +
+                        "LEFT OUTER JOIN FETCH employee.directReports " +
+                        "LEFT OUTER JOIN FETCH employee.roles " +
+                        "WHERE employee.id=?1" ),
+        @NamedQuery( name = "Employee.findInEmployeeIds", 
+		     query = "SELECT o FROM Employee o  WHERE  o.id in  ( ?1 )" ),
+        @NamedQuery( name = "Employee.findSalaryEmployees", 
+		     query = "SELECT o FROM Employee o  WHERE o.status = org.crank.crud.model.EmployeeStatus.SALARY" ),
+        @NamedQuery( name = "Employee.findExcellentEmployees", 
+		     query = "SELECT o FROM Employee o WHERE o.rank = org.crank.crud.model.EmployeeRank.EXCELLENT" )
 
 } )
 public class Employee extends Person {
@@ -69,17 +72,15 @@ public class Employee extends Person {
     private Address address;
 
     @OneToMany( cascade = CascadeType.ALL )
-    @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})    
     private Set<Task> tasks = new HashSet<Task>();
     
     @OneToMany( cascade = CascadeType.ALL )
-    @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})    
     private Set<ContactInfo> contacts = new HashSet<ContactInfo>();
 
-	@ManyToMany()
-	@JoinTable(name="EMPLOYEE_ROLE", 
-			    joinColumns={@JoinColumn(name="FK_EMPLOYEE_ID")},
-				inverseJoinColumns={@JoinColumn(name="FK_ROLE_ID")})	    
+    @ManyToMany()
+    @JoinTable(name="EMPLOYEE_ROLE", 
+		    joinColumns={@JoinColumn(name="FK_EMPLOYEE_ID")},
+			inverseJoinColumns={@JoinColumn(name="FK_ROLE_ID")})	    
     private Set<Role> roles = new HashSet<Role>();
 
     @ManyToOne( )
@@ -90,7 +91,6 @@ public class Employee extends Person {
     
 
     @OneToMany( cascade = CascadeType.ALL )
-    @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})    
     private Set<Employee> directReports = new HashSet<Employee>();
     
     

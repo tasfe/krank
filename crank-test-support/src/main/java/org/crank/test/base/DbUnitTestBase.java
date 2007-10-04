@@ -81,7 +81,7 @@ public abstract class DbUnitTestBase extends SpringTestNGBase {
 			InvocationTargetException, SQLException {
 		Connection conn = null;
 		Object delegate = (Object) em.getDelegate();
-		if (delegate.getClass().getName().equals("org.hibernate.Session")) {
+		if (delegate.getClass().getName().equals("org.hibernate.impl.SessionImpl")) {
 			conn = getWithHibernateSession(delegate);
 		} else if(delegate.getClass().getName().equals("org.apache.openjpa.persistence.EntityManagerImpl")) {
 			conn = getWithOpenJPASession(delegate);

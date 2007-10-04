@@ -485,9 +485,7 @@
         <activation>
           <activeByDefault>true</activeByDefault>
         </activation>
-	<dependencyManagement>
 	  <dependencies>
-            <!-- JPA Stuff -->
             <dependency>
               <groupId>org.hibernate</groupId>
               <artifactId>hibernate-tools</artifactId>
@@ -519,11 +517,9 @@
               <version>3.2.2.ga</version>
             </dependency>
           </dependencies>
-	</dependencyManagement>
       </profile>
       <profile>
 	<id>openjpa</id>
-	<dependencyManagement>
           <dependencies>
             <dependency>
               <groupId>org.apache.openjpa</groupId>
@@ -531,22 +527,20 @@
               <version>1.0.0</version>
             </dependency>
           </dependencies>
-	</dependencyManagement>
       </profile>
       <profile>
         <id>mysql</id>
         <activation>
           <activeByDefault>true</activeByDefault>
         </activation>
-	<dependencyManagement>
           <dependencies>
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>5.0.3</version>
+		<scope>test</scope>
             </dependency>
           </dependencies>
-	</dependencyManagement>
       </profile>
     </profiles>
 </project>

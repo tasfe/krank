@@ -5,13 +5,24 @@
 			http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
     version="1.0">
 
-    <persistence-unit name="crank-crud-test"
-        transaction-type="RESOURCE_LOCAL">
-        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <persistence-unit name="crank-crud-test" transaction-type="RESOURCE_LOCAL">
+        <!--provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider-->
 
         <class>org.crank.crud.test.model.Employee</class>
 
         <properties>
+	  <!-- OpenJPA Settings -->
+	  <property name="openjpa.ConnectionURL"
+		    value="jdbc:mysql://localhost:3306/crank_crud?autoReconnect=true" />
+	  <property name="openjpa.ConnectionDriverName"
+		    value="com.mysql.jdbc.Driver" />
+	  <property name="openjpa.ConnectionUserName" value="crank" />
+	  <property name="openjpa.ConnectionPassword" value="crank" />
+	  <property name="openjpa.jdbc.SynchronizeMappings"
+		    value="buildSchema(SchemaAction='add')" />
+	  <!--property name="openjpa.Log" value="DefaultLevel=TRACE,SQL=TRACE" /-->
+
             <!-- Hibernate settings -->
             <property name="hibernate.connection.driver_class"
                 value="com.mysql.jdbc.Driver" />

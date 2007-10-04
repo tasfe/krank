@@ -1,11 +1,7 @@
 package org.crank.crud.model;
 
 import java.io.Serializable;
-//import java.util.ArrayList;
-//import java.util.HashSet;
-//import java.util.List;
 import java.util.List;
-//import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -16,34 +12,29 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.Cascade;
-
-
-
 @Entity
 @NamedQueries( {
     @NamedQuery(name="Department.readPopulated",
-            query="select distinct department from Department department " +
-                    " left outer join fetch department.employees employee " +
-                    " left outer join fetch employee.tasks " +
-                    " left outer join fetch employee.contacts " +                    
-                    " where department.id=?")    
+            query="SELECT DISTINCT department FROM Department department " +
+                    " LEFT OUTER JOIN FETCH department.employees employee " +
+                    " LEFT OUTER JOIN FETCH employee.tasks " +
+                    " LEFT OUTER JOIN FETCH employee.contacts " +                    
+                    " WHERE department.id=?")    
 })
 public class Department implements Serializable{
 
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )	
-	private Long id;
+    private Long id;
     private String name;
     
     
     @OneToMany (mappedBy="department", cascade=CascadeType.ALL)
-    @Cascade({org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
     private List<Employee> employees = null;
 
-	public List<Employee> getEmployees() {
-		return employees;
-	}
+    public List<Employee> getEmployees() {
+        return employees;
+    }
 
     public void addEmployee (Employee employee) {
         employee.setDepartment( this );

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
@@ -32,6 +33,7 @@ import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.orm.jpa.support.JpaDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.apache.log4j.Logger;
 
 /**
  * @param <T>
@@ -43,9 +45,13 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  */
 public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		implements GenericDao<T, PK>, Finder<T> {
+	
+	
 	protected Class<T> type = null;
 	
 	protected boolean distinct = true;
+	
+	protected Logger logger = Logger.getLogger( GenericDaoJpa.class );
 
 	public GenericDaoJpa(final Class<T> aType) {
 		this.type = aType;
@@ -431,7 +437,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 				Comparison comparison = (Comparison) criterion;
                 if (comparison.getValue() != null) {
     				final String sOperator = comparison.getOperator().getOperator();
-    				if (!"like".equals(sOperator)) {
+    				if (!"like".equalsIgnoreCase(sOperator)) {
     					if (comparison instanceof Between) {
     						Between between = (Between) comparison;
     						query.setParameter(
@@ -466,6 +472,14 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
     					} else if (operator == Operator.LIKE_START) {
     						value.append(comparison.getValue()).append("%");
     					}
+    					if (logger.isDebugEnabled()) {
+    						logger.debug("parameters");
+	    					logger.debug("value name = " + comparison.getName());
+	    					logger.debug("value value = " + value);
+    					}
+    					System.out.println("parameters");
+    					System.out.println("value name = " + comparison.getName());
+    					System.out.println("value value = " + value);
     					query.setParameter(ditchDot(comparison.getName()), value
     							.toString());
     				}

@@ -1,9 +1,10 @@
 package org.crank.crud.controller;
 
-import java.util.Map;
-import java.util.List;
-
 import org.crank.crud.criteria.Criterion;
+import org.crank.crud.criteria.OrderBy;
+
+import java.util.List;
+import java.util.Map;
 
 
 public interface FilterablePageable extends Pageable {
@@ -19,5 +20,6 @@ public interface FilterablePageable extends Pageable {
     List<Criterion> getCriteria();
     void addFilteringListener(FilteringListener listener);
     void removeFilteringListener(FilteringListener listener);
+    void addOrderBy(OrderBy orderBy);
 
 }

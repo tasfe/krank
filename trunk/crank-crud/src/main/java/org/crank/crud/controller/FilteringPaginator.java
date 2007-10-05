@@ -16,6 +16,7 @@ import java.util.*;
 public class FilteringPaginator extends Paginator implements FilterablePageable, Serializable {
     private Map<String, FilterableProperty> filterableProperties = null;
     private List<Criterion> criteria;
+    private List<OrderBy> orderBy;
     private Class type;
     
     private String name;
@@ -142,8 +143,16 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
             public int compare( OrderBy ob1, OrderBy ob2 ) {
                 return ob1.getSequence().compareTo( ob2.getSequence() );
             }});
-        /* Set the orderBy list. */
-        filterablePaginatableDataSource().setOrderBy( orderBys.toArray(new OrderBy[orderBys.size()]) );
+        
+        if (orderBys.size()>0) {
+            /* Set the orderBy list. */
+            filterablePaginatableDataSource().setOrderBy( orderBys.toArray(new OrderBy[orderBys.size()]) );
+        } else {
+            /* Use default sorts */
+            if (orderBy!=null && this.orderBy.size()>0){
+                filterablePaginatableDataSource().setOrderBy( this.orderBy.toArray(new OrderBy[this.orderBy.size()]) );
+            }
+        }
         
         
         if (criteria!=null && criteria.size() >0) {
@@ -210,10 +219,25 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         this.type = type;
     }
 
+    public List<OrderBy> getOrderBy() {
+        if (orderBy==null) {
+            orderBy = new ArrayList<OrderBy>();
+        }
+        return orderBy;
+    }
+
+    public void setOrderBy(List<OrderBy> orderBy) {
+        this.orderBy = orderBy;
+    }
+
     public void addCriterion(Criterion criterion) {
     	List<Criterion> criteriaList = getCriteria();
     	criteriaList.add(criterion);
     }
+    public void addOrderBy(OrderBy orderBy) {
+        getOrderBy().add(orderBy);
+    }
+
 	public List<Criterion> getCriteria() {
 		if (criteria==null) {
 			criteria = new ArrayList<Criterion>();

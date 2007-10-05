@@ -104,7 +104,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 	public void testGetObjects() {
 		List<Employee> employees = employeeDao.find();
 		AssertJUnit.assertNotNull(employees);
-		AssertJUnit.assertEquals(14, employees.size());
+		AssertJUnit.assertTrue(employees.size()>=14);
 	}
 
 	@Test

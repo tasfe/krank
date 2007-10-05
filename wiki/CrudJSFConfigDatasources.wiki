@@ -1,0 +1,57 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+One of the questions is how to configure a data source for a crank application. The reason you may want to configure a datasource is that the application may run on multiple environments. Each environment may be configured differently. This will explain a couple of ways to do this.
+
+= Persistence xml file =
+Typically with the hibernate or jpa configuration the application uses a persistence.xml file in the META-INF directory. The crud-webapp-sample has one, and it looks something like this. 
+
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
+			http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+    version="1.0">
+
+    <persistence-unit name="crank-crud-app" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+
+        <class>org.crank.crud.model.Employee</class>
+        ....
+
+        <properties>
+            <!-- Hibernate settings -->
+            <property name="hibernate.connection.driver_class"
+                      value="com.mysql.jdbc.Driver" />
+            <property name="hibernate.connection.url"
+                      value="jdbc:mysql://localhost:3306/crank_crud?autoReconnect=true" />
+            <property name="hibernate.connection.username"
+                      value="crank" />
+            <property name="hibernate.connection.password"
+                      value="crank" />
+            <property name="hibernate.dialect"
+                      value="org.hibernate.dialect.MySQLDialect" />
+	    
+	        <!-- you may want to change this provider in production -->
+            <property name="hibernate.cache.provider_class"
+                      value="org.hibernate.cache.HashtableCacheProvider" />
+
+           ....
+        </properties>
+    </persistence-unit>
+
+</persistence>
+}}}
+
+Typically you could have replacer values put into your properties for database connections in this file. There are a number of problems. The first is this requires the application to be built each time for each new environment to get the new replacement values. Good and not so good depending if each environment shares the same set-up. The other problem is anyone getting a hold of your compiled web application can search and open this file and read the user name and password to the database. The last problem is maybe you have operations support or you want to use some other mechanism to manage your datasource say through a JNDI tree. This is where CrudJSFConfig comes in handy. 
+
+==Controller with flair ==
+The CrankCrudExampleApplicationContext has or is the controller that starts up a lot of the crank/spring configurations. 
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages

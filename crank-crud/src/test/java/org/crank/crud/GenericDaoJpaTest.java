@@ -385,7 +385,9 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		ids.add(1L);
 		ids.add(2L);
 		List<Employee> employees = employeeDao.find(Comparison.in("id", ids));
-		AssertJUnit.assertNotNull(employees);
+        AssertJUnit.assertNotNull(employees);
+        AssertJUnit.assertEquals(2,employees.size());
+
 	}
 
 	@Test

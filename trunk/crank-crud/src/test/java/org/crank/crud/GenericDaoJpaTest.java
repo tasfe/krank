@@ -21,9 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.transaction.TransactionManager;
 import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Group;
@@ -31,10 +28,8 @@ import org.crank.crud.test.DbUnitTestBase;
 import org.crank.crud.test.dao.EmployeeDAO;
 import org.crank.crud.test.model.Department;
 import org.crank.crud.test.model.Employee;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.testng.AssertJUnit;
@@ -109,7 +104,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 	public void testGetObjects() {
 		List<Employee> employees = employeeDao.find();
 		AssertJUnit.assertNotNull(employees);
-		AssertJUnit.assertEquals(14, employees.size());
+		AssertJUnit.assertEquals(15, employees.size());
 	}
 
 	@Test

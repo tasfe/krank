@@ -18,7 +18,7 @@ public class DaoPaginatableDataSourceTest extends DbUnitTestBase {
     @Test
     public void test() {
         int count = paginatableDataSource.getCount();
-        AssertJUnit.assertEquals( 13, count );
+        AssertJUnit.assertEquals( 14, count );
         AssertJUnit.assertEquals( 10, paginatableDataSource.list( 0, 10 ).size());
         Employee employee = (Employee) paginatableDataSource.list( 0, 3 ).get( 0 );
         AssertJUnit.assertEquals("Rick", employee.getFirstName());

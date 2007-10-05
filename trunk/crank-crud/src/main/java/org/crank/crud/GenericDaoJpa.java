@@ -79,8 +79,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return read(type, id);
 	}
 
-	@SuppressWarnings("unchecked")
-    public T read(Class clazz, PK id) {
+	//@SuppressWarnings("unchecked")
+    public T read(Class<?> clazz, PK id) {
 		return (T) getJpaTemplate().find(clazz, id);
 	}
 
@@ -130,7 +130,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return this.find(orderBy, criteria);
 	}
 
-	public List<T> searchOrdered(Class clazz, Criterion criteria,
+	public List<T> searchOrdered(Class<T> clazz, Criterion criteria,
 			String... orderBy) {
 		return this.find(clazz, orderBy, criteria);
 	}
@@ -139,10 +139,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
         return find(type, criteria, orderBy);
     }    
 
-	public List<T> find(Class clazz, List<Criterion> criteria,
+	public List<T> find(Class<T> clazz, List<Criterion> criteria,
 			List<String> orderBy) {
 		return find(clazz, orderBy
-				.toArray(new String[orderBy.size()]), (Criterion[]) criteria
+				.toArray(new String[orderBy.size()]), criteria
 				.toArray(new Criterion[criteria.size()]));
 	}
 
@@ -150,9 +150,9 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
         return find(type, criteria, orderBy);
     }    
 
-    public List<T> find(Class clazz, List<Criterion> criteria,
+    public List<T> find(Class<T> clazz, List<Criterion> criteria,
             String[] orderBy) {
-        return find(clazz, orderBy, (Criterion[]) criteria
+        return find(clazz, orderBy, criteria
                 .toArray(new Criterion[criteria.size()]));
     }
 
@@ -170,7 +170,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> find(Class clazz, Map<String, Object> propertyValues,
+	public List<T> find(Class<T> clazz, Map<String, Object> propertyValues,
 			String[] orderBy) {
 		return find(clazz, orderBy, Group.and(propertyValues));
 	}
@@ -191,9 +191,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return find(type);
 	}
     
-    public int count() {
+   @SuppressWarnings("unchecked")
+	public int count() {
         String entityName = getEntityName(type);
-        List list = getJpaTemplate().find(
+        List<T> list = (List<T>)getJpaTemplate().find(
                 "SELECT count(*) FROM " + entityName + " instance");
         Long count = (Long) list.get( 0 );
         return count.intValue();
@@ -213,7 +214,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> find(Class clazz, String[] propertyNames, Object[] values) {
+	public List<T> find(Class<T> clazz, String[] propertyNames, Object[] values) {
 		return find(clazz, propertyNames, values, null);
 	}
 
@@ -250,7 +251,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
     
 
 	@SuppressWarnings("unchecked")
-	public List<T> find(Class clazz, Criterion... criteria) {
+	public List<T> find(Class<T> clazz, Criterion... criteria) {
 		return find(clazz, (String[]) null, criteria);
 	}
 
@@ -319,7 +320,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> find(Class clazz, String[] orderBy, Criterion... criteria) {
+	public List<T> find(Class<T> clazz, String[] orderBy, Criterion... criteria) {
 		return doFind(clazz, orderBy, criteria, null);
 	}
 	
@@ -365,7 +366,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<T> doFind(Class clazz, String[] orderBy, final Criterion[] criteria, Fetch[] fetches,
+	private List<T> doFind(Class<T> clazz, String[] orderBy, final Criterion[] criteria, Fetch[] fetches,
 			final int startPosition, final int maxResult) {
 		
 		if (orderBy!=null) {
@@ -385,7 +386,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<T> doFind(Class clazz, String[] orderBy, Criterion[] criteria, Fetch[] fetches) {
+	private List<T> doFind(Class<T> clazz, String[] orderBy, Criterion[] criteria, Fetch[] fetches) {
 		return doFind(clazz, orderBy, criteria, fetches, -1, -1);
 	}
 
@@ -476,7 +477,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		}
 	}
 
-    private String ensureUnique(Set names, String name) {
+    private String ensureUnique(Set<String> names, String name) {
         if (names.contains(name)) {
             int index = 0;
             String tempVar = null;

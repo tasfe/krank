@@ -16,7 +16,7 @@ public class DaoFilteringDataSource<T, PK extends Serializable> extends DaoDataS
         super();
     }
 
-    public List list() {
+    public List<T> list() {
     	if (orderBy!=null && fetches!=null) {
     		return dao.find(fetches, orderBy, 0, 1000000, group);
     	} else if (orderBy!=null) {

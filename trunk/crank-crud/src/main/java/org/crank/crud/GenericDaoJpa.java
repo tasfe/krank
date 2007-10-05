@@ -477,9 +477,6 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	    					logger.debug("value name = " + comparison.getName());
 	    					logger.debug("value value = " + value);
     					}
-    					System.out.println("parameters");
-    					System.out.println("value name = " + comparison.getName());
-    					System.out.println("value value = " + value);
     					query.setParameter(ditchDot(comparison.getName()), value
     							.toString());
     				}

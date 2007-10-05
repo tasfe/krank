@@ -1,30 +1,9 @@
 package org.crank.crud;
 
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.Id;
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-
+import org.apache.log4j.Logger;
 import org.crank.crud.controller.CrudUtils;
-import org.crank.crud.criteria.Between;
-import org.crank.crud.criteria.Comparison;
-import org.crank.crud.criteria.Criterion;
-import org.crank.crud.criteria.Group;
-import org.crank.crud.criteria.Operator;
+import org.crank.crud.criteria.*;
 import org.crank.crud.criteria.OrderBy;
-import org.crank.crud.criteria.OrderDirection;
-import org.crank.crud.criteria.VerifiedBetween;
 import org.crank.crud.join.Fetch;
 import org.crank.crud.join.Join;
 import org.springframework.orm.jpa.EntityManagerHolder;
@@ -33,7 +12,12 @@ import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.orm.jpa.support.JpaDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import org.apache.log4j.Logger;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * @param <T>
@@ -254,7 +238,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
                         throws PersistenceException {
                     Query query = em.createQuery(sbquery.toString());
                     if (criteria != null) {
-                        addGroupParams(query, group);
+                        addGroupParams(query, group, null);
                     }
                     return ((Long)query.getResultList().get(0)).intValue();
                 }
@@ -366,7 +350,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 						throws PersistenceException {
 					Query query = em.createQuery(sQuery);
 					if (criteria != null) {
-						addGroupParams(query, group);
+						addGroupParams(query, group, null);
 					}
 					if (startPosition != -1 && maxResult != -1) {
 						query.setFirstResult(startPosition);
@@ -428,34 +412,41 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return find(type, orderBy, criteria);
 	}
 
-	private void addGroupParams(Query query, Group group) {
+	private void addGroupParams(Query query, Group group, Set names) {
 
-		for (Criterion criterion : group) {
+        if (names == null) {
+            names = new HashSet();
+        }
+        for (Criterion criterion : group) {
 			if (criterion instanceof Group) {
-				addGroupParams(query, (Group) criterion);
+				addGroupParams(query, (Group) criterion, names);
 			} else {
 				Comparison comparison = (Comparison) criterion;
+                String name = ditchDot(comparison.getName());
+
+                name = ensureUnique(names, name);
+                
                 if (comparison.getValue() != null) {
     				final String sOperator = comparison.getOperator().getOperator();
     				if (!"like".equalsIgnoreCase(sOperator)) {
     					if (comparison instanceof Between) {
     						Between between = (Between) comparison;
-    						query.setParameter(
-    								ditchDot(comparison.getName()) + "1",
+                            query.setParameter(
+    								name + "_1",
     								comparison.getValue());
     						query.setParameter(
-    								ditchDot(comparison.getName()) + "2", between
+    								name + "_2", between
     										.getValue2());
     					} else if (comparison instanceof VerifiedBetween) {
                             VerifiedBetween between = (VerifiedBetween) comparison;
     						query.setParameter(
-    								ditchDot(comparison.getName()) + "1",
+    								name + "_1",
     								comparison.getValue());
     						query.setParameter(
-    								ditchDot(comparison.getName()) + "2", between
+    								name + "_2", between
     										.getValue2());
                         } else {
-    						query.setParameter(ditchDot(comparison.getName()),
+    						query.setParameter(name,
     								comparison.getValue());
     					}
     
@@ -477,7 +468,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	    					logger.debug("value name = " + comparison.getName());
 	    					logger.debug("value value = " + value);
     					}
-    					query.setParameter(ditchDot(comparison.getName()), value
+    					query.setParameter(name, value
     							.toString());
     				}
                 }
@@ -485,7 +476,24 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		}
 	}
 
-	protected String constructWhereClauseString(Group group, boolean parens) {
+    private String ensureUnique(Set names, String name) {
+        if (names.contains(name)) {
+            int index = 0;
+            String tempVar = null;
+            while (true) {
+                tempVar = name + "_" + index;
+                if (!names.contains(tempVar)){
+                     break;
+                }
+                index++;
+            }
+            name = tempVar;
+        }
+        names.add(name);
+        return name;
+    }
+
+    protected String constructWhereClauseString(Group group, boolean parens) {
 		StringBuilder builder = new StringBuilder(255);
 		if (group==null || group.size() == 0) {
 			return "";
@@ -499,21 +507,26 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 			}
 		}
 		builder.append(" WHERE ");
-		constructWhereClauseString(builder, group, false);
+		constructWhereClauseString(builder, group, false, null);
 		return builder.toString();
 	}
 
 	protected void constructWhereClauseString(StringBuilder builder,
-			Group group, boolean parens) {
-		if (parens) {
+			Group group, boolean parens, Set names) {
+
+        if (names == null) {
+            names = new HashSet();
+        }
+
+        if (parens) {
 			builder.append(" ( ");
 		}
 		if (group.size() == 1) {
 			Criterion criterion = group.iterator().next();
 			if (criterion instanceof Group) {
-				constructWhereClauseString(builder, (Group) criterion, true);
+				constructWhereClauseString(builder, (Group) criterion, true, names);
 			} else if (criterion instanceof Comparison) {
-				addComparisonToQueryString((Comparison) criterion, builder);
+				addComparisonToQueryString((Comparison) criterion, builder, names);
 			}
 		} else {
 			int size = group.size();
@@ -521,9 +534,9 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 			for (Criterion criterion : group) {
 				index++;
 				if (criterion instanceof Group) {
-					constructWhereClauseString(builder, (Group) criterion, true);
+					constructWhereClauseString(builder, (Group) criterion, true, names);
 				} else if (criterion instanceof Comparison) {
-					addComparisonToQueryString((Comparison) criterion, builder);
+					addComparisonToQueryString((Comparison) criterion, builder, names);
 				}
 				if (index != size) {
 					builder.append(" ");
@@ -538,9 +551,11 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	private void addComparisonToQueryString(Comparison comparison,
-			StringBuilder builder) {
+			StringBuilder builder, Set names) {
 
 		String var = ":" +ditchDot(comparison.getName());
+        var = ensureUnique(names, var);
+
         if( comparison.getValue() != null ) {
             final String sOperator = comparison.getOperator().getOperator();
     
@@ -556,9 +571,9 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
             builder.append(" ");
     
             if (comparison instanceof Between || comparison instanceof VerifiedBetween) {
-                builder.append(var).append("1");
+                builder.append(var).append("_1");
                 builder.append(" ");
-                builder.append("and ").append(var).append("2");
+                builder.append("and ").append(var).append("_2");
             } else if (comparison.getOperator() == Operator.IN) {
                 builder.append(" (");
                 builder.append(var);

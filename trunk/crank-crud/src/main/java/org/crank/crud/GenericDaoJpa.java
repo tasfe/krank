@@ -634,7 +634,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 			}
 		}
 		if(pkName == null && aType.getSuperclass() != null) {
-			pkName = searchFieldsForPK(aType);
+            pkName = searchFieldsForPK((Class<T>)aType.getSuperclass());
 		}
 		return pkName;
 	}

@@ -6,9 +6,11 @@ import org.crank.controller.ExcelExportControllerBean;
 import org.crank.controller.SelectEmployeeListingController;
 import org.crank.controller.TreeControllerBean;
 import org.crank.crud.controller.CrudManagedObject;
+import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.controller.datasource.DaoFilteringDataSource;
 import org.crank.crud.controller.datasource.EnumDataSource;
 import org.crank.crud.criteria.Comparison;
+import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.dao.DepartmentDAO;
 import org.crank.crud.dao.EmployeeDAO;
 import org.crank.crud.dao.RoleDAO;
@@ -47,7 +49,16 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
     	}
     	return managedObjects;
 		
-	}    
+	}
+
+    @SuppressWarnings("unchecked")
+    @Bean(scope = DefaultScopes.SESSION, aliases = "pagers")
+    public Map<String, FilterablePageable> paginators() throws Exception {
+        Map<String, FilterablePageable> paginators =  super.paginators();
+        paginators.get("Employee").addOrderBy(OrderBy.asc("firstName"));
+        return paginators;
+    }
+
     @Bean (scope = DefaultScopes.SESSION)
     @ScopedProxy
     public DataTableScrollerBean dataTableScrollerBean() throws Exception {

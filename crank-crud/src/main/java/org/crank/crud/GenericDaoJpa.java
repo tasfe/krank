@@ -49,7 +49,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	
 	protected Class<T> type = null;
 	
-	protected boolean distinct = true;
+	protected boolean distinct = false;
 	
 	protected Logger logger = Logger.getLogger( GenericDaoJpa.class );
 

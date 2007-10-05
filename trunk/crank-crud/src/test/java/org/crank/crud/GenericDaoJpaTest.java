@@ -109,21 +109,21 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 	public void testGetObjects() {
 		List<Employee> employees = employeeDao.find();
 		AssertJUnit.assertNotNull(employees);
-		AssertJUnit.assertEquals(13, employees.size());
+		AssertJUnit.assertEquals(14, employees.size());
 	}
 
 	@Test
 	public void testGetUpdateObjects() throws Exception {
 		List<Employee> employees = employeeDao.find();
 		AssertJUnit.assertNotNull(employees);
-		AssertJUnit.assertEquals(13, employees.size());
+		AssertJUnit.assertEquals(14, employees.size());
 		for (Employee employee : employees) {
 			employee.setFirstName(employee.getFirstName() + "Gak");
 			employeeDao.update(employee);
 		}
 
 		AssertJUnit.assertNotNull(employees);
-		AssertJUnit.assertEquals(13, employees.size());
+		AssertJUnit.assertEquals(14, employees.size());
 		for (Employee employee : employees) {
 			AssertJUnit.assertTrue(employee.getFirstName().contains("Gak"));
 		}
@@ -217,12 +217,12 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
 		group = and(between("age", 1, 100));
 		string = dao.constructWhereClauseString(group, false);
-		AssertJUnit.assertEquals(" WHERE  o.age BETWEEN :age1 and :age2 ",
+		AssertJUnit.assertEquals(" WHERE  o.age BETWEEN :age_1 and :age_2 ",
 				string);
 
 		group = and(Employee.class, between("age", 1, 100));
 		string = dao.constructWhereClauseString(group, false);
-		AssertJUnit.assertEquals(" WHERE  o.age BETWEEN :age1 and :age2 ",
+		AssertJUnit.assertEquals(" WHERE  o.age BETWEEN :age_1 and :age_2 ",
 				string);
 
 		Employee employee = new Employee();
@@ -278,7 +278,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         AssertJUnit.assertEquals(0, employees.size());
 
         employees = employeeDao.find(in("age", 40, 1, 2, 3, 4, 5, 6));
-        AssertJUnit.assertEquals(13, employees.size());
+        AssertJUnit.assertEquals(14, employees.size());
 
     }
 
@@ -339,10 +339,10 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 	public void testFetch() {
 		List<Employee> result = employeeDao.find(join(joinFetch("department")),
 				orderBy("firstName"), and());
-		AssertJUnit.assertEquals(13, result.size());
+		AssertJUnit.assertEquals(14, result.size());
 		result = employeeDao.find(join(leftJoinFetch("department")),
 				orderBy("firstName"), and());
-		AssertJUnit.assertEquals(13, result.size());
+		AssertJUnit.assertEquals(14, result.size());
 
 	}
 
@@ -381,7 +381,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
 		employees = employeeDao.find(orderBy(desc("firstName")));
 		AssertJUnit.assertNotNull(employees);
-		AssertJUnit.assertEquals("Scott", employees.get(0).getFirstName());
+		AssertJUnit.assertEquals("Vanilla", employees.get(0).getFirstName());
 	}
 
 	@Test
@@ -432,6 +432,16 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         List<Employee> find = employeeDao.find(Comparison.eq("department", department));
         String firstname = find.get(0).getFirstName();
         AssertJUnit.assertEquals("Rick", firstname);
+    }
+
+    @Test
+    public void testSameVarTwice () {
+        List<Employee> find = employeeDao.find(
+                or(Comparison.eq("firstName", "Rick"),
+                   Comparison.eq("firstName", "Vanilla")
+                )
+        );
+        AssertJUnit.assertEquals(2, find.size());        
     }
 
     @Test

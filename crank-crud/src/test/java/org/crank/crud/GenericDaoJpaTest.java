@@ -262,7 +262,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 				like("firstName", "Ri")));
 		AssertJUnit.assertTrue(employees.size() > 0);
 
-		employees = employeeDao.find(or(in("age", 1, 2, 3, 4, 5, 6, 40)));
+		employees = employeeDao.find(or(in("age", 40, 1, 2, 3, 4, 5, 6)));
 		AssertJUnit.assertTrue(employees.size() > 0);
 
 		List<Criterion> criteria = new ArrayList<Criterion>();
@@ -270,6 +270,17 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		employees = employeeDao.find(criteria, orderBy("firstName"));
 		AssertJUnit.assertTrue(employees.size() > 0);
 	}
+
+    @Test
+    public void testFindByCriteriaIn() {
+
+        List<Employee> employees = employeeDao.find(in("age", 1, 2, 3, 4, 5, 6));
+        AssertJUnit.assertEquals(0, employees.size());
+
+        employees = employeeDao.find(in("age", 40, 1, 2, 3, 4, 5, 6));
+        AssertJUnit.assertEquals(13, employees.size());
+
+    }
 
 	@Test
 	public void testBetween() {

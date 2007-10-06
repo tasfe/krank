@@ -46,7 +46,7 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
 
     private void createFilterProperties( ) {
         filterableProperties = new HashMap<String, FilterableProperty>();
-        createFilterProperties( type, null );
+        createFilterProperties( type, null, new PropertyScanner() );
     }
 
     private class FPToggleListener implements ToggleListener, Serializable {
@@ -71,10 +71,10 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
             filter();
         }
     } 
-    private Set visitorSet = new HashSet();
 
-    private void createFilterProperties( final Class theType, final String propertyName ) {
+    private void createFilterProperties( final Class theType, final String propertyName, PropertyScanner ps) {
         String key = null;
+        
 
         BeanInfo beanInfo = null;
         try {
@@ -83,39 +83,97 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
             throw new RuntimeException(ie);
         }
         PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        List<PropertyDescriptor> pds = new ArrayList<PropertyDescriptor>(); 
+        List<PropertyDescriptor> spds = new ArrayList<PropertyDescriptor>();
+        
         for (PropertyDescriptor propertyDescriptor: propertyDescriptors) {
+        	if (theType == propertyDescriptor.getPropertyType()) {
+        		spds.add(propertyDescriptor);
+        	}else {
+        		pds.add(propertyDescriptor);
+        	}
+        }
 
+        setupFilters(theType, propertyName, ps, pds);
+        setupFilters(theType, propertyName, ps, spds);
+                
+    }
+
+	private void setupFilters(final Class theType, final String propertyName,
+			PropertyScanner ps, List<PropertyDescriptor> pds) {
+		String key;
+		for (PropertyDescriptor propertyDescriptor: pds) {
             String property = null;
             if (propertyName != null) {
                 property = propertyName + "." +  propertyDescriptor.getName();
             } else {
                 property = propertyDescriptor.getName();
             }
+            
+            
+
+            FilterableProperty filterableProperty = new FilterableProperty(property, propertyDescriptor.getPropertyType());
+
+            filterableProperties.put( property, filterableProperty );            
+            filterableProperty.addToggleListener(new FPToggleListener(property));
             String parentClassName = theType.getName();
             String childClassName = propertyDescriptor.getPropertyType().getName();
             key = parentClassName + "." + childClassName + "." + propertyDescriptor.getName();
+			if (CrudUtils.isEntity(propertyDescriptor.getPropertyType())
+					|| CrudUtils.isEmbeddable(propertyDescriptor
+							.getPropertyType())) {
+				if (ps.canIAddThisToTheFilterableProperties(key)) {
+					if (theType == propertyDescriptor.getPropertyType()) {
+						
+						createFilterProperties(propertyDescriptor
+								.getPropertyType(), property, ps);
+					} else {
+						createFilterProperties(propertyDescriptor
+								.getPropertyType(), property, ps);
+					}
 
-            if (!visitorSet.contains(key)) {
-
-                FilterableProperty filterableProperty = new FilterableProperty(property, propertyDescriptor.getPropertyType());
-
-                filterableProperties.put( property, filterableProperty );
-                //!theType.equals( propertyDescriptor.getPropertyType() does not allow circular dependencies which plagues us.
-//                if (CrudUtils.isEntity( propertyDescriptor.getPropertyType() ) && !theType.equals( propertyDescriptor.getPropertyType() )) {
-//                    createFilterProperties( propertyDescriptor.getPropertyType(), property );
-//                } else if (CrudUtils.isEmbeddable( propertyDescriptor.getPropertyType() ) && !theType.equals( propertyDescriptor.getPropertyType() )) {
-//                    createFilterProperties( propertyDescriptor.getPropertyType(), property );
-//                }
-
-                if (CrudUtils.isEntity(propertyDescriptor.getPropertyType()) || CrudUtils.isEmbeddable(propertyDescriptor
-						.getPropertyType())) {
-                    visitorSet.add(key);
-                	createFilterProperties(propertyDescriptor.getPropertyType(), property);
 				}
-                filterableProperty.addToggleListener(new FPToggleListener(property));
-            }
+			}
+            
         }
+	}
+
+	private static int  pscount;
+    class PropertyScanner implements Serializable{
+
+    	int number = 0;
+    	public PropertyScanner () {
+    		pscount ++;
+    		this.number = pscount;
+    		
+    		System.out.println("NEW PropertyScanner " + pscount);
+    	}
+	    private Map<String, Integer> visitorSet = new HashMap<String, Integer>();
+	    	
+	    private boolean canIAddThisToTheFilterableProperties(String key) {
+	            Integer visits = visitorSet.get(key);
+	            if (visits == null) {
+	                visitorSet.put(key, 0);
+	                return true;
+	            } else if (visits < propertyDepth) {
+	                int newVisits = visits.intValue() + 1;
+	                visitorSet.put(key, new Integer(newVisits));
+	                return true;
+	            } else {
+	                return false;
+	            }
+	    }
     }
+
+    public int getPropertyDepth() {
+        return propertyDepth;
+    }
+
+    public void setPropertyDepth(int propertyDepth) {
+        this.propertyDepth = propertyDepth;
+    }
+
+    private int propertyDepth = 1;
 
     public void filter() {
         fireBeforeFilter(filterablePaginatableDataSource().group());

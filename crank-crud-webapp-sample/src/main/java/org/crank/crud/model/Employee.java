@@ -31,7 +31,8 @@ import org.crank.crud.model.PersistedFile;
 		     query = "SELECT employee FROM Employee employee WHERE employee.department.name=?1" ),
         @NamedQuery( name = "Employee.readPopulated", 
                 query = "SELECT DISTINCT employee FROM Employee employee " +
-                        "LEFT OUTER JOIN FETCH employee.department " + 
+                        "LEFT OUTER JOIN FETCH employee.department " +
+                        "LEFT OUTER JOIN FETCH employee.specialty " + 
                         "LEFT OUTER JOIN FETCH employee.tasks " +
                         "LEFT OUTER JOIN FETCH employee.contacts " +
                         "LEFT OUTER JOIN FETCH employee.directReports " +
@@ -86,19 +87,18 @@ public class Employee extends Person {
     @ManyToOne( )
     private Department department;
     
-    @ManyToOne( )
-    private Employee manager;
-    
 
     @OneToMany( cascade = CascadeType.ALL )
     private Set<Employee> directReports = new HashSet<Employee>();
-    
-    
-    
+
     @ManyToOne()
     private Specialty specialty;
-    
+
     private PersistedFile file;
+
+    @ManyToOne( )
+    private Employee manager;
+    
 
     public Set<Role> getRoles() {
 		return roles;
@@ -265,14 +265,6 @@ public class Employee extends Person {
 		this.specialty = specialty;
 	}
 
-	public Employee getManager() {
-		return manager;
-	}
-
-	public void setManager(Employee manager) {
-		this.manager = manager;
-	}
-
 	public Set<Employee> getDirectReports() {
 		return directReports;
 	}
@@ -280,4 +272,13 @@ public class Employee extends Person {
 	public void setDirectReports(Set<Employee> directReports) {
 		this.directReports = directReports;
 	}
+
+    public Employee getManager() {
+        return manager;
+    }
+
+    public void setManager(Employee manager) {
+        this.manager = manager;
+    }
+
 }

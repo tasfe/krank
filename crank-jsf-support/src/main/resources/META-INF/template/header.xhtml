@@ -33,10 +33,13 @@
 	</c:if>
 	
 	<c:set var="filter" value="${paginator.filterableProperties[fieldName]}"/>
-	<c:set var="orderBy" value="${filter.orderBy}"/>
+
+
+    <c:set var="orderBy" value="${filter.orderBy}"/>
 	<c:set var="comparison" value="${filter.comparison}"/>
 
-	<!--  Style classes -->
+
+    <!--  Style classes -->
 	<c:if test="${empty headerLinkClass}">
 	    <c:set var="headerLinkClass" value="linkClass" />
 	</c:if>
@@ -55,7 +58,8 @@
 	<!-- END DEFINE VARIABLES -->
 
 	<h:column styleClass="${columnHeaderClass}">
-			<div style="${columnHeaderClass}">
+        <c:if test="${not empty filter}">
+            <div style="${columnHeaderClass}">
 
 				<a4j:commandLink styleClass="${headerLinkClass}" 
 				    value="${label}" reRender="${reRender}"
@@ -151,7 +155,11 @@
 						</a4j:commandLink>
 				    </h:panelGrid>					
 			</div>
-	</h:column>
+        </c:if>
+        <c:if test="${empty filter}">
+            ${label}
+        </c:if>
+    </h:column>
 
 </ui:composition>
 </html>

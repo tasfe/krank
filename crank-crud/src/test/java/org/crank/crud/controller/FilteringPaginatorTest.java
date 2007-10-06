@@ -5,6 +5,7 @@ import org.crank.crud.controller.datasource.FilteringPagingDataSource;
 import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.OrderBy;
+import org.crank.crud.join.Fetch;
 
 import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
@@ -41,8 +42,16 @@ public class FilteringPaginatorTest extends TestCase {
 		public void setOrderBy(OrderBy[] orderBy) {
 		}
 
-		
-	};
+        public Fetch[] fetches() {
+            return new Fetch[0];  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public void setFetches(Fetch[] fetches) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+
+    };
 	
 	protected void setUp() throws Exception {
 		

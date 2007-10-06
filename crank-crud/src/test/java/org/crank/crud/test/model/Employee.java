@@ -1,5 +1,8 @@
 package org.crank.crud.test.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 
 @Entity(name="Employee")
 @NamedQueries( {
@@ -28,7 +32,17 @@ import javax.persistence.NamedQuery;
 })
 public class Employee {
 
-    public Employee() {
+	@OneToMany
+	private List<Task> tasks = new ArrayList<Task>();
+    public List<Task> getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(List<Task> tasks) {
+		this.tasks = tasks;
+	}
+
+	public Employee() {
         
     }
     

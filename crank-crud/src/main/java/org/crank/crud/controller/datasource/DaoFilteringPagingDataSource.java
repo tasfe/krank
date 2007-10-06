@@ -8,11 +8,7 @@ public class DaoFilteringPagingDataSource<T, PK extends Serializable> extends Da
     
 
     public List<T> list( int startItem, int numItems ) {
-        if (orderBy!=null) {
-            return dao.find( orderBy, startItem, numItems, group );
-        } else {
-            return dao.find( startItem, numItems, group );
-        }
+        return dao.find(this.fetches, this.orderBy, startItem, numItems, this.group);
     }
 
 

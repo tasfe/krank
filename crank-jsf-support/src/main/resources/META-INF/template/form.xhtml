@@ -190,7 +190,9 @@
 					value="Cancel"
 					rendered="${((crud.state=='ADD') or (crud.state == 'EDIT') or (cancelAlwaysOn)) and not hideCancel }"
 					styleClass="${formButtonClass}" 
-					action="${crud.cancel}"/>			
+					action="${crud.cancel}"
+					immediate="true"
+					/>			
 			</h:panelGrid>
 			
 		    <h:panelGrid id="buttons${id}" columns="4" rendered="${ajax}">

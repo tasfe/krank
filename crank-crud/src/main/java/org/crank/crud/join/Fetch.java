@@ -94,6 +94,6 @@ public class Fetch {
 	}
 	
 	public String getDefaultAlias(){
-		return this.relationshipProperty.replaceAll(".","_");
+		return this.relationshipProperty.replace('.','_');
 	}
 }

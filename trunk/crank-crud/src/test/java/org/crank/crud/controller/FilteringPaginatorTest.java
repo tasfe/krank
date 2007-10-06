@@ -7,6 +7,7 @@ import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.OrderBy;
 
 import javax.persistence.Embeddable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import java.util.List;
 
@@ -49,6 +50,8 @@ public class FilteringPaginatorTest extends TestCase {
 
 	public void testOneToOne() {
 		paginator = new FilteringPaginator(dataSource, A.class);
+		assertNotNull(paginator.getFilterableProperties().get("b.c.name"));
+		
 	}
 
     public void testClearCriteria() {
@@ -75,6 +78,12 @@ public class FilteringPaginatorTest extends TestCase {
     @Embeddable
 	class A {
 
+		private String name;
+		
+		@ManyToOne
+		private A aparent;
+		
+
 		@OneToOne
 		private B b;
 
@@ -86,20 +95,62 @@ public class FilteringPaginatorTest extends TestCase {
 			this.b = b;
 		}
 
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public A getAparent() {
+			return aparent;
+		}
+
+		public void setAparent(A parent) {
+			this.aparent = parent;
+		}
+
 	}
 
 	@SuppressWarnings({"JpaModelErrorInspection"})
     @Embeddable
-	class B {
-		@OneToOne
-		private A a;
+	class C {
+		private String name;
 
-		public A getA() {
-			return a;
+		public String getName() {
+			return name;
 		}
 
-		public void setA(A a) {
-			this.a = a;
+		public void setName(String name) {
+			this.name = name;
+		}
+	}
+	
+	@SuppressWarnings({"JpaModelErrorInspection"})
+    @Embeddable
+	class B {
+		
+		private String name;
+		
+		@ManyToOne( )
+		private C c;
+		
+		public C getC() {
+			return c;
+		}
+
+		public void setC(C c) {
+			this.c = c;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
 		}
 		
 	}

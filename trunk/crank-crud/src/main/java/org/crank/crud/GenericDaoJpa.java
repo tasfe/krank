@@ -337,7 +337,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	private List<T> doFind(Class clazz, OrderBy[] orderBy, final Criterion[] criteria, Fetch[] fetches,
 			final int startPosition, final int maxResult) {
 		StringBuilder sbQuery = new StringBuilder(255);
-		final Group group = criteria!=null ? Group.and(criteria) : null;
+		final Group group = criteria!=null ? Group.and(criteria) : new Group();
 
 		final String sQuery = sbQuery.append(constructSelect(getEntityName(clazz), "o"))
 								     .append(constructJoins(fetches))
@@ -677,7 +677,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		if (null != orderBy && orderBy.length > 0) {
 			query.append(" ORDER BY ");
 			for (int index = 0; index < orderBy.length; index++) {
-				query.append(orderBy[index].getName());
+				query.append("o." + orderBy[index].getName());
 				query.append(" ");
 				query.append(orderBy[index].getDirection().toString());
 				if (index + 1 < orderBy.length) {

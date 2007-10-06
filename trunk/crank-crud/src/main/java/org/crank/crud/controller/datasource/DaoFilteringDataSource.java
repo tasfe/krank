@@ -17,13 +17,7 @@ public class DaoFilteringDataSource<T, PK extends Serializable> extends DaoDataS
     }
 
     public List<T> list() {
-    	if (orderBy!=null && fetches!=null) {
-    		return dao.find(fetches, orderBy, 0, 1000000, group);
-    	} else if (orderBy!=null) {
-            return dao.find( orderBy, group );
-        } else {
-            return dao.find( group );
-        }
+        return dao.find(this.fetches, this.orderBy, -1, -1, this.group);
     }
 
     public OrderBy[] orderBy() {
@@ -32,6 +26,10 @@ public class DaoFilteringDataSource<T, PK extends Serializable> extends DaoDataS
 
     public void setOrderBy( OrderBy[] orderBy ) {
         this.orderBy = orderBy;
+    }
+
+    public Fetch[] fetches() {
+        return fetches;  
     }
 
     public void setOrderBys( OrderBy... orderBy ) {

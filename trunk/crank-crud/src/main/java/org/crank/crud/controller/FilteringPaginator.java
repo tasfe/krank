@@ -5,6 +5,7 @@ import org.crank.crud.controller.datasource.PagingDataSource;
 import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.OrderBy;
+import org.crank.crud.join.Fetch;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -18,10 +19,29 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
     private List<Criterion> criteria;
     private List<OrderBy> orderBy;
     private Class type;
-    
+    private List<Fetch> fetches = new ArrayList<Fetch>();
+
+    public List<Fetch> getFetches() {
+        return fetches;
+    }
+
+    public void setFetches(List<Fetch> fetches) {
+        this.fetches = fetches;
+    }
+
     private String name;
     
     private int sequence;
+
+    private boolean autoJoin=true;
+
+    public boolean isAutoJoin() {
+        return autoJoin;
+    }
+
+    public void setAutoJoin(boolean autoJoin) {
+        this.autoJoin = autoJoin;
+    }
 
     public String getName() {
         return (name != null ? name : CrudUtils.getClassEntityName(type)) + "Paginator";
@@ -87,6 +107,9 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         List<PropertyDescriptor> spds = new ArrayList<PropertyDescriptor>();
         
         for (PropertyDescriptor propertyDescriptor: propertyDescriptors) {
+            if (autoJoin && CrudUtils.isEntity(propertyDescriptor.getPropertyType())) {
+                fetches.add(Fetch.leftJoinFetch(propertyDescriptor.getName()));
+            }
         	if (theType == propertyDescriptor.getPropertyType()) {
         		spds.add(propertyDescriptor);
         	}else {
@@ -94,8 +117,12 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         	}
         }
 
+
+
         setupFilters(theType, propertyName, ps, pds);
         setupFilters(theType, propertyName, ps, spds);
+
+        
                 
     }
 
@@ -119,18 +146,14 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
             String parentClassName = theType.getName();
             String childClassName = propertyDescriptor.getPropertyType().getName();
             key = parentClassName + "." + childClassName + "." + propertyDescriptor.getName();
-			if (CrudUtils.isEntity(propertyDescriptor.getPropertyType())
+
+            if (CrudUtils.isEntity(propertyDescriptor.getPropertyType())
 					|| CrudUtils.isEmbeddable(propertyDescriptor
 							.getPropertyType())) {
 				if (ps.canIAddThisToTheFilterableProperties(key)) {
-					if (theType == propertyDescriptor.getPropertyType()) {
-						
+
 						createFilterProperties(propertyDescriptor
 								.getPropertyType(), property, ps);
-					} else {
-						createFilterProperties(propertyDescriptor
-								.getPropertyType(), property, ps);
-					}
 
 				}
 			}
@@ -218,6 +241,9 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         		filterablePaginatableDataSource().group().add(criterion);
         	}
         }
+
+        filterablePaginatableDataSource().setFetches(this.fetches.toArray(new Fetch[this.fetches.size()]));
+
         fireAfterFilter(filterablePaginatableDataSource().group());        
         reset();
     }

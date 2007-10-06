@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Criterion;
+import org.crank.crud.criteria.Example;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.test.DbUnitTestBase;
 import org.crank.crud.test.dao.EmployeeDAO;
@@ -231,7 +232,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		string = dao.constructWhereClauseString(group, false);
 		AssertJUnit
 				.assertEquals(
-						" WHERE  o.active = :active  AND  (  o.department.name LIKE :department_name  )  AND  o.firstName LIKE :firstName ",
+						" WHERE  o.active = :active  AND  (  o.department.name LIKE :department_name  )  AND  o.firstName LIKE :firstName  AND  o.tasks = :tasks ",
 						string);
 
 	}
@@ -293,9 +294,11 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		employee.setNumberOfPromotions(1);
 		employee.setFirstName("Rick");
 		employee.setLastName("Rick");
+		employee.setTasks(null);
 
-		List<Employee> employees = employeeDao.find(like(employee)
-				.excludeProperty("lastName"));
+		Example ex =  like(employee).excludeProperty("lastName").excludeProperty("tasks");
+		System.out.println(ex);
+		List<Employee> employees = employeeDao.find(ex);
 		AssertJUnit.assertTrue(employees.size() > 0);
 
 		employee = new Employee();
@@ -308,7 +311,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		department.setName("Eng%");
 		employee.setDepartment(department);
 		employees = employeeDao.find(like(employee)
-				.excludeProperty("employees"));
+				.excludeProperty("employees").excludeProperty("tasks"));
 		AssertJUnit.assertTrue(employees.size() > 0);
 
 	}
@@ -335,7 +338,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		List<Employee> result = employeeDao.find(join(joinFetch("department")),
 				orderBy("firstName"), and());
 		AssertJUnit.assertEquals(14, result.size());
-		result = employeeDao.find(join(leftJoinFetch("department")),
+		result = employeeDao.find(join(leftJoinFetch("department"),leftJoinFetch("tasks")),
 				orderBy("firstName"), and());
 		AssertJUnit.assertEquals(14, result.size());
 

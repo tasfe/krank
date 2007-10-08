@@ -118,19 +118,22 @@ public class AutocompleteController implements CrudControllerListener {
 	private void handleCreateUpdate(CrudEvent event) {
         BeanWrapper entity = new BeanWrapperImpl( event.getEntity() );
         
-        List list = getListExact(value);
-        if (list.size()!=1) {
-        	FacesContext facesContext = FacesContext.getCurrentInstance();
-        	FacesMessage message = new FacesMessage("Invalid selection", "Unable to match '" + fieldName + "' selection to '" + value + "'");
-        	message.setSeverity(FacesMessage.SEVERITY_ERROR);
-        	component.setValid(false);
-        	facesContext.addMessage(component.getClientId(facesContext), message);
-        	facesContext.renderResponse();
-        	throw new CrankValidationException(message.toString());
-        } else {
-	        Object newValue = list.get(0);
-	        entity.setPropertyValue(fieldName, newValue);
-        	component.setValid(true);
+        
+        if ((value != null) && !"".equals(value)) {
+	        List list = getListExact(value);
+	        if (list.size()!=1) {
+	        	FacesContext facesContext = FacesContext.getCurrentInstance();
+	        	FacesMessage message = new FacesMessage("Invalid selection", "Unable to match '" + fieldName + "' selection to '" + value + "'");
+	        	message.setSeverity(FacesMessage.SEVERITY_ERROR);
+	        	component.setValid(false);
+	        	facesContext.addMessage(component.getClientId(facesContext), message);
+	        	facesContext.renderResponse();
+	        	throw new CrankValidationException(message.toString());
+	        } else {
+		        Object newValue = list.get(0);
+		        entity.setPropertyValue(fieldName, newValue);
+	        	component.setValid(true);
+	        }
         }
 	}
 

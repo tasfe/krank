@@ -1,11 +1,19 @@
 package org.crank.core;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+import org.testng.AssertJUnit;
+
 import junit.framework.TestCase;
 
 public class CrankExceptionTest extends TestCase {
 
 
     public void testPrintStackTrace() {
+        PrintStream oldErr = System.err;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
+        System.setErr(new PrintStream(baos));
         try {
             try {
                 throw new RuntimeException("YO");
@@ -15,13 +23,16 @@ public class CrankExceptionTest extends TestCase {
         } catch (CrankException ex) {
             ex.printStackTrace();
         }
-
+        AssertJUnit.assertTrue(baos.toString().contains("YO"));
+        baos = new ByteArrayOutputStream(256);
+        System.setErr(new PrintStream(baos));
         try {
            throw new CrankException();
         } catch (CrankException ex) {
             ex.printStackTrace();
         }
-    
+        AssertJUnit.assertTrue(baos.toString().contains("CrankException"));
+        System.setErr(oldErr);
     }
 
 }

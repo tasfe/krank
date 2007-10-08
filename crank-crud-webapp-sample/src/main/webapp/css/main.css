@@ -1,5 +1,6 @@
 html, body {
-	background : #ffffff;
+	background : #ffffff url(../images/bg.jpg) repeat-y top right;
+	height: 100%;
 }
 a:link, a:visited {
 	text-decoration : none;

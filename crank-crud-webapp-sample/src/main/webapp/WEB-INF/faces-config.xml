@@ -52,6 +52,13 @@
 
   <navigation-rule>
   	<navigation-case>
+  		<from-outcome>SKILLS</from-outcome>
+  		<to-view-id>/pages/crud/Skill/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+  	<navigation-case>
   		<from-outcome>EMPLOYEE_FORM</from-outcome>
   		<to-view-id>/pages/crud/Employee/Form.xhtml</to-view-id>
   	</navigation-case>

@@ -46,6 +46,8 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	        managedObjects.add( new CrudManagedObject(Department.class, DepartmentDAO.class) );
 	        managedObjects.add( new CrudManagedObject(Specialty.class, SpecialtyDAO.class) );
 	        managedObjects.add( new CrudManagedObject(Role.class, RoleDAO.class) );
+	        managedObjects.add( new CrudManagedObject(Skill.class, null) );
+	        
     	}
     	return managedObjects;
 		
@@ -136,6 +138,12 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
     @Bean(scope = DefaultScopes.SESSION)
 	public JsfSelectOneListingController<Specialty, Long> employeeToSpecialtyController() throws Exception {
     	JsfSelectOneListingController<Specialty, Long> controller = new JsfSelectOneListingController<Specialty, Long>(Specialty.class, "specialty", paginators().get("Specialty"), empCrud().getController()); 
+    	return controller;
+    }
+
+    @Bean(scope = DefaultScopes.SESSION)
+	public JsfSelectOneListingController<Skill, Long> employeeToSkillController() throws Exception {
+    	JsfSelectOneListingController<Skill, Long> controller = new JsfSelectOneListingController<Skill, Long>(Skill.class, "primarySkill", paginators().get("Skill"), empCrud().getController()); 
     	return controller;
     }
 

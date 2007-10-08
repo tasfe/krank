@@ -94,6 +94,9 @@ public class Employee extends Person {
     @ManyToOne()
     private Specialty specialty;
 
+    @ManyToOne()
+    private Skill primarySkill;
+
     private PersistedFile file;
 
     @ManyToOne( )
@@ -280,5 +283,13 @@ public class Employee extends Person {
     public void setManager(Employee manager) {
         this.manager = manager;
     }
+
+	public Skill getPrimarySkill() {
+		return primarySkill;
+	}
+
+	public void setPrimarySkill(Skill primarySkill) {
+		this.primarySkill = primarySkill;
+	}
 
 }

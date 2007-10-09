@@ -206,16 +206,19 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
         
         // Create the auto-complete controller for the particular property on the data source
         // Arguments are:
-        //     dataSource - the datasource for the lookup values
+        //     dataSource -   the data source for the lookup values
         //     propertyName - the property on the lookup results which will be used query against
-        //     fieldName - the field name of the associated entity which will be assigned the validated autocomplete entity upon successful lookup
+        //     fieldName -    the field name of the associated entity which will be assigned the  
+        //                    validated auto-complete entity upon successful lookup
         AutocompleteController autoController = new AutocompleteController(dataSource, "name", "specialty");
         
         // Wire in the event handler to the associated controller for dealing with 
         // conversion / validation from the Many to One association to the controller's entity
         cruds().get("Employee").getController().addCrudControllerListener(autoController);
         
-        // Add to the auto-complete map
+        // Add to the auto-complete map...
+        //     This will be accessed via the field.xhtml as the AutoComplete controller / validator
+        //     for the associated property
         autocomplete.put("Specialty", autoController);
 
         return autocomplete;

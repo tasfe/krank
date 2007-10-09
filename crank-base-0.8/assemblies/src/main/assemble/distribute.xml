@@ -146,21 +146,21 @@
       </includes>
     </dependencySet>
     <!--dependencySet>
-      <outputFileNameMapping>examples/crank-cache-web-test.war</outputFileNameMapping>
+      <outputFileNameMapping>examples/crank-preload-web-test.war</outputFileNameMapping>
       <includes>
-        <include>org.crank:crank-cache-web-test:war</include>
+        <include>org.crank:crank-preload-web-test:war</include>
       </includes>
     </dependencySet-->
     <dependencySet>
-      <outputFileNameMapping>examples/src/crank-cache-web-test-src.jar</outputFileNameMapping>
+      <outputFileNameMapping>examples/src/crank-preload-web-test-src.jar</outputFileNameMapping>
       <includes>
-        <include>org.crank:crank-cache-web-test:jar:sources</include>
+        <include>org.crank:crank-preload-web-test:jar:sources</include>
       </includes>
     </dependencySet>
     <dependencySet>
-      <outputFileNameMapping>examples/doc/crank-cache-web-test-javadoc.jar</outputFileNameMapping>
+      <outputFileNameMapping>examples/doc/crank-preload-web-test-javadoc.jar</outputFileNameMapping>
       <includes>
-        <include>org.crank:crank-cache-web-test:jar:javadoc</include>
+        <include>org.crank:crank-preload-web-test:jar:javadoc</include>
       </includes>
     </dependencySet>
     <!--dependencySet>

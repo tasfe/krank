@@ -4,13 +4,13 @@
   <parent>
     <groupId>org.crank</groupId>
     <artifactId>crank-base</artifactId>
-    <version>0.8-SNAPSHOT</version>
+    <version>0.9-SNAPSHOT</version>
   </parent>
 
   <groupId>org.crank.assemblies</groupId>
   <artifactId>assemblies</artifactId>
   <packaging>pom</packaging>
-  <version>0.8-SNAPSHOT</version>
+  <version>0.9-SNAPSHOT</version>
   <name>Crank :: Assemblies</name>
 
   <url>http://maven.apache.org</url>
@@ -190,20 +190,20 @@
     </dependency>
     <dependency>
       <groupId>org.crank</groupId>
-      <artifactId>crank-cache-web-test</artifactId>
+      <artifactId>crank-preload-web-test</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.crank</groupId>
-      <artifactId>crank-cache-web-test</artifactId>
+      <artifactId>crank-preload-web-test</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
       <classifier>sources</classifier>
     </dependency>
     <dependency>
       <groupId>org.crank</groupId>
-      <artifactId>crank-cache-web-test</artifactId>
+      <artifactId>crank-preload-web-test</artifactId>
       <version>${project.version}</version>
       <type>jar</type>
       <classifier>javadoc</classifier>

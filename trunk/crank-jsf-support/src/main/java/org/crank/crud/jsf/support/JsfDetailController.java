@@ -18,7 +18,7 @@ import org.crank.crud.controller.CrudOutcome;
 import org.crank.crud.controller.DetailController;
 
 public class JsfDetailController extends DetailController{
-    private DataModel model = new ListDataModel();
+    protected DataModel model = new ListDataModel();
 
     public JsfDetailController() {
         super();

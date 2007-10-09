@@ -33,7 +33,7 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
     
     private int sequence;
 
-    private boolean autoJoin=true;
+    private boolean autoJoin=false;
 
     public boolean isAutoJoin() {
         return autoJoin;

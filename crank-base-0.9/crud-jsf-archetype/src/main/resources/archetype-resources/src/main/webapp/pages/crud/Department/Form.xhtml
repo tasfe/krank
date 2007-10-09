@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:crank="http://www.googlecode.com/crank"
+	xmlns:validation="http://code.google.com/p/krank/validation"
+	>
+	
+<ui:composition template="/templates/layout.xhtml">
+	<ui:define name="content">
+		<h:form id="departmentForm">
+            <div id="clientValidationSummary" />
+			<a4j:region>
+		
+			<crank:form crud="${deptCrud.controller}"
+						propertyNames="name">
+				<c:set var="employeeDetailController" 
+					value="${deptCrud.controller.children.employees}" />
+				<c:set var="taskDetailController" 
+					value="${deptCrud.controller.children.employees.children.tasks}" />
+					
+				<crank:detailListing detailController="${employeeDetailController}" 
+									 propertyNames="firstName,lastName,active,dob,age,numberOfPromotions"
+									 reRender="departmentForm">
+					<crank:detailListing detailController="${taskDetailController}" 
+									 propertyNames="name,startDate,endDate,complete"
+									 reRender="departmentForm"/>
+									 
+				</crank:detailListing>
+			</crank:form>
+			</a4j:region>
+			
+		<!-- 
+			<validation:clientValidator  objectExpression="${deptCrud.controller.entity}" 
+		    propertyNames="name" />
+		 -->
+		</h:form>
+		
+	</ui:define>
+</ui:composition>
+</html>

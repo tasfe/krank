@@ -91,6 +91,7 @@ public abstract class CrudJSFConfig implements InitializingBean {
             dataPaginator.setRequestParameterMapFinder(new RequestParameterMapFinderImpl());
             paginators.put(StringUtils.unCapitalize(mo.getName()), dataPaginator);
             paginators.put(mo.getName(), dataPaginator);
+            dataPaginator.filter();
         }
         return paginators;
     }

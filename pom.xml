@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.crank</groupId>
     <artifactId>crank-base</artifactId>
@@ -58,8 +60,12 @@
     </developers>
 
     <scm>
-        <connection>scm:svn:http://krank.googlecode.com/svn/code/trunk/validation</connection>
-        <developerConnection>scm:svn:https://krank.googlecode.com/svn/code/trunk/validation</developerConnection>
+        <connection>
+            scm:svn:http://krank.googlecode.com/svn/code/trunk/validation
+        </connection>
+        <developerConnection>
+            scm:svn:https://krank.googlecode.com/svn/code/trunk/validation
+        </developerConnection>
     </scm>
 
     <issueManagement>
@@ -452,16 +458,16 @@
                 <scope>test</scope>
             </dependency>
 
-	    <dependency>
-	      <groupId>org.apache.geronimo.specs</groupId>
-	      <artifactId>geronimo-jpa_3.0_spec</artifactId>
-	      <version>1.1</version>
-	    </dependency>
-	    <dependency>
-	      <groupId>org.apache.geronimo.specs</groupId>
-	      <artifactId>geronimo-jta_1.1_spec</artifactId>
-	      <version>1.1</version>
-	    </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jpa_3.0_spec</artifactId>
+                <version>1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jta_1.1_spec</artifactId>
+                <version>1.1</version>
+            </dependency>
 
             <dependency>
                 <groupId>net.sf.ehcache</groupId>
@@ -480,67 +486,101 @@
     </properties>
 
     <profiles>
-      <profile>
-        <id>hibernate</id>
-        <activation>
-          <activeByDefault>true</activeByDefault>
-        </activation>
-	  <dependencies>
-            <dependency>
-              <groupId>org.hibernate</groupId>
-              <artifactId>hibernate-tools</artifactId>
-              <version>3.2.0.beta9a</version>
-            </dependency>
-            <dependency>
-              <groupId>org.hibernate</groupId>
-              <artifactId>hibernate-entitymanager</artifactId>
-              <version>3.2.1.ga</version>
-            </dependency>
-            <dependency>
-              <groupId>org.hibernate</groupId>
-              <artifactId>hibernate-annotations</artifactId>
-              <version>3.2.1.ga</version>
-              <exclusions>
-                <exclusion>
-                  <groupId>javax.persistence</groupId>
-                  <artifactId>ejb</artifactId>
-                </exclusion>
-		<exclusion>
-		  <groupId>javax.persistence</groupId>
-		  <artifactId>persistence-api</artifactId>
-		</exclusion>
-              </exclusions>
-            </dependency>
-            <dependency>
-              <groupId>org.hibernate</groupId>
-              <artifactId>hibernate</artifactId>
-              <version>3.2.2.ga</version>
-            </dependency>
-          </dependencies>
-      </profile>
-      <profile>
-	<id>openjpa</id>
-          <dependencies>
-            <dependency>
-              <groupId>org.apache.openjpa</groupId>
-              <artifactId>openjpa-persistence-jdbc</artifactId>
-              <version>1.0.0</version>
-            </dependency>
-          </dependencies>
-      </profile>
-      <profile>
-        <id>mysql</id>
-        <activation>
-          <activeByDefault>true</activeByDefault>
-        </activation>
-          <dependencies>
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>5.0.3</version>
-		<scope>test</scope>
-            </dependency>
-          </dependencies>
-      </profile>
+        <!-- JPA Implementation Profiles -->
+        <profile>
+            <id>hibernate</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-tools</artifactId>
+                    <version>3.2.0.beta9a</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-entitymanager</artifactId>
+                    <version>3.2.1.ga</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-annotations</artifactId>
+                    <version>3.2.1.ga</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>javax.persistence</groupId>
+                            <artifactId>ejb</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>javax.persistence</groupId>
+                            <artifactId>persistence-api</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate</artifactId>
+                    <version>3.2.2.ga</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>openjpa</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.openjpa</groupId>
+                    <artifactId>openjpa-persistence-jdbc</artifactId>
+                    <version>1.0.0</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <!--  database profiles -->
+        <profile>
+            <id>mysql</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <jdbc.url>
+                    jdbc:mysql://localhost:3306/crank_crud?autoReconnect=true
+                </jdbc.url>
+                <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+                <jdbc.user>crank</jdbc.user>
+                <jdbc.password>crank</jdbc.password>
+                <hibernate.dialect>
+                    org.hibernate.dialect.MySQLDialect
+                </hibernate.dialect>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                    <version>5.0.3</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>hsqldb</id>
+            <properties>
+                <!-- put the hsql db into memory for the unit tests -->
+                <jdbc.url>jdbc:hsqldb:mem:testdb</jdbc.url>
+                <jdbc.driver>org.hsqldb.jdbcDriver</jdbc.driver>
+                <jdbc.user>sa</jdbc.user>
+                <jdbc.password></jdbc.password>
+                <hibernate.dialect>
+                    org.crank.crud.test.HSQLDialect_HHH_1598
+                </hibernate.dialect>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>hsqldb</groupId>
+                    <artifactId>hsqldb</artifactId>
+                    <version>1.8.0.7</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
     </profiles>
 </project>

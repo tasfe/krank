@@ -5,39 +5,47 @@
 			http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
 	version="1.0">
 
-	<persistence-unit name="employee-example" transaction-type="RESOURCE_LOCAL">
-	  <provider>org.hibernate.ejb.HibernatePersistence</provider>
-            <properties>
+	<persistence-unit name="employee-example"
+		transaction-type="RESOURCE_LOCAL">
+		<provider>${krank.persistence.provider}</provider>
+		<properties>
 			<!-- OpenJPA Settings -->
-			<property name="openjpa.ConnectionURL" value="${jdbc.url}" />
-			<property name="openjpa.ConnectionDriverName" value="${jdbc.driver}" />
-			<property name="openjpa.ConnectionUserName" value="${jdbc.user}" />
-			<property name="openjpa.ConnectionPassword" value="${jdbc.password}" />
+			<property name="openjpa.ConnectionURL" value="${krank.jdbc.url}" />
+			<property name="openjpa.ConnectionDriverName"
+				value="${krank.jdbc.driver}" />
+			<property name="openjpa.ConnectionUserName"
+				value="${krank.jdbc.user}" />
+			<property name="openjpa.ConnectionPassword"
+				value="${krank.jdbc.password}" />
 			<property name="openjpa.jdbc.SynchronizeMappings"
 				value="buildSchema(SchemaAction='add')" />
-			<property name="openjpa.Log" value="DefaultLevel=TRACE,SQL=TRACE" />
+			<property name="openjpa.Log"
+				value="DefaultLevel=TRACE,SQL=TRACE" />
 
 			<!-- Hibernate settings -->
 			<property name="hibernate.connection.driver_class"
-				value="${jdbc.driver}" />
+				value="${krank.jdbc.driver}" />
 			<property name="hibernate.connection.url"
-				value="${jdbc.url}" />
+				value="${krank.jdbc.url}" />
 			<property name="hibernate.connection.username"
-				value="${jdbc.user}" />
+				value="${krank.jdbc.user}" />
 			<property name="hibernate.connection.password"
-				value="${jdbc.password}" />
+				value="${krank.jdbc.password}" />
 			<property name="hibernate.dialect"
-				value="${hibernate.dialect}" />
+				value="${krank.hibernate.dialect}" />
 
 			<!--  create non-existing tables automatically  -->
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.hsqldb.default_table_type" value="cached"/>
+			<property
+				name="hibernate.connection.hsqldb.default_table_type"
+				value="cached" />
 
 			<!-- Print SQL to stdout -->
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />
 			<property name="hibernate.use_sql_comments" value="true" />
-			<property name="hibernate.query.substitutions" value="true 1, false 0" />
+			<property name="hibernate.query.substitutions"
+				value="true 1, false 0" />
 		</properties>
 	</persistence-unit>
 

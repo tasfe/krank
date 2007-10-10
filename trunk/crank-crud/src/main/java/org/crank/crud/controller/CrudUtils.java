@@ -45,22 +45,8 @@ public class CrudUtils {
 	            return true;
 	        } else {
 	            /*Otherwise check to see if a column annotation data can be found. */
-	            found = map.get( "column" ) != null;
-	            if (found) {
-	                /* If the column annotation data was found, see if the nullable flag was set. */
-	                AnnotationData ad = (AnnotationData) map.get( "column" );
-	                Object object = ad.getValues().get("nullable");
-	                /* If the nullable flag was set, return its value. */
-	                if (object != null) {
-	                    Boolean bool = (Boolean) object;
-	                    return !bool.booleanValue();
-	                } else {
-	                    /* Otherwise, if the nullable value was not set, then return false. */
-	                    return false;
-	                }
-	            } else {
-	                return false;
-	            }
+
+	        	return (isRequiredColumn(map, "column") || isRequiredColumn(map, "joinColumn"));
 	        }
         } catch (Exception ex) {
     		throw new CrankException(ex, "CrankUtils.isRequired: Problem %s" +
@@ -69,14 +55,35 @@ public class CrudUtils {
         }
     }
 
+    private static boolean isRequiredColumn(Map map, String columnType) {
+    	boolean result = false;
+    	
+        boolean found = map.get( columnType ) != null;
+
+        if (found) {
+                /* If the column annotation data was found, see if the length flag was set. */
+                AnnotationData ad = (AnnotationData) map.get( columnType );
+                Object object = ad.getValues().get("nullable");
+                /* If the nullable flag was set, return its value. */
+                if (object != null) {
+                    Boolean bool = (Boolean) object;
+                    return !bool.booleanValue();
+                } else {
+                    /* Otherwise, if the nullable value was not set, then return false. */
+                    return false;
+                }
+        }
+        
+        return result;
+    }
+
     public static boolean isLargeText(Class clazz, String propertyName) {
+    	
         try {   
             if (!(getPropertyDescriptor(clazz, propertyName).getPropertyType() == String.class)) {
                 return false;
             }
             Map map = getAnnotationDataAsMap( clazz, propertyName );
-            
-            
             
             boolean found = map.get( "column" ) != null;
             /* If you found an annotation called required, return true. */
@@ -99,7 +106,7 @@ public class CrudUtils {
         }
         
     }
-
+    
     public static int textSize(Class clazz, String propertyName) {
         return columnSize( clazz, propertyName );
     }

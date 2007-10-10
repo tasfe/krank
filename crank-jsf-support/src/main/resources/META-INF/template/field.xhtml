@@ -65,10 +65,10 @@
 		<c:when test="${required=='true' and not crud:isBoolean(type,fieldName)}">
 			<c:choose>
 				<c:when test="${empty label}">
-				    <c:set var="label" value="${crud:createLabel(fieldName)}*" />
+				    <c:set var="label" disabled="${disabled}" value="${crud:createLabel(fieldName)}*" />
 				</c:when>
 				<c:otherwise>
-				    <c:set var="label" value="${label}*" />
+				    <c:set var="label" disabled="${disabled}" value="${label}*" />
 				</c:otherwise>
 			</c:choose>
 

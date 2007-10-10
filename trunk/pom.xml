@@ -486,12 +486,23 @@
 	<profiles>
 		<!-- JPA Implementation Profiles -->
 		<profile>
-			<id>hibernate</id>
+			<id>hibernate-mysql</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
 			    <krank.persistence.provider>org.hibernate.ejb.HibernatePersistence</krank.persistence.provider>
+				<krank.jdbc.url>
+					jdbc:mysql://localhost:3306/crank_crud?autoReconnect=true
+				</krank.jdbc.url>
+				<krank.jdbc.driver>
+					com.mysql.jdbc.Driver
+				</krank.jdbc.driver>
+				<krank.jdbc.user>crank</krank.jdbc.user>
+				<krank.jdbc.password>crank</krank.jdbc.password>
+				<krank.hibernate.dialect>
+					org.hibernate.dialect.MySQLDialect
+				</krank.hibernate.dialect>
 			</properties>
 			<dependencies>
 				<dependency>
@@ -524,6 +535,62 @@
 					<artifactId>hibernate</artifactId>
 					<version>3.2.2.ga</version>
 				</dependency>
+				<dependency>
+					<groupId>mysql</groupId>
+					<artifactId>mysql-connector-java</artifactId>
+					<version>5.0.3</version>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>hibernate-hsqldb</id>
+			<properties>
+			    <krank.persistence.provider>org.hibernate.ejb.HibernatePersistence</krank.persistence.provider>
+				<krank.jdbc.url>jdbc:hsqldb:mem:testdb</krank.jdbc.url>
+				<krank.jdbc.driver>org.hsqldb.jdbcDriver</krank.jdbc.driver>
+				<krank.jdbc.user>sa</krank.jdbc.user>
+				<krank.jdbc.password></krank.jdbc.password>
+				<krank.hibernate.dialect>
+					org.crank.crud.test.HSQLDialect_HHH_1598
+				</krank.hibernate.dialect>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-tools</artifactId>
+					<version>3.2.0.beta9a</version>
+				</dependency>
+				<dependency>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-entitymanager</artifactId>
+					<version>3.2.1.ga</version>
+				</dependency>
+				<dependency>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-annotations</artifactId>
+					<version>3.2.1.ga</version>
+					<exclusions>
+						<exclusion>
+							<groupId>javax.persistence</groupId>
+							<artifactId>ejb</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>javax.persistence</groupId>
+							<artifactId>persistence-api</artifactId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+				<dependency>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate</artifactId>
+					<version>3.2.2.ga</version>
+				</dependency>
+				<dependency>
+					<groupId>hsqldb</groupId>
+					<artifactId>hsqldb</artifactId>
+					<version>1.8.0.7</version>
+					<scope>test</scope>
+				</dependency>
 			</dependencies>
 		</profile>
 		<profile>
@@ -536,55 +603,6 @@
 					<groupId>org.apache.openjpa</groupId>
 					<artifactId>openjpa-persistence-jdbc</artifactId>
 					<version>1.0.0</version>
-				</dependency>
-			</dependencies>
-		</profile>
-		<!--  database profiles -->
-		<profile>
-			<id>mysql</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<krank.jdbc.url>
-					jdbc:mysql://localhost:3306/crank_crud?autoReconnect=true
-				</krank.jdbc.url>
-				<krank.jdbc.driver>
-					com.mysql.jdbc.Driver
-				</krank.jdbc.driver>
-				<krank.jdbc.user>crank</krank.jdbc.user>
-				<krank.jdbc.password>crank</krank.jdbc.password>
-				<krank.hibernate.dialect>
-					org.hibernate.dialect.MySQLDialect
-				</krank.hibernate.dialect>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>mysql</groupId>
-					<artifactId>mysql-connector-java</artifactId>
-					<version>5.0.3</version>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>hsqldb</id>
-			<properties>
-				<!-- put the hsql db into memory for the unit tests -->
-				<krank.jdbc.url>jdbc:hsqldb:mem:testdb</krank.jdbc.url>
-				<krank.jdbc.driver>org.hsqldb.jdbcDriver</krank.jdbc.driver>
-				<krank.jdbc.user>sa</krank.jdbc.user>
-				<krank.jdbc.password></krank.jdbc.password>
-				<krank.hibernate.dialect>
-					org.crank.crud.test.HSQLDialect_HHH_1598
-				</krank.hibernate.dialect>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>hsqldb</groupId>
-					<artifactId>hsqldb</artifactId>
-					<version>1.8.0.7</version>
-					<scope>test</scope>
 				</dependency>
 			</dependencies>
 		</profile>

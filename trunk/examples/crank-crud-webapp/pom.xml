@@ -257,33 +257,22 @@
 
 	<profiles>
 		<profile>
-			<id>mysql</id>
+			<id>hibernate-mysql</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<dependencies>
 				<dependency>
-					<groupId>mysql</groupId>
-					<artifactId>mysql-connector-java</artifactId>
-					<version>5.0.3</version>
-				</dependency>
-				<dependency>
 					<groupId>org.crank.example</groupId>
 					<artifactId>employee-jpa-model</artifactId>
 					<version>0.10-SNAPSHOT</version>
-					<classifier>mysql</classifier>
+					<classifier>hibernate-mysql</classifier>
 				</dependency>
 			</dependencies>
 		</profile>
 		<profile>
-			<id>hsqldb</id>
+			<id>hibernate-hsqldb</id>
 			<dependencies>
-				<dependency>
-					<groupId>hsqldb</groupId>
-					<artifactId>hsqldb</artifactId>
-					<version>1.8.0.7</version>
-					<scope>test</scope>
-				</dependency>
 				<dependency>
 					<groupId>org.crank.example</groupId>
 					<artifactId>employee-jpa-model</artifactId>

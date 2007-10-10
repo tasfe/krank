@@ -1,23 +1,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<artifactId>crank-base</artifactId>
-		<groupId>org.crank</groupId>
-		<version>0.10-SNAPSHOT</version>
+	  <groupId>org.crank.example</groupId>
+	  <artifactId>crank-example-base</artifactId>
+	  <version>0.10-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.crank</groupId>
-	<artifactId>crank-crud-webapp-sample</artifactId>
-	<name>crank-crud-webapp-sample</name>
+	<artifactId>crank-crud-webapp</artifactId>
+	<name>Crank :: Crud :: Sample Webapp</name>
 	<version>0.10-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<url>http://code.google.com/p/krank</url>
 
 	<dependencies>
-		<dependency>
-			<groupId>asm</groupId>
-			<artifactId>asm</artifactId>
-			<version>1.5.3</version>
-		</dependency>
+	  <dependency>
+	    <groupId>asm</groupId>
+	    <artifactId>asm</artifactId>
+	    <version>1.5.3</version>
+	  </dependency>
       <dependency>
 	<groupId>javax.servlet</groupId>
 	<artifactId>jsp-api</artifactId>
@@ -223,7 +222,6 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>crank-crud</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -269,6 +267,12 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>5.0.3</version>
             </dependency>
+	  <dependency>
+	    <groupId>org.crank.example</groupId>
+	    <artifactId>employee-jpa-model</artifactId>
+	    <version>0.10-SNAPSHOT</version>
+	    <classifier>mysql</classifier>
+	  </dependency>
           </dependencies>
       </profile>
 	  <profile>

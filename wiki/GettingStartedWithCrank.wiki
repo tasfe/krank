@@ -61,7 +61,7 @@ Now that you have all that under your belt, it is time to start the Crank tutori
 [CrankCrudTutorialUsingCustomListings Customize what shows up in a listing]
 [http://code.google.com/p/krank/wiki/CrankCrudTutorialSelfReferentialEntitiesAndCustomListings More Advanced Tutorial]
 [http://code.google.com/p/krank/wiki/CrankCrudSelectMany Crank Select Many Tutorial]
-
+[http://code.google.com/p/krank/wiki/BuildingCrankWithMaven Building Crank]
 Paul T owes us a working with Enums tutorial and an manyToOne autocomplete tutorial.
 
 --Rick Hightower

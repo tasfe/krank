@@ -12,6 +12,10 @@
 	       class="org.crank.core.spring.support.SpringBeanWrapperPropertiesUtil"/>
 
 	
+	<bean name="crank/validator/domainValidator" 
+	      class="org.crank.validation.validators.DomainValidator"  
+	      singleton="false"/>
+
 	<bean name="crank/validator/required" 
 	      class="org.crank.validation.validators.RequiredValidator"  
 	      singleton="false"/>

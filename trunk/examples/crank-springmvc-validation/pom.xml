@@ -1,19 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <artifactId>crank-base</artifactId>
-        <groupId>org.crank</groupId>
-        <version>0.10-SNAPSHOT</version>
+      <groupId>org.crank.example</groupId>
+      <artifactId>crank-example-base</artifactId>
+      <version>0.10-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.crank</groupId>
-    <artifactId>crank-springmvc-validation-sample</artifactId>
+    <artifactId>crank-springmvc-validation</artifactId>
     <packaging>war</packaging>
-    <name>crank-springmvc-validation-sample Maven Webapp</name>
+    <name>Crank :: Spring MVC Validation :: Sample Webapp</name>
     <version>0.10-SNAPSHOT</version>
-    <url>http://maven.apache.org</url>
+    <url>http://code.google.com/p/krank</url>
 
     <build>
-        <finalName>crank-springmvc-validation-sample</finalName>
+        <finalName>crank-springmvc-validation</finalName>
         <plugins>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>

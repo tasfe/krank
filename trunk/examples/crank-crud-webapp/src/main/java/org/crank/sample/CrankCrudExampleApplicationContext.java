@@ -226,7 +226,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
     
     @Bean
     public String persistenceUnitName() {
-    	return "crank-crud-app"; 
+    	return "employee-example"; 
     }
 
 }

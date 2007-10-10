@@ -1,8 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-	  <groupId>org.crank.example</groupId>
-	  <artifactId>crank-example-base</artifactId>
-	  <version>0.10-SNAPSHOT</version>
+		<groupId>org.crank.example</groupId>
+		<artifactId>crank-example-base</artifactId>
+		<version>0.10-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>crank-crud-webapp</artifactId>
@@ -12,30 +14,40 @@
 	<url>http://code.google.com/p/krank</url>
 
 	<dependencies>
-	  <dependency>
-	    <groupId>asm</groupId>
-	    <artifactId>asm</artifactId>
-	    <version>1.5.3</version>
-	  </dependency>
-      <dependency>
-	<groupId>javax.servlet</groupId>
-	<artifactId>jsp-api</artifactId>
-	<version>2.0</version>
-	<scope>provided</scope>
-      </dependency>
-      <dependency>
-	<groupId>javax.servlet</groupId>
-	<artifactId>servlet-api</artifactId>
-	<version>2.4</version>
-	<scope>provided</scope>
-      </dependency>
-
+		<dependency>
+			<groupId>javax.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<version>1.2_04</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.faces</groupId>
+			<artifactId>jsf-impl</artifactId>
+			<version>1.2_04</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>asm</groupId>
+			<artifactId>asm</artifactId>
+			<version>1.5.3</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.crank</groupId>
 			<artifactId>crank-test-support</artifactId>
@@ -203,18 +215,6 @@
 			<version>1.1.12</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.faces</groupId>
-			<artifactId>jsf-api</artifactId>
-			<version>1.2_04</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.faces</groupId>
-			<artifactId>jsf-impl</artifactId>
-			<version>1.2_04</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>el-impl</groupId>
 			<artifactId>el-impl</artifactId>
 			<version>1.0</version>
@@ -256,80 +256,100 @@
 	</build>
 
 	<profiles>
-      <profile>
-        <id>mysql</id>
-        <activation>
-          <activeByDefault>true</activeByDefault>
-        </activation>
-          <dependencies>
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>5.0.3</version>
-            </dependency>
-	  <dependency>
-	    <groupId>org.crank.example</groupId>
-	    <artifactId>employee-jpa-model</artifactId>
-	    <version>0.10-SNAPSHOT</version>
-	    <classifier>mysql</classifier>
-	  </dependency>
-          </dependencies>
-      </profile>
-	  <profile>
-	    <id>servlet-2.5</id>
-	    <dependencies>
-	      <dependency>
-		<groupId>javax.servlet</groupId>
-		<artifactId>jstl</artifactId>
-		<version>1.1.2</version>
-	      </dependency>
-	      <dependency>
-		<groupId>javax.faces</groupId>
-		<artifactId>jsf-api</artifactId>
-		<version>1.2_04</version>
-	      </dependency>
-	      <dependency>
-		<groupId>javax.faces</groupId>
-		<artifactId>jsf-impl</artifactId>
-		<version>1.2_04</version>
-	      </dependency>
-	      <dependency>
-		<groupId>el-impl</groupId>
-		<artifactId>el-impl</artifactId>
-		<version>1.0</version>
-	      </dependency>
-	    </dependencies>
-	  </profile>
-	  <profile>
-	    <id>servlet-2.4</id>
-	    <dependencies>
-              <dependency>
-                <groupId>javax.el</groupId>
-                <artifactId>el-api</artifactId>
-                <version>1.0</version>
-              </dependency>
-	      <dependency>
-		<groupId>javax.servlet</groupId>
-		<artifactId>jstl</artifactId>
-		<version>1.1.2</version>
-	      </dependency>
-	      <dependency>
-		<groupId>javax.faces</groupId>
-		<artifactId>jsf-api</artifactId>
-		<version>1.2_04</version>
-	      </dependency>
-	      <dependency>
-		<groupId>javax.faces</groupId>
-		<artifactId>jsf-impl</artifactId>
-		<version>1.2_04</version>
-	      </dependency>
-	      <dependency>
-		<groupId>el-impl</groupId>
-		<artifactId>el-impl</artifactId>
-		<version>1.0</version>
-	      </dependency>
-	    </dependencies>
-	  </profile>
+		<profile>
+			<id>mysql</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>mysql</groupId>
+					<artifactId>mysql-connector-java</artifactId>
+					<version>5.0.3</version>
+				</dependency>
+				<dependency>
+					<groupId>org.crank.example</groupId>
+					<artifactId>employee-jpa-model</artifactId>
+					<version>0.10-SNAPSHOT</version>
+					<classifier>mysql</classifier>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>hsqldb</id>
+			<dependencies>
+				<dependency>
+					<groupId>hsqldb</groupId>
+					<artifactId>hsqldb</artifactId>
+					<version>1.8.0.7</version>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.crank.example</groupId>
+					<artifactId>employee-jpa-model</artifactId>
+					<version>0.10-SNAPSHOT</version>
+					<classifier>hsqldb</classifier>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>servlet-2.5</id>
+			<dependencies>
+				<dependency>
+					<groupId>javax.servlet</groupId>
+					<artifactId>jstl</artifactId>
+					<version>1.1.2</version>
+				</dependency>
+				<dependency>
+					<groupId>javax.faces</groupId>
+					<artifactId>jsf-api</artifactId>
+					<version>1.2_04</version>
+					<scope>compile</scope>
+				</dependency>
+				<dependency>
+					<groupId>javax.faces</groupId>
+					<artifactId>jsf-impl</artifactId>
+					<version>1.2_04</version>
+					<scope>compile</scope>
+				</dependency>
+				<dependency>
+					<groupId>el-impl</groupId>
+					<artifactId>el-impl</artifactId>
+					<version>1.0</version>
+					<scope>compile</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>servlet-2.4</id>
+			<dependencies>
+				<dependency>
+					<groupId>javax.el</groupId>
+					<artifactId>el-api</artifactId>
+					<version>1.0</version>
+				</dependency>
+				<dependency>
+					<groupId>javax.servlet</groupId>
+					<artifactId>jstl</artifactId>
+					<version>1.1.2</version>
+				</dependency>
+				<dependency>
+					<groupId>javax.faces</groupId>
+					<artifactId>jsf-api</artifactId>
+					<version>1.2_04</version>
+				</dependency>
+				<dependency>
+					<groupId>javax.faces</groupId>
+					<artifactId>jsf-impl</artifactId>
+					<version>1.2_04</version>
+				</dependency>
+				<dependency>
+					<groupId>el-impl</groupId>
+					<artifactId>el-impl</artifactId>
+					<version>1.0</version>
+				</dependency>
+			</dependencies>
+		</profile>
 	</profiles>
 
 </project>

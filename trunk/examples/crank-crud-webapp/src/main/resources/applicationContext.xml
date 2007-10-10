@@ -8,6 +8,5 @@
 
 	 <bean class="org.crank.sample.CrankCrudExampleApplicationContext"/>
 	 <bean class="org.crank.config.spring.support.CrudDAOConfig"/>
-	 
 	 <bean class="org.springframework.config.java.process.ConfigurationPostProcessor"/>
 </beans>

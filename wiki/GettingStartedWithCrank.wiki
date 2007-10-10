@@ -40,6 +40,11 @@ Step 3 Crank:
  * [http://code.google.com/p/krank/ Home page]
  * [http://code.google.com/p/krank/wiki/CrankCrudIntro Introduction to Crank (should make a lot of sense based on Facelets articles)]
  * [http://code.google.com/p/krank/wiki/CrankCrudDesignDocs Design of Crank Crud]
+ * [http://code.google.com/p/krank/wiki/BuildingCrankWithMaven Building Crank]
+ * [http://code.google.com/p/krank/wiki/CrankCrudTutorial Crank Crud Tutorial]
+ * [http://code.google.com/p/krank/wiki/CrankCrudTutorialUsingCustomListings Customize what shows up in a listing]
+ *[http://code.google.com/p/krank/wiki/CrankCrudTutorialSelfReferentialEntitiesAndCustomListings More Advanced Tutorial]
+ * [http://code.google.com/p/krank/wiki/CrankCrudSelectMany Crank Select Many Tutorial]
 
 
 Step 4: Manage some objects
@@ -55,13 +60,6 @@ Base you example on the sandbox
 
 Don't worry about the real object model. Simplify it as much as you need to and get familar with the technique.
 
-Now that you have all that under your belt, it is time to start the Crank tutorials as follows:
 
-[http://code.google.com/p/krank/wiki/CrankCrudTutorial Crank Crud Tutorial]
-[CrankCrudTutorialUsingCustomListings Customize what shows up in a listing]
-[http://code.google.com/p/krank/wiki/CrankCrudTutorialSelfReferentialEntitiesAndCustomListings More Advanced Tutorial]
-[http://code.google.com/p/krank/wiki/CrankCrudSelectMany Crank Select Many Tutorial]
-[http://code.google.com/p/krank/wiki/BuildingCrankWithMaven Building Crank]
-Paul T owes us a working with Enums tutorial and an manyToOne autocomplete tutorial.
 
 --Rick Hightower

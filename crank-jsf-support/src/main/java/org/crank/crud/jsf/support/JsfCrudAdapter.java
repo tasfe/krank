@@ -24,9 +24,9 @@ import org.crank.crud.controller.Toggleable;
  * @param <T> Type of entity that we are providing CRUD for.
  * @param <PK> Primary key type.
  */
-public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator {
-    
-    private FilterablePageable paginator;
+public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator, Serializable {
+	private static final long serialVersionUID = 1L;
+	private FilterablePageable paginator;
     private DataModel model = new ListDataModel();
     private CrudControllerBase<T, PK> controller;
 

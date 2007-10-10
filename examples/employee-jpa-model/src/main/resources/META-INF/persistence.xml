@@ -6,6 +6,7 @@
 	version="1.0">
 
 	<persistence-unit name="employee-example" transaction-type="RESOURCE_LOCAL">
+	  <provider>org.hibernate.ejb.HibernatePersistence</provider>
             <properties>
 			<!-- OpenJPA Settings -->
 			<property name="openjpa.ConnectionURL" value="${jdbc.url}" />

@@ -1,0 +1,39 @@
+#summary Building Crank
+
+To get the build to work you have to checkout the whole stack of stuff... 
+
+
+{{{
+svn co http://krank.googlecode.com/svn/trunk crank 
+cd crank 
+mvn install 
+}}}
+
+And that will build the whole stack, including the crank-crud-webapp-sample. 
+
+
+After its built everything you can then use the jetty plugin to get 
+the app running. 
+
+{{{
+cd crank-crud-webapp-sample 
+mvn jetty:run 
+}}}
+
+then you can go to; 
+
+
+http://localhost:8080 
+
+
+and see the app running (you have to click on the url that it pops up 
+at the url). 
+
+
+Hope this helps. 
+
+
+TTFN, 
+
+
+Bill Dudney (posted by Rick for Bill)

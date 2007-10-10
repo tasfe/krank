@@ -19,7 +19,6 @@ public class AutoCompleteController <T, PK extends Serializable>  {
     private String fieldName;
     private String value;
     private FilteringDataSource dataSource;
-    private SelectSupport selectSupport = new SelectSupport();
     private CrudControllerBase<T, PK> controller; 
 
 	public void setDataSource( FilteringDataSource dataSource ) {
@@ -120,7 +119,7 @@ public class AutoCompleteController <T, PK extends Serializable>  {
 	        }
         }
         entity.setPropertyValue(fieldName, newValue);
-        selectSupport.fireSelect(newValue);
+        controller.fireSelect(newValue);
 	}
 
 	/**

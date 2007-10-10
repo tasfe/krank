@@ -5,7 +5,7 @@
       <version>0.10-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>crank-springmvc-validation</artifactId>
+    <artifactId>crank-validation-springmvc-webapp</artifactId>
     <packaging>war</packaging>
     <name>Crank :: Spring MVC Validation :: Sample Webapp</name>
     <version>0.10-SNAPSHOT</version>

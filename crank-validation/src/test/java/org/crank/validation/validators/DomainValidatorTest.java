@@ -4,8 +4,6 @@ import junit.framework.TestCase;
 
 import org.crank.validation.ValidationContext;
 import org.crank.validation.ValidatorMessage;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class DomainValidatorTest extends TestCase {
 
@@ -26,7 +24,6 @@ public class DomainValidatorTest extends TestCase {
     	parent.getChildren().add(child);
     	validator.setRootObject(child);
         ValidatorMessage message = (ValidatorMessage) validator.validate(40, "scaleFactor");
-        //System.out.println(message.getSummary());
         assertFalse(message.hasError());
         
         child = new DomainChild();
@@ -36,7 +33,6 @@ public class DomainValidatorTest extends TestCase {
     	parent.getChildren().add(child);
     	validator.setRootObject(child);
         message = (ValidatorMessage) validator.validate(60, "scaleFactor");
-        //System.out.println(message.getSummary());
         assertFalse(message.hasError());
         
         child = new DomainChild();
@@ -45,7 +41,6 @@ public class DomainValidatorTest extends TestCase {
     	parent.getChildren().add(child);
     	validator.setRootObject(child);
         message = (ValidatorMessage) validator.validate("", "name");
-        //System.out.println(message.getSummary());
         assertTrue(message.hasError());
         
         child = new DomainChild();
@@ -55,7 +50,6 @@ public class DomainValidatorTest extends TestCase {
     	parent.getChildren().add(child);
     	validator.setRootObject(child);
         message = (ValidatorMessage) validator.validate(30, "scaleFactor");
-        //System.out.println(message.getSummary());
         assertTrue(message.hasError());
         
     }

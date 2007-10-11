@@ -3,8 +3,10 @@ package org.crank.validation.validators;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 public class DomainParent {
-	
+	private Logger log = Logger.getLogger(this.getClass()); 
 	private List<DomainChild> children = new ArrayList<DomainChild>();
 
 	public List<DomainChild> getChildren() {
@@ -29,13 +31,13 @@ public class DomainParent {
 			
 			for (DomainChild c : children) {
 				if (c != child) {
-					System.out.println("Adding " + c.getScaleFactor() + " from child '" + c.getName() + "'");
+					log.info("Adding " + c.getScaleFactor() + " from child '" + c.getName() + "'");
 					sum += c.getScaleFactor();
 				}
 			}
 			
 			// Add the new value to the sum
-			System.out.println("Appending " + child.getScaleFactor() + " from validated child '" + child.getName() + "'");
+			log.info("Appending " + child.getScaleFactor() + " from validated child '" + child.getName() + "'");
 			sum += value;
 			
 			if (sum > 100) {

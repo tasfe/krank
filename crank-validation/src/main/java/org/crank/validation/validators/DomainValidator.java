@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.crank.core.AnnotationData;
 import org.crank.core.AnnotationUtils;
 import org.crank.core.MapUtils;
 import org.crank.validation.ValidationContext;
 import org.crank.validation.ValidatorMessage;
 import org.crank.validation.ValidatorMessageHolder;
-import org.crank.validation.validators.AbstractValidator;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -37,6 +37,8 @@ import org.springframework.beans.BeanWrapperImpl;
  *
  */
 public class DomainValidator extends AbstractValidator {
+	private static final long serialVersionUID = 1L;
+	private Logger log = Logger.getLogger(this.getClass()); 
 
 	private Object rootObject;
 	
@@ -44,6 +46,7 @@ public class DomainValidator extends AbstractValidator {
 		this.rootObject = rootObject;
 	}
 	
+	@SuppressWarnings("unused")
 	private ValidationContext validationContext;
 	
     private static Set<String> allowedPackages = new HashSet<String>();
@@ -129,12 +132,12 @@ public class DomainValidator extends AbstractValidator {
             		message.setDetail(nsme.getMessage());
             		message.setSummary(nsme.getMessage());
             		error = true;
-            		nsme.printStackTrace();
+            		log.error("no method", nsme);
             	} catch (Exception e) {
             		message.setDetail(e.getMessage());
             		message.setSummary(e.getMessage());
             		error = true;
-            		e.printStackTrace();
+            		log.error("general exception", e);
             	}            	
             }
 
@@ -149,17 +152,17 @@ public class DomainValidator extends AbstractValidator {
         		message.setDetail(iae.getMessage());
         		message.setSummary(iae.getMessage());
         		error = true;
-        		iae.printStackTrace();
+        		log.error("illegal access", iae);
         	} catch (InvocationTargetException ite) {
         		message.setDetail(ite.getMessage());
         		message.setSummary(ite.getMessage());
         		error = true;
-        		ite.printStackTrace();
+        		log.error("invocation target exception", ite);
         	} catch (Exception e) {
         		message.setDetail(e.getMessage());
         		message.setSummary(e.getMessage());
         		error = true;
-        		e.printStackTrace();
+        		log.error("general exception", e);
         	}            	
         }
 
@@ -171,29 +174,4 @@ public class DomainValidator extends AbstractValidator {
         return message;
 	}
 	
-    /**
-     * Clean up the Validation context.
-     * If you love something set it free. If it does not come back to you,
-     * hunt it down and really destroy it. Clean up the Thread local variable.
-     */
-//    protected void cleanup() {
-//        ValidationContext context = (ValidationContext) 
-//            ValidationContext.getCurrentInstance();
-//        context.free();
-//    }
-
-    /**
-     * Register a new ValidationContext and initialize it.
-     * 
-     * @param facesContext
-     * @param inputComponent
-     * @param validatorData
-     */
-//    private void registerValidationContext(FacesContext facesContext, UIInput inputComponent, ValidatorData validatorData) {
-//        JSFValidationContext context = new JSFValidationContext(inputComponent);
-//        context.setParentObject(validatorData.lookupParentObject(facesContext));
-//        context.setParams(inputComponent.getAttributes());
-//        context.register(context);
-//    }	
-
 }

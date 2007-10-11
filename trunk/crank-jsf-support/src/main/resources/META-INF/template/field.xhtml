@@ -13,6 +13,7 @@
 	  xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 	  xmlns:crank="http://www.googlecode.com/crank"	
 	  xmlns:crud="http://www.googlecode.com/crank/crud"
+	  xmlns:validation="http://code.google.com/p/krank/validation"
       >
 
 <!--  	  xmlns:validation="http://code.google.com/p/krank/validation" -->
@@ -101,7 +102,7 @@
 			                     required="${required}" 
 			                     styleClass="${formFieldStyleClasses}"
 			                     cols="50" rows="${crud:textSize(type,fieldName)/50}">
-			        <!--   validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}"/>-->
+			        <validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}"/>
 					<c:if test="${crud:textSize(type,fieldName)>0}">
 						<f:validateLength maximum="${crud:textSize(type,fieldName)}" />
 					</c:if>
@@ -142,7 +143,7 @@
 					                     value="#{entity[fieldName]}" 
 					                     required="${required}" 
 					                     styleClass="${formFieldStyleClasses}">
-			        <!--   validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}"/>-->							
+			        		<validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}"/>							
 							<c:if test="${crud:textSize(type,fieldName)>0}">
 								<f:validateLength maximum="${crud:textSize(type,fieldName)}" />
 							</c:if>
@@ -181,7 +182,7 @@
 	                   renderAsPopup="true" value="#{entity[fieldName]}" 
 	                   required="${required}"
 	                   styleClass="${formFieldStyleClasses}">
-			        <!--   validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}"/>-->	                   
+			        <validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}"/>	                   
 	        <ui:insert />
 		</t:calendar>
 		</a4j:outputPanel>
@@ -193,7 +194,7 @@
         <c:set var="propEntityName" value="${crud:getPropertyEntityName(type,fieldName)}" />
         <a4j:outputPanel ajaxRendered="true">        
 		<crud:select id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}">
-			        <!--   validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}"/>-->
+			        <validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}"/>
 			<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
 			<f:converter converterId="" binding="${converters[propEntityName]}"/>
 		</crud:select>

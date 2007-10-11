@@ -38,6 +38,9 @@
 		<c:if test="${empty delImg}">
 			<c:set var="delImg" value="/images/del-sm.gif" />
 		</c:if>
+		<c:if test="${empty formPropertyNames}">
+			<c:set var="formPropertyNames" value="${propertyNames}" />
+		</c:if>
 
 		<c:set var="entityName" value="${detailController.relationshipManager.childCollectionProperty}" />
 		<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
@@ -80,7 +83,7 @@
 							<crank:form   
 								id="${entityName}DetailSubForm"
 								crud="${detailController}" 
-								propertyNames="${propertyNames}"
+								propertyNames="${formPropertyNames}"
 								immediate="true"
 								reRender="${reRender}"
 								parentForm="${parentForm}"
@@ -103,33 +106,36 @@
 								</rich:columnGroup>
 							</f:facet>				
 							<c:forEach items="${pNames}" var="property">
+								<c:set var="renderAsText" value="${true}"/>
+								<c:set var="outputText" value=""/>
 								<h:column>
-									<c:set var="outputText" value=""/>
 									<c:choose>
 										<c:when test="${crud:contains(property, '.')}">
 											<c:choose>
 												<c:when test="${crud:isBoolean(detailController.entityClass,property)}">
 												
-													<h:graphicImage value="${booleanImg}" rendered="${(row.map[property] == 'true')}" styleClass="imageCenter"/>
-												</c:when>
-												<c:when test="${crud:isEnum(detailController.entityClass,property)}">
-													<c:set var="outputText" value="#{crud:createEnumLabel(row.map[property])}"/>
-												</c:when>
-												<c:otherwise>
-													<c:set var="outputText" value="#{row.map[property]}"/>
-												</c:otherwise>
-											</c:choose>
-										</c:when>
-										<c:otherwise>
-											<c:choose>
-												<c:when test="${crud:isBoolean(detailController.entityClass,property)}">
 													<h:graphicImage value="${booleanImg}" rendered="${(row[property] == 'true')}" styleClass="imageCenter"/>
+													<c:set var="renderAsText" value="${false}"/>
 												</c:when>
 												<c:when test="${crud:isEnum(detailController.entityClass,property)}">
 													<c:set var="outputText" value="#{crud:createEnumLabel(row[property])}"/>
 												</c:when>
 												<c:otherwise>
 													<c:set var="outputText" value="#{row[property]}"/>
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											<c:choose>
+												<c:when test="${crud:isBoolean(detailController.entityClass,property)}">
+										<h:graphicImage value="${booleanImg}" rendered="${(row[property] == 'true')}" styleClass="imageCenter"/>
+										<c:set var="renderAsText" value="${false}"/>
+												</c:when>
+												<c:when test="${crud:isEnum(detailController.entityClass,property)}">
+										<c:set var="outputText" value="#{crud:createEnumLabel(row[property])}"/>
+												</c:when>
+												<c:otherwise>
+										<c:set var="outputText" value="#{row[property]}"/>
 												</c:otherwise>
 											</c:choose>
 										</c:otherwise>
@@ -146,6 +152,7 @@
 										value="${outputText}" />
 								</h:column>
 							</c:forEach>
+
 							
 							<h:column rendered="${not manyToMany}">
 

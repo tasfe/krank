@@ -92,4 +92,38 @@
 
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>openjpa-hsqldb</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>
+                                    **/**/HSQLDialect_HHH_1598.java
+                                </exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>openjpa-mysql</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                                <exclude>
+                                    **/**/HSQLDialect_HHH_1598.java
+                                </exclude>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

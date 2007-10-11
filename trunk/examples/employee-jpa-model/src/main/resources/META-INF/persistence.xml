@@ -35,7 +35,7 @@
 				value="${krank.hibernate.dialect}" />
 
 			<!--  create non-existing tables automatically  -->
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
 			<property
 				name="hibernate.connection.hsqldb.default_table_type"
 				value="cached" />

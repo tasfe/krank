@@ -1,5 +1,6 @@
 package org.crank.validation.readers;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,9 +63,10 @@ import org.crank.validation.ValidatorMetaDataReader;
  * @author Rick Hightower
  * 
  */
-public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReader {
+public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReader, Serializable {
+	private static final long serialVersionUID = 1L;
 
-    /** Holds a cache of meta-data to reduce parsing with regex and to avoid
+	/** Holds a cache of meta-data to reduce parsing with regex and to avoid
      * reflection. 
      * Since this could get hit by multiple threads. I made it threadsafe.
      * */

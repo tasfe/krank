@@ -1,10 +1,9 @@
 package org.crank.controller;
 
+import javax.faces.context.FacesContext;
+
 import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.criteria.Comparison;
-import org.crank.crud.jsf.support.JsfCrudAdapter;
-
-import javax.faces.context.FacesContext;
 
 /**
  * Created by IntelliJ IDEA.

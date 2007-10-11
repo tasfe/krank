@@ -61,6 +61,12 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 			managedObjects
 					.add(new CrudManagedObject(Role.class, RoleDAO.class));
 			managedObjects.add(new CrudManagedObject(Skill.class, null));
+			try {
+				dataTableScrollerBean();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return managedObjects;
 
@@ -80,6 +86,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		DataTableScrollerBean bean = new DataTableScrollerBean();
 		bean.setEmployeeDataPaginator(paginators().get("Employee"));
 		bean.setEmployeeDAO(repos().get("Employee"));
+		bean.populate();
 		return bean;
 	}
 

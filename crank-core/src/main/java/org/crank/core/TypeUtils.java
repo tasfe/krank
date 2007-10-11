@@ -25,15 +25,15 @@ public class TypeUtils {
         if (value != null) {
         	if ( value instanceof String) {
             	if  (
-                        (value.toString().toLowerCase().indexOf(".com") > -1)  ||
-                        (value.toString().toLowerCase().indexOf(".org") > -1)  ||
-                        (value.toString().toLowerCase().indexOf(".edu") > -1)  ||
-                        (value.toString().toLowerCase().indexOf(".biz") > -1)  ||
-                        (value.toString().toLowerCase().indexOf(".info") > -1) ||
-                        (value.toString().toLowerCase().indexOf(".mobi") > -1) ||
-                        (value.toString().toLowerCase().indexOf(".us") > -1)   ||
-                        (value.toString().toLowerCase().indexOf(".ca") > -1)   ||
-                        (value.toString().toLowerCase().indexOf(".net") > -1)
+                        (value.toString().toLowerCase().indexOf(".com") > 0)  ||
+                        (value.toString().toLowerCase().indexOf(".org") > 0)  ||
+                        (value.toString().toLowerCase().indexOf(".edu") > 0)  ||
+                        (value.toString().toLowerCase().indexOf(".biz") > 0)  ||
+                        (value.toString().toLowerCase().indexOf(".info") > 0) ||
+                        (value.toString().toLowerCase().indexOf(".mobi") > 0) ||
+                        (value.toString().toLowerCase().indexOf(".us") > 0)   ||
+                        (value.toString().toLowerCase().indexOf(".ca") > 0)   ||
+                        (value.toString().toLowerCase().indexOf(".net") > 0)
                     ) {
             		return true;
             	}
@@ -42,6 +42,23 @@ public class TypeUtils {
         } else {
             return false;
         }
+    }
+
+    public static boolean isInCollection( Object value, Object collection ) {
+
+        if ((value != null) && (collection != null)) {
+        	if ((value instanceof String) && (collection instanceof String)) {
+       			String[] items = ((String)collection).split(",");
+       			String val = (String)value;
+       			for (String item : items) {
+       				if (item.equals(val)) {
+       					return true;
+       				}
+       			}
+            }
+        }
+        
+        return false;
     }
 
     public static boolean isText( Class<?> type, String propertyName ) {

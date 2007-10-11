@@ -9,9 +9,15 @@ import javax.faces.model.ListDataModel;
 
 import org.crank.crud.controller.CrudController;
 import org.crank.crud.controller.CrudControllerBase;
+import org.crank.crud.controller.CrudControllerListener;
+import org.crank.crud.controller.CrudEvent;
 import org.crank.crud.controller.CrudOperations;
 import org.crank.crud.controller.EntityLocator;
 import org.crank.crud.controller.FilterablePageable;
+import org.crank.crud.controller.FilteringEvent;
+import org.crank.crud.controller.FilteringListener;
+import org.crank.crud.controller.PaginationEvent;
+import org.crank.crud.controller.PaginationListener;
 import org.crank.crud.controller.Row;
 import org.crank.crud.controller.ToggleEvent;
 import org.crank.crud.controller.ToggleListener;
@@ -29,6 +35,7 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
 	private FilterablePageable paginator;
     private DataModel model = new ListDataModel();
     private CrudControllerBase<T, PK> controller;
+    private List page;
 
     public JsfCrudAdapter() {
         
@@ -44,6 +51,72 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
             public void toggle( ToggleEvent event ) {
                 JsfCrudAdapter.this.crudChanged();
             }} );
+        
+        this.paginator.addFilteringListener(new FilteringListener(){
+
+			public void afterFilter(FilteringEvent fe) {
+				getPage();
+			}
+
+			public void beforeFilter(FilteringEvent fe) {
+			}});
+        
+
+        this.controller.addCrudControllerListener(new CrudControllerListener(){
+
+			public void afterCancel(CrudEvent event) {
+			}
+
+			public void afterCreate(CrudEvent event) {
+				getPage();
+			}
+
+			public void afterDelete(CrudEvent event) {
+				getPage();
+			}
+
+			public void afterLoadCreate(CrudEvent event) {
+			}
+
+			public void afterLoadListing(CrudEvent event) {
+			}
+
+			public void afterRead(CrudEvent event) {
+			}
+
+			public void afterUpdate(CrudEvent event) {
+				getPage();
+			}
+
+			public void beforeCancel(CrudEvent event) {
+			}
+
+			public void beforeCreate(CrudEvent event) {
+			}
+
+			public void beforeDelete(CrudEvent event) {
+			}
+
+			public void beforeLoadCreate(CrudEvent event) {
+			}
+
+			public void beforeLoadListing(CrudEvent event) {
+			}
+
+			public void beforeRead(CrudEvent event) {
+			}
+
+			public void beforeUpdate(CrudEvent event) {
+			}});
+        
+        this.paginator.addPaginationListener(new PaginationListener(){
+			public void pagination(PaginationEvent pe) {
+				getPage();
+			}});
+    }
+    
+    protected void getPage() {
+    	page = paginator.getPage();
     }
     
     /**
@@ -58,10 +131,12 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
     }
 
     public DataModel getModel() {
+    	if (page == null) {
+    		page = paginator.getPage();
+    	}
         /* Note if you wire in events from paginators, you will only have to change this
          * when there is a next page event.
          */
-        List page = paginator.getPage();
         List<Row> wrappedList = new ArrayList<Row>(page.size());
         for (Object rowData : page) {
             Row row = new Row();

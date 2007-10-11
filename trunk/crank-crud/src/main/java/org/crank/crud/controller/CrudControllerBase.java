@@ -15,7 +15,7 @@ import org.crank.core.RequestParameterMapFinder;
 import org.crank.crud.GenericDao;
 import org.crank.web.RequestParameterMapFinderImpl;
 
-public abstract class CrudControllerBase<T, PK extends Serializable> implements CrudOperations, Toggleable, Selectable, Serializable {
+public abstract class CrudControllerBase<T, PK extends Serializable> implements CrudOperations, Toggleable, Serializable {
 
     protected GenericDao<T, PK> dao;
     protected EntityLocator entityLocator;
@@ -27,7 +27,6 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
     protected Object entity;
     private Map<String, DetailController> children = new HashMap<String, DetailController>();
     private ToggleSupport toggleSupport = new ToggleSupport();
-    private SelectSupport selectSupport = new SelectSupport();    
     private String name;
     protected CrudOperations parent;
     protected RequestParameterMapFinder requestParameterMapFinder = new RequestParameterMapFinderImpl();
@@ -80,22 +79,6 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
         toggleSupport.removeToggleListener( listener );
     }
 
-    /**
-     * @see Selectable#addSelectListener(SelectListener)
-     */
-	public void addSelectListener(SelectListener listener) {
-		selectSupport.addSelectListener(listener);
-		
-	}
-
-    /**
-     * @see Selectable#removeSelectListener(SelectListener)
-     */
-	public void removeSelectListener(SelectListener listener) {
-		selectSupport.removeSelectListener(listener);
-		
-	}
-
 
     /**
      * Fire an event to the Toggle listeners.
@@ -106,22 +89,7 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
     }
 
 
-    /**
-     * Fire an event to the Select listeners.
-     *
-     */
-    protected void fireSelect() {
-        selectSupport.fireSelect();
-    }
 
-
-    /**
-     * Fire an event to the Select listeners.
-     *
-     */
-    protected void fireSelect(Object value) {
-        selectSupport.fireSelect(value);
-    }
 
     /** 
      * @see CrudOperations#getEntity()

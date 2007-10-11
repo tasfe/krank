@@ -16,6 +16,7 @@
 
     <modules>
       <module>employee-jpa-model</module>
+      <module>security-jpa-model</module>
       <module>crank-crud-webapp</module>
       <module>crank-validation-jsf-webapp</module>
       <module>crank-validation-springmvc-webapp</module>

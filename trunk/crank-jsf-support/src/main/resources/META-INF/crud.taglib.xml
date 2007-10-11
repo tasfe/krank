@@ -166,6 +166,13 @@
 		</function-signature>
 	</function>
 	<function>
+		<function-name>isInCollection</function-name>
+		<function-class>org.crank.core.TypeUtils</function-class>
+		<function-signature>
+			boolean isInCollection(java.lang.Object, java.lang.Object) 
+		</function-signature>
+	</function>
+	<function>
 		<function-name>isUrl</function-name>
 		<function-class>org.crank.core.TypeUtils</function-class>
 		<function-signature>

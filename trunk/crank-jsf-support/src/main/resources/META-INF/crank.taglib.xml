@@ -60,5 +60,9 @@
 		<tag-name>modalPanel</tag-name>
 		<source>template/modalPanel.xhtml</source>
 	</tag>
+	<tag>
+		<tag-name>autoComplete</tag-name>
+		<source>template/autoComplete.xhtml</source>
+	</tag>
 
 </facelet-taglib>

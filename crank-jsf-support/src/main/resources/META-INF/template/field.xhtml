@@ -114,35 +114,18 @@
 				<c:choose>
 					<c:when test="${not empty suggest}">
 					<h:panelGroup>
-							<!-- DO NOT add a converter or validator to this input... it will auto-validate based on the entity.field wired into the app context -->
-						   	<h:inputText 
-						   		id="${fieldId}"
-						   		binding="${autocomplete[suggest].component}"
-						    	disabled="${disabled}"
-						        value="${autocomplete[suggest].value}" 
-						        required="${required}" 
-						        styleClass="${formFieldStyleClasses}"/>
-							<rich:suggestionbox 
-								id="${fieldId}suggestBox"
-								for="${fieldId}" 
-								ajaxSingle="true"
-								suggestionAction="#{autocomplete[suggest].autocomplete}" 
-								var="result">
-								<!-- Assumes that there is a "name" property in the underlying data source entity -->
-								<h:column>
-									<h:outputText value="#{result.name}" />
-								</h:column>
-							</rich:suggestionbox>
+					   	<crank:autoComplete
+							suggestionboxProperty="name" />
 					</h:panelGroup>
 
 					</c:when>
 					<c:otherwise>
 						<a4j:outputPanel ajaxRendered="true">
 					   	<h:inputText id="${fieldId}" 
-					    				 disabled="${disabled}"
-					                     value="#{entity[fieldName]}" 
-					                     required="${required}" 
-					                     styleClass="${formFieldStyleClasses}">
+					    			 disabled="${disabled}"
+					                 value="#{entity[fieldName]}" 
+					                 required="${required}" 
+					                 styleClass="${formFieldStyleClasses}">
 			        		<validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}"/>							
 							<c:if test="${crud:textSize(type,fieldName)>0}">
 								<f:validateLength maximum="${crud:textSize(type,fieldName)}" />

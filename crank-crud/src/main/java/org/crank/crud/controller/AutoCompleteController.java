@@ -38,12 +38,13 @@ public class AutoCompleteController <T, PK extends Serializable>  implements Sel
 		
 	}
 	
-    public AutoCompleteController(Class clazz, String propertyName, CrudOperations crudController, 
-    		FilteringDataSource dataSource, String fieldName) {
-    	this.controller = (CrudControllerBase<T, PK>) crudController;
+    public AutoCompleteController(Class sourceClass, String sourceProperty,  
+    		FilteringDataSource dataSource, CrudOperations targetCrudController, 
+    		String targetProperty) {
+    	this.controller = (CrudControllerBase<T, PK>) targetCrudController;
         this.dataSource = dataSource;
-        this.propertyName = propertyName;
-        this.fieldName = fieldName;
+        this.propertyName = sourceProperty;
+        this.fieldName = targetProperty;
     	
         if (controller!=null) {
 			controller.addCrudControllerListener(new CrudControllerListener() {
@@ -112,13 +113,21 @@ public class AutoCompleteController <T, PK extends Serializable>  implements Sel
 	 * Local helper method to lookup the many to one object and then associate it with the event's entity
 	 * @param event
 	 */
-	private void handleCreateUpdate(CrudEvent event) {
+	protected void handleCreateUpdate(CrudEvent event) {
         BeanWrapper entity = new BeanWrapperImpl( event.getEntity() );
         Object newValue = null;
         if ((value != null) && !"".equals(value)) {
 	        List<?> list = getListExact(value);
 	        if (list.size()==1) {
 		        newValue = list.get(0);
+	        } else {
+	        	StringBuilder msg = new StringBuilder();
+	        	msg.append("Unable to match '");
+	        	msg.append(fieldName);
+	        	msg.append("' to selection '");
+	        	msg.append(value);
+	        	msg.append("'.");
+	        	throw new IllegalArgumentException(msg.toString());
 	        }
         }
         entity.setPropertyValue(fieldName, newValue);

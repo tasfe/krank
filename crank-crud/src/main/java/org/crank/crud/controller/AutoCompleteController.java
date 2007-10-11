@@ -13,13 +13,14 @@ import org.springframework.beans.BeanWrapperImpl;
 import static org.crank.crud.criteria.Comparison.startsLike;
 import static org.crank.crud.criteria.Comparison.eq;
 
-public class AutoCompleteController <T, PK extends Serializable>  {
+public class AutoCompleteController <T, PK extends Serializable>  implements Selectable {
 
     private String propertyName;
     private String fieldName;
     private String value;
     private FilteringDataSource dataSource;
     private CrudControllerBase<T, PK> controller; 
+    private SelectSupport selectable = new SelectSupport();
 
 	public void setDataSource( FilteringDataSource dataSource ) {
         this.dataSource = dataSource;
@@ -44,55 +45,57 @@ public class AutoCompleteController <T, PK extends Serializable>  {
         this.propertyName = propertyName;
         this.fieldName = fieldName;
     	
-		controller.addCrudControllerListener(new CrudControllerListener() {
-
-			public void afterCancel(CrudEvent event) {
-			}
-
-			public void afterCreate(CrudEvent event) {
-				handleReadEvent(event);
-			}
-
-			public void afterDelete(CrudEvent event) {
-			}
-
-			public void afterLoadCreate(CrudEvent event) {
-                setValue(null);
-			}
-
-			public void afterLoadListing(CrudEvent event) {
-			}
-
-			public void afterRead(CrudEvent event) {
-				handleReadEvent(event);
-			}
-
-			public void afterUpdate(CrudEvent event) {
-			}
-
-			public void beforeCancel(CrudEvent event) {
-			}
-
-			public void beforeCreate(CrudEvent event) {
-				handleCreateUpdate(event);
-			}
-
-			public void beforeDelete(CrudEvent event) {
-			}
-
-			public void beforeLoadCreate(CrudEvent event) {
-			}
-
-			public void beforeLoadListing(CrudEvent event) {
-			}
-
-			public void beforeRead(CrudEvent event) {
-			}
-
-			public void beforeUpdate(CrudEvent event) {
-				handleCreateUpdate(event);
-			}}
-		);
+        if (controller!=null) {
+			controller.addCrudControllerListener(new CrudControllerListener() {
+	
+				public void afterCancel(CrudEvent event) {
+				}
+	
+				public void afterCreate(CrudEvent event) {
+					handleReadEvent(event);
+				}
+	
+				public void afterDelete(CrudEvent event) {
+				}
+	
+				public void afterLoadCreate(CrudEvent event) {
+	                setValue(null);
+				}
+	
+				public void afterLoadListing(CrudEvent event) {
+				}
+	
+				public void afterRead(CrudEvent event) {
+					handleReadEvent(event);
+				}
+	
+				public void afterUpdate(CrudEvent event) {
+				}
+	
+				public void beforeCancel(CrudEvent event) {
+				}
+	
+				public void beforeCreate(CrudEvent event) {
+					handleCreateUpdate(event);
+				}
+	
+				public void beforeDelete(CrudEvent event) {
+				}
+	
+				public void beforeLoadCreate(CrudEvent event) {
+				}
+	
+				public void beforeLoadListing(CrudEvent event) {
+				}
+	
+				public void beforeRead(CrudEvent event) {
+				}
+	
+				public void beforeUpdate(CrudEvent event) {
+					handleCreateUpdate(event);
+				}}
+			);
+        }
    	
     }
     
@@ -119,7 +122,7 @@ public class AutoCompleteController <T, PK extends Serializable>  {
 	        }
         }
         entity.setPropertyValue(fieldName, newValue);
-        controller.fireSelect(newValue);
+        selectable.fireSelect(newValue);
 	}
 
 	/**
@@ -180,6 +183,20 @@ public class AutoCompleteController <T, PK extends Serializable>  {
         dataSource.setOrderBy( new OrderBy[]{orderBy} );
         
         return dataSource.list();
+	}
+
+	public void addSelectListener(SelectListener listener) {
+		selectable.addSelectListener(listener);
+		
+	}
+
+	public void removeSelectListener(SelectListener listener) {
+		selectable.removeSelectListener(listener);
+		
+	}
+
+	public FilteringDataSource getDataSource() {
+		return dataSource;
 	}
 
 }

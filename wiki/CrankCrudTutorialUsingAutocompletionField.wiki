@@ -48,7 +48,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
         //     targetProperty -
         //        the property of the target entity to be completed by the 
         //        auto-complete value.	
-        AutoCompleteController autoController = new AutoCompleteController( 
+        AutoCompleteController autoController = new JsfAutoCompleteController( 
         		Specialty.class, "name", dataSource, controller, "specialty");
         
         // Add to the auto-complete map...
@@ -61,9 +61,9 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
         
 }}}
 
-The above code snippet creates a new AutoCompleteController to wire a `dataSource`, which contains the "source" entity for the list of suggestions, to a specific database entity's property. 
+The above code snippet creates a new JsfAutoCompleteController to wire a `dataSource`, which contains the "source" entity for the list of suggestions, to a specific database entity's property. 
 
-The first three parameters of the AutoCompleteController describe the datasource.  First is the class for the entity containing the properties for the list.  The property itself is described by the `sourceProperty`, the second parameter.  The third parameter, the 'datasource' is the filering datasource that will be used to obtain the list of values.
+The first three parameters of the JsfAutoCompleteController describe the datasource.  First is the class for the entity containing the properties for the list.  The property itself is described by the `sourceProperty`, the second parameter.  The third parameter, the 'datasource' is the filering datasource that will be used to obtain the list of values.
 
 The final two parameters relate to the target of the selection.  The `targetCrudController` is, surprisingly enough, the crud controller for the target entity, and the `targetProperty` represents the property name of the child entity which is value bound by the selection.  
 

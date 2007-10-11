@@ -49,6 +49,7 @@ public class Paginator implements Pageable, Serializable {
 
     public void setItemsPerPage( int itemsPerPage ) {
         this.itemsPerPage = itemsPerPage;
+        firePagination();
     }
 
     public void fastForwardPages() {

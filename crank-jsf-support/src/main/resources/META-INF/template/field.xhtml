@@ -194,7 +194,7 @@
         <c:set var="propEntityName" value="${crud:getPropertyEntityName(type,fieldName)}" />
         <a4j:outputPanel ajaxRendered="true">        
 		<crud:select id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}">
-			        <validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}"/>
+<!--			        <validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}"/>-->
 			<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
 			<f:converter converterId="" binding="${converters[propEntityName]}"/>
 		</crud:select>

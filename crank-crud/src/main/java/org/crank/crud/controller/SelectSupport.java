@@ -5,11 +5,6 @@ import java.util.List;
 
 public class SelectSupport implements Selectable {
     private List<SelectListener> list = new ArrayList<SelectListener>();
-    private Object value;
-
-    public Object getValue() {
-		return value;
-	}
 	/**
      * @see Selectable#addSelectListener(SelectListener)
      */
@@ -28,18 +23,17 @@ public class SelectSupport implements Selectable {
      *
      */
     public void fireSelect() {
-    	SelectEvent se = new SelectEvent(this);
-        for (SelectListener sl : list) {
-            sl.select( se );
-        }
+    	fireSelect(null);
     }
     /**
      * Fire an event to the listeners, setting the selected value.
      *
      */
     public void fireSelect(Object value) {
-    	this.value = value;
-    	fireSelect();
+    	SelectEvent se = new SelectEvent(this, value);
+        for (SelectListener sl : list) {
+            sl.select( se );
+        }
     }
     
 }

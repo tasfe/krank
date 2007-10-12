@@ -4,9 +4,13 @@ import java.io.Serializable;
 import java.util.EventObject;
 
 public class SelectEvent extends EventObject implements Serializable {
-
-    public SelectEvent( Object source ) {
+	private Object value;
+	public SelectEvent( Object source, Object value ) {
         super( source );
+        this.value = value;
     }
+    public Object getValue() {
+		return value;
+	}
 
 }

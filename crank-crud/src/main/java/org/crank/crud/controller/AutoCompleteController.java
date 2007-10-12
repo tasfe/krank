@@ -6,6 +6,7 @@ import java.util.List;
 import org.crank.crud.controller.CrudControllerListener;
 import org.crank.crud.controller.CrudEvent;
 import org.crank.crud.controller.datasource.FilteringDataSource;
+import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.criteria.OrderDirection;
 import org.springframework.beans.BeanWrapper;
@@ -21,6 +22,8 @@ public class AutoCompleteController <T, PK extends Serializable>  implements Sel
     private FilteringDataSource dataSource;
     private CrudControllerBase<T, PK> controller; 
     private SelectSupport selectable = new SelectSupport();
+    private Group group = new Group();
+
 
 	public void setDataSource( FilteringDataSource dataSource ) {
         this.dataSource = dataSource;
@@ -131,15 +134,37 @@ public class AutoCompleteController <T, PK extends Serializable>  implements Sel
 	        }
         }
         entity.setPropertyValue(fieldName, newValue);
-        selectable.fireSelect(newValue);
+	}
+	
+	private boolean found = true;
+	
+	public boolean isFound() {
+		return found;
+	}
+
+	public void setFound(boolean found) {
+		this.found = found;
+	}
+
+	protected void textChanged(String value) {
+		List<?> list = getListExact(value);
+		if (list.size() == 1) {
+			Object newValue = list.get(0);
+			selectable.fireSelect(newValue);
+			found = true;
+		} else {
+			found = false;
+		}
 	}
 
 	/**
-	 * Local helper method to perform wiring of the existing crud entity value into the local value
-	 * For example, for an Employee entity which has a Specialty entity as property "specialty"...
-	 * and the Specialty entity has a "name" property, then the
-	 * fieldName="specialty" and propertyName="name" would grab the value from the controller entity as
+	 * Local helper method to perform wiring of the existing crud entity value
+	 * into the local value For example, for an Employee entity which has a
+	 * Specialty entity as property "specialty"... and the Specialty entity has
+	 * a "name" property, then the fieldName="specialty" and propertyName="name"
+	 * would grab the value from the controller entity as
 	 * Employee.specialty.name
+	 * 
 	 * @param event
 	 */
 	private void handleReadEvent(CrudEvent event) {
@@ -166,7 +191,11 @@ public class AutoCompleteController <T, PK extends Serializable>  implements Sel
         dataSource.group().clear();
         
         /* Add the criteria */
-        dataSource.group().add(startsLike(propertyName,pref));
+        if (group.size() > 0) {
+        	dataSource.group().add(startsLike(propertyName,pref)).add(this.group);
+        } else {
+        	dataSource.group().add(startsLike(propertyName,pref));
+        }
         
         /* Set the orderBy list. */
         dataSource.setOrderBy( new OrderBy[]{orderBy} );
@@ -206,6 +235,10 @@ public class AutoCompleteController <T, PK extends Serializable>  implements Sel
 
 	public FilteringDataSource getDataSource() {
 		return dataSource;
+	}
+
+	public Group getGroup() {
+		return group;
 	}
 
 }

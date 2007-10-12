@@ -50,7 +50,7 @@
 	
 	
 	
-		<h:panelGrid id="formLayout${id}" columns="1" rendered="${rendered and ((crud.state=='ADD') or (crud.state == 'EDIT'))}">
+		<h:panelGrid columns="1" rendered="${rendered and ((crud.state=='ADD') or (crud.state == 'EDIT'))}">
 			<!-- Main for fields -->
 		    <h:panelGrid columns="3" rowClasses="formRowClass1, formRowClass2" columnClasses="topLeft">
 				<c:forEach items="${pNames}" var="property">
@@ -65,31 +65,6 @@
 				</c:forEach>			
 		    </h:panelGrid>
 			    
-			<!-- Enabled / Disabled Toggle Groups (jsf / a4j version - not working)  
-			<c:if test="${not empty enableGroups}">
-				<c:set var="enGroups" value="${fn:split(enableGroups, ',')}" />
-
-			    <h:panelGrid columns="1" rowClasses="radioGroup" cellspacing="5" width="100%">
-					<c:set var="counter" value="0"/>
-					<c:forEach items="${enGroups}" var="group">
-						<c:set var="groupIdEn" value="${entityName}GroupEn${counter}"/>
-
-						<crank:enableGroup 
-							id="${groupIdEn}"
-							useLabel="${false}"
-							propertyNames="${group}"
-							entity="${crud.entity}"
-							type="${crud.entityClass}"
-							crud="${crud}" 							
-							reRender="${reRender}" 
-							entityName="${entityName}"/>
-						
-						<c:set var="counter" value="${counter + 1}"/>
-					</c:forEach>	
-			    </h:panelGrid>
-			</c:if> -->
-
-					    
 			<!-- Enabled / Disabled Toggle Groups (javascript version) -->
 			<c:if test="${not empty enableGroups}">
 				<c:set var="enGroups" value="${fn:split(enableGroups, ',')}" />
@@ -174,26 +149,22 @@
 		    
 			<a4j:outputPanel ajaxRendered="true">
 		    
-		    <h:panelGrid id="buttonsPlain${id}" columns="4" rendered="${not ajax}">
+		    <h:panelGrid columns="4" rendered="${not ajax}">
 				<h:commandButton
-					id="createPlainB${id}" 
 					rendered="${(crud.state=='ADD') or (crud.state == null) or (crud.state=='UNKNOWN')}"
 					styleClass="${formButtonClass}" 
 					value="Create" 
 					action="${crud.create}"/>			
 				<h:commandButton 
-					id="updatePlainB${id}" 
-					rendered="${(crud.state=='EDIT')}" 
+					rendered="${(crud.state=='EDIT')}"
 					styleClass="${formButtonClass}" 
 					value="Update" 
 					action="${crud.update}"/>			
 				<h:commandButton 
-				    id="resetPlainB${id}"
 					value="Reset"
 					styleClass="${formButtonClass}" 
 					type="reset"/>
 				<h:commandButton 
-					id="cancelPlainB${id}" 
 					value="Cancel"
 					rendered="${((crud.state=='ADD') or (crud.state == 'EDIT') or (cancelAlwaysOn)) and not hideCancel }"
 					styleClass="${formButtonClass}" 
@@ -202,30 +173,26 @@
 					/>			
 			</h:panelGrid>
 			
-		    <h:panelGrid id="buttons${id}" columns="4" rendered="${ajax}">
+		    <h:panelGrid  columns="4" rendered="${ajax}">
 			    	  
 				<a4j:commandButton 
-					id="createAjaxB${id}" 
 					rendered="${addCreateMode}"
 					reRender="${reRender}" 
 					styleClass="${formButtonClass}"
 					value="Create" 
 					action="${crud.create}"/>		
 				<a4j:commandButton 
-					id="updateAjaxB${id}" 
-					rendered="${editMode}" 
+					rendered="${editMode}"
 					reRender="${reRender}" 
 					styleClass="${formButtonClass}" 
 					value="Update" 
 					action="${crud.update}"/>			
 				<a4j:commandButton 
-					id="resetAjaxB${id}" 
 					value="Reset"
 					reRender="${reRender}" 
 					styleClass="${formButtonClass}" 
 					type="reset"/>
 				<a4j:commandButton 
-					id="cancelAjaxB${id}" 
 					value="Cancel"
 					immediate="true"
 					rendered="${((crud.state=='ADD') or (crud.state == 'EDIT') or (cancelAlwaysOn)) and not hideCancel }"

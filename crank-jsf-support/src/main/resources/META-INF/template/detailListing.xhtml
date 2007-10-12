@@ -52,9 +52,8 @@
 
 		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
 		
-		<h:panelGroup id="bindingPanel${entityName}" binding="${detailController.subForm}">
+		<h:panelGroup binding="${detailController.subForm}">
 			<crank:node
-			    id="detail${entityName}"
 				entity="#{detailController}"
 				expandAction="toggleShowDetails"
 				expandText="${entityNameLabel}..."
@@ -72,7 +71,6 @@
 					<rich:spacer width="10" height="10"/>
 					<h:panelGrid columns="1" styleClass="detailPanelGrid" >
 						<crank:commandLink 
-							id="addNewDetail${entityName}"
 							entity="${detailController}"
 							action="loadCreate"
 							immediate="true"
@@ -85,7 +83,6 @@
 						</crank:commandLink>							
 						<c:if test="${detailController.showForm and not manyToMany}">
 							<crank:form   
-								id="${entityName}DetailSubForm"
 								crud="${detailController}" 
 								propertyNames="${formPropertyNames}"
 								immediate="true"
@@ -96,7 +93,7 @@
 								<ui:insert/>
 							</crank:form>
 						</c:if>
-						<rich:dataTable id="${id}Collection" value="#{detailController.model}" var="row">
+						<rich:dataTable value="#{detailController.model}" var="row">
 							<f:facet name="header">
 								<rich:columnGroup>
 									<c:forEach items="${pNames}" var="property">

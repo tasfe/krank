@@ -56,9 +56,8 @@
 			<c:set var="reRenderers" value="nodePanel${id},node${id},close${id},expand${id},fixed${id},fixedC${id}" />
 		</c:otherwise>
 	</c:choose>
-	<h:panelGrid id="nodePanel${id}" columns="${gridCols}" columnClasses="${columnClasses}">
+	<h:panelGrid columns="${gridCols}" columnClasses="${columnClasses}">
 		<crank:commandLink 
-			id="expand${id}"
 			immediate="true"
 			entity="${entity}"
 			action="${expandAction}"
@@ -68,11 +67,10 @@
 			rendered="${expandRendered and (not fixedBranch)}" 
 			styleClass="${toggleLinkClass}"
 			ajax="true">
-			<h:outputText id="expand${id}Out" value="${expandText}" />
+			<h:outputText  value="${expandText}" />
 			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
 		</crank:commandLink>
 		<crank:commandLink 
-			id="close${id}"
 			immediate="true"
 			entity="${entity}"
 			action="${closeAction}"
@@ -82,11 +80,10 @@
 			rendered="#{closeRendered and (not fixedBranch)}" 
 			styleClass="${toggleLinkClass}"
 			ajax="true">
-			<h:outputText id="close${id}Out" value="${collapseText}" />
+			<h:outputText  value="${collapseText}" />
 			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
 		</crank:commandLink>
 		<crank:commandLink 
-			id="fixed${id}"
 			immediate="true"
 			entity="${entity}"
 			action="${expandAction}"
@@ -96,11 +93,10 @@
 			rendered="${expandRendered and fixedBranch}" 
 			styleClass="${toggleLinkClass}"
 			ajax="true">
-			<h:outputText id="fixed${id}Out" value="${expandText}" />
+			<h:outputText  value="${expandText}" />
 			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
 		</crank:commandLink>
 		<crank:commandLink 
-			id="fixedC${id}"
 			immediate="true"
 			entity="${entity}"
 			action="${closeAction}"
@@ -110,10 +106,10 @@
 			rendered="#{closeRendered and fixedBranch}" 
 			styleClass="${toggleLinkClass}"
 			ajax="true">
-			<h:outputText id="fixedC${id}Out" value="${collapseText}" />
+			<h:outputText value="${collapseText}" />
 			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
 		</crank:commandLink>
-		<a4j:outputPanel id="node${id}" layout="block">
+		<a4j:outputPanel layout="block">
 			<ui:insert/>
 		</a4j:outputPanel>
 	</h:panelGrid>

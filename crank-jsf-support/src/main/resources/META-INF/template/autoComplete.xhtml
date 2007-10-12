@@ -53,7 +53,9 @@
 				styleClass="${styleClass}" 
 				binding="${controller.component}"
 				valueChangeListener="${controller.textChanged}"
-				/>
+				>
+				<ui:insert/>
+			 </h:inputText>
 			 <rich:suggestionbox	id="${fieldId}suggestBox" 
 				for="${fieldId}"
 				ajaxSingle="${suggestionboxAjaxSingle}"

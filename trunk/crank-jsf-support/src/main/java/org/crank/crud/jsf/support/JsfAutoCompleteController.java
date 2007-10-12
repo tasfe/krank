@@ -3,6 +3,7 @@ package org.crank.crud.jsf.support;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 
 import org.crank.core.CrankValidationException;
 import org.crank.crud.controller.AutoCompleteController;
@@ -26,6 +27,9 @@ public class JsfAutoCompleteController extends AutoCompleteController {
 		super();
 	}
 	
+	public void textChanged(ValueChangeEvent vce) {
+		super.textChanged((String)vce.getNewValue());
+	}
     public JsfAutoCompleteController(Class sourceClass, String sourceProperty,  
     		FilteringDataSource dataSource, CrudOperations targetCrudController, 
     		String targetProperty) {

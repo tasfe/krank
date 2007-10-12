@@ -76,7 +76,6 @@
 	<c:choose>
 		<c:when test="${empty action}">
 			<h:outputLink
-			    id="cmdLink${id}" 
 			    styleClass="${styleClass}"
 				onclick="${onclick}"
 				value="${value}"
@@ -87,7 +86,6 @@
 		</c:when>
 		<c:when test="${empty action and ajax}">
 			<a4j:commandLink
-			    id="cmdLink${id}" 
 			    styleClass="${styleClass}"
 				onclick="${onclick}"
 				value="${value}"
@@ -100,7 +98,6 @@
 		<c:otherwise>
 		    <c:if test="${ajax}">
 				<a4j:commandLink
-				    id="cmdLinkAjax${id}" 
 				    styleClass="${styleClass}"
 					action="#{entity[action]}"
 					title="${toolTipText}"
@@ -114,7 +111,6 @@
 			</c:if>
 		    <c:if test="${not ajax}">
 				<h:commandLink
-				    id="cmdLink${id}" 
 				    styleClass="${styleClass}"
 					action="#{entity[action]}"
 					title="${toolTipText}"

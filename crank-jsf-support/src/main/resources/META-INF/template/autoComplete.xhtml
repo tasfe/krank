@@ -24,7 +24,23 @@
 		<c:set var="styleClass" 
 			   value="${formFieldStyleClasses}" />
 	</c:if>
+	
+	
+	<c:if test="${empty controller}">
+		<c:set var="controller" value="${autocomplete[suggest]}"/>
+	</c:if>
 
+	<c:if test="${empty required}">
+		<c:set var="required" value="${false}"/>
+	</c:if>
+
+	<c:if test="${empty disabled}">
+		<c:set var="disabled" value="${false}"/>
+	</c:if>
+	
+	<c:if test="${empty suggestionboxProperty}">
+		<c:set var="suggestionboxProperty" value="name"/>
+	</c:if>
 
 	
  		<h:panelGroup>
@@ -32,21 +48,24 @@
 			<!--  add fvaluechange listener --> 
 			<h:inputText id="${fieldId}"
 				disabled="${disabled}"
-				value="#{autocomplete[suggest].value}" 
+				value="#{controller.value}" 
 				required="${required}"
 				styleClass="${styleClass}" 
-				binding="${autocomplete[suggest].component}"
+				binding="${controller.component}"
+				valueChangeListener="${controller.textChanged}"
 				/>
 			 <rich:suggestionbox	id="${fieldId}suggestBox" 
 				for="${fieldId}"
 				ajaxSingle="${suggestionboxAjaxSingle}"
-				suggestionAction="#{autocomplete[suggest].autocomplete}"
+				suggestionAction="#{controller.autocomplete}"
 				var="result">
 				<h:column>
 					  <h:outputText value="${result[suggestionboxProperty]}" />
 				</h:column>
 			</rich:suggestionbox>
 		</h:panelGroup>
+		
+		
 	</ui:composition>
 
 </html>

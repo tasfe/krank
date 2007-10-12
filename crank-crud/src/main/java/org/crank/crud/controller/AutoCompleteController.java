@@ -1,18 +1,17 @@
 package org.crank.crud.controller;
 
+import static org.crank.crud.criteria.Comparison.eq;
+import static org.crank.crud.criteria.Comparison.startsLike;
+
 import java.io.Serializable;
 import java.util.List;
 
-import org.crank.crud.controller.CrudControllerListener;
-import org.crank.crud.controller.CrudEvent;
 import org.crank.crud.controller.datasource.FilteringDataSource;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.criteria.OrderDirection;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
-import static org.crank.crud.criteria.Comparison.startsLike;
-import static org.crank.crud.criteria.Comparison.eq;
 
 public class AutoCompleteController <T, PK extends Serializable>  implements Selectable {
 
@@ -152,12 +151,12 @@ public class AutoCompleteController <T, PK extends Serializable>  implements Sel
 		System.out.printf("%s %s", Thread.currentThread().getName(), time);
 		if (list.size() == 1) {
 			Object newValue = list.get(0);
-			System.out.printf("FOUND %s %s", Thread.currentThread().getName(), time);			
+			System.out.printf("FOUND %s %s \n", Thread.currentThread().getName(), time);			
 			selectable.fireSelect(newValue);
 			found = true;
 			
 		} else {
-			System.out.printf("NOT FOUND %s %s", Thread.currentThread().getName(), time);			
+			System.out.printf("NOT FOUND %s %s \n", Thread.currentThread().getName(), time);			
 			selectable.fireUnselect();
 			found = false;
 		}
@@ -197,6 +196,8 @@ public class AutoCompleteController <T, PK extends Serializable>  implements Sel
         dataSource.group().clear();
         
         /* Add the criteria */
+        long time = System.currentTimeMillis();
+        System.out.printf("getList group: %s %s %s \n", Thread.currentThread().getName(), time, group);
         if (group.size() > 0) {
         	dataSource.group().add(startsLike(propertyName,pref)).add(this.group);
         } else {

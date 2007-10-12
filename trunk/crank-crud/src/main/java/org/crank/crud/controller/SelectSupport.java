@@ -36,4 +36,22 @@ public class SelectSupport implements Selectable {
         }
     }
     
+    /**
+     * Fire an event to the listeners.
+     *
+     */
+    public void fireUnselect() {
+    	fireUnselect(null);
+    }
+    /**
+     * Fire an event to the listeners, setting the selected value.
+     *
+     */
+    public void fireUnselect(Object value) {
+    	SelectEvent se = new SelectEvent(this, value);
+        for (SelectListener sl : list) {
+            sl.select( se );
+        }
+    }
+
 }

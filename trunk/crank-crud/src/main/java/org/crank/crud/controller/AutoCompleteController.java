@@ -148,11 +148,17 @@ public class AutoCompleteController <T, PK extends Serializable>  implements Sel
 
 	protected void textChanged(String value) {
 		List<?> list = getListExact(value);
+		long time = System.currentTimeMillis();
+		System.out.printf("%s %s", Thread.currentThread().getName(), time);
 		if (list.size() == 1) {
 			Object newValue = list.get(0);
+			System.out.printf("FOUND %s %s", Thread.currentThread().getName(), time);			
 			selectable.fireSelect(newValue);
 			found = true;
+			
 		} else {
+			System.out.printf("NOT FOUND %s %s", Thread.currentThread().getName(), time);			
+			selectable.fireUnselect();
 			found = false;
 		}
 	}

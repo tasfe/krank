@@ -1,7 +1,6 @@
 #summary Building Crank
 
-To get the build to work you have to checkout the whole stack of stuff... 
-
+To build from source you have to checkout the whole stack of stuff... 
 
 {{{
 svn co http://krank.googlecode.com/svn/trunk crank 
@@ -9,31 +8,33 @@ cd crank
 mvn install 
 }}}
 
-And that will build the whole stack, including the crank-crud-webapp-sample. 
+That will build and install all of crank.
 
-
-After its built everything you can then use the jetty plugin to get 
-the app running. 
+You can run the sample with the jetty plugin like this; 
 
 {{{
-cd crank-crud-webapp-sample 
+cd examples/crank-crud-webapp-sample 
 mvn jetty:run 
 }}}
 
 then you can go to; 
 
+http://localhost:8080/crank-crud-webapp
 
-http://localhost:8080 
+and see the example app. 
 
+==Alternative Build Stuff==
 
-and see the app running (you have to click on the url that it pops up 
-at the url). 
+The build by default will use hibernate for the jpa implementation and mysql for the database.
 
+However if you don't want to hassle with setting up and installing mysql you can use hsqldb.
 
-Hope this helps. 
+When you build you specify the db to use with the db property like this;
 
+{{{
+mvn -Ddb=hsqldb -Djpa=hibernate clean install
+}}}
 
-TTFN, 
+and that will build everything in the stack using hsql instead of mysql. You can run the examples with hsqldb as well, just include the -Ddb=hsqldb -Djpa=hibernate options on the same command line you use to start jetty.
 
-
-Bill Dudney (posted by Rick for Bill)
+The plan is to eventually move to hsqldb and/or derby as the default db but we gotta take some baby steps first.

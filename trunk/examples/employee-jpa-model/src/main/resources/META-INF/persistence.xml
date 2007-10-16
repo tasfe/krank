@@ -1,52 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
 			http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
-	version="1.0">
+    version="1.0">
 
-	<persistence-unit name="employee-example"
-		transaction-type="RESOURCE_LOCAL">
-		<provider>${krank.persistence.provider}</provider>
-		<properties>
-			<!-- OpenJPA Settings -->
-			<property name="openjpa.ConnectionURL" value="${krank.jdbc.url}" />
-			<property name="openjpa.ConnectionDriverName"
-				value="${krank.jdbc.driver}" />
-			<property name="openjpa.ConnectionUserName"
-				value="${krank.jdbc.user}" />
-			<property name="openjpa.ConnectionPassword"
-				value="${krank.jdbc.password}" />
-			<property name="openjpa.jdbc.SynchronizeMappings"
-				value="buildSchema(SchemaAction='add')" />
-			<property name="openjpa.Log"
-				value="DefaultLevel=TRACE,SQL=TRACE" />
-
-			<!-- Hibernate settings -->
-			<property name="hibernate.connection.driver_class"
-				value="${krank.jdbc.driver}" />
-			<property name="hibernate.connection.url"
-				value="${krank.jdbc.url}" />
-			<property name="hibernate.connection.username"
-				value="${krank.jdbc.user}" />
-			<property name="hibernate.connection.password"
-				value="${krank.jdbc.password}" />
-			<property name="hibernate.dialect"
-				value="${krank.hibernate.dialect}" />
-
-			<!--  create non-existing tables automatically  -->
-			<property name="hibernate.hbm2ddl.auto" value="update" />
-			<property
-				name="hibernate.connection.hsqldb.default_table_type"
-				value="cached" />
-
-			<!-- Print SQL to stdout -->
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-			<property name="hibernate.use_sql_comments" value="true" />
-			<property name="hibernate.query.substitutions"
-				value="true 1, false 0" />
-		</properties>
-	</persistence-unit>
+    <persistence-unit name="employee-example"
+        transaction-type="RESOURCE_LOCAL">
+        <class>org.crank.crud.model.Address</class>
+        <class>org.crank.crud.model.ContactInfo</class>
+        <class>org.crank.crud.model.Country</class>
+        <class>org.crank.crud.model.Department</class>
+        <class>org.crank.crud.model.Employee</class>
+        <class>org.crank.crud.model.EmployeeRank</class>
+        <class>org.crank.crud.model.EmployeeStatus</class>
+        <class>org.crank.crud.model.Person</class>
+        <class>org.crank.crud.model.Role</class>
+        <class>org.crank.crud.model.Skill</class>
+        <class>org.crank.crud.model.Specialty</class>
+        <class>org.crank.crud.model.StateBO</class>
+        <class>org.crank.crud.model.Task</class>
+    </persistence-unit>
 
 </persistence>

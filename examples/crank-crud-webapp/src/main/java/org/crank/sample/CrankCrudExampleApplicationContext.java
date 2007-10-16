@@ -15,7 +15,6 @@ import org.crank.crud.controller.CrudOperations;
 import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.controller.datasource.DaoFilteringDataSource;
 import org.crank.crud.controller.datasource.EnumDataSource;
-import org.crank.crud.controller.datasource.FilteringDataSource;
 import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.dao.DepartmentDAO;

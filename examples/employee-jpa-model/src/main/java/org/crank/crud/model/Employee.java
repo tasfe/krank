@@ -47,8 +47,9 @@ import org.crank.crud.model.PersistedFile;
 
 } )
 public class Employee extends Person {
+	private static final long serialVersionUID = 1L;
 
-    @Id
+	@Id
     @GeneratedValue( strategy = GenerationType.AUTO )
     private Long id;
     private boolean active;

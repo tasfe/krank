@@ -1,9 +1,32 @@
 package org.crank.crud;
 
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.Id;
+import javax.persistence.LockModeType;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
+
 import org.apache.log4j.Logger;
 import org.crank.crud.controller.CrudUtils;
-import org.crank.crud.criteria.*;
+import org.crank.crud.criteria.Between;
+import org.crank.crud.criteria.Comparison;
+import org.crank.crud.criteria.Criterion;
+import org.crank.crud.criteria.Group;
+import org.crank.crud.criteria.Operator;
 import org.crank.crud.criteria.OrderBy;
+import org.crank.crud.criteria.OrderDirection;
+import org.crank.crud.criteria.VerifiedBetween;
 import org.crank.crud.join.Fetch;
 import org.crank.crud.join.Join;
 import org.springframework.orm.jpa.EntityManagerHolder;
@@ -12,12 +35,6 @@ import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.orm.jpa.support.JpaDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.*;
 
 /**
  * @param <T>
@@ -29,13 +46,12 @@ import java.util.*;
  */
 public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		implements GenericDao<T, PK>, Finder<T> {
-	
-	
+
 	protected Class<T> type = null;
-	
+
 	protected boolean distinct = false;
-	
-	protected Logger logger = Logger.getLogger( GenericDaoJpa.class );
+
+	protected Logger logger = Logger.getLogger(GenericDaoJpa.class);
 
 	public GenericDaoJpa(final Class<T> aType) {
 		this.type = aType;
@@ -43,12 +59,12 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	public GenericDaoJpa() {
 	}
-	
-	public void setIsDistinct(boolean isDistinct){
+
+	public void setIsDistinct(boolean isDistinct) {
 		this.distinct = isDistinct;
 	}
-	
-	public boolean isDistinct(){
+
+	public boolean isDistinct() {
 		return this.distinct;
 	}
 
@@ -59,16 +75,16 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	@Transactional
 	public void delete(final PK id) {
-        getJpaTemplate().execute(
-                new JpaCallback() {
-                    public Object doInJpa(EntityManager entityManager) throws PersistenceException {
-                    	String queryString = "DELETE FROM " + getEntityName() + " WHERE " + getPrimaryKeyName() + " = " + id;
-                        Query query = entityManager.createQuery(queryString);
-                        query.executeUpdate();
-                        return null;
-                    }
-                }
-        );
+		getJpaTemplate().execute(new JpaCallback() {
+			public Object doInJpa(EntityManager entityManager)
+					throws PersistenceException {
+				String queryString = "DELETE FROM " + getEntityName()
+						+ " WHERE " + getPrimaryKeyName() + " = " + id;
+				Query query = entityManager.createQuery(queryString);
+				query.executeUpdate();
+				return null;
+			}
+		});
 	}
 
 	public T read(PK id) {
@@ -79,15 +95,15 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return read(type, id);
 	}
 
-	//@SuppressWarnings("unchecked")
-    public T read(Class<?> clazz, PK id) {
+	@SuppressWarnings("unchecked")
+	public T read(Class<?> clazz, PK id) {
 		return (T) getJpaTemplate().find(clazz, id);
 	}
 
 	@SuppressWarnings("unchecked")
-    public T readExclusive(Class clazz, PK id) {
+	public T readExclusive(Class clazz, PK id) {
 		EntityManager em = getTransactionEntityManager();
-		Object entity =  getJpaTemplate().find(clazz, id);
+		Object entity = getJpaTemplate().find(clazz, id);
 		em.lock(entity, LockModeType.READ);
 		return (T) entity;
 	}
@@ -104,20 +120,19 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		getJpaTemplate().refresh(transientObject);
 	}
 
-    @Transactional
-    public void flushAndClear() {
-        getJpaTemplate().execute(
-                new JpaCallback() {
-                    public Object doInJpa(EntityManager entityManager) throws PersistenceException {
-                        entityManager.flush();
-                        entityManager.clear();
-                        return null;
-                    }
-                }
-        );
-    }
+	@Transactional
+	public void flushAndClear() {
+		getJpaTemplate().execute(new JpaCallback() {
+			public Object doInJpa(EntityManager entityManager)
+					throws PersistenceException {
+				entityManager.flush();
+				entityManager.clear();
+				return null;
+			}
+		});
+	}
 
-    @Transactional
+	@Transactional
 	public T update(final T transientObject) {
 		return getJpaTemplate().merge(transientObject);
 	}
@@ -135,41 +150,38 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return this.find(clazz, orderBy, criteria);
 	}
 
-    public List<T> find(List<Criterion> criteria, List<String> orderBy) {
-        return find(type, criteria, orderBy);
-    }    
+	public List<T> find(List<Criterion> criteria, List<String> orderBy) {
+		return find(type, criteria, orderBy);
+	}
 
 	public List<T> find(Class<T> clazz, List<Criterion> criteria,
 			List<String> orderBy) {
-		return find(clazz, orderBy
-				.toArray(new String[orderBy.size()]), criteria
-				.toArray(new Criterion[criteria.size()]));
+		return find(clazz, orderBy.toArray(new String[orderBy.size()]),
+				criteria.toArray(new Criterion[criteria.size()]));
 	}
 
-    public List<T> find(List<Criterion> criteria, String[] orderBy) {
-        return find(type, criteria, orderBy);
-    }    
+	public List<T> find(List<Criterion> criteria, String[] orderBy) {
+		return find(type, criteria, orderBy);
+	}
 
-    public List<T> find(Class<T> clazz, List<Criterion> criteria,
-            String[] orderBy) {
-        return find(clazz, orderBy, criteria
-                .toArray(new Criterion[criteria.size()]));
-    }
+	public List<T> find(Class<T> clazz, List<Criterion> criteria,
+			String[] orderBy) {
+		return find(clazz, orderBy, criteria.toArray(new Criterion[criteria
+				.size()]));
+	}
 
 	public List<T> find(Map<String, Object> propertyValues) {
 		return find(propertyValues, null);
 	}
 
-	public List<T> find(Class clazz, Map<String, Object> propertyValues) {
+	public List<T> find(Class<T> clazz, Map<String, Object> propertyValues) {
 		return find(clazz, propertyValues, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<T> find(Map<String, Object> propertyValues, String[] orderBy) {
 		return find(orderBy, Group.and(propertyValues));
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<T> find(Class<T> clazz, Map<String, Object> propertyValues,
 			String[] orderBy) {
 		return find(clazz, orderBy, Group.and(propertyValues));
@@ -179,84 +191,74 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return find(type, property, value);
 	}
 
-	public List<T> find(Class clazz, String property, Object value) {
+	public List<T> find(Class<T> clazz, String property, Object value) {
 		HashMap<String, Object> propertyValues = new HashMap<String, Object>();
 		propertyValues.put(property, value);
 		return find(clazz, propertyValues);
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<T> find() {
-
 		return find(type);
 	}
-    
-   @SuppressWarnings("unchecked")
-	public int count() {
-        String entityName = getEntityName(type);
-        List<T> list = (List<T>)getJpaTemplate().find(
-                "SELECT count(*) FROM " + entityName + " instance");
-        Long count = (Long) list.get( 0 );
-        return count.intValue();
-    }
-    
 
 	@SuppressWarnings("unchecked")
-	public List<T> find(Class clazz) {
+	public int count() {
+		String entityName = getEntityName(type);
+		List<T> list = (List<T>) getJpaTemplate().find(
+				"SELECT count(*) FROM " + entityName + " instance");
+		Long count = (Long) list.get(0);
+		return count.intValue();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<T> find(Class<T> clazz) {
 		String entityName = getEntityName(clazz);
 		return (List<T>) getJpaTemplate().find(
 				"SELECT instance FROM " + entityName + " instance");
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<T> find(String[] propertyNames, Object[] values) {
 		return find(propertyNames, values, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<T> find(Class<T> clazz, String[] propertyNames, Object[] values) {
 		return find(clazz, propertyNames, values, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<T> find(Criterion... criteria) {
 		return find((String[]) null, criteria);
 	}
-    
-    public int count( final Criterion ... criteria ) {
-        final Group group = criteria!=null ? Group.and(criteria) : null;
 
-        final StringBuilder sbquery = new StringBuilder("SELECT count(" +
-                (this.distinct ? "DISTINCT " : "") + "o )"
-                + " FROM ");
-        sbquery.append(getEntityName(type));
-        sbquery.append(" ");
-        sbquery.append("o").append(" ").append( constuctWhereClause(group) );
-        
-        try {
-            return (Integer) this.getJpaTemplate().execute(new JpaCallback() {
-                public Object doInJpa(EntityManager em)
-                        throws PersistenceException {
-                    Query query = em.createQuery(sbquery.toString());
-                    if (criteria != null) {
-                        addGroupParams(query, group, null);
-                    }
-                    return ((Long)query.getResultList().get(0)).intValue();
-                }
-            });
-        } catch (Exception ex) {
-            throw new RuntimeException("Unable to run query : " + sbquery, ex);
-        }
-    }
-    
+	public int count(final Criterion... criteria) {
+		final Group group = criteria != null ? Group.and(criteria) : null;
 
-	@SuppressWarnings("unchecked")
+		final StringBuilder sbquery = new StringBuilder("SELECT count("
+				+ (this.distinct ? "DISTINCT " : "") + "o )" + " FROM ");
+		sbquery.append(getEntityName(type));
+		sbquery.append(" ");
+		sbquery.append("o").append(" ").append(constuctWhereClause(group));
+
+		try {
+			return (Integer) this.getJpaTemplate().execute(new JpaCallback() {
+				public Object doInJpa(EntityManager em)
+						throws PersistenceException {
+					Query query = em.createQuery(sbquery.toString());
+					if (criteria != null) {
+						addGroupParams(query, group, null);
+					}
+					return ((Long) query.getResultList().get(0)).intValue();
+				}
+			});
+		} catch (Exception ex) {
+			throw new RuntimeException("Unable to run query : " + sbquery, ex);
+		}
+	}
+
 	public List<T> find(Class<T> clazz, Criterion... criteria) {
 		return find(clazz, (String[]) null, criteria);
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<T> find(Class clazz, String[] propertyNames, Object[] values,
+	public List<T> find(Class<T> clazz, String[] propertyNames, Object[] values,
 			String[] orderBy) {
 		if (propertyNames.length != values.length) {
 			throw new RuntimeException(
@@ -272,16 +274,16 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return find(clazz, propertyValues, orderBy);
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<T> find(String[] propertyNames, Object[] values,
 			String[] orderBy) {
 		return find(type, propertyNames, values, orderBy);
 	}
 
-	public List<T> find(Fetch[] fetches, String[] orderBy, Criterion... criteria) {
+	public List<T> find(Fetch[] fetches, String[] orderBy,
+			Criterion... criteria) {
 		return doFind(this.type, orderBy, criteria, fetches);
 	}
-	
+
 	public List<T> find(Fetch[] fetches, Criterion... criteria) {
 		return doFind(this.type, null, criteria, fetches);
 	}
@@ -289,62 +291,71 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public List<T> find(Fetch... fetches) {
 		return doFind(this.type, null, null, fetches);
 	}
-	
 
-	public List<T> find(Fetch[] fetches, String[] orderBy, int startPosition, int maxResults, Criterion... criteria) {
-		return doFind(this.type, orderBy, criteria, fetches, startPosition, maxResults);
+	public List<T> find(Fetch[] fetches, String[] orderBy, int startPosition,
+			int maxResults, Criterion... criteria) {
+		return doFind(this.type, orderBy, criteria, fetches, startPosition,
+				maxResults);
 	}
 
-	public List<T> find(String[] orderBy, int startPosition, int maxResults, Criterion... criteria) {
-		return doFind(this.type, orderBy, criteria, null, startPosition, maxResults);
+	public List<T> find(String[] orderBy, int startPosition, int maxResults,
+			Criterion... criteria) {
+		return doFind(this.type, orderBy, criteria, null, startPosition,
+				maxResults);
 	}
 
-	public List<T> find(int startPosition, int maxResults, Criterion... criteria) {
-		return doFind(this.type, (OrderBy[]) null, criteria, null, startPosition, maxResults);
+	public List<T> find(int startPosition, int maxResults,
+			Criterion... criteria) {
+		return doFind(this.type, (OrderBy[]) null, criteria, null,
+				startPosition, maxResults);
 	}
 
 	public List<T> find(int startPosition, int maxResults) {
-		return doFind(this.type, (OrderBy[]) null, null, null, startPosition, maxResults);
-	}
-	
-	public List<T> find(Fetch[] fetches, OrderBy[] orderBy, int startPosition, int maxResults, Criterion... criteria) {
-		return doFind(this.type, orderBy, criteria, fetches, startPosition, maxResults);
+		return doFind(this.type, (OrderBy[]) null, null, null, startPosition,
+				maxResults);
 	}
 
-	public List<T> find(OrderBy[] orderBy, int startPosition, int maxResults, Criterion... criteria) {
-		return doFind(this.type, orderBy, criteria, null, startPosition, maxResults);
+	public List<T> find(Fetch[] fetches, OrderBy[] orderBy, int startPosition,
+			int maxResults, Criterion... criteria) {
+		return doFind(this.type, orderBy, criteria, fetches, startPosition,
+				maxResults);
 	}
-	
+
+	public List<T> find(OrderBy[] orderBy, int startPosition, int maxResults,
+			Criterion... criteria) {
+		return doFind(this.type, orderBy, criteria, null, startPosition,
+				maxResults);
+	}
+
 	public List<T> find(OrderBy[] orderBy, Criterion... criteria) {
 		return doFind(this.type, orderBy, criteria, null, -1, -1);
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<T> find(Class<T> clazz, String[] orderBy, Criterion... criteria) {
 		return doFind(clazz, orderBy, criteria, null);
 	}
-	
 
-	private String constuctWhereClause (final Group group) {
+	private String constuctWhereClause(final Group group) {
 		String whereClause = "";
 		if (group == null || group.size() > 0) {
 			whereClause = constructWhereClauseString(group, false);
-		}		
+		}
 		return whereClause;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private List<T> doFind(Class clazz, OrderBy[] orderBy, final Criterion[] criteria, Fetch[] fetches,
+	private List<T> doFind(Class<T> clazz, OrderBy[] orderBy,
+			final Criterion[] criteria, Fetch[] fetches,
 			final int startPosition, final int maxResult) {
 		StringBuilder sbQuery = new StringBuilder(255);
-		final Group group = criteria!=null ? Group.and(criteria) : new Group();
+		final Group group = criteria != null ? Group.and(criteria)
+				: new Group();
 
-		final String sQuery = sbQuery.append(constructSelect(getEntityName(clazz), "o"))
-								     .append(constructJoins(fetches))
-								     .append(constuctWhereClause(group))
-								     .append(constructOrderBy(orderBy)).toString();
+		final String sQuery = sbQuery.append(
+				constructSelect(getEntityName(clazz), "o")).append(
+				constructJoins(fetches)).append(constuctWhereClause(group))
+				.append(constructOrderBy(orderBy)).toString();
 
-		//ystem.out.println(sQuery);
 		try {
 			return (List<T>) this.getJpaTemplate().execute(new JpaCallback() {
 				public Object doInJpa(EntityManager em)
@@ -361,15 +372,16 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 				}
 			});
 		} catch (Exception ex) {
+			logger.debug("failed to run a query", ex);
 			throw new RuntimeException("Unable to run query : " + sQuery, ex);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private List<T> doFind(Class<T> clazz, String[] orderBy, final Criterion[] criteria, Fetch[] fetches,
+	private List<T> doFind(Class<T> clazz, String[] orderBy,
+			final Criterion[] criteria, Fetch[] fetches,
 			final int startPosition, final int maxResult) {
-		
-		if (orderBy!=null) {
+
+		if (orderBy != null) {
 			List<OrderBy> list = new ArrayList<OrderBy>();
 			for (String order : orderBy) {
 				list.add(new OrderBy(order, OrderDirection.ASC));
@@ -378,20 +390,19 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 					criteria, fetches, startPosition, maxResult);
 
 		} else {
-			return doFind(clazz, (OrderBy[]) null,
-					criteria, fetches, startPosition, maxResult);
+			return doFind(clazz, (OrderBy[]) null, criteria, fetches,
+					startPosition, maxResult);
 		}
-		
-		
+
 	}
 
-	@SuppressWarnings("unchecked")
-	private List<T> doFind(Class<T> clazz, String[] orderBy, Criterion[] criteria, Fetch[] fetches) {
+	private List<T> doFind(Class<T> clazz, String[] orderBy,
+			Criterion[] criteria, Fetch[] fetches) {
 		return doFind(clazz, orderBy, criteria, fetches, -1, -1);
 	}
 
 	private String constructJoins(Fetch[] fetches) {
-		if (fetches==null || fetches.length == 0) {
+		if (fetches == null || fetches.length == 0) {
 			return "";
 		}
 		StringBuilder builder = new StringBuilder(255);
@@ -399,104 +410,102 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 			if (fetch.getJoin() == Join.LEFT) {
 				builder.append(" left ");
 			}
-			builder.append(" join fetch ")
-			.append(fetch.isAliasedRelationship() ? "" : "o.").append(fetch.getRelationshipProperty())
-			.append(" ").append(
-				fetch.getAlias().equals("") ? fetch.getDefaultAlias() : fetch.getAlias() 
-			);
+			builder.append(" join fetch ").append(
+					fetch.isAliasedRelationship() ? "" : "o.").append(
+					fetch.getRelationshipProperty()).append(" ").append(
+					fetch.getAlias().equals("") ? fetch.getDefaultAlias()
+							: fetch.getAlias());
 		}
 		return builder.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<T> find(String[] orderBy, Criterion... criteria) {
 		return find(type, orderBy, criteria);
 	}
 
-	private void addGroupParams(Query query, Group group, Set names) {
+	private void addGroupParams(Query query, Group group, Set<String> names) {
 
-        if (names == null) {
-            names = new HashSet();
-        }
-        for (Criterion criterion : group) {
+		if (names == null) {
+			names = new HashSet<String>();
+		}
+		for (Criterion criterion : group) {
 			if (criterion instanceof Group) {
 				addGroupParams(query, (Group) criterion, names);
 			} else {
 				Comparison comparison = (Comparison) criterion;
-                String name = ditchDot(comparison.getName());
+				String name = ditchDot(comparison.getName());
 
-                name = ensureUnique(names, name);
-                
-                if (comparison.getValue() != null) {
-    				final String sOperator = comparison.getOperator().getOperator();
-    				if (!"like".equalsIgnoreCase(sOperator)) {
-    					if (comparison instanceof Between) {
-    						Between between = (Between) comparison;
-                            query.setParameter(
-    								name + "_1",
-    								comparison.getValue());
-    						query.setParameter(
-    								name + "_2", between
-    										.getValue2());
-    					} else if (comparison instanceof VerifiedBetween) {
-                            VerifiedBetween between = (VerifiedBetween) comparison;
-    						query.setParameter(
-    								name + "_1",
-    								comparison.getValue());
-    						query.setParameter(
-    								name + "_2", between
-    										.getValue2());
-                        } else {
-    						query.setParameter(name,
-    								comparison.getValue());
-    					}
-    
-    				} else {
-    					Operator operator = comparison.getOperator();
-    					StringBuilder value = new StringBuilder(50);
-    					if (operator == Operator.LIKE) {
-    						value.append(comparison.getValue());
-    					} else if (operator == Operator.LIKE_CONTAINS) {
-    						value.append("%").append(comparison.getValue()).append(
-    								"%");
-    					} else if (operator == Operator.LIKE_END) {
-    						value.append("%").append(comparison.getValue());
-    					} else if (operator == Operator.LIKE_START) {
-    						value.append(comparison.getValue()).append("%");
-    					}
-    					if (logger.isDebugEnabled()) {
-    						logger.debug("parameters");
-	    					logger.debug("value name = " + comparison.getName());
-	    					logger.debug("value value = " + value);
-    					}
-    					query.setParameter(name, value
-    							.toString());
-    				}
-                }
+				name = ensureUnique(names, name);
+
+				if (comparison.getValue() != null) {
+					final String sOperator = comparison.getOperator()
+							.getOperator();
+					if (!"like".equalsIgnoreCase(sOperator)) {
+						if (comparison instanceof Between) {
+							Between between = (Between) comparison;
+							query.setParameter(name + "_1", comparison
+									.getValue());
+							query
+									.setParameter(name + "_2", between
+											.getValue2());
+						} else if (comparison instanceof VerifiedBetween) {
+							VerifiedBetween between = (VerifiedBetween) comparison;
+							query.setParameter(name + "_1", comparison
+									.getValue());
+							query
+									.setParameter(name + "_2", between
+											.getValue2());
+						} else {
+							query.setParameter(name, comparison.getValue());
+						}
+
+					} else {
+						Operator operator = comparison.getOperator();
+						StringBuilder value = new StringBuilder(50);
+						if (operator == Operator.LIKE) {
+							value.append(comparison.getValue());
+						} else if (operator == Operator.LIKE_CONTAINS) {
+							value.append("%").append(comparison.getValue())
+									.append("%");
+						} else if (operator == Operator.LIKE_END) {
+							value.append("%").append(comparison.getValue());
+						} else if (operator == Operator.LIKE_START) {
+							value.append(comparison.getValue()).append("%");
+						}
+						if (logger.isDebugEnabled()) {
+							logger.debug("parameters");
+							logger
+									.debug("value name = "
+											+ comparison.getName());
+							logger.debug("value value = " + value);
+						}
+						query.setParameter(name, value.toString());
+					}
+				}
 			}
 		}
 	}
 
-    private String ensureUnique(Set<String> names, String name) {
-        if (names.contains(name)) {
-            int index = 0;
-            String tempVar = null;
-            while (true) {
-                tempVar = name + "_" + index;
-                if (!names.contains(tempVar)){
-                     break;
-                }
-                index++;
-            }
-            name = tempVar;
-        }
-        names.add(name);
-        return name;
-    }
+	private String ensureUnique(Set<String> names, String name) {
+		if (names.contains(name)) {
+			int index = 0;
+			String tempVar = null;
+			while (true) {
+				tempVar = name + "_" + index;
+				if (!names.contains(tempVar)) {
+					break;
+				}
+				index++;
+			}
+			name = tempVar;
+		}
+		names.add(name);
+		return name;
+	}
 
-    protected String constructWhereClauseString(Group group, boolean parens) {
+	protected String constructWhereClauseString(Group group, boolean parens) {
 		StringBuilder builder = new StringBuilder(255);
-		if (group==null || group.size() == 0) {
+		if (group == null || group.size() == 0) {
 			return "";
 		} else if (group.size() == 1) {
 			Criterion criterion = group.iterator().next();
@@ -513,21 +522,23 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	protected void constructWhereClauseString(StringBuilder builder,
-			Group group, boolean parens, Set names) {
+			Group group, boolean parens, Set<String> names) {
 
-        if (names == null) {
-            names = new HashSet();
-        }
+		if (names == null) {
+			names = new HashSet<String>();
+		}
 
-        if (parens) {
+		if (parens) {
 			builder.append(" ( ");
 		}
 		if (group.size() == 1) {
 			Criterion criterion = group.iterator().next();
 			if (criterion instanceof Group) {
-				constructWhereClauseString(builder, (Group) criterion, true, names);
+				constructWhereClauseString(builder, (Group) criterion, true,
+						names);
 			} else if (criterion instanceof Comparison) {
-				addComparisonToQueryString((Comparison) criterion, builder, names);
+				addComparisonToQueryString((Comparison) criterion, builder,
+						names);
 			}
 		} else {
 			int size = group.size();
@@ -535,9 +546,11 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 			for (Criterion criterion : group) {
 				index++;
 				if (criterion instanceof Group) {
-					constructWhereClauseString(builder, (Group) criterion, true, names);
+					constructWhereClauseString(builder, (Group) criterion,
+							true, names);
 				} else if (criterion instanceof Comparison) {
-					addComparisonToQueryString((Comparison) criterion, builder, names);
+					addComparisonToQueryString((Comparison) criterion, builder,
+							names);
 				}
 				if (index != size) {
 					builder.append(" ");
@@ -552,50 +565,51 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	private void addComparisonToQueryString(Comparison comparison,
-			StringBuilder builder, Set names) {
+			StringBuilder builder, Set<String> names) {
 
-		String var = ":" +ditchDot(comparison.getName());
-        var = ensureUnique(names, var);
+		String var = ":" + ditchDot(comparison.getName());
+		var = ensureUnique(names, var);
 
-        if( comparison.getValue() != null ) {
-            final String sOperator = comparison.getOperator().getOperator();
-    
-            if(!comparison.isAlias()){
-            	builder.append(" o.");
-            }else{
-            	builder.append(" ");
-            }
-            builder.append(comparison.getName());
-            
-            builder.append(" ");
-            builder.append(sOperator);
-            builder.append(" ");
-    
-            if (comparison instanceof Between || comparison instanceof VerifiedBetween) {
-                builder.append(var).append("_1");
-                builder.append(" ");
-                builder.append("and ").append(var).append("_2");
-            } else if (comparison.getOperator() == Operator.IN) {
-                builder.append(" (");
-                builder.append(var);
-                builder.append(") ");
-            } else {
-                builder.append(var);
-            }
-            builder.append(" ");                        
-        } else {
-        	if(!comparison.isAlias()){
-        		builder.append(" o.");	
-        	}else{
-        		builder.append(" ");
-        	}
-            builder.append( comparison.getName() );
-            if (comparison.getOperator() == Operator.EQ) {
-                builder.append( " is null " );
-            } else if (comparison.getOperator() == Operator.NE) {
-                builder.append( " is not null " );
-            }
-        }
+		if (comparison.getValue() != null) {
+			final String sOperator = comparison.getOperator().getOperator();
+
+			if (!comparison.isAlias()) {
+				builder.append(" o.");
+			} else {
+				builder.append(" ");
+			}
+			builder.append(comparison.getName());
+
+			builder.append(" ");
+			builder.append(sOperator);
+			builder.append(" ");
+
+			if (comparison instanceof Between
+					|| comparison instanceof VerifiedBetween) {
+				builder.append(var).append("_1");
+				builder.append(" ");
+				builder.append("and ").append(var).append("_2");
+			} else if (comparison.getOperator() == Operator.IN) {
+				builder.append(" (");
+				builder.append(var);
+				builder.append(") ");
+			} else {
+				builder.append(var);
+			}
+			builder.append(" ");
+		} else {
+			if (!comparison.isAlias()) {
+				builder.append(" o.");
+			} else {
+				builder.append(" ");
+			}
+			builder.append(comparison.getName());
+			if (comparison.getOperator() == Operator.EQ) {
+				builder.append(" is null ");
+			} else if (comparison.getOperator() == Operator.NE) {
+				builder.append(" is not null ");
+			}
+		}
 	}
 
 	protected String getEntityName(Class<T> aType) {
@@ -623,34 +637,36 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return getEntityName(this.type);
 	}
 
+	@SuppressWarnings("unchecked")
 	private String searchFieldsForPK(Class<T> aType) {
 		String pkName = null;
 		Field[] fields = aType.getDeclaredFields();
-		for(Field field : fields) {
+		for (Field field : fields) {
 			Id id = field.getAnnotation(Id.class);
-			if(id != null) {
+			if (id != null) {
 				pkName = field.getName();
 				break;
 			}
 		}
-		if(pkName == null && aType.getSuperclass() != null) {
-            pkName = searchFieldsForPK((Class<T>)aType.getSuperclass());
+		if (pkName == null && aType.getSuperclass() != null) {
+			pkName = searchFieldsForPK((Class<T>)aType.getSuperclass());
 		}
 		return pkName;
 	}
-	
+
 	private String searchMethodsForPK(Class<T> aType) {
 		String pkName = null;
 		Method[] methods = aType.getDeclaredMethods();
-		for(Method method : methods) {
+		for (Method method : methods) {
 			Id id = method.getAnnotation(Id.class);
-			if(id != null) {
+			if (id != null) {
 				pkName = method.getName().substring(4);
-				pkName = method.getName().substring(3,4).toLowerCase() + pkName;
+				pkName = method.getName().substring(3, 4).toLowerCase()
+						+ pkName;
 				break;
 			}
 		}
-		if(pkName == null && aType.getSuperclass() != null) {
+		if (pkName == null && aType.getSuperclass() != null) {
 			pkName = searchMethodsForPK(aType);
 		}
 		return pkName;
@@ -658,7 +674,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	protected String getPrimaryKeyName(Class<T> aType) {
 		String pkName = searchFieldsForPK(aType);
-		if(null == pkName) {
+		if (null == pkName) {
 			pkName = searchMethodsForPK(aType);
 		}
 		return pkName;
@@ -687,14 +703,13 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		}
 		return query.toString();
 	}
-	
-	private String constructSelect(String entityName, String instanceName){
-		StringBuilder query = new StringBuilder("SELECT " +
-				(this.distinct ? "DISTINCT " : "") + instanceName
-				+ " FROM ");
+
+	private String constructSelect(String entityName, String instanceName) {
+		StringBuilder query = new StringBuilder("SELECT "
+				+ (this.distinct ? "DISTINCT " : "") + instanceName + " FROM ");
 		query.append(entityName);
 		query.append(" ");
-        query.append(instanceName).append(" ");
+		query.append(instanceName).append(" ");
 		return query.toString();
 	}
 
@@ -732,8 +747,9 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	@SuppressWarnings("unchecked")
-    private T doReadPopulated(final PK id) {
-		final String queryName = CrudUtils.getClassEntityName(type) + ".readPopulated";
+	private T doReadPopulated(final PK id) {
+		final String queryName = CrudUtils.getClassEntityName(type)
+				+ ".readPopulated";
 		return (T) getJpaTemplate().execute(new JpaCallback() {
 			public Object doInJpa(EntityManager em) throws PersistenceException {
 				Query query = em.createNamedQuery(queryName);
@@ -751,14 +767,14 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return type.getSimpleName() + "." + finderMethod.getName();
 	}
 
-    public void delete( T entity ) {
-        getJpaTemplate().remove(entity);        
-    }
-    
-    private EntityManager getTransactionEntityManager() {
-    	EntityManagerHolder emHolder = (EntityManagerHolder)
-    	TransactionSynchronizationManager.getResource(getJpaTemplate().getEntityManagerFactory());
-    	return emHolder.getEntityManager();
-    }
+	public void delete(T entity) {
+		getJpaTemplate().remove(entity);
+	}
+
+	private EntityManager getTransactionEntityManager() {
+		EntityManagerHolder emHolder = (EntityManagerHolder) TransactionSynchronizationManager
+				.getResource(getJpaTemplate().getEntityManagerFactory());
+		return emHolder.getEntityManager();
+	}
 
 }

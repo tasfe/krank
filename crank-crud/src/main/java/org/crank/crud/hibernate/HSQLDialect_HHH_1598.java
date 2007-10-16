@@ -1,4 +1,4 @@
-package org.crank.crud.test;
+package org.crank.crud.hibernate;
 
 import java.sql.Types;
 

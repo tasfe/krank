@@ -34,7 +34,8 @@ public class AutoCompleteController <T, PK extends Serializable>  implements Sel
 	}
 
 	public void setValue(String value) {
-		System.out.printf("############################ setValue: value = %s %s %s %s\n", value, fieldName, propertyName, group);
+		System.out.printf("setValue(): fieldName: %s, value: %s, group: %s\n", 
+				fieldName, value, group);
 		this.value = value;
 	}
 
@@ -193,7 +194,7 @@ public class AutoCompleteController <T, PK extends Serializable>  implements Sel
 	 */
 	private List getList(String pref) {
 		OrderBy orderBy = new OrderBy(propertyName, OrderDirection.ASC);
-		
+		System.out.printf("In getList(String pref) pref: %s, Group: %s\n",pref,group.toString() );
         /* Clear the comparison group b/c we are about to recreate it */
         dataSource.group().clear();
         

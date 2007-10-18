@@ -19,7 +19,8 @@ import org.crank.crud.join.Fetch;
 public interface GenericDao<T, PK extends Serializable> {
 
 	/**
-	 * This method will get the entity into the db if its a new entity or an existing detached entity.
+	 * This method will get the entity into the db if its a new entity or an
+	 * existing detached entity.
 	 * 
 	 * @param entity
 	 */
@@ -82,7 +83,14 @@ public interface GenericDao<T, PK extends Serializable> {
 	void flushAndClear();
 
 	/**
-	 * Remove an object from persistent storage in the database.
+	 * Remove an object from persistent storage in the database. Since this uses
+	 * the PK to do the delete there is a chance that the entity manager could
+	 * be left in an inconsistent state, if you delete the object with id 1 but
+	 * that object is still in the entity managers cache.
+	 * 
+	 * You can do two things, put all your PK deletes together and then call
+	 * flushAndClear when done, or you can just call the delete method with the
+	 * entity wich will not suffer from this problem.
 	 * 
 	 * @param id
 	 *            The Primary Key of the object to delete.

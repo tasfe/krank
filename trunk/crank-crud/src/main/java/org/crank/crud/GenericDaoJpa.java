@@ -797,6 +797,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return type.getSimpleName() + "." + finderMethod.getName();
 	}
 
+	@Transactional
 	public void delete(T entity) {
 		getJpaTemplate().remove(entity);
 	}

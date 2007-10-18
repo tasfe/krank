@@ -45,21 +45,21 @@ public class DataInitServlet implements Servlet {
             employee.setFirstName( "FOO" + index );
             employee.setLastName( "BAR" + index );
             employee.setActive(true);
-            employee.setAddress(getNewAddress(context));
+            employee.setAddress(getNewAddress());
             employee.setAge(40);
-            employee.setDepartment(getDepartment(context, index % 3));
+            employee.setDepartment(getDepartment(index % 3));
             employee.setDescription("Big Dood");
             employee.setDob(new Date());
             employee.setEmail("bob@bobby.com");
             employee.setNumberOfPromotions(0);
             employee.setPhone("333-000-9876");
             employee.setRank(1);
-            empDao.create( employee );
+            empDao.persist( employee );
         }
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Address getNewAddress(ApplicationContext context) {
+	public Address getNewAddress() {
 		Address address = new Address();
 		address.setLine_1("One Two St");
 		address.setZipCode("90210");
@@ -67,26 +67,20 @@ public class DataInitServlet implements Servlet {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Department getDepartment(ApplicationContext context, int index) {
+	public Department getDepartment(int index) {
 		Department dep = null;
 		if(departments.size() > 0) {
 			dep = departments.get(index);
 		} else {
-			// repositoryies is built from the managedObjects in CrankCrudExampleApplicationContext.managedObjects()
-			Map<String, GenericDao> daos = (Map<String,GenericDao>)context.getBean("repositories");
-			GenericDao depDao = daos.get("Department");
 			dep = new Department();
 			dep.setName("Gizmot");
-			depDao.create(dep);
+			departments.add(dep);
 			dep = new Department();
 			dep.setName("Bistor");
-			depDao.create(dep);
+			departments.add(dep);
 			dep = new Department();
 			dep.setName("Zible");
-			depDao.create(dep);
-			departments.add((Department)depDao.find("name", "Gizmot").get(0));
-			departments.add((Department)depDao.find("name", "Bistor").get(0));
-			departments.add((Department)depDao.find("name", "Zible").get(0));
+			departments.add(dep);
 			dep = departments.get(index);
 		}
 		return dep;

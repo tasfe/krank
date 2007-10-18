@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.LockModeType;
@@ -60,17 +61,35 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public GenericDaoJpa() {
 	}
 
+	@Transactional
+	public T store(T entity) {
+		T persistedEntity = entity;
+		try {
+			// TODO: the error reporting could be deferred (the entity has an ID that is in the db but not in the enity manager)
+			getJpaTemplate().persist(entity);
+		} catch(EntityExistsException e) {
+			// if the entity exists then we call merge
+			persistedEntity = (T)getJpaTemplate().merge(entity);
+		}
+		return persistedEntity;
+	}
+
+	@Transactional
+	public void persist(T entity) {
+		getJpaTemplate().persist(entity);
+	}
+
+	@Transactional
+	public T merge(T entity) {
+		return getJpaTemplate().merge(entity);
+	}
+
 	public void setIsDistinct(boolean isDistinct) {
 		this.distinct = isDistinct;
 	}
 
 	public boolean isDistinct() {
 		return this.distinct;
-	}
-
-	@Transactional
-	public void create(final T newInstance) {
-		getJpaTemplate().merge(newInstance);
 	}
 
 	@Transactional
@@ -132,6 +151,17 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		});
 	}
 
+	/**
+	 * @deprecated use store
+	 */
+	@Transactional
+	public void create(final T newInstance) {
+		getJpaTemplate().merge(newInstance);
+	}
+
+	/**
+	 * @deprecated use merge
+	 */
 	@Transactional
 	public T update(final T transientObject) {
 		return getJpaTemplate().merge(transientObject);

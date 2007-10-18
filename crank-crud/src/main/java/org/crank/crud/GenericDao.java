@@ -92,6 +92,7 @@ public interface GenericDao<T, PK extends Serializable> {
 	 * flushAndClear when done, or you can just call the delete method with the
 	 * entity wich will not suffer from this problem.
 	 * 
+	 * @see delete(T entity)
 	 * @param id
 	 *            The Primary Key of the object to delete.
 	 */

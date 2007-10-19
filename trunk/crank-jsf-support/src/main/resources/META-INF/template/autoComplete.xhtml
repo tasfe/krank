@@ -52,10 +52,11 @@
 			<h:inputText id="${fieldId}" disabled="${disabled}"
 				value="#{controller.value}" required="${required}"
 				styleClass="${styleClass}" binding="${controller.component}"
-				valueChangeListener="${controller.textChanged}">
+				valueChangeListener="${controller.textChanged}"
+				rendered="${rendered}">
 				<ui:insert />
 			</h:inputText>
-
+		
 		<rich:suggestionbox id="${fieldId}suggestBox" for="${fieldId}"
 			ajaxSingle="${suggestionboxAjaxSingle}"
 			suggestionAction="#{controller.autocomplete}" var="result"

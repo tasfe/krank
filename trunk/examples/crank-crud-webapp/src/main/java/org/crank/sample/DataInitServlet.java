@@ -35,29 +35,33 @@ public class DataInitServlet implements Servlet {
 
 	@SuppressWarnings("unchecked")
 	public void init(ServletConfig config) throws ServletException {
-		ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext());
-		// repositoryies is built from the managedObjects in CrankCrudExampleApplicationContext.managedObjects()
-		Map<String, GenericDao> daos = (Map<String,GenericDao>)context.getBean("repositories");
+		ApplicationContext context = WebApplicationContextUtils
+				.getWebApplicationContext(config.getServletContext());
+		// repositoryies is built from the managedObjects in
+		// CrankCrudExampleApplicationContext.managedObjects()
+		Map<String, GenericDao> daos = (Map<String, GenericDao>) context
+				.getBean("repositories");
+		persistDepartments(daos.get("Department"));
 		GenericDao empDao = daos.get("Employee");
-        Employee employee = null;
-        for (int index = 0; index < 100; index ++) {
-            employee = new Employee();
-            employee.setFirstName( "FOO" + index );
-            employee.setLastName( "BAR" + index );
-            employee.setActive(true);
-            employee.setAddress(getNewAddress());
-            employee.setAge(40);
-            employee.setDepartment(getDepartment(index % 3));
-            employee.setDescription("Big Dood");
-            employee.setDob(new Date());
-            employee.setEmail("bob@bobby.com");
-            employee.setNumberOfPromotions(0);
-            employee.setPhone("333-000-9876");
-            employee.setRank(1);
-            empDao.persist( employee );
-        }
+		Employee employee = null;
+		for (int index = 0; index < 100; index++) {
+			employee = new Employee();
+			employee.setFirstName("FOO" + index);
+			employee.setLastName("BAR" + index);
+			employee.setActive(true);
+			employee.setAddress(getNewAddress());
+			employee.setAge(40);
+			employee.setDescription("Big Dood");
+			employee.setDob(new Date());
+			employee.setEmail("bob@bobby.com");
+			employee.setNumberOfPromotions(0);
+			employee.setPhone("333-000-9876");
+			employee.setRank(1);
+			empDao.persist(employee);
+			addEmployee(daos.get("Department"), departments.get(index % 3), employee);
+		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Address getNewAddress() {
 		Address address = new Address();
@@ -66,24 +70,24 @@ public class DataInitServlet implements Servlet {
 		return address;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public Department getDepartment(int index) {
-		Department dep = null;
-		if(departments.size() > 0) {
-			dep = departments.get(index);
-		} else {
-			dep = new Department();
-			dep.setName("Gizmot");
-			departments.add(dep);
-			dep = new Department();
-			dep.setName("Bistor");
-			departments.add(dep);
-			dep = new Department();
-			dep.setName("Zible");
-			departments.add(dep);
-			dep = departments.get(index);
-		}
-		return dep;
+	public void persistDepartments(GenericDao<Department, Long> deptDao) {
+		Department dep = new Department();
+		dep.setName("Gizmot");
+		deptDao.persist(dep);
+		departments.add(dep);
+		dep = new Department();
+		dep.setName("Bistor");
+		deptDao.persist(dep);
+		departments.add(dep);
+		dep = new Department();
+		dep.setName("Zible");
+		deptDao.persist(dep);
+		departments.add(dep);
+	}
+	
+	public void addEmployee(GenericDao<Department, Long> deptDao, Department dep, Employee emp) {
+		dep.addEmployee(emp);
+		deptDao.merge(dep);
 	}
 
 	public void service(ServletRequest req, ServletResponse res)

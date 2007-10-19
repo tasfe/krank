@@ -58,7 +58,9 @@
 
 		<rich:suggestionbox id="${fieldId}suggestBox" for="${fieldId}"
 			ajaxSingle="${suggestionboxAjaxSingle}"
-			suggestionAction="#{controller.autocomplete}" var="result">
+			suggestionAction="#{controller.autocomplete}" var="result"
+			reRender="${reRender}"
+			>
 			<h:column>
 				<h:outputText value="${result[suggestionboxProperty]}" />
 			</h:column>

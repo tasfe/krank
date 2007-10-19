@@ -16,9 +16,11 @@ import javax.persistence.OneToMany;
 @Entity
 @NamedQueries( {
 		@NamedQuery(name = "Department.readPopulated", query = "SELECT DISTINCT department FROM Department department "
-				+ " LEFT JOIN department.employees AS employee"
-				+ " LEFT JOIN employee.tasks "
-				+ " LEFT JOIN employee.contacts " + " WHERE department.id=?1"),
+				+ " LEFT JOIN FETCH department.employees AS employee"
+				+ " LEFT JOIN FETCH employee.tasks "
+				+ " LEFT JOIN FETCH employee.contacts " 
+				+ " LEFT JOIN FETCH employee.roles "
+				+ " WHERE department.id=?1"),
 		@NamedQuery(name = "Department.findDepartmentNamed", query = "SELECT o FROM Department o  WHERE  o.name = ?1") })
 public class Department implements Serializable {
 	private static final long serialVersionUID = 1L;

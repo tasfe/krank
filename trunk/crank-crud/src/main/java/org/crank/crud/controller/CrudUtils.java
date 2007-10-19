@@ -144,12 +144,12 @@ public class CrudUtils {
         
     }
 
-    private static Map getAnnotationDataAsMap( Class clazz, String propertyName ) {
+    private static Map<String, AnnotationData> getAnnotationDataAsMap( Class clazz, String propertyName ) {
         List<AnnotationData> annotationDataForProperty = AnnotationUtils.getAnnotationDataForProperty( clazz, propertyName, false, allowedPackages );
         if (annotationDataForProperty.size()==0) {
             annotationDataForProperty = AnnotationUtils.getAnnotationDataForField( clazz, propertyName, allowedPackages );
         }
-        Map map = MapUtils.convertListToMap( "name", annotationDataForProperty);
+        Map<String, AnnotationData> map = MapUtils.convertListToMap( "name", annotationDataForProperty);
         return map;
     }
 
@@ -158,6 +158,20 @@ public class CrudUtils {
         return map.get( "manyToOne" ) != null; 
     }
     
+    public static boolean isManyToOneOptional(Class clazz, String propertyName) {
+        Map<String, AnnotationData> map = getAnnotationDataAsMap( clazz, propertyName );
+        AnnotationData data = map.get( "manyToOne" );
+        if (data != null) {
+        	Boolean optional = (Boolean) data.getValues().get("optional");
+        	if (optional == null) {
+        		return false;
+        	} else {
+        		return optional;
+        	}
+        }
+        return false;
+    }
+
     public static boolean isOneToOne(Class clazz, String propertyName) {
         Map map = getAnnotationDataAsMap( clazz, propertyName );
         return map.get( "oneToOne" ) != null; 

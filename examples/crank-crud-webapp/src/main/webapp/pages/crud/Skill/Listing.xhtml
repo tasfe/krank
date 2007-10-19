@@ -14,12 +14,14 @@
 		<h:outputText value="Specialties" styleClass="pageTitle"/>
 
 			<a4j:form id="skillListForm">
+			
+				<a4j:outputPanel>
 				<crank:form
 					crud="${cruds.skill.controller}" 
 					parentForm="skillForm"
 					propertyNames="name"
 					ajax="${true}"/>
-			
+				</a4j:outputPanel>
 				<crank:listing 
 					jsfCrudAdapter="${cruds.skill}" 
 					propertyNames="name"

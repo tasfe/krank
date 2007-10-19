@@ -14,6 +14,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+
 @Entity(name="Employee")
 @NamedQueries( {
 	@NamedQuery(name="Employee.findEmployeesByDepartment",
@@ -74,6 +77,9 @@ public class Employee {
 	private Address address;
 	
 	private Integer rank;
+	
+	@Column (name="department_id", insertable=false, updatable=false)
+	private Long departmentId;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	private Department department;
@@ -165,4 +171,13 @@ public class Employee {
     public void setAddress( Address address ) {
         this.address = address;
     }
+    
+	public Long getDepartmentId() {
+		return departmentId;
+	}
+
+	public void setDepartmentId(Long departmentId) {
+		this.departmentId = departmentId;
+	}
+    
 }

@@ -52,6 +52,13 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 	}
  
 	@Test
+	public void testLazyEmployees() {
+		Employee emp = employeeDao.read(1L);
+		System.out.println(emp.getDepartmentId());
+		System.out.println(emp.getDepartment().getId());
+	}
+
+	@Test
 	public void testLazy() {
 		List<Department> departments = departmentDao.find();
 		assert departments.size() > 0;

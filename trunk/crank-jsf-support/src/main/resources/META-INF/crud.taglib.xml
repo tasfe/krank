@@ -117,6 +117,21 @@
 		</function-signature>
 	</function>
 	<function>
+		<function-name>isManyToOneRequired</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isManyToOne(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isManyToOneOptional</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isManyToOne(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+
+	<function>
 		<function-name>isOneToOne</function-name>
 		<function-class>org.crank.crud.controller.CrudUtils</function-class>
 		<function-signature>

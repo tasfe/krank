@@ -31,6 +31,10 @@ public class SelectItemUtils {
     private String labelPropertyName = "name";
 
     /**
+     */
+    private String optionalLabel = "select one";
+
+    /**
      * Class of id. Defaults to java.lang.Long.
      */
     private Class classTypeOfId = Long.class;
@@ -40,9 +44,16 @@ public class SelectItemUtils {
      */
     private boolean primitive = false;
 
-    @SuppressWarnings("unchecked")
     public List createSelectItems( final List list, String idProperty, String labelProperty ) {
+    	return createSelectItems(list, idProperty, labelProperty, false);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List createSelectItems( final List list, String idProperty, String labelProperty, boolean optional ) {
         List selectItems = new ArrayList(list.size()); // new list of selectItems
+        if (optional) {
+        	selectItems.add(new SelectItem (-1L, this.optionalLabel));
+        }
         for (Iterator iter = list.iterator(); iter.hasNext();) {
         	Object item = (Object) iter.next();
             String label = "?";
@@ -73,9 +84,14 @@ public class SelectItemUtils {
      * @return list of SelectItems
      */
     public List createSelectItems( final List list ) {
-        return createSelectItems( list, this.getIdPropertyName(), this.getLabelPropertyName() );
+        return createSelectItems( list, this.getIdPropertyName(), this.getLabelPropertyName(), false );
     }
 
+	public List<SelectItem> createSelectItems(List list, boolean optional) {
+		return createSelectItems( list, this.getIdPropertyName(), this.getLabelPropertyName(), optional );
+	}
+    
+    
     /**
      * What it the type of the id class, defaults to java.lang.Long.
      * 
@@ -160,6 +176,7 @@ public class SelectItemUtils {
     public void setPropertiesUtil( PropertiesUtil propertiesUtil ) {
         this.propertiesUtil = propertiesUtil;
     }
+
     
 
 }

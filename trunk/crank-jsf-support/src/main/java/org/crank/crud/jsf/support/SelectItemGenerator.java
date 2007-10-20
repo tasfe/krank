@@ -29,5 +29,9 @@ public class SelectItemGenerator {
         return selectItemUtils.createSelectItems( dataSource.list() );
     }
     
+    @SuppressWarnings("unchecked")
+    public List<SelectItem> getListOptional() {
+        return selectItemUtils.createSelectItems( dataSource.list(), true );
+    }
 
 }

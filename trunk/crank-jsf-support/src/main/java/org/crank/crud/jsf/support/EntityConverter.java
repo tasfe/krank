@@ -11,9 +11,11 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
 
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
 
 
 /**
@@ -61,6 +63,10 @@ public class EntityConverter implements Converter, Serializable {
      */
     @SuppressWarnings("unchecked")
     public Object getAsObject(final FacesContext facesContext, final UIComponent component, final String value) {
+    	if (value.equals("-1")) {
+    		throw new ConverterException(new FacesMessage("Required","Required"));
+    	}
+    	
         Serializable entityId = CrudUtils.getIdObject(value, this.idType);
         if (dao == null) {
             ObjectRegistry objectRegistry = CrankContext.getObjectRegistry();
@@ -92,7 +98,11 @@ public class EntityConverter implements Converter, Serializable {
             return value.toString();
         }
 
-        return bwValue.getPropertyValue(idPropertyName).toString();
+        try {
+        	return bwValue.getPropertyValue(idPropertyName).toString();
+        } catch (Exception ex) {
+        	return "-1";
+        }
     }
 
     /**

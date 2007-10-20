@@ -21,8 +21,16 @@ public class JsfSelectOneListingController<T, PK extends Serializable> {
     private Class entityClass;
 	private String idProperty="id";
 	private String labelProperty="name";
+	private String sourceProperty = null;
     
 	
+	public JsfSelectOneListingController (Class entityClass, String propertyName, FilterablePageable pageable, CrudOperations crudController, String sourceProperty) {
+    	this.paginator = pageable;
+    	this.controller = (CrudControllerBase<T, PK>) crudController;
+    	this.propertyName = propertyName;
+    	this.entityClass = entityClass;
+    	this.sourceProperty = sourceProperty;
+    }
 
 
 	public JsfSelectOneListingController (Class entityClass, String propertyName, FilterablePageable pageable, CrudOperations crudController) {
@@ -57,7 +65,13 @@ public class JsfSelectOneListingController<T, PK extends Serializable> {
 	public void select () {
     	BeanWrapper wrapper = new BeanWrapperImpl(this.controller.getEntity());
 		Object value = this.model.getRowData();
-		wrapper.setPropertyValue(this.propertyName, value);
+		
+		if ((sourceProperty != null) && !"".equals(sourceProperty)) {
+	    	BeanWrapper valueWrapper = new BeanWrapperImpl(value);
+	    	wrapper.setPropertyValue(this.propertyName, valueWrapper.getPropertyValue(this.sourceProperty));
+		} else {
+			wrapper.setPropertyValue(this.propertyName, value);
+		}
 		this.show = false;
 	}
 	

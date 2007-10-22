@@ -10,7 +10,7 @@ public class DomainValidatorTest extends TestCase {
     private DomainValidator validator;
 
     public void setUp() {
-        validator = new DomainValidator(TestValidationContext.getCurrentInstance());
+        validator = new DomainValidator();
     }
 
 	public void testDomainValidator() {

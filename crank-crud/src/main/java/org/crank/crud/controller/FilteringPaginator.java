@@ -168,8 +168,6 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
     	public PropertyScanner () {
     		pscount ++;
     		this.number = pscount;
-    		
-    		System.out.println("NEW PropertyScanner " + pscount);
     	}
 	    private Map<String, Integer> visitorSet = new HashMap<String, Integer>();
 	    	

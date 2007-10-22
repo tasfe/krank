@@ -46,7 +46,7 @@ public class TypeUtils {
 
     public static boolean isInCollection( Object value, Object collection ) {
 
-        if ((value != null) && (collection != null)) {
+        if ((value != null) && (!"".equals(value)) && (collection != null) && (!"".equals(collection))) {
         	if ((value instanceof String) && (collection instanceof String)) {
        			String[] items = ((String)collection).split(",");
        			String val = (String)value;

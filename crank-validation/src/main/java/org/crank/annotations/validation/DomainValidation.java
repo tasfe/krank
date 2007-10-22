@@ -12,4 +12,5 @@ public @interface DomainValidation {
 	String summaryMessage() default "";
 	String parentProperty() default "";
 	String method() default "";
+	boolean global() default false;
 }

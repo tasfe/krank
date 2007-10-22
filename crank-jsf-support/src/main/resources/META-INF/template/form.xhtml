@@ -15,6 +15,14 @@
 
   <ui:composition>
 
+  	<c:if test="${empty reportingMode}">
+  		<c:set var="reportingMode" value="false"/>
+  	</c:if>
+
+  	<c:if test="${empty immediate}">
+  		<c:set var="immediate" value="false"/>
+  	</c:if>
+
   	<c:if test="${empty ajax}">
   		<c:set var="ajax" value="false"/>
   	</c:if>
@@ -47,8 +55,6 @@
 	</c:if>
 	
 	<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
-	
-	
 	
 		<h:panelGrid columns="1" rendered="${rendered and ((crud.state=='ADD') or (crud.state == 'EDIT'))}">
 			<!-- Main for fields -->
@@ -153,11 +159,13 @@
 				<h:commandButton
 					rendered="${(crud.state=='ADD') or (crud.state == null) or (crud.state=='UNKNOWN')}"
 					styleClass="${formButtonClass}" 
+					immediate="${immediate}"
 					value="Create" 
 					action="${crud.create}"/>			
 				<h:commandButton 
 					rendered="${(crud.state=='EDIT')}"
 					styleClass="${formButtonClass}" 
+					immediate="${immediate}"
 					value="Update" 
 					action="${crud.update}"/>			
 				<h:commandButton 

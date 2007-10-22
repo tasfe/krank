@@ -48,8 +48,7 @@
 
 		<c:set var="entityName" value="${detailController.relationshipManager.childCollectionProperty}" />
 		<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
-
-
+			
 		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
 		
 		<h:panelGroup binding="${detailController.subForm}">
@@ -107,16 +106,18 @@
 								</rich:columnGroup>
 							</f:facet>				
 							<c:forEach items="${pNames}" var="property">
+
 								<c:set var="renderAsText" value="${true}"/>
+								<c:set var="renderAsBoolean" value="${false}"/>
 								<c:set var="outputText" value=""/>
 								<h:column>
 									<c:choose>
 										<c:when test="${crud:contains(property, '.')}">
 											<c:choose>
 												<c:when test="${crud:isBoolean(detailController.entityClass,property)}">
-												
-													<h:graphicImage value="${booleanImg}" rendered="${(row[property] == 'true')}" styleClass="imageCenter"/>
+													<h:graphicImage value="${booleanImg}" rendered="${(row[property] == 'true') and not crud:isInCollection(property,editableProperties)}" styleClass="imageCenter"/>
 													<c:set var="renderAsText" value="${false}"/>
+													<c:set var="renderAsBoolean" value="${true}"/>
 												</c:when>
 												<c:when test="${crud:isEnum(detailController.entityClass,property)}">
 													<c:set var="outputText" value="#{crud:createEnumLabel(row[property])}"/>
@@ -129,29 +130,42 @@
 										<c:otherwise>
 											<c:choose>
 												<c:when test="${crud:isBoolean(detailController.entityClass,property)}">
-										<h:graphicImage value="${booleanImg}" rendered="${(row[property] == 'true')}" styleClass="imageCenter"/>
-										<c:set var="renderAsText" value="${false}"/>
+													<h:graphicImage value="${booleanImg}" rendered="${(row[property] == 'true') and not crud:isInCollection(property,editableProperties)}" styleClass="imageCenter"/>
+													<c:set var="renderAsText" value="${false}"/>
+													<c:set var="renderAsBoolean" value="${true}"/>
 												</c:when>
 												<c:when test="${crud:isEnum(detailController.entityClass,property)}">
-										<c:set var="outputText" value="#{crud:createEnumLabel(row[property])}"/>
+													<c:set var="outputText" value="#{crud:createEnumLabel(row[property])}"/>
 												</c:when>
 												<c:otherwise>
-										<c:set var="outputText" value="#{row[property]}"/>
+													<c:set var="outputText" value="#{row[property]}"/>
 												</c:otherwise>
 											</c:choose>
 										</c:otherwise>
 									</c:choose>
 
-									<h:outputLink 
-										rendered="${renderAsText and autoLink and crud:isUrl(outputText)}"
-										value="${crud:formatAsUrl(outputText)}" 
-										title="Go to ${outputText}">
-										<h:outputText value="${outputText}" />
-									</h:outputLink>
-									<h:outputText
-										rendered="${renderAsText and not (autoLink and crud:isUrl(outputText))}" 
-										value="${outputText}" />
+									<c:if test="${crud:isInCollection(property,editableProperties)}">
+										<c:if test="${renderAsBoolean}">
+										   	<h:selectBooleanCheckbox value="${row[property]}" />
+										</c:if>
+										<c:if test="${not renderAsBoolean}">
+											<h:inputText value="${row[property]}" />
+										</c:if>
+									</c:if>
+									
+									<c:if test="${not crud:isInCollection(property,editableProperties)}">
+										<h:outputLink 
+											rendered="${renderAsText and autoLink and crud:isUrl(outputText)}"
+											value="${crud:formatAsUrl(outputText)}" 
+											title="Go to ${outputText}">
+											<h:outputText value="${outputText}" />
+										</h:outputLink>
+										<h:outputText
+											rendered="${renderAsText and not (autoLink and crud:isUrl(outputText))}" 
+											value="${outputText}" />
+									</c:if>
 								</h:column>
+								
 							</c:forEach>
 
 							
@@ -199,14 +213,10 @@
 						
 					</h:panelGrid>
 
-					<rich:spacer width="20" height="10"/>
-					<h:panelGrid columns="1" styleClass="detailPanelGrid" >
-						 
-					</h:panelGrid>
-					
 				</h:panelGrid>
-
+			
 			</crank:node>
+			
 		</h:panelGroup>
 </a4j:outputPanel>
 </ui:composition>

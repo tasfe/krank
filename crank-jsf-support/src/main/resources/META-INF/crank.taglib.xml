@@ -29,6 +29,10 @@
 		<source>template/field.xhtml</source>
 	</tag>
 	<tag>
+		<tag-name>simpleField</tag-name>
+		<source>template/simpleField.xhtml</source>
+	</tag>
+	<tag>
 		<tag-name>header</tag-name>
 		<source>template/header.xhtml</source>
 	</tag>

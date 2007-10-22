@@ -54,6 +54,23 @@
 		<c:set var="entityName" value="${crud.name}" />
 	</c:if>
 	
+	<!-- If overriding, then the component assumes that all labels will be provided -->
+  	<c:if test="${empty overrideButtonLabels}">
+  		<c:set var="overrideButtonLabels" value="false"/>
+  	</c:if>
+  	<c:if test="${not overrideButtonLabels}">
+  		<c:set var="createButtonText" value="Create ${crud:createLabel(entityName)}"/>
+  	</c:if>
+  	<c:if test="${not overrideButtonLabels}">
+  		<c:set var="updateButtonText" value="Update ${crud:createLabel(entityName)}"/>
+  	</c:if>
+  	<c:if test="${not overrideButtonLabels}">
+  		<c:set var="resetButtonText" value="Reset"/>
+  	</c:if>
+  	<c:if test="${not overrideButtonLabels}">
+  		<c:set var="cancelButtonText" value="Cancel"/>
+  	</c:if>
+
 	<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
 	
 		<h:panelGrid columns="1" rendered="${rendered and ((crud.state=='ADD') or (crud.state == 'EDIT'))}">
@@ -160,20 +177,20 @@
 					rendered="${(crud.state=='ADD') or (crud.state == null) or (crud.state=='UNKNOWN')}"
 					styleClass="${formButtonClass}" 
 					immediate="${immediate}"
-					value="Create" 
+					value="${createButtonText}" 
 					action="${crud.create}"/>			
 				<h:commandButton 
 					rendered="${(crud.state=='EDIT')}"
 					styleClass="${formButtonClass}" 
 					immediate="${immediate}"
-					value="Update" 
+					value="${updateButtonText}" 
 					action="${crud.update}"/>			
 				<h:commandButton 
-					value="Reset"
+					value="${resetButtonText}"
 					styleClass="${formButtonClass}" 
 					type="reset"/>
 				<h:commandButton 
-					value="Cancel"
+					value="${cancelButtonText}"
 					rendered="${((crud.state=='ADD') or (crud.state == 'EDIT') or (cancelAlwaysOn)) and not hideCancel }"
 					styleClass="${formButtonClass}" 
 					action="${crud.cancel}"
@@ -187,21 +204,21 @@
 					rendered="${addCreateMode}"
 					reRender="${reRender}" 
 					styleClass="${formButtonClass}"
-					value="Create" 
+					value="${createButtonText}" 
 					action="${crud.create}"/>		
 				<a4j:commandButton 
 					rendered="${editMode}"
 					reRender="${reRender}" 
 					styleClass="${formButtonClass}" 
-					value="Update" 
+					value="${updateButtonText}" 
 					action="${crud.update}"/>			
 				<a4j:commandButton 
-					value="Reset"
+					value="${resetButtonText}"
 					reRender="${reRender}" 
 					styleClass="${formButtonClass}" 
 					type="reset"/>
 				<a4j:commandButton 
-					value="Cancel"
+					value="${cancelButtonText}"
 					immediate="true"
 					rendered="${((crud.state=='ADD') or (crud.state == 'EDIT') or (cancelAlwaysOn)) and not hideCancel }"
 					reRender="${reRender}" 

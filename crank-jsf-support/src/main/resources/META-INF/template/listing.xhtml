@@ -21,6 +21,9 @@
 	<c:if test="${empty id}">
 		<c:set var="id" value="PaginatedListing" />
 	</c:if>
+	<c:if test="${empty enableDelete}">
+		<c:set var="enableDelete" value="false" />
+	</c:if>
 	<c:if test="${empty autoLink}">
 		<c:set var="autoLink" value="${true}" />
 	</c:if>
@@ -127,6 +130,7 @@
 							</crank:commandLink>
 							
 							<crank:commandLink id="disableSelected${id}"
+											   rendered="${enableDelete}"
 											   entity="${crud}"
 											   action="deleteSelected"
 											   onclick="if (!confirm('Are you sure you want to disable all selected items?')) return false"
@@ -206,20 +210,21 @@
 				<h:column>
 					<h:panelGroup>
                         <c:if test="${not readOnly}">
-                        <h:commandLink
-							action="${crud.read}"
-							title="Edit this record"
-							onclick="${editFunction}" >
-								<h:graphicImage value="${editImg}" border="0" styleClass="${listingImageButtonClass}" />
-						</h:commandLink>
-
-						<h:commandLink
-							action="${crud.delete}"  
-							title="Delete this record"
-							onclick="if (!confirm('Are you sure you want to delete this item?')) return false" >
-								<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
-						</h:commandLink>
-                           </c:if> 
+	                        <h:commandLink
+								action="${crud.read}"
+								title="Edit this record"
+								onclick="${editFunction}" >
+									<h:graphicImage value="${editImg}" border="0" styleClass="${listingImageButtonClass}" />
+							</h:commandLink>
+	
+							<h:commandLink
+								action="${crud.delete}"  
+								rendered="${enableDelete}"
+								title="Delete this record"
+								onclick="if (!confirm('Are you sure you want to delete this item?')) return false" >
+									<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
+							</h:commandLink>
+                        </c:if> 
                         <ui:insert />
 
                     </h:panelGroup>

@@ -29,6 +29,10 @@
 			<property-name>fieldName</property-name>
 			<property-class>java.lang.String</property-class>
 		</property>
+		<property>
+			<property-name>parentObject</property-name>
+			<property-class>java.lang.Object</property-class>
+		</property>
 
 	</component>
 

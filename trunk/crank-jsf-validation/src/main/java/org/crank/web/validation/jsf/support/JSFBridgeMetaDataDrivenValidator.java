@@ -47,6 +47,7 @@ public class JSFBridgeMetaDataDrivenValidator extends
 	private ValidatorMetaDataReader jsfBridgeValidatorMetaDataReader = null;
     private Class formClass;
     private String fieldName;
+    private Object parentObject;
 
 	private PropertiesUtil jsfBridgeValidatorPropertiesUtil = null;
 
@@ -73,7 +74,11 @@ public class JSFBridgeMetaDataDrivenValidator extends
          * Extract the parent object expression and the property name (field)
          * that we are validating.
          */
-        ValidatorData validatorData = new ValidatorData(expressionString, facesContext, formClass, fieldName);
+		System.out.println("expressionString = " + expressionString);
+		System.out.println("formClass = " + formClass.getName());
+		System.out.println("fieldName = " + fieldName);
+		System.out.println("parentObject = " + (parentObject==null?"null":parentObject.getClass().getName()));
+        ValidatorData validatorData = new ValidatorData(expressionString, facesContext, formClass, fieldName, parentObject);
 
         registerValidationContext(facesContext, inputComponent, validatorData);
 		fieldNameHolder[0] = validatorData.getPropertyNameOfTheField();
@@ -287,5 +292,13 @@ public class JSFBridgeMetaDataDrivenValidator extends
     public void setFieldName( String fieldName ) {
         this.fieldName = fieldName;
     }
+
+	public Object getParentObject() {
+		return parentObject;
+	}
+
+	public void setParentObject(Object parentObject) {
+		this.parentObject = parentObject;
+	}
 
 }

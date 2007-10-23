@@ -340,7 +340,7 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
      * Fire and event to the listeners.
      *
      */
-    private void fireBeforeFilter(Group group) {
+    protected void fireBeforeFilter(Group group) {
         FilteringEvent fe = new FilteringEvent(this, group);
         for (FilteringListener fl : listeners) {
             fl.beforeFilter( fe );
@@ -351,7 +351,7 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
      * Fire and event to the listeners.
      *
      */
-    private void fireAfterFilter(Group group) {
+    protected void fireAfterFilter(Group group) {
         FilteringEvent fe = new FilteringEvent(this, group);
         for (FilteringListener fl : listeners) {
             fl.afterFilter( fe );

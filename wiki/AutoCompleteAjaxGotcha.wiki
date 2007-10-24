@@ -67,8 +67,7 @@ The following page works fine as coded –
 
 And renders as follows -
 
-http://code.google.com/p/krank/wiki/img/AutoCompleteAjaxGotchaPage1.jpg
-
+http://krank.googlecode.com/svn/wiki/img/AutoCompleteAjaxGotchaPage1.jpg
 
 However, changing the enveloping panelGroup to an a4j ouputPanel as follows –
 

@@ -1,6 +1,6 @@
 #summary The Auto-complete components do not work and play well with Ajax due to a problem with RichFaces suggestionBox.
 
-At work, we’re starting to do some pretty cool things with RichFaces. Among them is a controller that uses three Crank Auto-complete Controller components to allow the user to select a specific item from a hierarchy.   The Auto-complete Controller is based on the RichFaces suggestionBox, and automatically includes the field to be completed and the suggestionBox in a single component.
+At work, we’re starting to do some pretty cool things with !RichFaces. Among them is a controller that uses three Crank Auto-complete Controller components to allow the user to select a specific item from a hierarchy.   The Auto-complete Controller is based on the !RichFaces suggestionBox, and automatically includes the field to be completed and the suggestionBox in a single component.
 
 The problem we are solving with this component was similar to this - Imagine selecting a car by specifying manufacturer, make, and model from a set of three Auto-complete fields, where you could start selecting from any of the three. As selections are made the higher order fields automatically completed and the list of lower order values is automatically constrained.  For example if you start with manufacturer and choose ‘GM’, only GM makes would appear in the makes suggestions list.  If you then choose ‘Chevrolet’ from the makes list, only Chevys would appear in the models list.  From the short list of models, you might then select ‘Impala’.
 
@@ -97,7 +97,7 @@ However, changing the enveloping panelGroup to an a4j ouputPanel as follows –
               value="Property" for="suggest"
               styleClass="${formLabelStyleClasses}" />
           </a4j:outputPanel>
-
+          <!-- This is what changed, it was a panelGroup. -->
           <a4j:outputPanel ajaxRendered="true">
             <h:inputText
               id="suggest"

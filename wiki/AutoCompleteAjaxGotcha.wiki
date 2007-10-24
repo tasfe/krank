@@ -39,7 +39,7 @@ The following page works fine as coded –
               styleClass="${formLabelStyleClasses}" />
           </a4j:outputPanel>
 
-          <a4j:outputPanel ajaxRendered="true">
+          <h:panelGroup>
             <h:inputText
               id="suggest"
               value="#{sbController.property}"
@@ -56,7 +56,7 @@ The following page works fine as coded –
                 <h:outputText value="${result.text}" />
               </h:column>
             </rich:suggestionbox>
-          </a4j:outputPanel>
+          </h:panelGroup>
         </h:panelGrid>
       </a4j:form>
     </ui:define>
@@ -128,6 +128,6 @@ However, changing the enveloping panelGroup to an a4j ouputPanel as follows –
 
 It yields this result –
 
-Page2.jpg 
+http://krank.googlecode.com/svn/wiki/img/AutoCompleteAjaxGotchaPage2.jpg
 
 I’ve reported this as a bug to the RichFaces project (JIRA task here) but until there’s a final resolution, be careful not wrap the auto-complete components in Ajax active containers.

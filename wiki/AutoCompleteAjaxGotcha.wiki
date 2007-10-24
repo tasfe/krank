@@ -71,7 +71,58 @@ http://krank.googlecode.com/svn/wiki/img/AutoCompleteAjaxGotchaPage1.jpg
 
 However, changing the enveloping panelGroup to an a4j ouputPanel as follows –
 
+{{{
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+  xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+  xmlns:c="http://java.sun.com/jstl/core"
+  xmlns:crank="http://www.googlecode.com/crank"
+  xmlns:t="http://myfaces.apache.org/tomahawk">
 
+  <ui:composition template="/templates/layout.xhtml">
+    <ui:define name="content">
+
+      <span class="pageTitle">SuggestionBox</span>
+
+      <a4j:form id="sbForm">
+
+        <h:panelGrid columns="3" rowClasses="formRowClass1, formRowClass2"
+          columnClasses="topLeft">
+          <a4j:outputPanel ajaxRendered="true" keepTransient="true">
+            <h:outputLabel id="properyLabel" rendered="${true}"
+              value="Property" for="suggest"
+              styleClass="${formLabelStyleClasses}" />
+          </a4j:outputPanel>
+
+          <a4j:outputPanel ajaxRendered="true">
+            <h:inputText
+              id="suggest"
+              value="#{sbController.property}"
+              styleClass="${styleClass}">
+            </h:inputText>
+
+            <rich:suggestionbox
+              id="properySuggestBox"
+              for="suggest"
+              ajaxSingle="true"
+              suggestionAction="#{sbController.autocomplete}"
+              var="result">
+              <h:column>
+                <h:outputText value="${result.text}" />
+              </h:column>
+            </rich:suggestionbox>
+          </a4j:outputPanel>
+        </h:panelGrid>
+      </a4j:form>
+    </ui:define>
+  </ui:composition>
+</html>
+
+}}}
 
 
 

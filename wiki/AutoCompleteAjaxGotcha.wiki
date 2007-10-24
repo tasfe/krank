@@ -66,3 +66,18 @@ The following page works fine as coded –
 }}}
 
 And renders as follows -
+
+Page1.jpg
+
+
+However, changing the enveloping panelGroup to an a4j ouputPanel as follows –
+
+
+
+
+
+It yields this result –
+
+Page2.jpg 
+
+I’ve reported this as a bug to the RichFaces project (JIRA task here) but until there’s a final resolution, be careful not wrap the auto-complete components in Ajax active containers.

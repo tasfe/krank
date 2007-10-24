@@ -126,8 +126,10 @@ However, changing the enveloping panelGroup to an a4j ouputPanel as follows –
 
 
 
-It yields this result –
+Yields this result –
 
 http://krank.googlecode.com/svn/wiki/img/AutoCompleteAjaxGotchaPage2.jpg
+
+The same result occurs if you add the id of the panel group to the reRender tag of the suggestionBox.
 
 I’ve reported this as a bug to the RichFaces project (JIRA task here) but until there’s a final resolution, be careful not wrap the auto-complete components in Ajax active containers.

@@ -25,6 +25,19 @@ public class FilterablePropertyTest extends TestCase {
         fp = new FilterableProperty("foo", Date.class);
         assertTrue( fp.getComparison() instanceof Between);
         
+        fp = new FilterableProperty("foo", Long.class);
+        assertTrue( fp.isLong());
+
+        fp = new FilterableProperty("foo", Integer.class);
+        assertTrue( fp.isInteger());
+        
+        fp = new FilterableProperty("foo", String.class);
+        assertFalse( fp.isInteger());
+        assertTrue( fp.isString());
+
+        
     }
+    
+    
 
 }

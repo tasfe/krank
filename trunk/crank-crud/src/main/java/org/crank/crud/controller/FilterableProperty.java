@@ -16,6 +16,36 @@ public class FilterableProperty implements Serializable, Toggleable {
         
     }
     
+    public boolean isEnum() {
+    	return Enum.class.isAssignableFrom(type); 
+    }
+    
+    public boolean isString() {
+    	return String.class.isAssignableFrom(type); 
+    }
+
+    public boolean isLong() {
+    	if (Long.class.isAssignableFrom(type)){
+    		return true;
+    	} else {
+    		if (type.isPrimitive() && type.getName().equals("long")){
+    			return true;
+    		}    		
+    	}
+    	return false;
+    }
+
+    public boolean isInteger() {
+    	if (Integer.class.isAssignableFrom(type)) {
+    		return true;
+    	} else {
+    		if (type.isPrimitive() && type.getName().equals("int")){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+
     @SuppressWarnings("unchecked")
     public FilterableProperty(String name, Class type) {
         this.type = type;

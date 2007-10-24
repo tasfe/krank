@@ -67,7 +67,7 @@ The following page works fine as coded –
 
 And renders as follows -
 
-Page1.jpg
+http://code.google.com/p/krank/wiki/images/Page1.jpg
 
 
 However, changing the enveloping panelGroup to an a4j ouputPanel as follows –

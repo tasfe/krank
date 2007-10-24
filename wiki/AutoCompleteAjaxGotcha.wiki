@@ -6,7 +6,7 @@ The problem we are solving with this component was similar to this - Imagine sel
 
 You might arrive at the same state by starting with the model directly.  Without the manufacture and make selections, however, the model list would contain every model known to the application (hence the use of auto-complete rather than a drop-down box).  You could then select ‘Impala’ directly and have the ‘GM’ manufacturer and ‘Chevrolet’ make automatically selected for you.  Likewise you could have started by selecting the make and have the manufacturer set and the model list constrained.  
 
-We had hoped to use Ajax to have the related selections appear in the high order fields automatically when a low order field was completed via the Auto-complete Controller. In developing this component, we became aware of a problem with suggestionBox.  It seems that SuggestionBox fails when included in an a4j outputPanel or when included in a panelGroup that is included in a reRender set.  
+We had hoped to use Ajax to have the related selections appear in the high order fields automatically when a low order field was completed via the Auto-complete Controller. In developing this component, we became aware of a problem with suggestionBox.  It seems that suggestionBox fails when included in an a4j outputPanel or when included in a panelGroup that is included in a reRender set.  
 
 To illustrate the failure, here’s a little sample code.  This is not the code from the actual component, but it demonstrates the problem equally well.
 
@@ -66,4 +66,3 @@ The following page works fine as coded –
 }}}
 
 And renders as follows -
-

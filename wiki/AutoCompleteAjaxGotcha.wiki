@@ -132,4 +132,4 @@ http://krank.googlecode.com/svn/wiki/img/AutoCompleteAjaxGotchaPage2.jpg
 
 The same result occurs if you add the id of the panel group to the reRender tag of the suggestionBox.
 
-I’ve reported this as a bug to the RichFaces project http://jira.jboss.com/jira/browse/RF-1235 but until there’s a final resolution, be careful not wrap the auto-complete components in Ajax active containers.
+I’ve reported this as a bug to the !RichFaces project http://jira.jboss.com/jira/browse/RF-1235 but until there’s a final resolution, be careful not wrap the auto-complete components in Ajax active containers.

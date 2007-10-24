@@ -102,13 +102,31 @@
 					<h:graphicImage value="${filterOnImg}" border="0"/>
 				</a4j:commandLink>
 				</div>
-				
 				<a4j:outputPanel axajRendered="true" rendered="#{comparison.enabled and not crud:isDate(paginator.type,fieldName)}">
 					<a4j:outputPanel rendered="${crud:isText(paginator.type,fieldName)}">
 						<h:inputText 		
 											styleClass="${headerFilterInputTextClass}" 
 											value="#{comparison.value}"
-											size="5"/>
+											size="5"
+											rendered="${filter.long}">
+									<f:converter converterId="javax.faces.Long"/>
+						</h:inputText>
+
+						<h:inputText 		
+											styleClass="${headerFilterInputTextClass}" 
+											value="#{comparison.value}"
+											size="5"
+											rendered="${filter.integer}">
+									<f:converter converterId="javax.faces.Integer"/>
+						</h:inputText>
+
+						<h:inputText        styleClass="${headerFilterInputTextClass}" 
+											value="#{comparison.value}"
+											size="5"
+											rendered="${filter.string}">
+						</h:inputText>
+
+
 					</a4j:outputPanel>
 
 					<a4j:outputPanel rendered="${crud:isEnum(paginator.type,fieldName)}">

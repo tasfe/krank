@@ -102,31 +102,37 @@
 					<h:graphicImage value="${filterOnImg}" border="0"/>
 				</a4j:commandLink>
 				</div>
+				
 				<a4j:outputPanel axajRendered="true" rendered="#{comparison.enabled and not crud:isDate(paginator.type,fieldName)}">
 					<a4j:outputPanel rendered="${crud:isText(paginator.type,fieldName)}">
-						<h:inputText 		
-											styleClass="${headerFilterInputTextClass}" 
-											value="#{comparison.value}"
-											size="5"
-											rendered="${filter.long}">
-									<f:converter converterId="javax.faces.Long"/>
-						</h:inputText>
-
-						<h:inputText 		
-											styleClass="${headerFilterInputTextClass}" 
-											value="#{comparison.value}"
-											size="5"
-											rendered="${filter.integer}">
-									<f:converter converterId="javax.faces.Integer"/>
-						</h:inputText>
-
 						<h:inputText        styleClass="${headerFilterInputTextClass}" 
 											value="#{comparison.value}"
-											size="5"
-											rendered="${filter.string}">
+											size="5">
+									<c:choose>											
+										<c:when test="${filter.long}">
+											<f:converter converterId="javax.faces.Long"/>
+										</c:when>
+										<c:when test="${filter.integer}">
+											<f:converter converterId="javax.faces.Integer"/>
+										</c:when>
+										<c:when test="${filter.bigDecimal}">
+											<f:converter converterId="javax.faces.BigDecimal"/>
+										</c:when>
+										<c:when test="${filter.double}">
+											<f:converter converterId="javax.faces.Double"/>
+										</c:when>
+										<c:when test="${filter.float}">
+											<f:converter converterId="javax.faces.Float"/>
+										</c:when>
+										<c:when test="${filter.short}">
+											<f:converter converterId="javax.faces.Short"/>
+										</c:when>
+										<c:when test="${filter.bigInteger}">
+											<f:converter converterId="javax.faces.BigInteger"/>
+										</c:when>
+									</c:choose>
+									
 						</h:inputText>
-
-
 					</a4j:outputPanel>
 
 					<a4j:outputPanel rendered="${crud:isEnum(paginator.type,fieldName)}">

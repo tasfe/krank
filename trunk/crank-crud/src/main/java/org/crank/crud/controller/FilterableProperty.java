@@ -24,6 +24,37 @@ public class FilterableProperty implements Serializable, Toggleable {
     	return String.class.isAssignableFrom(type); 
     }
 
+    public boolean isBigInteger() {
+    	return java.math.BigInteger.class.isAssignableFrom(type);
+    }
+
+    public boolean isBigDecimal() {
+    	return java.math.BigDecimal.class.isAssignableFrom(type);
+    }
+
+    public boolean isFloat() {
+    	if (Float.class.isAssignableFrom(type)){
+    		return true;
+    	} else {
+    		if (type.isPrimitive() && type.getName().equals("float")){
+    			return true;
+    		}    		
+    	}
+    	return false;
+    }
+
+    public boolean isDouble() {
+    	if (Double.class.isAssignableFrom(type)){
+    		return true;
+    	} else {
+    		if (type.isPrimitive() && type.getName().equals("double")){
+    			return true;
+    		}    		
+    	}
+    	return false;
+    }
+
+
     public boolean isLong() {
     	if (Long.class.isAssignableFrom(type)){
     		return true;
@@ -46,6 +77,18 @@ public class FilterableProperty implements Serializable, Toggleable {
     	return false;
     }
 
+    public boolean isShort() {
+    	if (Short.class.isAssignableFrom(type)) {
+    		return true;
+    	} else {
+    		if (type.isPrimitive() && type.getName().equals("short")){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+
+    
     @SuppressWarnings("unchecked")
     public FilterableProperty(String name, Class type) {
         this.type = type;

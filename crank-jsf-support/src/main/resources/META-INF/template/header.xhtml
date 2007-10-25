@@ -66,6 +66,9 @@
 				    title="${sortTip}"
 					action="#{orderBy.toggle}"/>
 
+				
+				<h:outputText value="&#160; ${(orderBy.sequence+1)}" rendered="${orderBy.enabled}" styleClass="${headerLinkClass}"/>
+
 				<br />
 				
 				<div style="text-align: right">

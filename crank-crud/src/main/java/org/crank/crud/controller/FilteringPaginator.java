@@ -223,6 +223,12 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
                 return ob1.getSequence().compareTo( ob2.getSequence() );
             }});
         
+        int sequence = 0;
+        for (OrderBy order: orderBys) {
+        	order.setSequence(sequence);
+        	sequence++;
+        }
+        
         if (orderBys.size()>0) {
             /* Set the orderBy list. */
             filterablePaginatableDataSource().setOrderBy( orderBys.toArray(new OrderBy[orderBys.size()]) );

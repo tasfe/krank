@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 
@@ -45,6 +46,8 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
         this.paginator = filterablePageable;
         this.controller = crudController;
         crudController.setEntityLocator( this );
+        
+        
         
         /* Registers for events. */
         ((Toggleable)crudController).addToggleListener( new ToggleListener(){
@@ -89,6 +92,7 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
 			}
 
 			public void beforeCancel(CrudEvent event) {
+				FacesContext.getCurrentInstance().renderResponse();
 			}
 
 			public void beforeCreate(CrudEvent event) {

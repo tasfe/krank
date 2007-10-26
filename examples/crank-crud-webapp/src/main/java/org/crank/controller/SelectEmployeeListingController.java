@@ -20,9 +20,8 @@ public class SelectEmployeeListingController {
     }
 
     public String showListingForDepartment () {
-        employeePaginator.disableFilters();
-        employeePaginator.disableSorts();
         employeePaginator.clearAll();
+        employeePaginator.getCriteria().clear();
         String sId = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
         employeePaginator.addCriterion(Comparison.eq("department.id",Long.valueOf(sId)));
         employeePaginator.filter();

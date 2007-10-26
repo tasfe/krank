@@ -12,6 +12,19 @@ public final class MessageUtils {
 	private MessageUtils() {
 	}
 
+	public static String createLabelNoPlural(String fieldName) {
+		if (fieldName.endsWith("s")) {
+			fieldName = fieldName.substring(0, fieldName.length()-1);
+		} else if (fieldName.endsWith("es")) {
+			fieldName = fieldName.substring(0, fieldName.length()-2);
+		}
+		return generateLabelValue(fieldName);
+	}
+	
+	
+		
+
+	
 	/**
 	 * Get the field label.
 	 *

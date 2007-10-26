@@ -5,6 +5,13 @@
 <facelet-taglib>
 	<namespace>http://www.googlecode.com/crank/crud</namespace>
 	<function>
+		<function-name>createLabelNoPlural</function-name>
+		<function-class>org.crank.message.MessageUtils</function-class>
+		<function-signature>
+			java.lang.String createLabelNoPlural(java.lang.String)
+		</function-signature>
+	</function>
+	<function>
 		<function-name>createLabel</function-name>
 		<function-class>org.crank.message.MessageUtils</function-class>
 		<function-signature>

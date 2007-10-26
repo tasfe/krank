@@ -99,7 +99,7 @@
 				<a4j:commandLink  
 					reRender="${reRender}"
 					action="#{comparison.enable}"
-					rendered="#{not comparison.enabled and (not crud:isEnum(paginator.type,fieldName))}"
+					rendered="#{not comparison.enabled}"
 					title="${filterTip}"
 					styleClass="${headerLinkClass}">
 					<h:graphicImage value="${filterOnImg}" border="0"/>

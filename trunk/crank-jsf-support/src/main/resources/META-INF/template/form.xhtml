@@ -59,10 +59,10 @@
   		<c:set var="overrideButtonLabels" value="false"/>
   	</c:if>
   	<c:if test="${not overrideButtonLabels}">
-  		<c:set var="createButtonText" value="Create ${crud:createLabel(entityName)}"/>
+  		<c:set var="createButtonText" value="Create ${crud:createLabelNoPlural(entityName)}"/>
   	</c:if>
   	<c:if test="${not overrideButtonLabels}">
-  		<c:set var="updateButtonText" value="Update ${crud:createLabel(entityName)}"/>
+  		<c:set var="updateButtonText" value="Update ${crud:createLabelNoPlural(entityName)}"/>
   	</c:if>
   	<c:if test="${not overrideButtonLabels}">
   		<c:set var="resetButtonText" value="Reset"/>

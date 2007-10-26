@@ -12,7 +12,6 @@ import org.crank.controller.TreeControllerBean;
 import org.crank.crud.controller.AutoCompleteController;
 import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.controller.CrudOperations;
-import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.controller.datasource.DaoFilteringDataSource;
 import org.crank.crud.controller.datasource.EnumDataSource;
 import org.crank.crud.criteria.Comparison;
@@ -66,20 +65,11 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 			try {
 				dataTableScrollerBean();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 		return managedObjects;
 
-	}
-
-	@SuppressWarnings("unchecked")
-	@Bean(scope = DefaultScopes.SESSION, aliases = "pagers")
-	public Map<String, FilterablePageable> paginators() throws Exception {
-		Map<String, FilterablePageable> paginators = super.paginators();
-		paginators.get("Employee").addOrderBy(OrderBy.asc("firstName"));
-		return paginators;
 	}
 
 	@ScopedProxy
@@ -131,6 +121,9 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 				new JsfDetailController(Task.class));
 		adapter.getController().addChild("contacts",
 				new JsfDetailController(ContactInfo.class));
+
+		adapter.getPaginator().addOrderBy(OrderBy.asc("lastName"));
+		adapter.getPaginator().filter();
 
 		/*
 		 * Setup directReports detail controller. Make sure framework calls

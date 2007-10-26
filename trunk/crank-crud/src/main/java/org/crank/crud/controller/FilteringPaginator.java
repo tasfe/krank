@@ -2,6 +2,7 @@ package org.crank.crud.controller;
 
 import org.crank.crud.controller.datasource.FilteringPagingDataSource;
 import org.crank.crud.controller.datasource.PagingDataSource;
+import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.OrderBy;
@@ -198,37 +199,43 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
 
     public void filter() {
         fireBeforeFilter(filterablePaginatableDataSource().group());
-        /* Clear the comparison group b/c we are about to recreate it */
-        filterablePaginatableDataSource().group().clear();
         
-        /* OrderBy collection list. */
-        List<OrderBy> orderBys = new ArrayList<OrderBy>();
+        List<OrderBy> orderBys = prepareUserFiltersAndExtractOrderBysForFilter();
         
-        /* Iterator through the filters. */
-        Collection<FilterableProperty> values = filterableProperties.values();
-        for (FilterableProperty fp : values) {
-            /* Add the comparison to the group. */
-            if (fp.getComparison().isEnabled() && fp.getComparison().getValue()!=null) {
-                filterablePaginatableDataSource().group().add( fp.getComparison() );
-            }
-            
-            /* Add the order by clause to the list. */
-            if (fp.getOrderBy().isEnabled()) {
-                orderBys.add( fp.getOrderBy() );
-            }
+        prepareOrderByClauseProgramaticOrUserForFilter(orderBys);
+        
+        prepareProgramaticCriteriaForFilter();
+
+        filterablePaginatableDataSource().setFetches(this.fetches.toArray(new Fetch[this.fetches.size()]));
+
+        fireAfterFilter(filterablePaginatableDataSource().group());        
+        reset();
+    }
+
+	private void prepareProgramaticCriteriaForFilter() {
+		/* Build the Criteria list. */
+        if (criteria!=null && criteria.size() >0) {
+        	for (Criterion criterion : criteria) {
+        		filterablePaginatableDataSource().group().add(criterion);
+        	}
         }
-        
+	}
+
+	private void prepareOrderByClauseProgramaticOrUserForFilter(List<OrderBy> orderBys) {
+		/* Sort the orderBys. */
         Collections.sort( orderBys,  new Comparator<OrderBy> (){
             public int compare( OrderBy ob1, OrderBy ob2 ) {
                 return ob1.getSequence().compareTo( ob2.getSequence() );
             }});
         
+        /* Re-sequence the orderBys so the number show up correctly to the end user. */
         int sequence = 0;
         for (OrderBy order: orderBys) {
         	order.setSequence(sequence);
         	sequence++;
         }
         
+        /* If there were OrderBys passed by the end user, use them, if not, use the default orderBys. */
         if (orderBys.size()>0) {
             /* Set the orderBy list. */
             filterablePaginatableDataSource().setOrderBy( orderBys.toArray(new OrderBy[orderBys.size()]) );
@@ -238,19 +245,42 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
                 filterablePaginatableDataSource().setOrderBy( this.orderBy.toArray(new OrderBy[this.orderBy.size()]) );
             }
         }
+	}
+
+	private List<OrderBy> prepareUserFiltersAndExtractOrderBysForFilter() {
+        /* Clear the comparison group b/c we are about to recreate it */
+        filterablePaginatableDataSource().group().clear();
+
+		/* OrderBy collection list. */
+        List<OrderBy> orderBys = new ArrayList<OrderBy>();
         
-        
-        if (criteria!=null && criteria.size() >0) {
-        	for (Criterion criterion : criteria) {
-        		filterablePaginatableDataSource().group().add(criterion);
-        	}
+        /* Iterator through the filters. */
+        Collection<FilterableProperty> values = filterableProperties.values();
+        for (FilterableProperty fp : values) {
+            /* Add the comparison to the group. */
+            if (fp.getComparison().isEnabled() && fp.getComparison().getValue()!=null) {
+            	
+            	/* If it is an Enumerator, let's convert it here. We let JSF manage the other types, but since
+            	 * there is no easy way to tell JSF about the Enumerator, we just convert it here since 
+            	 * comparison.getValue() is an Object.
+            	 */
+                if (fp.isEnum()){
+                	Enum theEnumValue = Enum.valueOf(fp.getType(), (String)fp.getComparison().getValue());
+                	Comparison eqc = Comparison.eq(fp.getComparison().getName(), theEnumValue);
+                	filterablePaginatableDataSource().group().add( eqc );
+                } else {
+                	filterablePaginatableDataSource().group().add( fp.getComparison() );
+                }
+            }
+            
+            /* Add the order by clause to the list. */
+            if (fp.getOrderBy().isEnabled()) {
+                orderBys.add( fp.getOrderBy() );
+            }
+            
         }
-
-        filterablePaginatableDataSource().setFetches(this.fetches.toArray(new Fetch[this.fetches.size()]));
-
-        fireAfterFilter(filterablePaginatableDataSource().group());        
-        reset();
-    }
+		return orderBys;
+	}
     
     public void clearAll() {
         filterableProperties.clear();

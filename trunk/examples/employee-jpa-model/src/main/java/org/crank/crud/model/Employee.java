@@ -58,7 +58,7 @@ public class Employee extends Person {
     private String phone;
     @Column (nullable=false)
     private Integer numberOfPromotions;
-    private EmployeeStatus status;
+    private EmployeeStatus status = EmployeeStatus.SALARY;
     private Integer rank;
     private Date dob;
     @Embedded

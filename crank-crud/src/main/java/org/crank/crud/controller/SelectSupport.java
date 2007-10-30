@@ -50,7 +50,7 @@ public class SelectSupport implements Selectable {
     public void fireUnselect(Object value) {
     	SelectEvent se = new SelectEvent(this, value);
         for (SelectListener sl : list) {
-            sl.select( se );
+            sl.unselect(se);
         }
     }
 

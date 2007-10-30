@@ -94,9 +94,6 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
     } 
 
     private void createFilterProperties( final Class theType, final String propertyName, PropertyScanner ps) {
-        String key = null;
-        
-
         BeanInfo beanInfo = null;
         try {
             beanInfo = Introspector.getBeanInfo( theType );
@@ -117,14 +114,8 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         		pds.add(propertyDescriptor);
         	}
         }
-
-
-
         setupFilters(theType, propertyName, ps, pds);
         setupFilters(theType, propertyName, ps, spds);
-
-        
-                
     }
 
 	private void setupFilters(final Class theType, final String propertyName,

@@ -16,7 +16,7 @@
 
 	<!-- DEFINE VARIABLES --> 
 	<c:if test="${empty label}">
-	    <c:set var="label" value="${crud:replace(crud:createLabel(fieldName),'.','_')}" />
+	    <c:set var="label" value="${crud:replace(crud:createLabelWithNameSpace(entityName,fieldName),'.','_')}" />
 	</c:if>
 
 	<c:if test="${empty sortDescImg}">

@@ -9,8 +9,10 @@
 		<phase-listener>org.crank.jsf.support.DebugPhaseListener</phase-listener>
   </lifecycle>
    -->
+   
   <application>
     <variable-resolver>org.springframework.web.jsf.DelegatingVariableResolver</variable-resolver>
+    <message-bundle>messages</message-bundle>
   </application>
   
   <component>

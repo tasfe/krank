@@ -5,20 +5,6 @@
 <facelet-taglib>
 	<namespace>http://www.googlecode.com/crank/crud</namespace>
 	<function>
-		<function-name>createLabelNoPlural</function-name>
-		<function-class>org.crank.message.MessageUtils</function-class>
-		<function-signature>
-			java.lang.String createLabelNoPlural(java.lang.String)
-		</function-signature>
-	</function>
-	<function>
-		<function-name>createLabel</function-name>
-		<function-class>org.crank.message.MessageUtils</function-class>
-		<function-signature>
-			java.lang.String generateLabelValue(java.lang.String)
-		</function-signature>
-	</function>
-	<function>
 		<function-name>createEnumLabel</function-name>
 		<function-class>org.crank.crud.controller.CrudUtils</function-class>
 		<function-signature>
@@ -226,4 +212,27 @@
 			<renderer-type>org.crank.javax.faces.Menu</renderer-type>
 		</component>
 	</tag>
+	
+	<function>
+		<function-name>createLabel</function-name>
+		<function-class>org.crank.web.jsf.support.JSFMessageUtils</function-class>
+		<function-signature>
+			java.lang.String createLabel(java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>createLabelWithNameSpace</function-name>
+		<function-class>org.crank.web.jsf.support.JSFMessageUtils</function-class>
+		<function-signature>
+			java.lang.String createLabelWithNameSpace(java.lang.String, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>createLabelNoPlural</function-name>
+		<function-class>org.crank.web.jsf.support.JSFMessageUtils</function-class>
+		<function-signature>
+			java.lang.String createLabelNoPlural(java.lang.String)
+		</function-signature>
+	</function>
+	
 </facelet-taglib>

@@ -12,13 +12,13 @@ public final class MessageUtils {
 	private MessageUtils() {
 	}
 
-	public static String createLabelNoPlural(String fieldName) {
+	public static String createLabelNoPlural(String fieldName, final ResourceBundle bundle) {
 		if (fieldName.endsWith("s")) {
 			fieldName = fieldName.substring(0, fieldName.length()-1);
 		} else if (fieldName.endsWith("es")) {
 			fieldName = fieldName.substring(0, fieldName.length()-2);
 		}
-		return generateLabelValue(fieldName);
+		return getLabel(fieldName, bundle);
 	}
 	
 	
@@ -43,6 +43,35 @@ public final class MessageUtils {
 		/** Look for fieldName, e.g., firstName. */
 		try {
 			label = bundle.getString(fieldName);
+		} catch (MissingResourceException mre) {
+			label = generateLabelValue(fieldName);
+		}
+
+		return label;
+	}
+
+	/**
+	 * Get the field label.
+	 *
+	 * @param fieldName
+	 *            fieldName
+	 * @param messageSource
+	 *            messageSource
+	 *
+	 * @return Label from the Message Source.
+	 */
+	public static String createLabelWithNameSpace(final String namespace, final String fieldName,
+			final ResourceBundle bundle) {
+
+		String label;
+
+		/** Look for fieldName, e.g., firstName. */
+		try {
+			try {
+				label = bundle.getString(namespace + '.' + fieldName);
+			} catch (MissingResourceException mre) {
+				label = bundle.getString(fieldName);
+			}
 		} catch (MissingResourceException mre) {
 			label = generateLabelValue(fieldName);
 		}

@@ -1,4 +1,4 @@
-#How to setup messages and labels with Crank
+#summary How to setup messages and labels with Crank
 
 = Introduction =
 

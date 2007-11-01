@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.crank.core.RequestParameterMapFinder;
 
+/** This is to find request params from non-JSF apps.*/
 public class RequestParameterMapFinderImpl implements RequestParameterMapFinder {
 
     @SuppressWarnings("unchecked")

@@ -53,8 +53,10 @@ public final class MessageUtils {
 	/**
 	 * Get the field label.
 	 *
+	 * @param namespace
+	 *            Namespace is a qualifier usually the name of a Form or Entity.
 	 * @param fieldName
-	 *            fieldName
+	 *            fieldName is the name of the label we want to look up.
 	 * @param messageSource
 	 *            messageSource
 	 *
@@ -64,15 +66,16 @@ public final class MessageUtils {
 			final ResourceBundle bundle) {
 
 		String label;
-
-		/** Look for fieldName, e.g., firstName. */
 		try {
 			try {
+				/** Look for name-space + . + fieldName, e.g., Employee.firstName. */
 				label = bundle.getString(namespace + '.' + fieldName);
 			} catch (MissingResourceException mre) {
+				/** Look for fieldName only, e.g., firstName. */
 				label = bundle.getString(fieldName);
 			}
 		} catch (MissingResourceException mre) {
+			/** If you can't find the label, generate it thus, "firstName" becomes "First Name".*/
 			label = generateLabelValue(fieldName);
 		}
 

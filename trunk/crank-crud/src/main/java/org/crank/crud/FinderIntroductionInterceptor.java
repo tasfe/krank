@@ -4,7 +4,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.IntroductionInterceptor;
 
 /**
-*
+*  Finder method introduction interceptor is used to mixin finder methods to our DAO objects.
 *  @version $Revision:$
 *  @author Rick Hightower
 */

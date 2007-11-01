@@ -10,7 +10,7 @@ import org.crank.crud.cache.PreloadableCacheableGenericDaoJpa;
 import org.crank.crud.cache.CachingAdvisor;
 
 /**
- * This simplifies Spring configuration.
+ * This simplifies Spring configuration for Generic DAOs.
  *
  *  @version $Revision:$
  *  @author Rick Hightower

@@ -9,6 +9,8 @@ import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.join.Fetch;
 
 /**
+ * This is our GenericDAO interface that supports its own Criteria API and finder AOP mixins.
+ * 
  * @param <T>
  *            DAO class
  * @param <PK>

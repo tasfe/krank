@@ -13,6 +13,7 @@ public class EmployeeReportObjectMapper implements RowMapper {
 		employeeReportObject.setFirstName(rs.getString("firstName"));
 		employeeReportObject.setLastName(rs.getString("lastName"));
 		//employeeReportObject.setTaskCount(rs.getInt("taskCount"));
+		employeeReportObject.setId(rs.getLong("id"));
 		return employeeReportObject;
 	}
 

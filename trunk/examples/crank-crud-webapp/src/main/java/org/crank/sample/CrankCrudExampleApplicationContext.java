@@ -163,8 +163,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	public JsfCrudAdapter empRecordCrud() {
 		EmployeeDataSource dataSource = new EmployeeDataSource();
 		dataSource.setJdbcTemplate(new JdbcTemplate(employeeDataSource()));
-		FilteringPaginator filteringPaginator = new FilteringPaginator();
-		filteringPaginator.setDataSource(dataSource);
+		FilteringPaginator filteringPaginator = new FilteringPaginator(dataSource, EmployeeReportObject.class);
 		JsfCrudAdapter adapter = new JsfCrudAdapter(filteringPaginator, (CrudController)empCrud().getController()){
 		    public Serializable getEntity() {
 		        Object object = ((Row)getModel().getRowData()).getObject();

@@ -1,17 +1,23 @@
 package org.crank.sample;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.sql.DataSource;
 
 import org.crank.config.spring.support.CrudJSFConfig;
 import org.crank.controller.ExcelExportControllerBean;
 import org.crank.controller.SelectEmployeeListingController;
 import org.crank.controller.TreeControllerBean;
 import org.crank.crud.controller.AutoCompleteController;
+import org.crank.crud.controller.CrudController;
 import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.controller.CrudOperations;
+import org.crank.crud.controller.FilteringPaginator;
+import org.crank.crud.controller.Row;
 import org.crank.crud.controller.datasource.DaoFilteringDataSource;
 import org.crank.crud.controller.datasource.EnumDataSource;
 import org.crank.crud.criteria.Comparison;
@@ -37,12 +43,15 @@ import org.crank.crud.model.Specialty;
 import org.crank.crud.model.Task;
 import org.crank.crud.relationships.RelationshipManager;
 import org.crank.model.jsf.support.RichFacesTreeModelBuilder;
+import org.crank.sample.datasource.EmployeeDataSource;
+import org.crank.sample.datasource.EmployeeReportObject;
 import org.springframework.config.java.annotation.Bean;
 import org.springframework.config.java.annotation.Configuration;
 import org.springframework.config.java.annotation.ExternalBean;
 import org.springframework.config.java.annotation.Lazy;
 import org.springframework.config.java.annotation.aop.ScopedProxy;
 import org.springframework.config.java.util.DefaultScopes;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration(defaultLazy = Lazy.TRUE)
 public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
@@ -142,8 +151,32 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		return adapter;
 	}
 
+	@SuppressWarnings("unchecked")
 	@ExternalBean
-	abstract JsfCrudAdapter<Employee, Long> empCrud();
+	abstract JsfCrudAdapter empCrud();
+	
+	@ExternalBean
+	abstract DataSource employeeDataSource();
+
+	@SuppressWarnings({ "unchecked", "serial" })
+	@Bean(scope = DefaultScopes.SESSION)
+	public JsfCrudAdapter empRecordCrud() {
+		EmployeeDataSource dataSource = new EmployeeDataSource();
+		dataSource.setJdbcTemplate(new JdbcTemplate(employeeDataSource()));
+		FilteringPaginator filteringPaginator = new FilteringPaginator();
+		filteringPaginator.setDataSource(dataSource);
+		JsfCrudAdapter adapter = new JsfCrudAdapter(filteringPaginator, (CrudController)empCrud().getController()){
+		    public Serializable getEntity() {
+		        Object object = ((Row)getModel().getRowData()).getObject();
+		        EmployeeReportObject employeeReportObject = (EmployeeReportObject) object;
+		        Employee employee = new Employee();
+		        employee.setId(employeeReportObject.getId());
+		        return employee;
+		     }			
+		};
+		
+		return adapter;
+	}
 
 	@Bean(scope = DefaultScopes.SESSION)
 	public JsfSelectManyController<Role, Long> employeeToRoleController()

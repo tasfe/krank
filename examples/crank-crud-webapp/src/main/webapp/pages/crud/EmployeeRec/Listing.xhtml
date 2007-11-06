@@ -16,6 +16,14 @@
 
 
 		<a4j:form id="employeeListingForm">
+				<a4j:outputPanel ajaxRendered="true">
+					<h:panelGroup rendered="${empRecordCrud.controller.showForm}">
+						<crank:form crud="${empRecordCrud.controller}"
+							parentForm="employeeListingForm" 
+							propertyNames="firstName,lastName,numberOfPromotions,age,department" ajax="${true}" />
+					</h:panelGroup>
+				</a4j:outputPanel>
+
 				<crank:listing  jsfCrudAdapter="${empRecordCrud}" 
 					propertyNames="firstName,lastName"
 					parentForm="employeeListingForm"

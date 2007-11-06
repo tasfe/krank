@@ -15,7 +15,7 @@
 	<c:set var="crud" value="${jsfCrudAdapter.controller}"/>
 	<c:set var="entityName" value="${crud.name}" />
 	<c:set var="entityNameLabel" value="${crud:createLabel(crud.name)}" />
-	<c:set var="paginator" value="${paginators[entityName]}"/>
+	<c:set var="paginator" value="${jsfCrudAdapter.paginator}"/>
 
 	<!-- DEFINE VARIABLES -->
 	<c:if test="${empty id}">

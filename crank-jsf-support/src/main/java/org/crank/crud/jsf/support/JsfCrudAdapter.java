@@ -9,7 +9,6 @@ import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 
 import org.crank.crud.controller.CrudController;
-import org.crank.crud.controller.CrudControllerBase;
 import org.crank.crud.controller.CrudControllerListener;
 import org.crank.crud.controller.CrudEvent;
 import org.crank.crud.controller.CrudOperations;
@@ -25,45 +24,41 @@ import org.crank.crud.controller.ToggleListener;
 import org.crank.crud.controller.Toggleable;
 
 /**
- * This class adpats a CrudController to the JSF world.
+ * This class adapts a CrudController to the JSF world.
  * @author Rick Hightower
  *
  * @param <T> Type of entity that we are providing CRUD for.
  * @param <PK> Primary key type.
  */
+@SuppressWarnings("unchecked")
 public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator, Serializable {
 	private static final long serialVersionUID = 1L;
 	private FilterablePageable paginator;
     private DataModel model = new ListDataModel();
-    private CrudControllerBase<T, PK> controller;
-    private List page;
+    private CrudController controller;
+	private List page;
 
     public JsfCrudAdapter() {
         
     }
 
-    public JsfCrudAdapter(FilterablePageable filterablePageable, CrudController<T, PK > crudController) {
+    public JsfCrudAdapter(FilterablePageable filterablePageable, CrudController crudController) {
         this.paginator = filterablePageable;
         this.controller = crudController;
-        crudController.setEntityLocator( this );
-        
-        
-        
-        /* Registers for events. */
-        ((Toggleable)crudController).addToggleListener( new ToggleListener(){
+        if (this.controller != null) {
+        	crudController.setEntityLocator( this );
+        	setupCrudControllerWiring();
+        }
+        if (this.paginator!=null) {
+        	setupPaginatorEventWiring();
+        }
+    }
+
+	private void setupCrudControllerWiring() {
+		((Toggleable)this.controller).addToggleListener( new ToggleListener(){
             public void toggle( ToggleEvent event ) {
                 JsfCrudAdapter.this.crudChanged();
             }} );
-        
-        this.paginator.addFilteringListener(new FilteringListener(){
-
-			public void afterFilter(FilteringEvent fe) {
-				getPage();
-			}
-
-			public void beforeFilter(FilteringEvent fe) {
-			}});
-        
 
         this.controller.addCrudControllerListener(new CrudControllerListener(){
 
@@ -112,12 +107,24 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
 
 			public void beforeUpdate(CrudEvent event) {
 			}});
+	}
+
+	private void setupPaginatorEventWiring() {
+		/* Registers for events. */
+        this.paginator.addFilteringListener(new FilteringListener(){
+
+			public void afterFilter(FilteringEvent fe) {
+				getPage();
+			}
+
+			public void beforeFilter(FilteringEvent fe) {
+			}});
         
         this.paginator.addPaginationListener(new PaginationListener(){
 			public void pagination(PaginationEvent pe) {
 				getPage();
 			}});
-    }
+	}
     
     protected void getPage() {
     	page = paginator.getPage();

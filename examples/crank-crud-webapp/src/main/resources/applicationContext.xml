@@ -30,7 +30,7 @@
 
     <bean name="jpaVendorAdapter"
         class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-        <property name="showSql" value="${krank.hibernate.show_sql}" />
+        <property name="showSql" value="false" />
         <property name="databasePlatform" value="${krank.hibernate.dialect}" />
     </bean>
 

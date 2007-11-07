@@ -25,6 +25,10 @@
 		<source>template/form.xhtml</source>
 	</tag>
 	<tag>
+		<tag-name>ajaxForm</tag-name>
+		<source>template/ajaxForm.xhtml</source>
+	</tag>
+	<tag>
 		<tag-name>field</tag-name>
 		<source>template/field.xhtml</source>
 	</tag>

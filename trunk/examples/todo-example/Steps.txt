@@ -11,3 +11,6 @@
 	
 4) Add entry in app context for Task
 
+5) Add persistence.xml entry for task
+org.crank.todo.Task.java
+

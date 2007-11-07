@@ -1,0 +1,914 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	     xmlns:aop="http://www.springframework.org/schema/aop"
+	     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages"/>
+	</bean>
+
+	<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames" value="*Bean,*Controller"/>
+	</bean>
+
+	<bean id="resourceBundleLocator" 
+	      class="org.crank.web.spring.support.SpringResourceBundleLocator"/>
+
+	<!--  Validation configuration -->
+    <bean abstract="true" name="crank/validator" 
+          class="org.crank.validation.validators.AbstractValidator">
+    	<property name="resourceBundleLocator" ref="resourceBundleLocator"/>
+    </bean>
+
+	 <bean id="validatorMetaDataReader" 
+	      class="org.crank.validation.readers.AnnotationValidatorMetaDataReader" />
+	      
+	 <bean id="bridgeValidatorPropertiesUtil" 
+	       class="org.crank.core.spring.support.SpringBeanWrapperPropertiesUtil"/>
+	
+	 <bean name="crank/validator/required" 
+	      parent="crank/validator"
+	      class="org.crank.validation.validators.RequiredValidator"  
+	      scope="prototype"/>
+	      
+	      <!-- 
+     <bean name="crank/validator/commonEmail" 
+	       parent="crank/validator"
+           class="org.crank.validation.validators.CommonBridgeValidator"
+           >
+    	<property name="validatorClass">
+    		<value>org.apache.commons.validator.EmailValidator</value>
+    	</property>
+    	<property name="noMessages" value="true"></property>
+     </bean>
+	       -->
+
+	 <bean name="crank/validator/range,crank/validator/longRange" 
+		  parent="crank/validator" init-method="init"
+	      class="org.crank.validation.validators.LongRangeValidator"  
+	      scope="prototype">
+	      <property name="min" value="10"/>
+	      <property name="max" value="100"/>
+	 </bean>
+
+	 <bean name="crank/validator/equals,crank/validator/equalsCompare" 
+		  parent="crank/validator" init-method="init"
+	      class="org.crank.validation.validators.EqualsCompareValidator"  
+	      scope="prototype">
+	 </bean>
+
+	 <bean name="crank/validator/regex" 
+		  parent="crank/validator" 
+	      class="org.crank.validation.validators.RegexValidator"
+	      scope="prototype">
+	      <property name="match" value="this gets set by the annotations you could set a default here, but why?"/>
+	 </bean>
+
+	<bean name="regexContributionText" class="java.lang.String">
+	 	<constructor-arg>
+			<value>
+				<![CDATA[
+					wasFieldValid = validateRegExp('${fieldId}', '${divId}', /${regex}/, '${detailMessage}');			
+					if (! wasFieldValid) {
+						errorCount = errorCount + 1;
+					}
+					addErrorToSummaryIfNecessary(wasFieldValid, '${summaryMessage}');
+		        ]]>
+			</value>
+	 	</constructor-arg>
+	</bean>	
+
+	 <!-- 
+		Description: This will match US most common telephones format with extension or with out extension. 
+		
+		Matches: (123) 456-7890|||(123) 456-7890 x123 
+		Non-Matches: (123) 456-7890 x123x|||(123) 456-7890 x123 x123|||(123) 456-7890 x 
+	    Regex Author: Khoi Le
+	    Works in both Java and JavaScript (IE tested)
+	  -->
+	 <bean id="phoneRegex" class="java.lang.String">
+	 	<constructor-arg>
+	 	<value>1?( |-)?((\([0-9]{3}\) ?)|([0-9]{3}[- \.]))?[0-9]{3}[- \.][0-9]{4}(\s(x[0-9]+)?){0,1}$</value>
+	 	</constructor-arg>
+	 </bean>
+
+	 <!--  Defined this in one spot so we could resuse if for client rule and server rule.
+		Matches e-mail addresses, including some of the newer top-level-domain extensions, 
+		such as info, museum, name, etc. Also allows for emails tied directly to IP addresses. 
+
+		Matches: example@example.com|||foo@bar.info|||blah@127.0.0.1 
+		Non-Matches: broken@@example.com|||foo@bar.infp|||blah@.nospam.biz 
+		Regex Author: David Huyck wrote the below Regex.
+		
+		See http://regexlib.com/DisplayPatterns.aspx for more details.
+		Works in both JavaScript (IE tested) and Java.
+	  -->
+	 <bean id="emailRegex" class="java.lang.String">
+	 	<constructor-arg >
+	 	<value>^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.(([0-9]{1,3})|([a-zA-Z]{2,3})|(aero|coop|info|museum|name))$</value>
+	 	</constructor-arg>
+	 </bean>
+	 
+	 <!-- 
+		Description: This will match US zip codes.
+		
+		Matches: 12345-1234, 12345
+		Non-Matches: (123) 456-7890, abcdef-abcd
+	    Regex Author: Rick Hightower
+	    Works in both Java and JavaScript (IE tested)
+	  -->
+	 <bean id="zipRegex" class="java.lang.String">
+	 	<constructor-arg>
+	 	<value>^[0-9]{5}(-| )?([0-9]{4})?$</value>
+	 	</constructor-arg>
+	 </bean>
+	 
+	 <!-- 
+		Description: This regular expressions matches dates of the form XX/XX/YYYY where XX can 
+		be 1 or 2 digits long and YYYY is always 4 digits long. 
+		Matches: 4/1/2001|||12/12/2001|||55/5/3434 
+		Non-Matches: 1/1/01|||12 Jan 01|||1-1-2001 
+		Regex Author: Steven Smith, Rick Hightower
+		To test in Java you must associated with a String (example uses Date).
+		Works in JavaScript (IE)
+	  -->
+	 <bean id="dateRegex" class="java.lang.String">
+	 	<constructor-arg>
+	 	<value>^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$</value>
+	 	</constructor-arg>
+	 </bean>
+
+	<!-- 
+		Description: validates numbers, with or without decimal places, and comma 1000 separators. 
+		Matches: 9999999|||99999.99999|||99,999,999.9999 
+		Non-Matches: 9999.|||9,99,99999.999|||999.9999.9999 
+		Regex Author: Neville Clark 
+		No way to test Java side since conversion happens before validation.
+		JavaScript (IE) working.
+	 -->	 	 
+	 <bean id="numberRegex" class="java.lang.String">
+	 	<constructor-arg>
+	 	<value>^((([0-9]{1,3})(,[0-9]{3})*)|([0-9]+))(.[0-9]+)?$</value>
+	 	</constructor-arg>
+	 </bean>
+
+
+	 <!-- 
+	    Description: This regex matches US currency format with lead dollar sign. Dollar value must have 
+	    at least one digit and may or may not be comma separated. Cents value is optional. 
+		Matches: $0.84|||$123458|||$1,234,567.89 
+		Non-Matches: $12,3456.01|||12345|||$1.234 
+		Regex Author: Author: Michael Ash, Rick Hightower (slight mods)
+		JavaScript (IE) working
+	 -->
+	 <bean id="currencyRegex" name="dollarRegex" class="java.lang.String">
+	 	<constructor-arg>
+	 	<value>^\$?([0-9]{1,3}(\,[0-9]{3})*|([0-9]+))(.[0-9]{1,2})?$</value>
+	 	</constructor-arg>
+	 </bean>
+
+	 
+	 <!--  Defines currency validation rule.  -->
+	 <bean name="crank/validator/currency" 
+		  parent="crank/validator" 
+	      class="org.crank.validation.validators.RegexValidator"
+	      scope="prototype">
+	      <!--  Here we define some default messages -->
+	      <property name="detailMessage" value="{crank.validate.currency.detail}"/>
+	      <property name="summaryMessage" value="{crank.validate.currency.summary}"/>
+	      <property name="match" ref="currencyRegex"/>
+	 </bean>
+
+	 <!--  Defines date validation rule.  -->
+	 <bean name="crank/validator/date" 
+		  parent="crank/validator" 
+	      class="org.crank.validation.validators.RegexValidator"
+	      scope="prototype">
+	      <!--  Here we define some default messages -->
+	      <property name="detailMessage" value="{crank.validate.date.detail}"/>
+	      <property name="summaryMessage" value="{crank.validate.date.summary}"/>
+	      <property name="match" ref="dateRegex"/>
+	 </bean>
+
+	 <!--  Defines number validation rule.  -->
+	 <bean name="crank/validator/number" 
+		  parent="crank/validator" 
+	      class="org.crank.validation.validators.RegexValidator"
+	      scope="prototype">
+	      <!--  Here we define some default messages -->
+	      <property name="detailMessage" value="{crank.validate.number.detail}"/>
+	      <property name="summaryMessage" value="{crank.validate.number.summary}"/>
+	      <property name="match" ref="numberRegex"/>
+	 </bean>
+
+
+	 <!--  Defines zip code validation rule.  -->
+	 <bean name="crank/validator/zip" 
+		  parent="crank/validator" 
+	      class="org.crank.validation.validators.RegexValidator"
+	      scope="prototype">
+	      <!--  Here we define some default messages -->
+	      <property name="detailMessage" value="{crank.validate.zip.detail}"/>
+	      <property name="summaryMessage" value="{crank.validate.zip.summary}"/>
+	      <property name="match" ref="zipRegex"/>
+	 </bean>
+
+
+	 <!--  Defines phone number validation rule.  -->
+	 <bean name="crank/validator/phone" 
+		  parent="crank/validator" 
+	      class="org.crank.validation.validators.RegexValidator"
+	      scope="prototype">
+	      <property name="detailMessage" value="{crank.validate.phone.detail}"/>
+	      <property name="summaryMessage" value="{crank.validate.phone.summary}"/>
+	      <property name="match" ref="phoneRegex"/>
+	 </bean>
+
+	 <!--  Defines email validation rule.  This code gets added to the validation method of the form.-->
+	 <bean name="crank/validator/email" 
+		  parent="crank/validator" 
+	      class="org.crank.validation.validators.RegexValidator"
+	      scope="prototype">
+	      <property name="detailMessage" value="{crank.validate.email.detail}"/>
+	      <property name="summaryMessage" value="{crank.validate.email.summary}"/>
+	      <property name="match" ref="emailRegex"/>
+	 </bean>
+
+	<!--  This is the client code contribution for phone validation. -->
+	<bean name="crank/client/validator/phone" 
+	      class="org.crank.web.validation.SimpleScriptValidator">
+	      
+	    <!--  This entry sets up the message specification for i18N messages -->
+	    <property name="messageSpecification">
+	    	<bean parent="messageSpecification">
+	      <property name="detailMessage" value="{crank.validate.phone.detail}"/>
+	      <property name="summaryMessage" value="{crank.validate.phone.summary}"/>
+	    	</bean>
+	    </property>
+	    <!--  This passes arguments the template engine that will produce the JavaScript validator -->
+	    <property name="templateArguments">
+	    	<map> <entry key="regex" value-ref="phoneRegex"/> </map>
+	    </property>
+	    
+	    <!--  This is the actual code template that will be generated. -->
+		<property name="contributionText" ref="regexContributionText"/>
+	</bean>
+
+
+	 	 
+
+	<!--  This is the client code contribution for email validation. -->
+	<bean name="crank/client/validator/email" 
+	      class="org.crank.web.validation.SimpleScriptValidator">
+	      
+	    <!--  This entry sets up the message specification for i18N messages -->
+	    <property name="messageSpecification">
+	    	<bean parent="messageSpecification">
+	      <property name="detailMessage" value="{crank.validate.email.detail}"/>
+	      <property name="summaryMessage" value="{crank.validate.email.summary}"/>
+	    	</bean>
+	    </property>
+	    <!--  This passes arguments the template engine that will produce the JavaScript validator -->
+	    <property name="templateArguments">
+	    	<map> <entry key="regex" value-ref="emailRegex"/> </map>
+	    </property>
+	    
+	    <!--  This is the actual code template that will be generated. -->
+		<property name="contributionText" ref="regexContributionText"/>
+	</bean>
+
+	<!--  This is the client code contribution for zip validation. -->
+	<bean name="crank/client/validator/zip" 
+	      class="org.crank.web.validation.SimpleScriptValidator">
+	      
+	    <!--  This entry sets up the message specification for i18N messages -->
+	    <property name="messageSpecification">
+	    	<bean parent="messageSpecification">
+	      <property name="detailMessage" value="{crank.validate.zip.detail}"/>
+	      <property name="summaryMessage" value="{crank.validate.zip.summary}"/>
+	    	</bean>
+	    </property>
+	    <!--  This passes arguments the template engine that will produce the JavaScript validator -->
+	    <property name="templateArguments">
+	    	<map> <entry key="regex" value-ref="zipRegex"/> </map>
+	    </property>
+	    
+	    <!--  This is the actual code template that will be generated. -->
+		<property name="contributionText" ref="regexContributionText"/>
+	</bean>
+
+
+	<!--  This is the client code contribution for date validation. -->
+	<bean name="crank/client/validator/date" 
+	      class="org.crank.web.validation.SimpleScriptValidator">
+	      
+	    <!--  This entry sets up the message specification for i18N messages -->
+	    <property name="messageSpecification">
+	    	<bean parent="messageSpecification">
+	      <property name="detailMessage" value="{crank.validate.date.detail}"/>
+	      <property name="summaryMessage" value="{crank.validate.date.summary}"/>
+	    	</bean>
+	    </property>
+	    <!--  This passes arguments the template engine that will produce the JavaScript validator -->
+	    <property name="templateArguments">
+	    	<map> <entry key="regex" value-ref="dateRegex"/> </map>
+	    </property>
+	    
+	    <!--  This is the actual code template that will be generated. -->
+		<property name="contributionText" ref="regexContributionText"/>
+	</bean>
+
+	<!--  This is the client code contribution for number validation. -->
+	<bean name="crank/client/validator/number" 
+	      class="org.crank.web.validation.SimpleScriptValidator">
+	      
+	    <!--  This entry sets up the message specification for i18N messages -->
+	    <property name="messageSpecification">
+	    	<bean parent="messageSpecification">
+	      <property name="detailMessage" value="{crank.validate.number.detail}"/>
+	      <property name="summaryMessage" value="{crank.validate.number.summary}"/>
+	    	</bean>
+	    </property>
+	    <!--  This passes arguments the template engine that will produce the JavaScript validator -->
+	    <property name="templateArguments">
+	    	<map> <entry key="regex" value-ref="numberRegex"/> </map>
+	    </property>
+	    
+	    <!--  This is the actual code template that will be generated. -->
+		<property name="contributionText" ref="regexContributionText"/>
+	</bean>
+
+
+	<!--  This is the client code contribution for currency validation. -->
+	<bean name="crank/client/validator/currency" 
+	      class="org.crank.web.validation.SimpleScriptValidator">
+	      
+	    <!--  This entry sets up the message specification for i18N messages -->
+	    <property name="messageSpecification">
+	    	<bean parent="messageSpecification">
+	      <property name="detailMessage" value="{crank.validate.currency.detail}"/>
+	      <property name="summaryMessage" value="{crank.validate.currency.summary}"/>
+	    	</bean>
+	    </property>
+	    <!--  This passes arguments the template engine that will produce the JavaScript validator -->
+	    <property name="templateArguments">
+	    	<map> <entry key="regex" value-ref="currencyRegex"/> </map>
+	    </property>
+	    
+	    <!--  This is the actual code template that will be generated. -->
+		<property name="contributionText" ref="regexContributionText"/>
+	</bean>
+
+
+	<!--  client validation -->	      
+
+	 <bean id="bridgeValidatorMetaDataReader" 
+	      class="org.crank.validation.readers.AnnotationValidatorMetaDataReader" />
+	
+	<bean id="validationScriptReaper" 
+	      class="org.crank.web.validation.ValidationScriptReaper">
+	      <property name="validatorMetaDataReader" ref="bridgeValidatorMetaDataReader"/>
+	      <property name="appendFormNameToProperty" value="false"/>
+	      <property name="propertyPrefix" value=""/>
+	</bean>
+	
+	<bean name="crank/client/validator/required" 
+	      class="org.crank.web.validation.SimpleScriptValidator">
+	      
+	    <property name="messageSpecification">
+	    	<bean parent="messageSpecification">
+	    		<property name="detailMessage" value="{validator.required.detail}"/>
+	    		<property name="summaryMessage" value="{validator.required.summary}"/>
+	    	</bean>
+	    </property>
+	    
+		<property name="contributionText">
+			<value>
+				<![CDATA[
+					wasFieldValid = validateRequiredField('${fieldId}', '${divId}', '${detailMessage}');			
+					if (! wasFieldValid) {
+						errorCount = errorCount + 1;
+					}
+					addErrorToSummaryIfNecessary(wasFieldValid, '${summaryMessage}');
+		        ]]>
+			</value>
+		</property>	
+	</bean>
+
+    <bean id="messageSpecification" class="org.crank.message.MessageSpecification">
+    	<property name="resourceBundleLocator" ref="resourceBundleLocator"/>
+	</bean>
+
+	<bean name="crank/client/validator/range,crank/client/validator/longRange" 
+	      class="org.crank.web.validation.SimpleScriptValidator">
+	    <property name="messageSpecification">
+	    	<bean parent="messageSpecification">
+	    		<property name="detailMessage" value="{validator.range.detail}"/>
+	    		<property name="summaryMessage" value="{validator.range.summary}"/>
+	    	</bean>
+	    </property>
+	    <property name="messageArgumentNames" value="min,max"/>
+		<property name="contributionText">
+			<value>
+				<![CDATA[
+					wasFieldValid = validateRangeField('${fieldId}', '${divId}', ${min}, ${max}, '${detailMessage}');			
+					if (! wasFieldValid) {
+						errorCount = errorCount + 1;
+					}
+					addErrorToSummaryIfNecessary(wasFieldValid, '${summaryMessage}');
+		        ]]>
+			</value>
+		</property>	
+	</bean>
+
+
+	<bean name="crank/client/validator/equals" 
+	      class="org.crank.web.validation.SimpleScriptValidator">
+	    <property name="messageSpecification">
+	    	<bean parent="messageSpecification">
+	    		<property name="detailMessage" value="{validator.equals.detail}"/>
+	    		<property name="summaryMessage" value="{validator.equals.summary}"/>
+	    	</bean>
+	    </property>
+		<property name="contributionText">
+			<value>
+				<![CDATA[
+					wasFieldValid = validateCompareFields('${fieldId}',
+					        '${form}:${compareToProperty}','${divId}','eq','${detailMessage}')
+					if (! wasFieldValid) {
+						errorCount = errorCount + 1;
+					}
+					addErrorToSummaryIfNecessary(wasFieldValid, '${summaryMessage}');
+		        ]]>
+			</value>
+		</property>	
+	</bean>
+
+	<bean name="crank/client/validator/regex" 
+	      class="org.crank.web.validation.SimpleScriptValidator">
+	    <property name="messageSpecification">
+	    	<bean parent="messageSpecification">
+	    		<property name="detailMessage" value="{validator.regex.detail}"/>
+	    		<property name="summaryMessage" value="{validator.regex.summary}"/>
+	    	</bean>
+	    </property>
+	    <property name="messageArgumentNames" value="match"/>
+		<property name="contributionText">
+			<value>
+				<![CDATA[
+					wasFieldValid = validateRegExp('${fieldId}', '${divId}', '${match}', '${detailMessage}');			
+					if (! wasFieldValid) {
+						errorCount = errorCount + 1;
+					}
+					addErrorToSummaryIfNecessary(wasFieldValid, '${summaryMessage}');
+		        ]]>
+			</value>
+		</property>	
+	</bean>
+
+	<bean name="crank/client/validator/loop" 
+	      class="org.crank.web.validation.SimpleScriptValidator">
+	    <property name="messageSpecification">
+	    	<bean parent="messageSpecification">
+	    		<property name="detailMessage" value="{validator.regex.detail}"/>
+	    		<property name="summaryMessage" value="{validator.regex.summary}"/>
+	    	</bean>
+	    </property>
+	    <property name="messageArgumentNames" value="match"/>
+		<property name="contributionText">
+			<value>
+				<![CDATA[
+		var value=document.getElementById('${fieldId}').value;
+		
+		var xmlhttp = createAjaxRequest();
+		xmlhttp.open("POST", "loop.validate", false);
+		xmlhttp.onreadystatechange=function() 
+		{
+			if (xmlhttp.readyState==4 && xmlhttp.status==200) 
+			{
+				var wasFieldValid = true;
+				var answer=xmlhttp.responseText;
+				if (answer=="valid") {
+					wasFieldValid=true;
+				} else {
+					wasFieldValid=false;
+					errorCount = errorCount + 1;					
+				}
+				addErrorToSummaryIfNecessary(wasFieldValid, '${summaryMessage}');
+			}
+		}
+		xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded;");
+		xmlhttp.send("value=" + value + "&validator=loop");
+
+		        ]]>
+			</value>
+		</property>	
+	</bean>
+
+
+	<bean name="crank/client/validator/commonEmailSupport" 
+	      class="org.crank.web.validation.SimpleScriptValidator">
+	    <property name="messageSpecification">
+	    	<bean parent="messageSpecification">
+	    		<property name="detailMessage" value="{validator.commonEmail.detail}"/>
+	    		<property name="summaryMessage" value="{validator.commonEmail.summary}"/>
+	    	</bean>
+	    </property>
+		<property name="contributionText">
+			<value>
+				<![CDATA[
+				function validateEmailViaAjax(async) {
+						validateFieldUsingAjax(async, 'commonEmail', '${fieldId}', '${divId}', '${summaryMessage}', '${detailMessage}');
+				}
+		        ]]>
+			</value>
+		</property>	
+	</bean>
+
+	<bean name="crank/client/validator/commonEmail" 
+	      class="org.crank.web.validation.SimpleScriptValidator">
+	    <property name="messageSpecification">
+	    	<bean parent="messageSpecification">
+	    		<property name="detailMessage" value="{validator.commonEmail.detail}"/>
+	    		<property name="summaryMessage" value="{validator.commonEmail.summary}"/>
+	    	</bean>
+	    </property>
+		<property name="contributionText">
+			<value>
+				<![CDATA[
+				if (!validateEmailViaAjax(false)){
+					errorCount = errorCount + 1;
+				}
+		        ]]>
+			</value>
+		</property>	
+	</bean>
+
+	<bean name="crank/client/validator/encodeValidateFieldSupport" 
+	      class="org.crank.web.validation.SimpleScriptValidator">
+		<property name="contributionText">
+		<value>
+		<![CDATA[
+		<SCRIPT language='javascript'>
+			${validators}
+		</SCRIPT>
+        ]]>
+		</value>
+		</property>
+	</bean>
+
+	<bean name="crank/client/validator/encodeValidateFormFunction" 
+	      class="org.crank.web.validation.SimpleScriptValidator">
+		<property name="contributionText">
+		<value>
+		<![CDATA[
+		<SCRIPT language='javascript'>
+		function validate() {
+			var errorCount = 0;
+			var wasFieldValid = false;
+			
+			clearValidationSummary();
+			${validators} // <-------- Form validators get added here.
+			return errorCount==0;
+		}
+		</SCRIPT>
+        ]]>
+		</value>
+		</property>
+	</bean>
+
+	<bean class="org.crank.web.validation.spring.support.JavaScriptLibraryContribution">
+		<property name="resource" value="classpath:org/crank/web/validation/ajaxlib.js"/>
+	</bean>
+
+	<bean
+		class="org.crank.web.validation.spring.support.JavaScriptLibraryContribution">
+		<property name="contributionText">
+			<value>
+				<![CDATA[
+		        /**
+		         *   Validates a field by calling our validation framework.
+		         *   To reduce dependencies on other JS frameworks, we just use Ajax directly.
+		         *   You could opt to use any JS framework, you would just have to adjust this accordingly.
+		         *   @param async for onfocus and blur you want to use async=true, otherwise async=false.
+		         */
+				function validateFieldUsingAjax(async, validator, fieldId, errorDiv, summaryMessage, detailMessage) {
+				        /** Was the field valid. */
+				        var valid;
+				        /* Get the value of the field. */
+						var value=document.getElementById(fieldId).value;
+
+                        /* If the value is blank return. We only validate non-blank fields. */
+						if(value == null || value == '') {
+							return true;
+						}
+						
+						/* Create an Ajax request to our AjaxValidationServlet. */
+						var xmlhttp = createAjaxRequest();
+						
+						
+						xmlhttp.open("POST", "ajaxValidatorServlet.validate", async);
+						
+						/* Create the handler. This get called async for onFocus and sync for form submission. */
+						xmlhttp.onreadystatechange=function() 
+						{
+							if (xmlhttp.readyState==4 && xmlhttp.status==200) 
+							{
+								var answer=xmlhttp.responseText;
+								if (answer=="valid") {
+									wasFieldValid=true;
+									hideValidationError(fieldId, errorDiv, detailMessage);
+								} else {
+									wasFieldValid=false;
+									showValidationError(fieldId, errorDiv, detailMessage);
+								}
+								valid = wasFieldValid; //TODO why do I have two fields that mean the same thing?
+								addErrorToSummaryIfNecessary(wasFieldValid, summaryMessage);
+							}
+						}
+						/* Set the header and send the request. */
+						xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded;");
+						xmlhttp.send("value=" + value + "&validator=" + validator);
+				}		
+        ]]>
+			</value>
+		</property>
+	</bean>
+
+
+	<bean name="crank/client/validator/encodeValidationStyleClasses" 
+	      class="org.crank.web.validation.SimpleValidationContribution">
+		<property name="contributionText">
+		<value>
+		<![CDATA[
+
+			<style type='text/css'>
+			.dynamicDivClass { position: relative; visibility: hidden; }
+			.staticDivClass  { position: relative; display : none; }
+			.defaultValidationMsgClass {color: red;}			
+			</style>
+        ]]>
+		</value>
+		</property>
+	</bean>
+
+	<bean id="jsValidationRules" 
+	      class="org.crank.web.validation.SimpleValidationContribution">
+		<property name="contributionText">
+		<value>
+		<![CDATA[
+function showValidationDiv(divName, detail) {
+	
+	div = document.getElementById(divName);
+	div.style.visibility='visible';	
+	div.innerHTML = detail;
+		
+}
+
+function hideValidationDiv(obj) {
+	document.getElementById(obj).style.visibility='hidden';
+	document.getElementById(obj).innerHTML = "";
+}
+
+function highlightField(obj) {
+	if(document.getElementById(obj) != null)
+		document.getElementById(obj).style.backgroundColor="yellow";
+}
+
+
+function resetFieldColor(obj) {
+	if(document.getElementById(obj) != null)
+		document.getElementById(obj).style.backgroundColor="white";
+}
+
+function showValidationError(field, error, detail) {
+	showValidationDiv(error, detail);
+	highlightField(field);
+}
+
+function hideValidationError(field, error) {
+	hideValidationDiv(error);
+	resetFieldColor(field);
+}
+
+
+function validateRegExp(field, error, pattern, detailMessage) {
+
+
+	var value=document.getElementById(field).value;
+
+	if(value == null || value == '') {
+		return true;
+	}
+
+	if(value.match(pattern) == null) {
+		showValidationError(field, error, detailMessage);
+		return false;
+	}
+	else {
+		hideValidationError(field, error);
+		return true;
+	}
+}
+
+
+function validateRequiredField(field, error, detailMessage) {
+	var inputField = document.getElementById(field)
+	var value=inputField.value;
+	if(value == null || value == '') {
+		showValidationError(field, error, detailMessage);
+		return false;
+	}else {
+		hideValidationError(field, error);
+		return true;
+	}
+}
+
+function validateCompareFields(field1,field2,error,operator,detailMessage) {
+	if(operator == 'eq') {
+		return validateEquality(field1,field2,error,detailMessage);
+	}
+	else if(operator == 'not')
+		return validateNotEquals(field1,field2,error,detailMessage);
+}
+
+function validateRangeField(field, error, minValue, maxValue, detailMessage) {
+	var valueText = document.getElementById(field).value;
+	if(valueText == null || valueText == '') {
+		return true;
+	}
+	var value = parseInt(valueText);
+	        
+	if(minValue != null && maxValue !=null ) {
+		if(value > maxValue || value < minValue ) {
+			showValidationError(field, error, detailMessage);
+			return false;
+		}
+		else {
+			hideValidationError(field, error);
+			return true;
+		}	
+	} else if(minValue == null && maxValue !=null) {
+		if(value > maxValue) {
+			showValidationError(field, error, detailMessage);
+			return false;
+		}
+		else {
+			hideValidationError(field, error);
+			return true;
+		}
+	} else if(minValue != null && maxValue ==null) {
+		if(value <minValue) {
+			showValidationError(field, error, detailMessage);
+			return false;
+		}
+		else {
+			hideValidationError(field, error);
+			return true;
+		}
+	}
+}
+
+
+function validateEquality(field1,field2,error,detailMessage) {
+	var value1=document.getElementById(field1).value;
+	var value2=document.getElementById(field2).value;
+	
+	/*  We only validated the fields if they are present. 
+	 *  If the fields are required, they must marked as required.
+	 */
+	if (value1 == null && value2 == null) {
+		return;
+	}
+	
+	if(value1 == value2) {
+		hideCompareValidationError(field1, field2, error, detailMessage);
+		return true;
+	}
+	else {
+		showCompareValidationError(field1, field2, error, detailMessage);
+		return false;
+	}
+}
+
+function validateNotEquals(field1,field2,error,detailMessage) {
+	var value1=document.getElementById(field1).value;
+	var value2=document.getElementById(field2).value;
+	
+	if(value1 != value2) {
+		hideCompareValidationError(field1, field2, error, detailMessage);
+		return true;
+	}
+	else {
+		showCompareValidationError(field1, field2, error, detailMessage);
+		return false;
+	}
+}
+
+
+function validateLengthExactly(field, error, exactValue, highlight, display) {
+	var value = document.getElementById(field).value;
+	if(value.length != exactValue) {
+		showValidationError(field, error, highlight, display);
+		return false;
+	} else {
+		hideValidationError(field, error, highlight, display);
+		return true;
+	}
+}
+
+function validateLengthInterval(field, error, min, max, highlight, display) {
+	var value = document.getElementById(field).value;
+	var len = value.length;
+	if(min != null && max !=null ) {
+		if(len > max || len < min ) {
+			showValidationError(field, error, highlight, display);
+			return false;
+		}
+		else {
+			hideValidationError(field, error, highlight, display);
+			return true;
+		}	
+	} else if(min == null && max !=null) {
+		if(len > max) {
+			showValidationError(field, error, highlight, display);
+			return false;
+		}
+		else {
+			hideValidationError(field, error, highlight, display);
+			return true;
+		}
+	} else if(min != null && max ==null) {
+		if(len < min) {
+			showValidationError(field, error, highlight, display);
+			return false;
+		}
+		else {
+			hideValidationError(error,display);
+			if(highlight==true)
+				resetFieldColor(field);
+			return true;
+		}
+	}
+}
+
+function keyPressNumber(decimal) {
+  var kc = window.event.keyCode;
+  var t = window.event.srcElement.value ;
+
+      if (decimal) {
+            if (t.indexOf(',') != -1) {
+                  if( (kc >= 48 && kc <= 57) == false) {
+                        window.event.keyCode = 0;
+                  }
+            }
+            else {
+                  if ((kc >= 48 && kc <= 57 || kc == 44) == false) {
+                        window.event.keyCode = 0;
+                  }
+            }
+      }
+      else {
+            if ((kc >= 48 && kc <= 57) == false) {
+                  window.event.keyCode = 0;
+            }
+      }
+}
+
+function addErrorToSummaryIfNecessary(isValid, errorMsg) {
+	if(document.getElementById('clientValidationSummary') != null) {
+		document.getElementById('clientValidationSummary').innerHTML +=  errorMsg + '<br />';
+	}
+}
+
+function clearValidationSummary() {
+	
+	if(document.getElementById('clientValidationSummary') != null) {
+			document.getElementById('clientValidationSummary').innerHTML="";
+	}	
+}
+
+
+function showCompareValidationError(field1, field2, error, detailMessage) {
+	showValidationDiv(error, detailMessage);
+	highlightField(field1);
+	highlightField(field2);
+}
+
+function hideCompareValidationError(field1, field2, error, detailMessage) {
+	hideValidationDiv(error, detailMessage);
+	resetFieldColor(field1);
+	resetFieldColor(field2);
+}
+
+        ]]>
+		</value>
+		</property>
+	</bean>
+
+
+</beans>

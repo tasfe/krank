@@ -10,9 +10,12 @@
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
 			<h:form id="taskForm">
+			
+				<!-- 
 				<a4j:outputPanel ajaxRendered="true">
 					<h:panelGroup rendered="${cruds.task.controller.showForm}">
-						<div style="border: thin; margin-left: 10px">
+						<div style="border-color: black; border: solid 1px; margin-left: 10px; padding-left: 10px">
+						<h4>${cruds.task.controller.name} Form</h4>
 						<crank:form
 							crud="${cruds.task.controller}" 
 							parentForm="taskForm"
@@ -21,8 +24,12 @@
 						</div>
 					</h:panelGroup>
 				</a4j:outputPanel>
-				
+				 -->
 
+			<crank:ajaxForm crud="${cruds.task.controller}" parentForm="taskForm"
+				propertyNames="name,complete,description" />
+
+			<h4>${cruds.task.controller.name} Listing</h4>
 				<crank:listing 
 					jsfCrudAdapter="${cruds.task}" 
 					propertyNames="name,description"

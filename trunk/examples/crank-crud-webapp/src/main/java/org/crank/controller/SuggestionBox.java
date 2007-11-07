@@ -173,7 +173,7 @@ public class SuggestionBox {
     }
 
     public void OnSelect() {
-        System.out.print("Onselect works!!!");
+        //System.out.print("Onselect works!!!");
 
     }
 

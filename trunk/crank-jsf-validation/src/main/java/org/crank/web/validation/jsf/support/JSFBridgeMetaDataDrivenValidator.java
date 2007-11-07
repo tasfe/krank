@@ -74,10 +74,10 @@ public class JSFBridgeMetaDataDrivenValidator extends
          * Extract the parent object expression and the property name (field)
          * that we are validating.
          */
-		System.out.println("expressionString = " + expressionString);
-		System.out.println("formClass = " + formClass.getName());
-		System.out.println("fieldName = " + fieldName);
-		System.out.println("parentObject = " + (parentObject==null?"null":parentObject.getClass().getName()));
+//		System.out.println("expressionString = " + expressionString);
+//		System.out.println("formClass = " + formClass.getName());
+//		System.out.println("fieldName = " + fieldName);
+//		System.out.println("parentObject = " + (parentObject==null?"null":parentObject.getClass().getName()));
         ValidatorData validatorData = new ValidatorData(expressionString, facesContext, formClass, fieldName, parentObject);
 
         registerValidationContext(facesContext, inputComponent, validatorData);

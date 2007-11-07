@@ -18,6 +18,9 @@ public class SelectManyRelationshipManager extends RelationshipManager {
 	@SuppressWarnings("unchecked")
 	public void process(Set<Object> selectedRelatedEntities, Set<Object> entitiesInView) {
 		Object collection = getChildCollection(parentObject);
+		if (collection == null) {
+			return;
+		}
 		Iterator<Object> iterator = iterator(collection);
 		
 		Set currentValues = toSet(collection);
@@ -45,6 +48,9 @@ public class SelectManyRelationshipManager extends RelationshipManager {
 	@SuppressWarnings("unchecked")
 	public String getCollectionLabelString() {
 		Object collection = getChildCollection(parentObject);
+		if (collection == null) {
+			return "";
+		}
 		Iterator iterator = null;
 		StringBuilder builder = new StringBuilder(255);
 
@@ -114,6 +120,9 @@ public class SelectManyRelationshipManager extends RelationshipManager {
 	@SuppressWarnings("unchecked")
 	public boolean isSelected(Object object) {
 		Object collection = getChildCollection(parentObject);
+		if (collection == null) {
+			return false;
+		}
 		Iterator iterator = iterator(collection);
 
 		BeanWrapper wrapper = new BeanWrapperImpl();

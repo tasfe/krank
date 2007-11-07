@@ -15,11 +15,11 @@
     <message-bundle>messages</message-bundle>
   </application>
   
+  <!-- 
   <component>
     <component-type>org.crank.javax.faces.SelectOne</component-type>
     <component-class>org.crank.javax.faces.component.UISelectOne</component-class>
   </component>
-  
   <render-kit>
       <renderer>
       <component-family>javax.faces.SelectOne</component-family>
@@ -30,6 +30,7 @@
     </renderer>
   
   </render-kit>
+   -->
   
   <navigation-rule>
   	<navigation-case>

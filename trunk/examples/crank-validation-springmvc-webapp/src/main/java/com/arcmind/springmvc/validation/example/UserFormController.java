@@ -10,7 +10,7 @@ public class UserFormController extends SimpleFormController {
 	protected void doSubmitAction(Object pojoForm) throws Exception {
 		
 		User  user = (User) pojoForm;
-		System.out.println("GOT USER " + user.getFirstName());
+		//System.out.println("GOT USER " + user.getFirstName());
 		
 	}
 		

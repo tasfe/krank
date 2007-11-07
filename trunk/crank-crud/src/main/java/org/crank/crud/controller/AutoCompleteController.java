@@ -34,8 +34,8 @@ public class AutoCompleteController <T, PK extends Serializable>  implements Sel
 	}
 
 	public void setValue(String value) {
-		System.out.printf("setValue(): fieldName: %s, value: %s, group: %s\n", 
-				fieldName, value, group);
+//		System.out.printf("setValue(): fieldName: %s, value: %s, group: %s\n", 
+//				fieldName, value, group);
 		this.value = value;
 	}
 

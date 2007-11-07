@@ -116,6 +116,8 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	@SuppressWarnings("unchecked")
 	@Bean(scope = DefaultScopes.SESSION, aliases = "empCrud")
 	public JsfCrudAdapter employeeCrud() throws Exception {
+				
+		
 		JsfCrudAdapter adapter = cruds().get("Employee");
 
 		/*
@@ -148,6 +150,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 
 		adapter.getController().addChild("directReports", directReports);
 
+		
 		return adapter;
 	}
 
@@ -177,7 +180,10 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		return adapter;
 	}
 
-	@Bean(scope = DefaultScopes.SESSION)
+	@ExternalBean
+	abstract JsfSelectManyController<Role, Long> empToRole ();
+	
+	@Bean(scope = DefaultScopes.SESSION, aliases="empToRole")
 	public JsfSelectManyController<Role, Long> employeeToRoleController()
 			throws Exception {
 		JsfSelectManyController<Role, Long> controller = new JsfSelectManyController<Role, Long>(

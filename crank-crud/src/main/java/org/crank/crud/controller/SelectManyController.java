@@ -84,6 +84,8 @@ public abstract class SelectManyController<T, PK extends Serializable> {
             public void afterFilter(FilteringEvent fe) {
             }
         });
+        
+        initEntity();
     	
     }
 

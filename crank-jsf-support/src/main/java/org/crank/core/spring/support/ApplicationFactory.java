@@ -12,7 +12,7 @@ public class ApplicationFactory extends javax.faces.application.ApplicationFacto
             (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
 
         Application orgApp = appFactory.getApplication();
-        System.out.println(orgApp.getClass().getName());
+        //System.out.println(orgApp.getClass().getName());
         application = new SpringApplication(orgApp);
     
     }

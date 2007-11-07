@@ -449,7 +449,7 @@ public class SpringApplication extends Application {
         FacesException originalException = null;
         String marker = "###############################################";
         
-        System.out.println(marker +  " THIS FAR 1");
+        //System.out.println(marker +  " THIS FAR 1");
 
         try {
             // Create converter with original application

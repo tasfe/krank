@@ -225,14 +225,18 @@ public class RelationshipManager implements Serializable {
 
 
     protected Object getChildCollection( Object parent ) {
-        /*
-         * Invoke the method and return the list type thing (it can be an
-         * Array, List, Set or Map)
-         */
-        BeanWrapper wrapper = new BeanWrapperImpl (parent);
-
-        Object listTypeThing = wrapper.getPropertyValue( childCollectionProperty() );
-        return listTypeThing;
+    	if (parent != null) {
+	        /*
+	         * Invoke the method and return the list type thing (it can be an
+	         * Array, List, Set or Map)
+	         */
+	        BeanWrapper wrapper = new BeanWrapperImpl (parent);
+	
+	        Object listTypeThing = wrapper.getPropertyValue( childCollectionProperty() );
+	        return listTypeThing;
+    	} else {
+    		return null;
+    	}
     }
 
     

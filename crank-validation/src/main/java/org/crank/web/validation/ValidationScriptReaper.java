@@ -283,7 +283,7 @@ public class ValidationScriptReaper {
     }
 
     private void writeValidatorTemplatesForProperties(String suffix, String[] propertyNames, Map<String, List<ValidatorMetaData>> validationMetaData, String form, StringWriter swriter) {
-    	System.out.println(Arrays.asList(propertyNames));
+    	//System.out.println(Arrays.asList(propertyNames));
         for (String propertyName : propertyNames) {
             List<ValidatorMetaData> propertyValidationMetaData = 
                 validationMetaData.get(propertyName);

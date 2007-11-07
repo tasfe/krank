@@ -50,10 +50,10 @@ class ValidatorData {
         if (fieldName==null) {
             extractPropertyName();
         }
-        System.out.println("parentClassOfTheField = " + (this.parentClassOfTheField==null?"null":this.parentClassOfTheField.getName()));
-        System.out.println("propertyNameOfTheField = " + this.propertyNameOfTheField);
-        System.out.println("parentObjectExpression = " + this.parentObjectExpression);
-        System.out.println("fieldName = " + fieldName);
+//        System.out.println("parentClassOfTheField = " + (this.parentClassOfTheField==null?"null":this.parentClassOfTheField.getName()));
+//        System.out.println("propertyNameOfTheField = " + this.propertyNameOfTheField);
+//        System.out.println("parentObjectExpression = " + this.parentObjectExpression);
+//        System.out.println("fieldName = " + fieldName);
         
 		/* We need the parentObject so we can read its meta-data. Use the expression to look
 		 * up the parent object and then get its class. */

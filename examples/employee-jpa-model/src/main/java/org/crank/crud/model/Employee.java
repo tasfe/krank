@@ -132,7 +132,7 @@ public class Employee extends Person {
     }
 
     public void setDepartment( Department department ) {
-        System.out.println( "SET DEPARTMENT " + department );
+        //System.out.println( "SET DEPARTMENT " + department );
         this.department = department;
     }
 

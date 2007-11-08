@@ -1,0 +1,10 @@
+#summary Presentation on getting started with Crank
+
+= Introduction =
+
+Powerpoint presentation on getting started with Crank.
+
+
+= Details =
+
+http://krank.googlecode.com/svn/wiki/ppts/Crank-Slidess.ppt

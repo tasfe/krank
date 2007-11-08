@@ -1,6 +1,8 @@
 package org.crank.crud.jsf.support;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,8 @@ import org.crank.crud.controller.DetailController;
 public class JsfDetailController extends DetailController{
     protected DataModel model = new ListDataModel();
 
+    protected Comparator orderByComparator;
+    
     public JsfDetailController() {
         super();
     }
@@ -44,21 +48,23 @@ public class JsfDetailController extends DetailController{
     
     @SuppressWarnings("unchecked")
     public DataModel getModel() {
-        if (parent.getEntity()==null) {
-            model.setWrappedData( new ArrayList() );
-        } else {
+    	List al = new ArrayList();
+        if (parent.getEntity() != null) {
             Object object = this.relationshipManager.retrieveChildCollectionFromParentObject(parent.getEntity(), true);
             if (object instanceof List) {
-                model.setWrappedData( object );
+            	al = (List) object; 
             } else if (object instanceof Set) {
-                model.setWrappedData( new ArrayList((Set)object) );
+                al =  new ArrayList((Set)object);
             } else if (object instanceof Map)  {
                 Map map = (Map) object;
-                model.setWrappedData( new ArrayList(map.values()) );
+                al =  new ArrayList(map.values());
+            }
+            if (orderByComparator != null) {
+            	Collections.sort(al, orderByComparator);
             }
         }
+        model.setWrappedData( al );
         return model;
-
     }
 
     /**
@@ -87,5 +93,13 @@ public class JsfDetailController extends DetailController{
         blankOutInputComponentFields();
         return super.cancel();
     }
+
+	public Comparator getOrderByComparator() {
+		return orderByComparator;
+	}
+
+	public void setOrderByComparator(Comparator orderBy) {
+		this.orderByComparator = orderBy;
+	}
 
 }

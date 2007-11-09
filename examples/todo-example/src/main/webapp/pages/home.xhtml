@@ -3,41 +3,19 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
-	xmlns:crank="http://www.googlecode.com/crank"	
-	>
+	xmlns:crank="http://www.googlecode.com/crank">
+
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
-			<h:form id="taskForm">
-			
-				<!-- 
-				<a4j:outputPanel ajaxRendered="true">
-					<h:panelGroup rendered="${cruds.task.controller.showForm}">
-						<div style="border-color: black; border: solid 1px; margin-left: 10px; padding-left: 10px">
-						<h4>${cruds.task.controller.name} Form</h4>
-						<crank:form
-							crud="${cruds.task.controller}" 
-							parentForm="taskForm"
-							propertyNames="name,complete,description"
-							ajax="${true}" />
-						</div>
-					</h:panelGroup>
-				</a4j:outputPanel>
-				 -->
-
-			<crank:ajaxForm crud="${cruds.task.controller}" parentForm="taskForm"
+		<h:form id="taskForm">
+			<crank:ajaxForm crud="${cruds.task.controller}" 
+			    parentForm="taskForm"
 				propertyNames="name,complete,description" />
-
 			<h4>${cruds.task.controller.name} Listing</h4>
-				<crank:listing 
-					jsfCrudAdapter="${cruds.task}" 
-					propertyNames="name,description"
-					parentForm="taskForm"/>
-
-			</h:form>
-
-
+			<crank:listing jsfCrudAdapter="${cruds.task}"
+				propertyNames="name,complete,description" 
+				parentForm="taskForm" />
+		</h:form>
 	</ui:define>
 </ui:composition>
 </html>

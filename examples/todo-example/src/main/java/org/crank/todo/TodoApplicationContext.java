@@ -11,7 +11,7 @@ import org.springframework.config.java.annotation.Lazy;
 import org.springframework.config.java.util.DefaultScopes;
 
 @Configuration(defaultLazy = Lazy.TRUE)
-public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
+public abstract class TodoApplicationContext extends CrudJSFConfig {
 
 	private static List<CrudManagedObject> managedObjects;
 
@@ -20,10 +20,8 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		if (managedObjects == null) {
 			managedObjects = new ArrayList<CrudManagedObject>();
 			managedObjects.add(new CrudManagedObject(Task.class, null));
-
 		}
 		return managedObjects;
-
 	}
 
 	@Bean

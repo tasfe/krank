@@ -25,7 +25,8 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
     protected Class<T> entityClass;
     protected CrudState state;
     protected Object entity;
-    private Map<String, DetailController> children = new HashMap<String, DetailController>();
+    @SuppressWarnings("unchecked")
+	private Map<String, DetailController> children = new HashMap<String, DetailController>();
     private ToggleSupport toggleSupport = new ToggleSupport();
     private String name;
     protected CrudOperations parent;

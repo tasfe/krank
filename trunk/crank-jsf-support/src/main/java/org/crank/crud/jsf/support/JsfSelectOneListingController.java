@@ -1,6 +1,8 @@
 package org.crank.crud.jsf.support;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
@@ -8,36 +10,52 @@ import javax.faces.model.ListDataModel;
 import org.crank.crud.controller.CrudControllerBase;
 import org.crank.crud.controller.CrudOperations;
 import org.crank.crud.controller.FilterablePageable;
+import org.crank.crud.controller.Row;
+import org.crank.crud.controller.SelectListener;
+import org.crank.crud.controller.SelectSupport;
+import org.crank.crud.controller.Selectable;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
-public class JsfSelectOneListingController<T, PK extends Serializable> {
+public class JsfSelectOneListingController<T, PK extends Serializable> implements Selectable{
 	
 	private FilterablePageable paginator;
     private DataModel model = new ListDataModel();
-    private CrudControllerBase<T, PK> controller;
     private boolean show;
     private String propertyName;
     private Class entityClass;
 	private String idProperty="id";
 	private String labelProperty="name";
 	private String sourceProperty = null;
+	private SelectSupport selectSupport = new SelectSupport();
+	private BeanWrapper wrappedController;
+	private CrudControllerBase<T, PK> controller;	
     
 	
-	public JsfSelectOneListingController (Class entityClass, String propertyName, FilterablePageable pageable, CrudOperations crudController, String sourceProperty) {
+	public JsfSelectOneListingController (Class entityClass, String propertyName, FilterablePageable pageable, CrudOperations crudController) {
     	this.paginator = pageable;
-    	this.controller = (CrudControllerBase<T, PK>) crudController;
+    	controller = (CrudControllerBase<T, PK>) crudController;
+    	wrappedController = new BeanWrapperImpl(crudController.getEntity());
     	this.propertyName = propertyName;
     	this.entityClass = entityClass;
+    }
+
+	public JsfSelectOneListingController (Class entityClass, String propertyName, FilterablePageable pageable, CrudOperations crudController, String sourceProperty) {
+    	this(entityClass, propertyName, pageable, crudController);
     	this.sourceProperty = sourceProperty;
     }
 
+	public JsfSelectOneListingController (Class entityClass, FilterablePageable pageable) {
+		this(entityClass, null, null, pageable);
+    }
 
-	public JsfSelectOneListingController (Class entityClass, String propertyName, FilterablePageable pageable, CrudOperations crudController) {
-    	this.paginator = pageable;
-    	this.controller = (CrudControllerBase<T, PK>) crudController;
-    	this.propertyName = propertyName;
-    	this.entityClass = entityClass;
+	public JsfSelectOneListingController (Class entityClass, Object controller, String controllerProperty, FilterablePageable pageable) {
+		this.entityClass = entityClass;
+		this.paginator = pageable;
+    	if (controller != null) {
+    		wrappedController = new BeanWrapperImpl(controller);
+    	}
+    	this.propertyName = controllerProperty;
     }
 
 
@@ -54,7 +72,16 @@ public class JsfSelectOneListingController<T, PK extends Serializable> {
         /* Note if you wire in events from paginators, you will only have to change this
          * when there is a next page event.
          */
-        model.setWrappedData( paginator.getPage() );
+        //model.setWrappedData( paginator.getPage() );
+        List page = getPaginator().getPage();
+        List<Row> wrappedList = new ArrayList<Row>(page.size());
+        for (Object rowData : page) {
+            Row row = new Row();
+            row.setObject( rowData );
+            wrappedList.add(row);
+        }
+        model.setWrappedData( wrappedList );
+
         return model;
     }
 
@@ -63,16 +90,20 @@ public class JsfSelectOneListingController<T, PK extends Serializable> {
 	}
 	
 	public void select () {
-    	BeanWrapper wrapper = new BeanWrapperImpl(this.controller.getEntity());
-		Object value = this.model.getRowData();
-		
+		Row selectedRow = (Row) this.model.getRowData();
+		Object valueBean = selectedRow.getObject();
+		Object value = valueBean;
 		if ((sourceProperty != null) && !"".equals(sourceProperty)) {
-	    	BeanWrapper valueWrapper = new BeanWrapperImpl(value);
-	    	wrapper.setPropertyValue(this.propertyName, valueWrapper.getPropertyValue(this.sourceProperty));
-		} else {
-			wrapper.setPropertyValue(this.propertyName, value);
+	    	BeanWrapper valueWrapper = new BeanWrapperImpl(valueBean);
+	    	value = valueWrapper.getPropertyValue(this.sourceProperty);
 		}
+		selectSupport.fireSelect(value);
 		this.show = false;
+		
+		if (wrappedController != null) {
+			wrappedController.setPropertyValue(this.propertyName, value);
+		}
+  		
 	}
 	
 	public void cancel () {
@@ -91,7 +122,7 @@ public class JsfSelectOneListingController<T, PK extends Serializable> {
 	public void setShow(boolean show) {
 		this.show = show;
 	}
-
+	
 	public CrudControllerBase<T, PK> getController() {
 		return controller;
 	}
@@ -138,5 +169,16 @@ public class JsfSelectOneListingController<T, PK extends Serializable> {
 	public void setLabelProperty(String labelProperty) {
 		this.labelProperty = labelProperty;
 	}
+
+	public void addSelectListener(SelectListener listener) {
+		selectSupport.addSelectListener(listener);
+	}
+
+
+	public void removeSelectListener(SelectListener listener) {
+		selectSupport.removeSelectListener(listener);
+	}
+
+
 	
 }

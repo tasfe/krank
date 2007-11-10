@@ -196,28 +196,28 @@
 									<c:when test="${crud:contains(property, '.')}">
 										<c:choose>
 											<c:when test="${crud:isBoolean(entityClass,property)}">
-												<h:graphicImage value="${booleanImg}" rendered="${(row[property] == 'true')}" styleClass="imageCenter"/>
+												<h:graphicImage value="${booleanImg}" rendered="${(row.map[property] == 'true')}" styleClass="imageCenter"/>
 												<c:set var="renderAsText" value="${false}"/>
 											</c:when>
 											<c:when test="${crud:isEnum(entityClass,property)}">
-												<c:set var="outputText" value="#{crud:createEnumLabel(row[property])}"/>
+												<c:set var="outputText" value="#{crud:createEnumLabel(row.map[property])}"/>
 											</c:when>
 											<c:otherwise>
-												<c:set var="outputText" value="#{row[property]}"/>
+												<c:set var="outputText" value="#{row.map[property]}"/>
 											</c:otherwise>
 										</c:choose>
 									</c:when>
 									<c:otherwise>
 										<c:choose>
 											<c:when test="${crud:isBoolean(entityClass,property)}">
-												<h:graphicImage value="${booleanImg}" rendered="${(row[property] == 'true')}" styleClass="imageCenter"/>
+												<h:graphicImage value="${booleanImg}" rendered="${(row.object[property] == 'true')}" styleClass="imageCenter"/>
 												<c:set var="renderAsText" value="${false}"/>
 											</c:when>
 											<c:when test="${crud:isEnum(entityClass,property)}">
-												<c:set var="outputText" value="#{crud:createEnumLabel(row[property])}"/>
+												<c:set var="outputText" value="#{crud:createEnumLabel(row.object[property])}"/>
 											</c:when>
 											<c:otherwise>
-												<c:set var="outputText" value="#{row[property]}"/>
+												<c:set var="outputText" value="#{row.object[property]}"/>
 											</c:otherwise>
 										</c:choose>
 									</c:otherwise>

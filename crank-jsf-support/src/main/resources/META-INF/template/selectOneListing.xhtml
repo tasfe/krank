@@ -73,6 +73,15 @@
 	<c:if test="${empty immediate}">
 		<c:set var="immediate" value="true" />
 	</c:if>
+	<c:if test="${empty expandText}">
+		<c:set var="expandText" value="edit" />
+	</c:if>
+	<c:if test="${empty collapseText}">
+		<c:set var="collapseText" value="(cancel)" />
+	</c:if>
+	<c:if test="${empty showField}">
+		<c:set var="showField" value="true" />
+	</c:if>
 
 	<!-- Style classes -->
 	<c:if test="${empty listingCommandButtonClass}">
@@ -121,14 +130,16 @@
 				id="${fieldId}"
 				readonly="true"
 				styleClass="fieldField"
-				value="${boundValue}"/>
+				value="${boundValue}"
+				rendered="${showField}"/>
+
 					
 			<crank:node
 				entity="#{jsfSelectOneController}"
 				expandAction="showSelection"
-				expandText="edit"
+				expandText="${expandText}"
 				closeAction="cancel"
-				collapseText="(cancel)"
+				collapseText="${collapseText}"
 				fixedBranch="${true}"
 				layout="vertical"
 				reRender="${reRender}"

@@ -49,6 +49,10 @@
 		<c:if test="${empty formPropertyNames}">
 			<c:set var="formPropertyNames" value="${propertyNames}" />
 		</c:if>
+		<c:if test="${empty showAdd}">
+			<c:set var="showAdd" value="true" />
+		</c:if>
+
 
 		<c:set var="entityName" value="${detailController.relationshipManager.childCollectionProperty}" />
 		<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
@@ -77,7 +81,7 @@
 							entity="${detailController}"
 							action="loadCreate"
 							immediate="true"
-							rendered="#{(not detailController.showForm) and (not readOnly)}"
+							rendered="#{(not detailController.showForm) and (not readOnly) and showAdd}"
 							toolTipText="Click to add a new detail record..."
 							reRender="${reRender}"
 							styleClass="${toggleLinkClass}"

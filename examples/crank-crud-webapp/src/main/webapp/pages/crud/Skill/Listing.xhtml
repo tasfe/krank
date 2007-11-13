@@ -12,6 +12,11 @@
 	<ui:define name="content">
 
 		<h:outputText value="Specialties" styleClass="pageTitle"/>
+		
+		<a4j:outputPanel ajaxRendered="true">
+			<h:messages infoClass="infoClass" errorClass="errorClass" layout="table" globalOnly="true"/>
+		</a4j:outputPanel>
+
 
 			<h:form id="skillListForm">
 			

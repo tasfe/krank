@@ -4,7 +4,9 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
-	xmlns:rich="http://richfaces.ajax4jsf.org/rich">
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+    xmlns:c="http://java.sun.com/jstl/core"
+	>
 
 	<head>
 	  	<title><ui:insert name="title">CRANK!</ui:insert></title>
@@ -26,7 +28,23 @@
 		</td>
 		</tr>
 		</table>
+
+	<a4j:outputPanel ajaxRendered="true">
+			<h:messages infoClass="infoClass" errorClass="errorClass" layout="table" globalOnly="true"/>
+	</a4j:outputPanel>
+
+	<c:if test="${not empty crankErrorException}">
+			<div>
+			<pre>
+			${crankErrorException}
+			</pre>
+			</div>
+	</c:if>
 	</body>
+	
+	
+	
+	
 	<ui:debug hotkey="d" rendered="#{initParam['facelets.DEBUG']}"/>
 	
 </html>

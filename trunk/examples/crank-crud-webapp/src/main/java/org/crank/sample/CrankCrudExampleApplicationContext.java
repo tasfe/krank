@@ -13,7 +13,6 @@ import org.crank.controller.ExcelExportControllerBean;
 import org.crank.controller.SelectEmployeeListingController;
 import org.crank.controller.TreeControllerBean;
 import org.crank.crud.controller.AutoCompleteController;
-import org.crank.crud.controller.CrudController;
 import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.controller.CrudOperations;
 import org.crank.crud.controller.FilteringPaginator;
@@ -100,6 +99,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		return controller;
 	}
 
+	@SuppressWarnings("unchecked")
 	@ExternalBean
 	public abstract JsfCrudAdapter deptCrud();
 
@@ -108,8 +108,8 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	public JsfCrudAdapter deptCrudController() throws Exception {
 		JsfCrudAdapter adapter = cruds().get("Department");
 		adapter.getController().addChild("employees",
-				new JsfDetailController(Employee.class)).addChild("tasks",
-				new JsfDetailController(Task.class));
+				createDetailController(Employee.class)).addChild("tasks",
+						createDetailController(Task.class));
 		return adapter;
 	}
 
@@ -129,9 +129,9 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 
 		/* Setup tasks and contacts DetailControllers. */
 		adapter.getController().addChild("tasks",
-				new JsfDetailController(Task.class));
+				createDetailController(Task.class));
 		adapter.getController().addChild("contacts",
-				new JsfDetailController(ContactInfo.class));
+				createDetailController(ContactInfo.class));
 
 		adapter.getPaginator().addOrderBy(OrderBy.asc("lastName"));
 		adapter.getPaginator().filter();
@@ -140,7 +140,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		 * Setup directReports detail controller. Make sure framework calls
 		 * add/remove methods.
 		 */
-		JsfDetailController directReports = new JsfDetailController(
+		JsfDetailController directReports = createDetailController(
 				Employee.class);
 		RelationshipManager relationshipManager = directReports
 				.getRelationshipManager();
@@ -167,7 +167,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		EmployeeDataSource dataSource = new EmployeeDataSource();
 		dataSource.setJdbcTemplate(new JdbcTemplate(employeeDataSource()));
 		FilteringPaginator filteringPaginator = new FilteringPaginator(dataSource, EmployeeReportObject.class);
-		JsfCrudAdapter adapter = new JsfCrudAdapter(filteringPaginator, (CrudController)empCrud().getController()){
+		JsfCrudAdapter adapter = new JsfCrudAdapter(filteringPaginator, (CrudOperations)empCrud().getController()){
 		    public Serializable getEntity() {
 		        Object object = ((Row)getModel().getRowData()).getObject();
 		        EmployeeReportObject employeeReportObject = (EmployeeReportObject) object;

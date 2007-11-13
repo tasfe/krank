@@ -8,7 +8,7 @@ import java.util.Map;
  * @author Rick Hightower
  *
  */
-public interface CrudOperations {
+public interface CrudOperations extends Toggleable {
     /** Create an object. */
     CrudOutcome create();
     /** Load a form to update an object. */

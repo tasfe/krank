@@ -11,14 +11,18 @@ import org.crank.core.spring.support.SpringBeanWrapperPropertiesUtil;
 import org.crank.crud.GenericDao;
 import org.crank.crud.controller.CrudController;
 import org.crank.crud.controller.CrudManagedObject;
+import org.crank.crud.controller.CrudOperations;
 import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.controller.FilteringPaginator;
 import org.crank.crud.controller.datasource.DaoFilteringPagingDataSource;
 import org.crank.crud.controller.support.tomahawk.TomahawkFileUploadHandler;
 import org.crank.crud.jsf.support.EntityConverter;
 import org.crank.crud.jsf.support.JsfCrudAdapter;
+import org.crank.crud.jsf.support.JsfDetailController;
+import org.crank.crud.jsf.support.JsfMessageInterceptor;
 import org.crank.crud.jsf.support.SelectItemGenerator;
 import org.crank.web.RequestParameterMapFinderImpl;
+import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.config.java.annotation.Bean;
 import org.springframework.config.java.annotation.ExternalBean;
@@ -42,18 +46,26 @@ public abstract class CrudJSFConfig implements InitializingBean {
         
         for (CrudManagedObject mo : managedObjects()) {
         	/* Create a new controller. */
-            CrudController crudController = new CrudController();
+            CrudController crudControllerTarget = new CrudController();
+            
+            CrudOperations ops = (CrudOperations) addJSFMessageHandling(crudControllerTarget);
+            
+            
             /* Associate controller with file upload subcontroller. */
-            crudController.setFileUploadHandler( new TomahawkFileUploadHandler() );
+            crudControllerTarget.setFileUploadHandler( new TomahawkFileUploadHandler() );
             /* Register property utils. */
-            crudController.setPropertyUtil( new SpringBeanWrapperPropertiesUtil() );
+            crudControllerTarget.setPropertyUtil( new SpringBeanWrapperPropertiesUtil() );
             
             /* Set the entity class into the controller. */
-            crudController.setEntityClass( mo.getEntityType() );
+            crudControllerTarget.setEntityClass( mo.getEntityType() );
+            
             
             /* Inject the repositories. */
-            crudController.setDao( repos().get( mo.getName() ) );
-            JsfCrudAdapter jsfCrudAdapter = new JsfCrudAdapter(paginators().get(StringUtils.unCapitalize(mo.getName())), crudController);
+            crudControllerTarget.setDao( repos().get( mo.getName() ) );
+            JsfCrudAdapter jsfCrudAdapter = new JsfCrudAdapter(
+            		paginators().get(StringUtils.unCapitalize(mo.getName())), ops);
+            
+            
             
             /* Put the controller into the map. */
             cruds.put(StringUtils.unCapitalize(mo.getName()), jsfCrudAdapter);
@@ -62,7 +74,21 @@ public abstract class CrudJSFConfig implements InitializingBean {
         
         return cruds;
     }
+
+	public Object addJSFMessageHandling(
+			Object target) {
+		ProxyFactoryBean proxyCreatorSupport = new ProxyFactoryBean();
+		proxyCreatorSupport.setTarget(target);
+		proxyCreatorSupport.addAdvice(new JsfMessageInterceptor());
+		proxyCreatorSupport.setOptimize(true);
+		proxyCreatorSupport.setOpaque(false);
+		return proxyCreatorSupport.getObject();
+	}
     
+	public JsfDetailController createDetailController(Class<?> entityClass) {
+		return (JsfDetailController) addJSFMessageHandling(new JsfDetailController(entityClass));
+	}
+	
     @SuppressWarnings("unchecked")
     @ExternalBean
     public abstract Map<String, GenericDao> repos() ;

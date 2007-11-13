@@ -35,18 +35,20 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
 	private static final long serialVersionUID = 1L;
 	private FilterablePageable paginator;
     private DataModel model = new ListDataModel();
-    private CrudController controller;
+    private CrudOperations controller;
 	private List page;
 
     public JsfCrudAdapter() {
         
     }
 
-    public JsfCrudAdapter(FilterablePageable filterablePageable, CrudController crudController) {
+    public JsfCrudAdapter(FilterablePageable filterablePageable, CrudOperations crudController) {
         this.paginator = filterablePageable;
         this.controller = crudController;
+        if (crudController instanceof CrudController) {
+        	((CrudController)crudController).setEntityLocator( this );
+        }
         if (this.controller != null) {
-        	crudController.setEntityLocator( this );
         	setupCrudControllerWiring();
         }
         if (this.paginator!=null) {

@@ -13,9 +13,10 @@ import org.crank.core.CrankValidationException;
 import org.crank.core.PropertiesUtil;
 import org.crank.core.RequestParameterMapFinder;
 import org.crank.crud.GenericDao;
+import org.crank.message.MessageManagerUtils;
 import org.crank.web.RequestParameterMapFinderImpl;
 
-public abstract class CrudControllerBase<T, PK extends Serializable> implements CrudOperations, Toggleable, Serializable {
+public abstract class CrudControllerBase<T, PK extends Serializable> implements CrudOperations, Serializable {
 
     protected GenericDao<T, PK> dao;
     protected EntityLocator entityLocator;
@@ -233,6 +234,7 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
         }
         fireBeforeCreate();
         CrudOutcome outcome = doCreate();
+    	MessageManagerUtils.getCurrentInstance().addStatusMessage("Created");        
         fireAfterCreate();
         return outcome;
     }
@@ -258,6 +260,7 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
         try {
 	        fireBeforeUpdate();
 	        CrudOutcome outcome = doUpdate();
+	    	MessageManagerUtils.getCurrentInstance().addStatusMessage("Updated");
 	        fireAfterUpdate();
 	        return outcome;
 		} catch (CrankValidationException e) {
@@ -270,6 +273,7 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
     public CrudOutcome delete() {
         fireBeforeDelete();
         CrudOutcome outcome = doDelete();
+    	MessageManagerUtils.getCurrentInstance().addStatusMessage("Deleted");        
         fireAfterDelete();
         return outcome;
     }

@@ -132,11 +132,11 @@
 	<!-- END DEFINE VARIABLES -->
 
 	<a4j:outputPanel ajaxRendered="true">
-	
-	<h:panelGrid id="paginator${id}" columns="1" width="100%">
+	<a4j:region id="paginatorRegion${id}">
+	<h:panelGrid id="paginator${id}" columns="2">
 	
 		<!-- TOOL BAR -->
-		<h:panelGroup>
+		<h:panelGroup style="text-align: left;">
 			<crank:commandLink 
 				id="addNewLink${id}"
 				rendered="${not readOnly}"
@@ -208,7 +208,7 @@
 		</h:panelGroup>
 
 		<!-- PAGINATOR -->
-		<h:panelGroup>
+		<h:panelGroup style="text-align: right;">
 			<crank:commandLink 
 				id="firstPage${id}"
 				entity="#{paginator}"
@@ -323,10 +323,13 @@
 				<f:selectItem itemLabel="All rows" itemValue="100000"/>
 				<a4j:support action="#{paginator.reset}" event="onchange" ajaxSingle="true" reRender="${refreshPaginator}" /> 
 			</h:selectOneMenu>
+			<a4j:status startText="Paginating..." stopText="" for="paginatorRegion${id}"
+					startStyleClass="statusStartStyleClass" stopStyleClass="statusStopStyleClass" />	
 			
 		</h:panelGroup>
-		
 	</h:panelGrid>
+	</a4j:region>
+	
 	</a4j:outputPanel>
 </ui:composition>
 </html>

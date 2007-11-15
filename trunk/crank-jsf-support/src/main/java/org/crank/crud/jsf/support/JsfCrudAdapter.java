@@ -136,7 +136,18 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
      * @see EntityLocator#getEntity()
      */
     public Serializable getEntity() {
+        /** If the selected entity is not equal return it and set it to null. */
+       if (selectedEntity!=null) {
+    	   Object tmp = selectedEntity;
+    	   selectedEntity = null;
+    	   return (Serializable) tmp;
+       }
        return (Serializable) ((Row)model.getRowData()).getObject();
+    }
+    
+    private Object selectedEntity;
+    public void setSelectedEnity(Object selectedEntity) {
+    	this.selectedEntity = selectedEntity;
     }
 
     private void crudChanged() {

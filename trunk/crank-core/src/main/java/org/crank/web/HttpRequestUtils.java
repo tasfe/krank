@@ -2,7 +2,7 @@ package org.crank.web;
 
 import javax.servlet.http.HttpServletRequest;
 /**
- * Associatest he request with the current thread so that it can be easily accessed.
+ * Associates the request with the current thread so that it can be easily accessed.
  * @author Rick Hightower, Chris Mathias
  *
  */

@@ -84,6 +84,11 @@ public abstract class CrudJSFConfig implements InitializingBean {
 		proxyCreatorSupport.setOpaque(false);
 		return proxyCreatorSupport.getObject();
 	}
+	
+	@Bean (scope = DefaultScopes.SINGLETON)
+	public CrudJSFConfig crudJSFConfig() {
+		return this;
+	}
     
 	public JsfDetailController createDetailController(Class<?> entityClass) {
 		return (JsfDetailController) addJSFMessageHandling(new JsfDetailController(entityClass));

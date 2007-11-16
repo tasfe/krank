@@ -11,6 +11,7 @@ import org.crank.crud.controller.CrudEvent;
 import org.crank.crud.controller.CrudOperations;
 import org.crank.crud.controller.datasource.FilteringDataSource;
 
+@SuppressWarnings("unchecked")
 public class JsfAutoCompleteController extends AutoCompleteController {
 	
     private UIInput component;

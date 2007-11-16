@@ -1,238 +1,102 @@
-#summary Using custom datasources (SQL)
-
-= Introduction =
-
-Crank is a great framework if you plan to use JPA and you want to do simple CRUD operations. Once you want to do something completely custom, you are not quite on your own either.
-
-For example if you want to implement a paginateable listing that is not JPA enabled you can. You simply implement one of the following interfaces:
-
- * `FilteringDataSource` if you want a filterable, sortable listing
- * `PagingDataSource` is you want a paginateable listing
- * `FilteringPagingDataSource` if you want a filterable, sortable listing
- 
-By default, the framework uses a `FilteringPagingDataSource` called `DaoFilteringPagingDataSource` which uses the custom `GenericDao` interface to read object from a persistent store (typically the `GenericDaoJpa` which knows how to use JPA). 
-
-There could be a `GenericDaoIBatis` and `GenericDaoSpringJDBC` but `GenericDao` is a large interface and difficult to extend and really relies on the functionality that a framework like Hibernate, TopLink, etc. provides.
-
-Conversely, it is much easier for custom non-JPA retrieval to implement `FilteringPagingDataSource` than try to implement the much more complex `GenericDao`.
-
-The `FilteringPagingDataSource` is plugged into the `FilteringPaginator`. The `FilteringPaginator` does all of the GUI logic for filtering and paginating the listing. This is logic that you do not have to repeat. The `FilteringPagingDataSource` is small in comparison to the `FilteringPaginator`.
-
-Let's demonstrate a really simple example of implementing a `FilteringPagingDataSource` as follows:
+I got the below error when I am accessing three ENUM fields on the Form.xhtml page. 
 
 {{{
-public class EmployeeDataSource implements FilteringPagingDataSource {
-	
-	/** The group holds conditions used by the listing to filter results. */
-	private Group group = new Group();
-	/** The orderBys holds a list of how the user wants the listings sorted. */
-	private OrderBy[] orderBys = new OrderBy []{};
-	/** Used to execute queries. */
-	private JdbcTemplate jdbcTemplate;
-	
-	/** Used for calculating count of employees. */
-	private static final String SELECT_COUNT = "select count(*) from Employee ";
-	/** Used to calculate employee list. */
-	private static final String SELECT_ROW = "select id, firstName, lastName, 5 from Employee ";
-	
-	
-    /** Get the count of employees based on the current generated where clause.
-     * The where clause is generated based on the values. */
-	public int getCount() {
-		return  jdbcTemplate.queryForInt(SELECT_COUNT + constructWhereClause(), extractValues());
-	}
-
-	/**
-	 * Get the employees for the current page of data. 
-	 * @param startItem where to start retrieving records.
-	 * @param how many records to retrieve.
-	 */
-	@SuppressWarnings("unchecked")
-	public List list(int startItem, int numItems) {
-		String query = SELECT_ROW + constructWhereClause() + constructOrderByClause() + 
-		" LIMIT " + (startItem + numItems) + " OFFSET " + startItem;
-		return jdbcTemplate.query(
-				query, 
-				extractValues(), new EmployeeReportObjectMapper());
-	}
-
-	/**
-	 * Get all employees.
-	 */
-	@SuppressWarnings("unchecked")
-	public List list() {
-		return jdbcTemplate.query(
-				SELECT_ROW + constructWhereClause() + constructOrderByClause(), 
-				extractValues(), new EmployeeReportObjectMapper());
-	}
-
-
-	/** Group gets manipualted by the paginator. */
-	public Group group() {
-		return group;
-	}
-
-	/** Order by gets used by the paginator class. */
-	public OrderBy[] orderBy() {
-		return this.orderBys;
-	}
-
-	/** Not used. */
-	public void setFetches(Fetch[] fetches) {
-	}
-
-	/** Not used. */
-	public Fetch[] fetches() {
-		return null;
-	}
-
-	
-	public void setOrderBy(OrderBy[] orderBy) {
-		this.orderBys = orderBy;
-	}
-
-	/** Used for dependency injection of jdbcTemplate. */
-	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-	}
-
-}}}
-	
-Most of the methods above just implement the `FilteringPagingDataSource` interface. The `getCount`, and two `list` methods use Spring's `jdbcTemplate` to actually retrieve records from the database. They really don't do much as they delegate most of the effort to the `jdbcTemplate` and the other helper methods.
-
-The bulk of the logic in the `EmployeeDataSource` is to work with the conditions (`group`) and sorting information (`orderBys`) that were passed to this class by the `FilteringPaginator` (from the end user clicking sort links, etc.).
-
-The bulk of the work is performed by the helper methods that process the comparison group and the orderBys.
-
-{{{
-	/** Construct the where clause from the group of Comparison objects. 
-	 * @return the where clause based on the group of comparisons
-	 */
-	protected String constructWhereClause() {
-		StringBuilder builder = new StringBuilder();
-		/* If the group has something in it build a where clause. */
-		if (group.size() > 0) {
-			builder.append(" WHERE ");
-			/* If the current iteration is a comparison, use it. */
-			for (Criterion criterion : group) {
-				if (criterion instanceof Comparison) {
-					Comparison comparison = (Comparison) criterion;
-					if (comparison.getName().equals("taskCount")) {
-						continue;
-					}
-					builder.append(comparison.getName());
-					builder.append(" " + comparison.getOperator().getOperator());
-					builder.append(" ? ");
-					builder.append("AND");
-				}
-			}
-			return builder.toString().substring(0,builder.length()-3);
-		} else {
-			return "";
-		}
-	}
-
-	/**
-	 * Construct the order by clause.  
-	 * @return
-	 */
-	protected String constructOrderByClause() {
-		StringBuilder builder = new StringBuilder();
-		if (this.orderBys.length > 0) {
-			builder.append(" ORDER BY ");
-			for (OrderBy orderBy : orderBys) {
-				builder.append(" " + orderBy.getName() + " " + orderBy.getDirection() + ",");
-			}
-			
-			return builder.toString().substring(0,builder.length()-1);
-		} else {
-			return "";
-		}
-	}
-
-	/**
-	 * Extract the values for the prepared statement calls.
-	 * @return extracted values.
-	 */
-	protected Object[] extractValues() {
-		List <Object> values = new ArrayList<Object>();
-		for (Criterion criterion : group) {
-			if (criterion instanceof Comparison) {
-				Comparison comparison = (Comparison) criterion;
-				if (comparison.getOperator() == Operator.LIKE || comparison.getOperator() == Operator.LIKE_START) {
-					String sValue = (String) comparison.getValue();
-					values.add(sValue + "%");
-				} else {
-					values.add(comparison.getValue());
-				}
-			}
-		}
-		return values.toArray(new Object[values.size()]);
-	}
-
+java.lang.IllegalArgumentException: Expected a child component type of UISelectItem/UISelectItems for component type javax.faces.SelectOne(LeadDeliveryBO_deliveryType).  Found null.
+	at com.sun.faces.renderkit.RenderKitUtils.getSelectItems(RenderKitUtils.java:357)
+	at com.sun.faces.renderkit.html_basic.MenuRenderer.getOptionNumber(MenuRenderer.java:675)
+	at com.sun.faces.renderkit.html_basic.MenuRenderer.renderSelect(MenuRenderer.java:793)
+	at com.sun.faces.renderkit.html_basic.MenuRenderer.encodeEnd(MenuRenderer.java:335)
+	at javax.faces.component.UIComponentBase.encodeEnd(UIComponentBase.java:833)
+	at org.ajax4jsf.renderkit.RendererBase.renderChild(RendererBase.java:286)
+	at org.ajax4jsf.renderkit.RendererBase.renderChildren(RendererBase.java:262)
+	at org.ajax4jsf.renderkit.html.AjaxOutputPanelRenderer.encodeChildren(AjaxOutputPanelRenderer.java:79)
+	at javax.faces.component.UIComponentBase.encodeChildren(UIComponentBase.java:809)
+	at com.sun.faces.renderkit.html_basic.HtmlBasicRenderer.encodeRecursive(HtmlBasicRenderer.java:271)
+	at com.sun.faces.renderkit.html_basic.GridRenderer.encodeChildren(GridRenderer.java:242)
+	at javax.faces.component.UIComponentBase.encodeChildren(UIComponentBase.java:809)
+	at com.sun.faces.renderkit.html_basic.HtmlBasicRenderer.encodeRecursive(HtmlBasicRenderer.java:271)
+	at com.sun.faces.renderkit.html_basic.GridRenderer.encodeChildren(GridRenderer.java:242)
+	at javax.faces.component.UIComponentBase.encodeChildren(UIComponentBase.java:809)
+	at org.ajax4jsf.renderkit.RendererBase.renderChild(RendererBase.java:282)
+	at org.ajax4jsf.renderkit.RendererBase.renderChildren(RendererBase.java:262)
+	at org.ajax4jsf.renderkit.RendererBase.renderChild(RendererBase.java:284)
+	at org.ajax4jsf.renderkit.RendererBase.renderChildren(RendererBase.java:262)
+	at org.ajax4jsf.renderkit.AjaxContainerRenderer.encodeChildren(AjaxContainerRenderer.java:97)
+	at javax.faces.component.UIComponentBase.encodeChildren(UIComponentBase.java:809)
+	at org.ajax4jsf.component.UIAjaxRegion.encodeChildren(UIAjaxRegion.java:113)
+	at com.sun.faces.renderkit.html_basic.HtmlBasicRenderer.encodeRecursive(HtmlBasicRenderer.java:271)
+	at com.sun.faces.renderkit.html_basic.GridRenderer.encodeChildren(GridRenderer.java:242)
+	at javax.faces.component.UIComponentBase.encodeChildren(UIComponentBase.java:809)
+	at org.ajax4jsf.renderkit.RendererBase.renderChild(RendererBase.java:282)
+	at org.ajax4jsf.renderkit.RendererBase.renderChildren(RendererBase.java:262)
+	at org.ajax4jsf.renderkit.AjaxContainerRenderer.encodeChildren(AjaxContainerRenderer.java:97)
+	at javax.faces.component.UIComponentBase.encodeChildren(UIComponentBase.java:809)
+	at org.ajax4jsf.component.UIAjaxRegion.encodeChildren(UIAjaxRegion.java:113)
+	at javax.faces.component.UIComponent.encodeAll(UIComponent.java:886)
+	at javax.faces.component.UIComponent.encodeAll(UIComponent.java:892)
+	at com.sun.facelets.FaceletViewHandler.renderView(FaceletViewHandler.java:571)
+	at org.ajax4jsf.application.ViewHandlerWrapper.renderView(ViewHandlerWrapper.java:108)
+	at org.ajax4jsf.application.AjaxViewHandler.renderView(AjaxViewHandler.java:216)
+	at com.sun.faces.lifecycle.RenderResponsePhase.execute(RenderResponsePhase.java:106)
+	at com.sun.faces.lifecycle.LifecycleImpl.phase(LifecycleImpl.java:251)
+	at com.sun.faces.lifecycle.LifecycleImpl.render(LifecycleImpl.java:144)
+	at javax.faces.webapp.FacesServlet.service(FacesServlet.java:245)
+	at org.mortbay.jetty.servlet.ServletHolder.handle(ServletHolder.java:487)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1093)
+	at org.apache.myfaces.webapp.filter.ExtensionsFilter.doFilter(ExtensionsFilter.java:100)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1084)
+	at org.ajax4jsf.webapp.BaseXMLFilter.doXmlFilter(BaseXMLFilter.java:141)
+	at org.ajax4jsf.webapp.BaseFilter.doFilter(BaseFilter.java:281)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1084)
+	at org.apache.myfaces.webapp.filter.ExtensionsFilter.doFilter(ExtensionsFilter.java:147)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1084)
+	at org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter.doFilterInternal(OpenEntityManagerInViewFilter.java:111)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:75)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1084)
+	at org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:360)
+	at org.mortbay.jetty.security.SecurityHandler.handle(SecurityHandler.java:216)
+	at org.mortbay.jetty.servlet.SessionHandler.handle(SessionHandler.java:181)
+	at org.mortbay.jetty.handler.ContextHandler.handle(ContextHandler.java:712)
+	at org.mortbay.jetty.webapp.WebAppContext.handle(WebAppContext.java:405)
+	at org.mortbay.jetty.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:211)
+	at org.mortbay.jetty.handler.HandlerCollection.handle(HandlerCollection.java:114)
+	at org.mortbay.jetty.handler.HandlerWrapper.handle(HandlerWrapper.java:139)
+	at org.mortbay.jetty.Server.handle(Server.java:313)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:506)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:844)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:644)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:211)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:381)
+	at org.mortbay.io.nio.SelectChannelEndPoint.run(SelectChannelEndPoint.java:396)
+	at org.mortbay.thread.BoundedThreadPool$PoolThread.run(BoundedThreadPool.java:442)
 }}}
 
-Next we need to configure this as follows:
-
+This is what I did with Rick's help. Needed to add a separate selectItemGenerator for each  ENUM field.
 {{{
-	@SuppressWarnings({ "unchecked", "serial" })
-	@Bean(scope = DefaultScopes.SESSION)
-	public JsfCrudAdapter empRecordCrud() {
-		EmployeeDataSource dataSource = new EmployeeDataSource();
-		dataSource.setJdbcTemplate(new JdbcTemplate(employeeDataSource()));
-		FilteringPaginator filteringPaginator = new FilteringPaginator(dataSource, EmployeeReportObject.class);
-		JsfCrudAdapter adapter = new JsfCrudAdapter(filteringPaginator, (CrudController)empCrud().getController()){
-		    public Serializable getEntity() {
-		        Object object = ((Row)getModel().getRowData()).getObject();
-		        EmployeeReportObject employeeReportObject = (EmployeeReportObject) object;
-		        Employee employee = new Employee();
-		        employee.setId(employeeReportObject.getId());
-		        return employee;
-		     }			
-		};
-		
-		return adapter;
-	}
+@SuppressWarnings("unchecked")
+    @Bean (scope = DefaultScopes.SINGLETON)
+    public Map<String, SelectItemGenerator> selectItemGenerators() throws Exception {
+        Map<String, SelectItemGenerator> selectItemGenerators =   super.selectItemGenerators();
 
-}}}
+        SelectItemGenerator selectItemGenerator = new SelectItemGenerator();
+        EnumDataSource<DeliveryMethodEnum> dataSource = new EnumDataSource();
+        dataSource.setType(DeliveryMethodEnum.class);
+        selectItemGenerator.setDataSource( dataSource );
+        selectItemGenerators.put("DeliveryMethodEnum", selectItemGenerator);
 
-Lastly, we use it as follows:
-
-{{{
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
-	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-	xmlns:c="http://java.sun.com/jstl/core"
-	xmlns:crank="http://www.googlecode.com/crank"
-	>
-<ui:composition template="/templates/layout.xhtml">
-	<ui:define name="content">
-	
-	
-	    <span class="pageTitle">Employee Record Listing</span>
-
-
-		<a4j:form id="employeeListingForm">
-				<a4j:outputPanel ajaxRendered="true">
-					<h:panelGroup rendered="${empRecordCrud.controller.showForm}">
-						<crank:form crud="${empRecordCrud.controller}"
-							parentForm="employeeListingForm" 
-							propertyNames="firstName,lastName,numberOfPromotions,age,department" ajax="${true}" />
-					</h:panelGroup>
-				</a4j:outputPanel>
-
-				<crank:listing  jsfCrudAdapter="${empRecordCrud}" 
-					propertyNames="firstName,lastName"
-					parentForm="employeeListingForm"
-					/>
-		</a4j:form>
-				
-	</ui:define>
-</ui:composition>
-</html>
+        selectItemGenerator = new SelectItemGenerator();
+        EnumDataSource<DeliveryTypeEnum> dataSource2 = new EnumDataSource();
+        dataSource.setType(DeliveryTypeEnum.class);
+        selectItemGenerator.setDataSource( dataSource2 );
+        selectItemGenerators.put("DeliveryTypeEnum", selectItemGenerator);
+        
+        selectItemGenerator = new SelectItemGenerator();
+        EnumDataSource<BatchModeEnum> dataSource3 = new EnumDataSource();
+        dataSource.setType(BatchModeEnum.class);
+        selectItemGenerator.setDataSource( dataSource2 );
+        selectItemGenerators.put("BatchModeEnum", selectItemGenerator);
+        
+        return selectItemGenerators;
+    }
 
 }}}

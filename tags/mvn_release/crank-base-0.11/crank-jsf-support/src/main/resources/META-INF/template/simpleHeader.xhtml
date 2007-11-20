@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	  xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	  xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+      xmlns:crud="http://www.googlecode.com/crank/crud"
+      xmlns:crank="http://www.googlecode.com/crank">
+
+<ui:composition>
+
+	<!-- DEFINE VARIABLES --> 
+	<c:if test="${empty label}">
+	    <c:set var="label" value="${crud:createLabel(fieldName)}" />
+	</c:if>
+	
+	<c:if test="${empty reRender}">
+	    <c:set var="reRender" value="exportPanel" />
+	</c:if>
+
+	<!--  Style classes -->
+	<c:if test="${empty headerLinkClass}">
+	    <c:set var="headerLinkClass" value="linkClass" />
+	</c:if>
+	<c:if test="${empty headerTextClass}">
+	    <c:set var="headerTextClass" value="textClass" />
+	</c:if>
+	<c:if test="${empty headerFilterInputTextClass}">
+	    <c:set var="headerFilterInputTextClass" value="inputTextClass" />
+	</c:if>
+	<c:if test="${empty columnHeaderClass}">
+	    <c:set var="columnHeaderClass" value="dataTableColumnHeader" />
+	</c:if>
+
+	<!-- END DEFINE VARIABLES -->
+
+	<h:column styleClass="${columnHeaderClass}">
+		<h:outputText value="${label}" styleClass="headerTextClass"/>
+	</h:column>
+
+</ui:composition>
+</html>

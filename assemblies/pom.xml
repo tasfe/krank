@@ -4,13 +4,13 @@
   <parent>
     <groupId>org.crank</groupId>
     <artifactId>crank-base</artifactId>
-    <version>0.10-SNAPSHOT</version>
+    <version>0.11-SNAPSHOT</version>
   </parent>
 
   <groupId>org.crank.assemblies</groupId>
   <artifactId>assemblies</artifactId>
   <packaging>pom</packaging>
-  <version>0.10-SNAPSHOT</version>
+  <version>0.11-SNAPSHOT</version>
   <name>Crank :: Assemblies</name>
 
   <url>http://maven.apache.org</url>

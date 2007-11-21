@@ -1,0 +1,57 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:av="http://arc-mind.com/crank/validation"
+	xmlns:form="http://www.springframework.org/tags/form" version="2.0">
+	<!-- xmlns:crank="http://www.crankframework.com/crank" -->
+
+	<jsp:output doctype-root-element="html"
+		doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
+		doctype-system="http://www.w3c.org/TR/xhtml1/DTD/xhtml1-strict.dtd" />
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+
+	<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+	<title>User Registration</title>
+	<avclientValidator beanName="user" propertyNames="firstName"/>
+	</head>
+
+	<body>
+	<h1>User Registration House of Pain</h1>
+	<br />
+	<br />
+	<spring:bind path="user.*">
+		<c:if test="${not empty status.errorMessages}">
+			<ol class="errorList">
+				<c:forEach var="error" items="${status.errorMessages}">
+					<li class="errorItem"><c:out value="${error}"
+						escapeXml="false" /><br />
+					</li>
+				</c:forEach>
+			</ol>
+		</c:if>
+	</spring:bind>
+	<div id="clientValidationSummary">&#160;</div>
+	
+	<form:form id="userForm" name="user">
+				
+	
+		<spring:bind path="user.firstName">
+			<label for="${status.expression}">First Name</label>
+			<input name="${status.expression}" id="${status.expression}"
+				type="text" value="${user.firstName}" />
+			<c:forEach var="error" items="${status.errorMessage}">
+						${error} 
+				</c:forEach>
+				<span id="firstNameError">&#160;</span> 
+		</spring:bind>
+		<div>
+		<input id="submit" value="Continue" type="submit" onclick="return validate();"/>
+		</div>
+	</form:form>
+	
+	</body>
+	</html>
+
+</jsp:root>

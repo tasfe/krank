@@ -3,13 +3,13 @@
     <parent>
         <artifactId>crank-base</artifactId>
         <groupId>org.crank</groupId>
-        <version>0.12</version>
+        <version>0.13-SNAPSHOT</version>
     </parent>
 
     <groupId>org.crank.integration</groupId>
     <artifactId>crank-integration-base</artifactId>
     <packaging>pom</packaging>
-    <version>0.12</version>
+    <version>0.13-SNAPSHOT</version>
     <name>Crank :: Integration Test Base</name>
 
     <modules>

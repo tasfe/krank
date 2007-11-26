@@ -12,6 +12,7 @@
 	xmlns:crank="http://www.googlecode.com/crank">
 
 <ui:composition>
+<c:if test="${not empty detailController}">
 <a4j:outputPanel ajaxRendered="true">
 
 		<c:if test="${empty readOnly}">
@@ -58,7 +59,7 @@
 		<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
 			
 		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
-		
+
 		<h:panelGroup binding="${detailController.subForm}">
 			<crank:node
 				entity="#{detailController}"
@@ -101,6 +102,7 @@
 								<ui:insert/>
 							</crank:form>
 						</c:if>
+						
 						<rich:dataTable value="#{detailController.model}" var="row">
 							<f:facet name="header">
 								<rich:columnGroup>
@@ -230,5 +232,10 @@
 			
 		</h:panelGroup>
 </a4j:outputPanel>
+</c:if>
+
+<c:if test="${empty detailController}">
+	<h:outputText value="DETAIL CONTROLLER IS NULL"/>
+</c:if>
 </ui:composition>
 </html>

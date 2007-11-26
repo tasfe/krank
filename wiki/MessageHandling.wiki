@@ -1,4 +1,4 @@
-#summary Handling errors
+#summary Handling errors, message generation
 
 = Introduction =
 

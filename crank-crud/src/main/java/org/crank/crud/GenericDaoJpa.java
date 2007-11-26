@@ -755,6 +755,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		} else {
 			query.append(newSelectStatement);
 		}
+		query.append(" FROM ");
 		query.append(entityName);
 		query.append(" ");
 		query.append(instanceName).append(" ");
@@ -824,6 +825,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		EntityManagerHolder emHolder = (EntityManagerHolder) TransactionSynchronizationManager
 				.getResource(getJpaTemplate().getEntityManagerFactory());
 		return emHolder.getEntityManager();
+	}
+
+	public void setNewSelectStatement(String newSelectStatement) {
+		this.newSelectStatement = newSelectStatement;
 	}
 
 }

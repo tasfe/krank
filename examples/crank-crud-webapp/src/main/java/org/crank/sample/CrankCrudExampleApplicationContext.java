@@ -111,8 +111,8 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	public JsfCrudAdapter deptCrudController() throws Exception {
 		JsfCrudAdapter adapter = cruds().get("Department");
 		adapter.getController().addChild("employees",
-				createDetailController(Employee.class)).addChild("tasks",
-						createDetailController(Task.class));
+				new JsfDetailController(Employee.class)).addChild("tasks",
+						new JsfDetailController(Task.class));
 		return adapter;
 	}
 
@@ -132,9 +132,9 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 
 		/* Setup tasks and contacts DetailControllers. */
 		adapter.getController().addChild("tasks",
-				createDetailController(Task.class));
+				new JsfDetailController(Task.class));
 		adapter.getController().addChild("contacts",
-				createDetailController(ContactInfo.class));
+				new JsfDetailController(ContactInfo.class));
 
 		adapter.getPaginator().addOrderBy(OrderBy.asc("lastName"));
 		adapter.getPaginator().filter();
@@ -143,7 +143,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		 * Setup directReports detail controller. Make sure framework calls
 		 * add/remove methods.
 		 */
-		JsfDetailController directReports = createDetailController(
+		JsfDetailController directReports = new JsfDetailController(
 				Employee.class);
 		RelationshipManager relationshipManager = directReports
 				.getRelationshipManager();

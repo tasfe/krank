@@ -48,7 +48,7 @@ public abstract class CrudJSFConfig implements InitializingBean {
         	/* Create a new controller. */
             CrudController crudControllerTarget = new CrudController();
             
-            CrudOperations ops = (CrudOperations) addJSFMessageHandling(crudControllerTarget);
+            //CrudOperations ops = (CrudOperations) addJSFMessageHandling(crudControllerTarget);
             
             
             /* Associate controller with file upload subcontroller. */
@@ -63,7 +63,7 @@ public abstract class CrudJSFConfig implements InitializingBean {
             /* Inject the repositories. */
             crudControllerTarget.setDao( repos().get( mo.getName() ) );
             JsfCrudAdapter jsfCrudAdapter = new JsfCrudAdapter(
-            		paginators().get(StringUtils.unCapitalize(mo.getName())), ops);
+            		paginators().get(StringUtils.unCapitalize(mo.getName())), crudControllerTarget);
             
             
             

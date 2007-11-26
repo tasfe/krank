@@ -7,6 +7,18 @@
            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
 
     <bean class="org.crank.sample.CrankCrudExampleApplicationContext" />
+    
+	<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+        <property name="scopes">
+            <map>
+                <entry key="view">
+                    <bean class="org.crank.config.spring.support.ViewScope"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    
 
     <bean id="employeeDataSource"
         class="org.apache.commons.dbcp.BasicDataSource"

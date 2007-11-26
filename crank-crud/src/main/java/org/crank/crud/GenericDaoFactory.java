@@ -78,6 +78,7 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
     
     private GenericDaoJpa loadNonCachingDao() {
         GenericDaoJpa dao = new GenericDaoJpa( bo );
+        dao.setNewSelectStatement(newSelect);
         dao.setEntityManagerFactory( entityManagerFactory );
         return dao;
     }
@@ -89,6 +90,7 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
         PreloadableCacheableGenericDaoJpa dao = new PreloadableCacheableGenericDaoJpa( bo );
         dao.setPreloadConfiguration( preloadConfiguration );
         dao.setEntityManagerFactory( entityManagerFactory );
+        dao.setNewSelectStatement(newSelect);
         dao.preload();
         this.addAdvisor( new CachingAdvisor() );
         return dao;
@@ -101,4 +103,10 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
     public void setBo( Class bo ) {
         this.bo = bo;
     }
+
+    private String newSelect;
+	public void setNewSelect(String newSelect) {
+		this.newSelect = newSelect;
+		
+	}
 }

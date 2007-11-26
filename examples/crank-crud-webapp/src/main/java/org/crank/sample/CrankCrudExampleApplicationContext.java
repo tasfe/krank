@@ -67,8 +67,11 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 					DepartmentDAO.class));
 			managedObjects.add(new CrudManagedObject(Specialty.class,
 					SpecialtyDAO.class));
+			
+			CrudManagedObject crudManagedObject = new CrudManagedObject(Role.class, RoleDAO.class);
+			crudManagedObject.setNewSelect("new Role(o.id, o.name)");
 			managedObjects
-					.add(new CrudManagedObject(Role.class, RoleDAO.class));
+					.add(crudManagedObject);
 			managedObjects.add(new CrudManagedObject(Skill.class, null));
 			try {
 				dataTableScrollerBean();

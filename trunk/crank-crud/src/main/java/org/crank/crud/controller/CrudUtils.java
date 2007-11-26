@@ -227,7 +227,12 @@ public class CrudUtils {
     }
     
     public static String getObjectId(DetailController detailController, Object row) {
-        return detailController.getObjectId( row );
+    	
+    	if (row == null) {
+    		return "-1";
+    	} else {
+    		return detailController.getObjectId( row );
+    	}
     }
     
 

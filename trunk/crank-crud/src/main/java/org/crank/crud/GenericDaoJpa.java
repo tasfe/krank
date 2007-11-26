@@ -38,7 +38,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
- * This is our GenericDAO interface that supports its own Criteria API and finder AOP mixins.
+ * This is our GenericDAO interface that supports its own Criteria API and
+ * finder AOP mixins.
+ * 
  * @param <T>
  *            Dao class
  * @param <PK>
@@ -54,6 +56,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	protected boolean distinct = false;
 
 	protected Logger logger = Logger.getLogger(GenericDaoJpa.class);
+	
+	private String newSelectStatement = null;
 
 	public GenericDaoJpa(final Class<T> aType) {
 		this.type = aType;
@@ -66,11 +70,12 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public T store(T entity) {
 		T persistedEntity = entity;
 		try {
-			// TODO: the error reporting could be deferred (the entity has an ID that is in the db but not in the enity manager)
+			// TODO: the error reporting could be deferred (the entity has an ID
+			// that is in the db but not in the enity manager)
 			getJpaTemplate().persist(entity);
-		} catch(EntityExistsException e) {
+		} catch (EntityExistsException e) {
 			// if the entity exists then we call merge
-			persistedEntity = (T)getJpaTemplate().merge(entity);
+			persistedEntity = (T) getJpaTemplate().merge(entity);
 		}
 		return persistedEntity;
 	}
@@ -244,8 +249,14 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	@SuppressWarnings("unchecked")
 	public List<T> find(Class<T> clazz) {
 		String entityName = getEntityName(clazz);
-		return (List<T>) getJpaTemplate().find(
+		if (newSelectStatement == null) {
+			return (List<T>) getJpaTemplate().find(
 				"SELECT instance FROM " + entityName + " instance");
+		} else {
+			return (List<T>) getJpaTemplate().find(
+					"SELECT " + newSelectStatement + " FROM " + entityName + " o");
+			
+		}
 	}
 
 	public List<T> find(String[] propertyNames, Object[] values) {
@@ -289,8 +300,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return find(clazz, (String[]) null, criteria);
 	}
 
-	public List<T> find(Class<T> clazz, String[] propertyNames, Object[] values,
-			String[] orderBy) {
+	public List<T> find(Class<T> clazz, String[] propertyNames,
+			Object[] values, String[] orderBy) {
 		if (propertyNames.length != values.length) {
 			throw new RuntimeException(
 					"You are not using this API correctly. The propertynames length should always match values length.");
@@ -680,7 +691,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 			}
 		}
 		if (pkName == null && aType.getSuperclass() != null) {
-			pkName = searchFieldsForPK((Class<T>)aType.getSuperclass());
+			pkName = searchFieldsForPK((Class<T>) aType.getSuperclass());
 		}
 		return pkName;
 	}
@@ -736,8 +747,14 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	private String constructSelect(String entityName, String instanceName) {
-		StringBuilder query = new StringBuilder("SELECT "
-				+ (this.distinct ? "DISTINCT " : "") + instanceName + " FROM ");
+		StringBuilder query = new StringBuilder(255);
+		query.append("SELECT ");
+		query.append((this.distinct ? " DISTINCT " : " "));
+		if (newSelectStatement == null) {
+			query.append(instanceName);
+		} else {
+			query.append(newSelectStatement);
+		}
 		query.append(entityName);
 		query.append(" ");
 		query.append(instanceName).append(" ");

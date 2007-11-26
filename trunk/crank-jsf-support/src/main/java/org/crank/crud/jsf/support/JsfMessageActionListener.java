@@ -1,34 +1,31 @@
 package org.crank.crud.jsf.support;
 
-
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ActionListener;
 
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
 import org.crank.message.MessageManagerUtils;
 import org.crank.message.SimpleMessageManager;
 
-/** 
- * Turns exceptions into JSF Messages. 
- * @author Rick Hightower
- * Used to add error handling to non-JSF based classes.
- *
- */
-public class JsfMessageInterceptor extends MessageProcessor implements MethodInterceptor {
+public class JsfMessageActionListener extends MessageProcessor implements
+		ActionListener {
 
-	/**
-	 * Wrap method calls with error handling.
-	 */
-	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+	private ActionListener defaultActionListener;
+	
+	public JsfMessageActionListener (ActionListener defaultActionListener) {
+		this.defaultActionListener = defaultActionListener;
+	}
+	
+	public void processAction(ActionEvent event)
+			throws AbortProcessingException {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		try {
 			MessageManagerUtils.setCurrentInstance(new SimpleMessageManager());
-			Object returnObject = methodInvocation.proceed();
+			defaultActionListener.processAction(event);
 			
 			generateFacesMessages(facesContext);
-			
-			return returnObject;
 		} catch (Exception ex) {
 			/* If there was an exception, stay on the current view and add
 			 * an error message.
@@ -42,10 +39,9 @@ public class JsfMessageInterceptor extends MessageProcessor implements MethodInt
 			
 			/* Populate stack trace for display. */
 			extractErrorMessage(facesContext, ex);
-			logError(ex);
-			
-			return null;
+			logError(ex);			
 		}
+
 	}
 
 }

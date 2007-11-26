@@ -57,7 +57,7 @@ public abstract class CrudDAOConfig implements InitializingBean {
 		Map<String, GenericDao> repositories = new HashMap<String, GenericDao>();
 
 		for (CrudManagedObject mo : managedObjects()) {
-			GenericDao dao = createDao(mo.getDaoInterface(), mo.getEntityType());
+			GenericDao dao = createDao(mo.getDaoInterface(), mo.getEntityType(), mo.getNewSelect());
 			repositories.put(mo.getName(), dao);
 		}
 
@@ -122,7 +122,7 @@ public abstract class CrudDAOConfig implements InitializingBean {
 	}
 
 	@SuppressWarnings("unchecked")
-	public GenericDao createDao(Class daoClass, Class entityClass)
+	public GenericDao createDao(Class daoClass, Class entityClass, String newSelect)
 			throws Exception {
 		GenericDaoFactory genericDaoFactory = new GenericDaoFactory(
 				transactionInterceptor());
@@ -131,6 +131,8 @@ public abstract class CrudDAOConfig implements InitializingBean {
 		} else {
 			genericDaoFactory.setInterface(daoClass);
 		}
+		
+		genericDaoFactory.setNewSelect(newSelect);
 		genericDaoFactory.setBo(entityClass);
 		genericDaoFactory.setEntityManagerFactory(entityManagerFactory());
 		genericDaoFactory.afterPropertiesSet();

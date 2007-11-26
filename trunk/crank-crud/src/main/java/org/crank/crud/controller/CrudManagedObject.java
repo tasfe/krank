@@ -9,8 +9,15 @@ public class CrudManagedObject implements Serializable {
     private String name;
     private boolean needsConverter;
     private boolean needsDropDownSupport;
+    private String newSelect = null;
 
-    public CrudManagedObject () {
+    public String getNewSelect() {
+		return newSelect;
+	}
+	public void setNewSelect(String newSelect) {
+		this.newSelect = newSelect;
+	}
+	public CrudManagedObject () {
         
     }
     public CrudManagedObject (final Class entityType, final Class daoInterface) {

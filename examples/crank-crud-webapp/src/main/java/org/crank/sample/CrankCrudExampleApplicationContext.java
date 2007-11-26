@@ -162,7 +162,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	abstract DataSource employeeDataSource();
 
 	@SuppressWarnings({ "unchecked", "serial" })
-	@Bean(scope = DefaultScopes.SESSION)
+	@Bean(scope = "view")
 	public JsfCrudAdapter empRecordCrud() {
 		EmployeeDataSource dataSource = new EmployeeDataSource();
 		dataSource.setJdbcTemplate(new JdbcTemplate(employeeDataSource()));
@@ -173,8 +173,10 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		        EmployeeReportObject employeeReportObject = (EmployeeReportObject) object;
 		        Employee employee = new Employee();
 		        employee.setId(employeeReportObject.getId());
+		        //throw new RuntimeException("CAN'T TOUCH THIS");
 		        return employee;
-		     }			
+		     }
+		    
 		};
 		
 		return adapter;

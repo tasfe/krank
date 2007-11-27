@@ -30,3 +30,14 @@ In Facelet page:
                                    parentForm="employeeForm" />
 
 }}}
+
+Where the Employee has a primarySkill property:
+
+{{{
+public class Employee extends Person {
+
+    ...
+    @ManyToOne()
+    private Skill primarySkill;
+
+}}}

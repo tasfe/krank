@@ -696,7 +696,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return pkName;
 	}
 
-	private String searchMethodsForPK(Class<T> aType) {
+	private String searchMethodsForPK(Class aType) {
 		String pkName = null;
 		Method[] methods = aType.getDeclaredMethods();
 		for (Method method : methods) {
@@ -709,7 +709,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 			}
 		}
 		if (pkName == null && aType.getSuperclass() != null) {
-			pkName = searchMethodsForPK(aType);
+			pkName = searchMethodsForPK(aType.getSuperclass());
 		}
 		return pkName;
 	}

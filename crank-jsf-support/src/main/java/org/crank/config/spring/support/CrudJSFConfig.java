@@ -11,7 +11,6 @@ import org.crank.core.spring.support.SpringBeanWrapperPropertiesUtil;
 import org.crank.crud.GenericDao;
 import org.crank.crud.controller.CrudController;
 import org.crank.crud.controller.CrudManagedObject;
-import org.crank.crud.controller.CrudOperations;
 import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.controller.FilteringPaginator;
 import org.crank.crud.controller.datasource.DaoFilteringPagingDataSource;

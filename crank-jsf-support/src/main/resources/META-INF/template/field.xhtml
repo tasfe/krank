@@ -182,7 +182,7 @@
     <c:if test="${crud:isManyToOne(type,fieldName) and not forceInputText}">
         <c:set var="propEntityName" value="${crud:getPropertyEntityName(type,fieldName)}" />
         <a4j:outputPanel ajaxRendered="true">        
-		<crud:select id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}">
+		<crud:select id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}" required="${not crud:isManyToOneOptional(type,fieldName)}">
 <!--			        <validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}"/>-->
 
 			<c:if test="${not crud:isManyToOneOptional(type,fieldName)}">

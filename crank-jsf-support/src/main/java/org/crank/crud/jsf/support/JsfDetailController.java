@@ -18,9 +18,18 @@ import javax.faces.model.ListDataModel;
 import org.crank.crud.controller.CrudOperations;
 import org.crank.crud.controller.CrudOutcome;
 import org.crank.crud.controller.DetailController;
+import org.crank.crud.controller.EntityLocator;
+import org.crank.crud.controller.Row;
+import org.crank.crud.controller.SelectListener;
+import org.crank.crud.controller.SelectSupport;
+import org.crank.crud.controller.Selectable;
 
-public class JsfDetailController extends DetailController{
+@SuppressWarnings({ "unchecked", "serial" })
+public class JsfDetailController extends DetailController implements Selectable, EntityLocator {
+	
+	protected boolean allowsSelection=false;
     protected DataModel model = new ListDataModel();
+    protected SelectSupport selectSupport = new SelectSupport();
 
     protected Comparator orderByComparator;
     
@@ -30,6 +39,11 @@ public class JsfDetailController extends DetailController{
 
     public JsfDetailController( Class entityClass ) {
         super( entityClass );
+    }
+
+    public JsfDetailController( Class entityClass, boolean allowSelection ) {
+        super( entityClass );
+        this.allowsSelection = allowSelection;
     }
 
     public JsfDetailController( CrudOperations parent, Class entityClass ) {
@@ -62,12 +76,27 @@ public class JsfDetailController extends DetailController{
             if (orderByComparator != null) {
             	Collections.sort(al, orderByComparator);
             }
+            if (allowsSelection) {
+            	al = wrapListElementsInRowObjects(al);
+            }
+            
         }
         model.setWrappedData( al );
         return model;
     }
 
-    /**
+    @SuppressWarnings("unchecked")
+	private List wrapListElementsInRowObjects(List al) {
+    	ArrayList newList = new ArrayList(al.size());
+    	Iterator iterator = al.iterator();
+    	while(iterator.hasNext()) {
+    		newList.add(new Row(iterator.next()));
+    		
+    	}
+		return newList;
+	}
+
+	/**
      * Blank out the component fields so users don't see old values.
      *
      */
@@ -100,6 +129,52 @@ public class JsfDetailController extends DetailController{
 
 	public void setOrderByComparator(Comparator orderBy) {
 		this.orderByComparator = orderBy;
+	}
+
+	public boolean isAllowsSelection() {
+		return allowsSelection;
+	}
+
+	public void setAllowsSelection(boolean allowsSelection) {
+		this.allowsSelection = allowsSelection;
+	}
+
+	public void processSelection() {
+		if (! allowsSelection) {
+			throw new RuntimeException("The allowSelection property must be set");
+		}
+
+		selectSupport.fireSelect(getSelectedEntities());		
+	}
+	
+	public void addSelectListener(SelectListener listener) {
+		if (! allowsSelection) {
+			throw new RuntimeException("The allowSelection property must be set");
+		}
+
+		selectSupport.addSelectListener(listener);
+	}
+
+	public void removeSelectListener(SelectListener listener) {
+		if (! allowsSelection) {
+			throw new RuntimeException("The allowSelection property must be set");
+		}
+
+		selectSupport.removeSelectListener(listener);
+	}
+
+	public List getSelectedEntities() {
+		if (! allowsSelection) {
+			throw new RuntimeException("The allowSelection property must be set");
+		}
+        List<Row> list = (List<Row>) model.getWrappedData();
+        List selectedList = new ArrayList(10);
+        for (Row row : list){
+            if (row.isSelected()) {
+                selectedList.add( row.getObject() );
+            }
+        }
+        return selectedList;
 	}
 
 }

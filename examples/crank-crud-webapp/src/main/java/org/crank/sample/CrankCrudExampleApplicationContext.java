@@ -10,8 +10,8 @@ import javax.sql.DataSource;
 
 import org.crank.config.spring.support.CrudJSFConfig;
 import org.crank.controller.ExcelExportControllerBean;
+import org.crank.controller.SayHelloController;
 import org.crank.controller.SelectEmployeeListingController;
-import org.crank.controller.TreeControllerBean;
 import org.crank.crud.controller.AutoCompleteController;
 import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.controller.CrudOperations;
@@ -25,7 +25,6 @@ import org.crank.crud.dao.DepartmentDAO;
 import org.crank.crud.dao.EmployeeDAO;
 import org.crank.crud.dao.RoleDAO;
 import org.crank.crud.dao.SpecialtyDAO;
-import org.crank.crud.join.Fetch;
 import org.crank.crud.jsf.support.JsfAutoCompleteController;
 import org.crank.crud.jsf.support.JsfCrudAdapter;
 import org.crank.crud.jsf.support.JsfDetailController;
@@ -41,7 +40,6 @@ import org.crank.crud.model.Skill;
 import org.crank.crud.model.Specialty;
 import org.crank.crud.model.Task;
 import org.crank.crud.relationships.RelationshipManager;
-import org.crank.model.jsf.support.RichFacesTreeModelBuilder;
 import org.crank.sample.datasource.EmployeeDataSource;
 import org.crank.sample.datasource.EmployeeReportObject;
 import org.springframework.config.java.annotation.Bean;
@@ -111,7 +109,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	public JsfCrudAdapter deptCrudController() throws Exception {
 		JsfCrudAdapter adapter = cruds().get("Department");
 		adapter.getController().addChild("employees",
-				new JsfDetailController(Employee.class)).addChild("tasks",
+				new JsfDetailController(Employee.class, true)).addChild("tasks",
 						new JsfDetailController(Task.class));
 		return adapter;
 	}
@@ -274,37 +272,19 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		return bean;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Bean(scope = DefaultScopes.SESSION)
-	@ScopedProxy
-	public TreeControllerBean treeControllerBean() throws Exception {
-		/* Create TreeControllerBean. */
-		TreeControllerBean bean = new TreeControllerBean();
-
-		/* Setup a datasource for the tree. */
-		DaoFilteringDataSource<Department, Long> dataSource = new DaoFilteringDataSource<Department, Long>();
-		dataSource.setDao(this.repos().get("Department"));
-		dataSource.setFetches(Fetch.leftJoinFetch("employees"));
-
-		/* Create a tree builder for the tree model. */
-		RichFacesTreeModelBuilder treeBuilder = new RichFacesTreeModelBuilder();
-		/* Inject build instructions for tree nodes. */
-		treeBuilder
-				.setTreeBuildDirections("Departments->this.name->employees.firstName,lastName");
-		treeBuilder.setNoRoot(false);
-
-		/* Inject dependencies in tree controller. */
-		bean.setDataSource(dataSource);
-		bean.setTreeBuilder(treeBuilder);
-		bean.setEmployeeCrud(this.employeeCrud());
-		bean.setDeptCrud(this.deptCrud());
-		return bean;
-	}
-
-
 	@Bean
 	public String persistenceUnitName() {
 		return "employee-example";
 	}
+	
+	@Bean(scope = DefaultScopes.SESSION) 
+	public SayHelloController hello(){
+		System.out.println("SAY HELLO alakjsfdl;aksjf;lkajf;lkjasfl;kja;kslfja;lsfjlkf;lkasjf;lkas;lkjaslkjs");
+		SayHelloController helloController = new SayHelloController();
+		
+		helloController.setEmployeesController((JsfDetailController) deptCrud().getController().getChildren().get("employees"));
+		return helloController;
+	}
+	
 
 }

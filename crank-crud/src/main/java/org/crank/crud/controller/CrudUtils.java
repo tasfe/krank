@@ -228,6 +228,10 @@ public class CrudUtils {
     
     public static String getObjectId(DetailController detailController, Object row) {
     	
+    	if (row instanceof Row) {
+    		row = ((Row)row).getObject();
+    	}
+    		
     	if (row == null) {
     		return "-1";
     	} else {

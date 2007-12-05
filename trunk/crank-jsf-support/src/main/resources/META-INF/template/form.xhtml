@@ -81,6 +81,9 @@
 
 	<h:panelGrid columns="1" rendered="${renderExpression}">
 		<!-- Main for fields -->
+		
+		<ui:insert name="headerForm"/>
+		
 		<h:panelGrid columns="3" rowClasses="formRowClass1, formRowClass2"
 			columnClasses="topLeft">
 			<c:if test="${not empty propertyNames}">

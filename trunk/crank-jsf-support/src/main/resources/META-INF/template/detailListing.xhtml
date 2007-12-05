@@ -15,6 +15,9 @@
 <c:if test="${not empty detailController}">
 <a4j:outputPanel ajaxRendered="true">
 
+
+		<!-- Variable declaration. -->
+
 		<c:if test="${empty readOnly}">
 			<c:set var="readOnly" value="false" />
 		</c:if>
@@ -54,12 +57,16 @@
 			<c:set var="showAdd" value="true" />
 		</c:if>
 
+		<c:if test="${empty isSelectableColumn}">
+			<c:set var="isSelectableColumn" value="${detailController.allowsSelection}" />
+		</c:if>
 
 		<c:set var="entityName" value="${detailController.relationshipManager.childCollectionProperty}" />
 		<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
 			
 		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
 
+		<!-- detail controller starts here. -->
 		<h:panelGroup binding="${detailController.subForm}">
 			<crank:node
 				entity="#{detailController}"
@@ -75,6 +82,7 @@
 				expandToolTip="Click to show Add / Edit ${entityNameLabel}"
 				closeToolTip="Click to hide ${entityNameLabel}">
 				
+				<!-- CRUD controls Add new and form. -->
 				<h:panelGrid columns="2" rendered="${detailController.showDetails}" >
 					<rich:spacer width="10" height="10"/>
 					<h:panelGrid columns="1" styleClass="detailPanelGrid" >
@@ -100,12 +108,37 @@
 								resetMode="${false}"
 								ajax="${ajax}">
 								<c:set var="formPropertyNames" value=""/>
-								<ui:insert/>
 							</crank:form>
 						</c:if>
 						
+						<!-- The actual listing. -->
 						<rich:dataTable value="#{detailController.model}" var="row">
+							<!-- Header for the listing. -->
 							<f:facet name="header">
+								<c:if test="${isSelectableColumn}">
+									<h:column>
+										<crank:commandLink id="selectAll${id}"
+														   onclick="toggleAllCheckBoxes('${parentForm}',true);"
+										                   toolTipText="Click to select all rows">
+										                   
+											<h:graphicImage id="selectAll${id}Img" value="${selectAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
+										</crank:commandLink>
+										<crank:commandLink id="selectNone${id}"
+										                   onclick="toggleAllCheckBoxes('${parentForm}',false);"
+										                   toolTipText="Click to un-select all rows">
+											<h:graphicImage id="selectNone${id}Img" value="${selectNoneImg}" border="0" styleClass="${listingImageButtonClass}"/>
+										</crank:commandLink>
+										
+										<crank:commandLink id="disableSelected${id}"
+														   rendered="${enableDelete}"
+														   entity="${crud}"
+														   action="deleteSelected"
+														   onclick="if (!confirm('Are you sure you want to disable all selected items?')) return false"
+										                   toolTipText="Click to delete selected rows">
+											<h:graphicImage id="disableSelected${id}Img" value="${delAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
+										</crank:commandLink>
+									</h:column>
+								</c:if>
 								<rich:columnGroup>
 									<c:forEach items="${pNames}" var="property">
 										<h:column>
@@ -116,7 +149,15 @@
 											<h:outputText value="Action" />
 									</h:column>
 								</rich:columnGroup>
-							</f:facet>				
+							</f:facet>
+							<c:if test="${isSelectableColumn}">
+									<h:column>
+										<h:selectBooleanCheckbox value="#{row.selected}"
+											styleClass="imageCenter" />
+									</h:column>
+							</c:if>
+
+								<!-- Iterate over properties and render the table. -->
 							<c:forEach items="${pNames}" var="property">
 
 								<c:set var="renderAsText" value="${true}"/>
@@ -124,13 +165,16 @@
 								<c:set var="outputText" value=""/>
 								<h:column>
 									<c:choose>
+										<!--  This choose seems to do nothing as the otherwise block is the same as the test block. -->
 										<c:when test="${crud:contains(property, '.')}">
 											<c:choose>
+												<!--  If the property is a boolean, render a check box graphic. -->
 												<c:when test="${crud:isBoolean(detailController.entityClass,property)}">
 													<h:graphicImage value="${booleanImg}" rendered="${(row[property] == 'true') and not crud:isInCollection(property,editableProperties)}" styleClass="imageCenter"/>
 													<c:set var="renderAsText" value="${false}"/>
 													<c:set var="renderAsBoolean" value="${true}"/>
 												</c:when>
+												<!--  If the property is an enum, render its text value. -->
 												<c:when test="${crud:isEnum(detailController.entityClass,property)}">
 													<c:set var="outputText" value="#{crud:createEnumLabel(row[property])}"/>
 												</c:when>
@@ -183,7 +227,7 @@
 							
 							<h:column rendered="${(not manyToMany) and (not readOnly)}">
 
-								<h:panelGrid columns="2" rendered="${ajax}">
+								<h:panelGroup rendered="${ajax}">
 									<a4j:commandLink 
 										action="${detailController.read}" 
 										title="Edit this record"
@@ -201,9 +245,10 @@
 										<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
 									</a4j:commandLink>
-								</h:panelGrid>
+									<ui:insert />
+								</h:panelGroup>
 
-								<h:panelGrid columns="2" rendered="${not ajax}">
+								<h:panelGroup rendered="${not ajax}">
 									<h:commandLink 
 										action="${detailController.read}" 
 										title="Edit this record">
@@ -219,7 +264,8 @@
 										<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
 									</h:commandLink>
-								</h:panelGrid>
+									<ui:insert />
+								</h:panelGroup>
 
 							</h:column>
 							

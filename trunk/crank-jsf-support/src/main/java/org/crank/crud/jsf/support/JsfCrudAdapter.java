@@ -163,9 +163,7 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
          */
         List<Row> wrappedList = new ArrayList<Row>(page.size());
         for (Object rowData : page) {
-            Row row = new Row();
-            row.setObject( rowData );
-            wrappedList.add(row);
+            wrappedList.add(new Row(rowData));
         }
         model.setWrappedData( wrappedList );
         return model;

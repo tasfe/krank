@@ -6,20 +6,29 @@ import java.util.Map;
 import java.util.Set;
 
 
+import org.crank.core.CrankException;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
+@SuppressWarnings("serial")
 class MagicMap implements Map<String, Object>, Serializable {
     private BeanWrapper beanWrapper;
+    private BeanWrapper thisWrapper;    
     
     public MagicMap (Object object){
+        init(object);
+    }
+
+    public void init (Object object){
         beanWrapper = new BeanWrapperImpl(object);
+        thisWrapper = new BeanWrapperImpl(this);
     }
 
     public MagicMap (){
         
     }
 
+    
     public void clear() {
     }
 
@@ -38,9 +47,15 @@ class MagicMap implements Map<String, Object>, Serializable {
     public Object get( Object oKey ) {
         try {
             String key = (String) oKey;
-            return beanWrapper.getPropertyValue( key );
+            if (beanWrapper.isReadableProperty(key)) {
+            	return beanWrapper.getPropertyValue( key );
+            } else {
+            	return thisWrapper.getPropertyValue( key ) ;
+            }
         } catch (org.springframework.beans.NullValueInNestedPathException nvinpe) {
             return null;
+        } catch (org.springframework.beans.NotReadablePropertyException nrpe) {
+        	return null;
         }
     }
 
@@ -54,7 +69,11 @@ class MagicMap implements Map<String, Object>, Serializable {
 
     public Object put( String oKey, Object value ) {
         String key = (String) oKey;
-        beanWrapper.setPropertyValue( key, value );
+        if (beanWrapper.isWritableProperty(key)) {
+        	beanWrapper.setPropertyValue( key, value );
+        } else {
+        	thisWrapper.setPropertyValue( key, value );
+        }
         return null;
     }
 
@@ -78,16 +97,23 @@ class MagicMap implements Map<String, Object>, Serializable {
     
 }
 
-public class Row implements Serializable {
+@SuppressWarnings("serial")
+public class Row extends MagicMap implements Serializable {
     private boolean selected;
     private Object object;
-    private MagicMap magicMap;
+    
+    public Row (Object object) {
+    	super(object);
+    	this.object = object;
+    }
+    
+    public Row () {
+    	
+    }
 
-    public Map getMap() {
-        if (magicMap==null) {
-            magicMap=new MagicMap(object);
-        }
-        return magicMap;
+    @Deprecated
+    public Map<String, Object> getMap() {
+        return this;
     }
 
     public Object getObject() {
@@ -96,6 +122,7 @@ public class Row implements Serializable {
 
     public void setObject( Object object ) {
         this.object = object;
+        super.init(object);
     }
 
     public boolean isSelected() {
@@ -105,4 +132,5 @@ public class Row implements Serializable {
     public void setSelected( boolean selected ) {
         this.selected = selected;
     }
+
 }

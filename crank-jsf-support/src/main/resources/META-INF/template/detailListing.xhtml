@@ -65,6 +65,11 @@
 		<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
 			
 		<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
+		
+		<c:if test="${empty useBody}">
+			<c:set var="useBody" value="true" />
+		</c:if>
+		
 
 		<!-- detail controller starts here. -->
 		<h:panelGroup binding="${detailController.subForm}">
@@ -107,7 +112,18 @@
 								entityName="${entityName}"
 								resetMode="${false}"
 								ajax="${ajax}">
-								<c:set var="formPropertyNames" value=""/>
+								
+									<c:set var="formPropertyNames" value=""/>
+									<c:set var="isSelectableColumnCopy" value="${isSelectableColumn}"/>
+									<c:set var="isSelectableColumn" value=""/>
+									<c:if test="${useBody}">
+										<ui:insert/>
+									</c:if>
+									<c:if test="${not useBody}">
+										<ui:insert name="formBody"/>
+									</c:if>									
+									<c:set var="isSelectableColumn" value="${isSelectableColumnCopy}"/>
+								
 							</crank:form>
 						</c:if>
 						
@@ -245,7 +261,7 @@
 										<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
 									</a4j:commandLink>
-									<ui:insert />
+									<ui:insert name="columnActions"/>
 								</h:panelGroup>
 
 								<h:panelGroup rendered="${not ajax}">
@@ -264,7 +280,7 @@
 										<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
 									</h:commandLink>
-									<ui:insert />
+									<ui:insert name="columnActions"/>
 								</h:panelGroup>
 
 							</h:column>

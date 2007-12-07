@@ -25,12 +25,16 @@
 			<c:set var="selectNoneImg" value="/images/unselected-sm.gif" />
 		</c:if>
 
+		<c:if test="${empty delAllImg}">
+			<c:set var="delAllImg" value="/images/del-alt-sm.gif" />
+		</c:if>		
+
 		<c:if test="${empty readOnly}">
 			<c:set var="readOnly" value="false" />
 		</c:if>
 
 		<c:if test="${empty enableDelete}">
-			<c:set var="enableDelete" value="false" />
+			<c:set var="enableDelete" value="true" />
 		</c:if>
 
 		<c:if test="${empty ajax}">

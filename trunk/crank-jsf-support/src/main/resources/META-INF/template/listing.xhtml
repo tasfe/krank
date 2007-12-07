@@ -22,7 +22,12 @@
 		<c:set var="id" value="PaginatedListing" />
 	</c:if>
 	<c:if test="${empty enableDelete}">
-		<c:set var="enableDelete" value="false" />
+		<c:if test="#{empty initParam['crank.listing.enableDelete']}">
+			<c:set var="enableDelete" value="true" />
+		</c:if>
+		<c:if test="#{not empty initParam['crank.listing.enableDelete']}">
+			<c:set var="enableDelete" value="#{initParam['crank.listing.enableDelete']}" />
+		</c:if>
 	</c:if>
 	<c:if test="${empty autoLink}">
 		<c:set var="autoLink" value="${true}" />

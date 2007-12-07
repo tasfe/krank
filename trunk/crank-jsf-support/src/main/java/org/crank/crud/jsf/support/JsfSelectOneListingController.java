@@ -28,14 +28,12 @@ public class JsfSelectOneListingController<T, PK extends Serializable> implement
 	private String labelProperty="name";
 	private String sourceProperty = null;
 	private SelectSupport selectSupport = new SelectSupport();
-	private BeanWrapper wrappedController;
 	private CrudControllerBase<T, PK> controller;	
     
 	
 	public JsfSelectOneListingController (Class entityClass, String propertyName, FilterablePageable pageable, CrudOperations crudController) {
     	this.paginator = pageable;
     	controller = (CrudControllerBase<T, PK>) crudController;
-    	wrappedController = new BeanWrapperImpl(crudController.getEntity());
     	this.propertyName = propertyName;
     	this.entityClass = entityClass;
     }
@@ -49,12 +47,11 @@ public class JsfSelectOneListingController<T, PK extends Serializable> implement
 		this(entityClass, null, null, pageable);
     }
 
-	public JsfSelectOneListingController (Class entityClass, Object controller, String controllerProperty, FilterablePageable pageable) {
+	private Object parentEntity = null;
+	public JsfSelectOneListingController (Class entityClass, Object parentEntity, String controllerProperty, FilterablePageable pageable) {
 		this.entityClass = entityClass;
 		this.paginator = pageable;
-    	if (controller != null) {
-    		wrappedController = new BeanWrapperImpl(controller);
-    	}
+		this.parentEntity = parentEntity;
     	this.propertyName = controllerProperty;
     }
 
@@ -97,13 +94,19 @@ public class JsfSelectOneListingController<T, PK extends Serializable> implement
 	    	BeanWrapper valueWrapper = new BeanWrapperImpl(valueBean);
 	    	value = valueWrapper.getPropertyValue(this.sourceProperty);
 		}
+
+		BeanWrapper wrappedParentEntity =  null;
+    	if (this.parentEntity != null) {
+    		wrappedParentEntity = new BeanWrapperImpl(this.parentEntity);
+    	} else {
+    		wrappedParentEntity = new BeanWrapperImpl(controller.getEntity());
+    	}
+		
+    	wrappedParentEntity.setPropertyValue(this.propertyName, value);
+    	
 		selectSupport.fireSelect(value);
 		this.show = false;
-		
-		if (wrappedController != null) {
-			wrappedController.setPropertyValue(this.propertyName, value);
-		}
-  		
+    	
 	}
 	
 	public void cancel () {

@@ -23,6 +23,15 @@
 		<c:set var="required" value="true" />
 	</c:if>
 	
+	<c:if test="${empty debug}">
+			<c:if test="#{empty initParam['crank.debug']}">
+				<c:set var="debug" value="false" />
+			</c:if>
+			<c:if test="#{not empty initParam['crank.debug']}">
+				<c:set var="debug" value="#{initParam['crank.debug']}" />
+			</c:if>
+	</c:if>
+
 	<c:if test="${empty selectManyClass}">
 		<c:set var="selectManyClass" value="paginationPageNumberLink" />
 	</c:if>
@@ -115,6 +124,24 @@
 	<c:if test="${not valueBased}">
 		<c:set var="boundValue" value="${jsfSelectOneController.controller.entity[jsfSelectOneController.propertyName][jsfSelectOneController.labelProperty]}"/>
 	</c:if>
+
+
+    <c:if test="${debug}">        
+	<table>
+            	<tr><td>jsfSelectOneController</td><td>${jsfSelectOneController}</td></tr>
+            	<tr><td>jsfSelectOneController.controller</td><td>${jsfSelectOneController.controller}</td></tr>
+            	<tr><td>jsfSelectOneController.controller.entity</td><td>${jsfSelectOneController.controller.entity}</td></tr>
+            	<tr><td>jsfSelectOneController.propertyName</td><td>${jsfSelectOneController.propertyName}</td></tr>
+            	<tr><td>valueBased</td><td>${valueBased}</td></tr>
+            	<tr><td>boundValue</td><td>${boundValue}</td></tr>            	
+            	<tr><td>entityName</td><td>${entityName}</td></tr>            	
+            	<tr><td>entityNameLabel</td><td>${entityNameLabel}</td></tr>            	
+            	<tr><td>paginator</td><td>${paginator}</td></tr>            	
+            	<tr><td>entityClass</td><td>${entityClass}</td></tr>            	
+
+	</table>
+	</c:if>
+	
 	
 	<c:set var="pNames" value="${fn:split(propertyNames, ',')}" />
 	
@@ -123,16 +150,13 @@
 		<h:panelGrid columns="3" columnClasses="nodeLeaf">
 			<h:outputLabel rendered="${useLabel}" for="${fieldId}" value="${entityNameLabel}:&nbsp;&nbsp;" styleClass="fieldLabel"/>
 
-            <span class="${selectManyClass}">${boundValue}</span>
-
-			<!-- readonly="true" prevents submitting of this value which is OK since the action from the listing selects the value 
+			<!-- readonly="true" prevents submitting of this value which is OK since the action from the listing selects the value --> 
 			<h:inputText
-				id="${fieldId}"
 				readonly="true"
 				styleClass="fieldField"
 				value="${boundValue}"
 				rendered="${showField}"/>
-				-->
+				
 
 					
 			<crank:node
@@ -249,22 +273,7 @@
 				</h:panelGrid>
 			</crank:node>				
 			<ui:insert/>
-<!--				<a4j:commandLink rendered="${not jsfSelectOneController.show}" -->
-<!--				                 action="${jsfSelectOneController.showSelection}" -->
-<!--				                 styleClass="${selectManyClass}"-->
-<!--				                 immediate="${immediate}"-->
-<!--				                 value="edit"-->
-<!--				                 title="Show the selection window for ${entityNameLabel}"/>-->
 		</h:panelGrid>
-	
-
-<!--			<a4j:commandLink action="${jsfSelectOneController.cancel}"-->
-<!--							 rendered="${jsfSelectOneController.show}"-->
-<!--							 value="Cancel"-->
-<!--							 styleClass="${selectManyClass}"-->
-<!--							 immediate="${immediate}"-->
-<!--							 title="Hides the ${entityNameLabel} selection window"-->
-<!--							 />-->
 	</a4j:outputPanel>
 </ui:composition>
 </html>

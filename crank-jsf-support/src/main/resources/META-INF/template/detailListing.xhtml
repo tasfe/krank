@@ -34,8 +34,14 @@
 		</c:if>
 
 		<c:if test="${empty enableDelete}">
-			<c:set var="enableDelete" value="true" />
+			<c:if test="#{empty initParam['crank.detailListing.enableDelete']}">
+				<c:set var="enableDelete" value="true" />
+			</c:if>
+			<c:if test="#{not empty initParam['crank.listing.enableDelete']}">
+				<c:set var="enableDelete" value="#{initParam['crank.detailListing.enableDelete']}" />
+			</c:if>
 		</c:if>
+		
 
 		<c:if test="${empty ajax}">
 			<c:set var="ajax" value="true" />
@@ -273,7 +279,10 @@
 										<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
 									</a4j:commandLink>
-									<ui:insert name="columnActions"/>
+									<!--   <ui:insert name="columnActions"/> -->
+									<c:if test="${columnActions}">
+										<ui:insert />
+									</c:if>
 								</h:panelGroup>
 
 								<h:panelGroup rendered="${not ajax}">
@@ -292,7 +301,10 @@
 										<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
 									</h:commandLink>
-									<ui:insert name="columnActions"/>
+									<!--   <ui:insert name="columnActions"/> -->
+									<c:if test="${columnActions}">
+										<ui:insert />
+									</c:if>
 								</h:panelGroup>
 
 							</h:column>

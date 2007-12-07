@@ -11,10 +11,9 @@
    -->
    
   <application>
-<!--      <action-listener>org.crank.crud.jsf.support.JsfMessageActionListener</action-listener> -->
+    <action-listener>org.crank.crud.jsf.support.JsfMessageActionListener</action-listener>
     <variable-resolver>org.springframework.web.jsf.DelegatingVariableResolver</variable-resolver>
     <message-bundle>messages</message-bundle>
-    
   </application>
   
   <!-- 

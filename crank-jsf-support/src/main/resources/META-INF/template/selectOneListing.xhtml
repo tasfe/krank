@@ -123,15 +123,16 @@
 		<h:panelGrid columns="3" columnClasses="nodeLeaf">
 			<h:outputLabel rendered="${useLabel}" for="${fieldId}" value="${entityNameLabel}:&nbsp;&nbsp;" styleClass="fieldLabel"/>
 
-<!--			<span class="${selectManyClass}">${boundValue}</span>-->
+            <span class="${selectManyClass}">${boundValue}</span>
 
-			<!-- readonly="true" prevents submitting of this value which is OK since the action from the listing selects the value -->
+			<!-- readonly="true" prevents submitting of this value which is OK since the action from the listing selects the value 
 			<h:inputText
 				id="${fieldId}"
 				readonly="true"
 				styleClass="fieldField"
 				value="${boundValue}"
 				rendered="${showField}"/>
+				-->
 
 					
 			<crank:node

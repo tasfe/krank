@@ -17,6 +17,13 @@
 
 
 		<!-- Variable declaration. -->
+		<c:if test="${empty selectAllImg}">
+			<c:set var="selectAllImg" value="/images/selected-sm.gif" />
+		</c:if>
+
+		<c:if test="${empty selectNoneImg}">
+			<c:set var="selectNoneImg" value="/images/unselected-sm.gif" />
+		</c:if>
 
 		<c:if test="${empty readOnly}">
 			<c:set var="readOnly" value="false" />
@@ -131,31 +138,32 @@
 						<rich:dataTable value="#{detailController.model}" var="row">
 							<!-- Header for the listing. -->
 							<f:facet name="header">
-								<c:if test="${isSelectableColumn}">
-									<h:column>
-										<crank:commandLink id="selectAll${id}"
-														   onclick="toggleAllCheckBoxes('${parentForm}',true);"
-										                   toolTipText="Click to select all rows">
-										                   
-											<h:graphicImage id="selectAll${id}Img" value="${selectAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
-										</crank:commandLink>
-										<crank:commandLink id="selectNone${id}"
-										                   onclick="toggleAllCheckBoxes('${parentForm}',false);"
-										                   toolTipText="Click to un-select all rows">
-											<h:graphicImage id="selectNone${id}Img" value="${selectNoneImg}" border="0" styleClass="${listingImageButtonClass}"/>
-										</crank:commandLink>
-										
-										<crank:commandLink id="disableSelected${id}"
-														   rendered="${enableDelete}"
-														   entity="${crud}"
-														   action="deleteSelected"
-														   onclick="if (!confirm('Are you sure you want to disable all selected items?')) return false"
-										                   toolTipText="Click to delete selected rows">
-											<h:graphicImage id="disableSelected${id}Img" value="${delAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
-										</crank:commandLink>
-									</h:column>
-								</c:if>
 								<rich:columnGroup>
+									<c:if test="${isSelectableColumn}">								
+										<h:column>
+											<crank:commandLink id="selectAll${id}"
+															   onclick="toggleAllCheckBoxes('${parentForm}',true);"
+											                   toolTipText="Click to select all rows">
+											                   
+												<h:graphicImage id="selectAll${id}Img" value="${selectAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
+											</crank:commandLink>
+											<crank:commandLink id="selectNone${id}"
+											                   onclick="toggleAllCheckBoxes('${parentForm}',false);"
+											                   toolTipText="Click to un-select all rows">
+												<h:graphicImage id="selectNone${id}Img" value="${selectNoneImg}" border="0" styleClass="${listingImageButtonClass}"/>
+											</crank:commandLink>
+											
+											<crank:commandLink id="disableSelected${id}"
+															   rendered="${enableDelete}"
+															   entity="${crud}"
+															   action="deleteSelected"
+															   onclick="if (!confirm('Are you sure you want to disable all selected items?')) return false"
+											                   toolTipText="Click to delete selected rows">
+												<h:graphicImage id="disableSelected${id}Img" value="${delAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
+											</crank:commandLink>
+										</h:column>
+									</c:if>
+								
 									<c:forEach items="${pNames}" var="property">
 										<h:column>
 											<h:outputText value="${crud:createLabel(property)}" />

@@ -27,10 +27,15 @@
 					<crank:detailListing 
 						detailController="${employeeDetailController}" 
 						propertyNames="firstName,lastName,active,dob,age,numberOfPromotions">
-	
+
+ 						<crank:selectOneListing jsfSelectOneController="${employeeToSkillController}"
+							propertyNames="name"
+							parentForm="departmentForm"
+							/>
 						<crank:detailListing 
 							detailController="${taskDetailController}" 
 							propertyNames="name,startDate,endDate,complete"/>
+
 
 							
 					</crank:detailListing>

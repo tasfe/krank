@@ -3,6 +3,7 @@ package org.crank.crud;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -722,6 +723,41 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 
 	public String queryNameFromMethod(Method finderMethod) {
 		return type.getSimpleName() + "." + finderMethod.getName();
+	}
+
+	public void delete(Collection<T> entities) {
+		for (T entity : entities) {
+			delete(entity);
+		}
+	}
+
+	public Collection<T> merge(Collection<T> entities) {
+		List<T> results = new ArrayList<T>();
+		for (T entity : entities) {
+			results.add(merge(entity));		
+		}
+		return results;
+	}
+
+	public void persist(Collection<T> entities) {
+		for (T entity : entities) {
+			persist(entity);
+		}
+		
+	}
+
+	public void refresh(Collection<T> entities) {
+		for (T entity : entities) {
+			refresh(entity);
+		}
+	}
+
+	public Collection<T> store(Collection<T> entities) {
+		List<T> results = new ArrayList<T>();
+		for (T entity : entities) {
+			results.add(store(entity));
+		}
+		return results;
 	}
 
 }

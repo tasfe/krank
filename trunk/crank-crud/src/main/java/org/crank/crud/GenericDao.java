@@ -1,6 +1,8 @@
 package org.crank.crud;
 
 import java.io.Serializable;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +51,35 @@ public interface GenericDao<T, PK extends Serializable> {
 	public T merge(T entity);
 
 	/**
+	 * This method will get the entity into the db if its a new entity or an
+	 * existing detached entity.
+	 * 
+	 * @param entity
+	 */
+	public Collection<T> store(Collection<T> entities);
+
+	/**
+	 * Persist the entities. Details of this method are in section 3.2.1 of the <a
+	 * href="http://tinyurl.com/2pc93u">JPA spec</a>. Basics - persist will
+	 * take the entity and put it into the db.
+	 * 
+	 * @param entity
+	 */
+	public void persist(Collection<T> entities);
+
+	/**
+	 * Merge the collection of entities, returning (a colleciton of potentially different objects) the
+	 * persisted entities. Details of this method are in section 3.2.4.1 of the <a
+	 * href="http://tinyurl.com/2pc93u">JPA spec</a>. Basics - merge will take
+	 * an exiting 'detatched' entity and merge its properties onto an existing
+	 * entity. The entity with the merged state is returned.
+	 * 
+	 * @param entity
+	 */
+	public Collection<T> merge(Collection<T> entities);
+	
+	
+	/**
 	 * Retrieve an object that was previously persisted to the database using
 	 * the indicated id as primary key
 	 * 
@@ -80,6 +111,15 @@ public interface GenericDao<T, PK extends Serializable> {
 	void refresh(T transientObject);
 
 	/**
+	 * Refresh a persistent object that may have changed in another
+	 * thread/transaction.
+	 * 
+	 * @param transientObject
+	 *            The Object to refresh.
+	 */
+	void refresh(Collection<T> entities);
+
+	/**
 	 * Write anything to db that is pending operation and clear it.
 	 */
 	void flushAndClear();
@@ -107,6 +147,14 @@ public interface GenericDao<T, PK extends Serializable> {
 	 *            The Primary Key of the object to delete.
 	 */
 	void delete(T entity);
+
+	/**
+	 * Remove an object from persistent storage in the database.
+	 * 
+	 * @param entity
+	 *            The Primary Key of the object to delete.
+	 */
+	void delete(Collection<T> entities);
 
 	/**
 	 * Allows getting an object using a map of the field and values

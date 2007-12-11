@@ -17,6 +17,8 @@ import static org.crank.crud.join.Fetch.joinFetch;
 import static org.crank.crud.join.Fetch.leftJoinFetch;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,8 @@ import org.crank.crud.test.model.Department;
 import org.crank.crud.test.model.Employee;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.testng.AssertJUnit;
@@ -450,6 +454,105 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         );
         AssertJUnit.assertEquals(2, find.size());        
     }
+    
+    @Test
+    public void testPersistMultiple() {
+        List<Employee> employees =Arrays.asList(
+        		new Employee[] { 
+        				new Employee("PersistMultipleOne", "Hightower"), 
+        				new Employee("PersistMultipleTwo", "Hightower"), 
+        				new Employee("PersistMultipleThree", "Hightower") 
+        				}
+        		);
+        employeeDao.persist(employees);
+         // clean up inserted data
+        for (Employee e : employees) {
+        	employeeDao.delete(e);
+        }
+    }
+    
+    @Test
+    public void testStoreMultiple() {
+        employeeDao.flushAndClear();
+    	TransactionTemplate xTemplate = new TransactionTemplate(transactionManager);
+    	xTemplate.execute(new TransactionCallback() {
+		
+			public Object doInTransaction(TransactionStatus arg0) {
+		        List<Employee> employees =Arrays.asList(
+		        		new Employee[] { 
+		        				new Employee("StoreMultipleOne", "Hightower"), 
+		        				new Employee("StoreMultipleTwo", "Hightower"), 
+		        				new Employee("StoreMultipleThree", "Hightower") 
+		        				}
+		        		);
+		        Collection<Employee> results = employeeDao.store(employees);
+		         // clean up inserted data
+		        for (Employee e : results) {
+		        	employeeDao.delete(e);
+		        }
+		        employeeDao.flushAndClear();
+		        
+				employees = employeeDao.find();
+				AssertJUnit.assertTrue(employees.size() > 0);
+				// make a change to each of the employees in the 'managed' state
+		        for (Employee e : employees) {
+		        	e.setAge(e.getAge()+1);
+		        }
+		        employeeDao.store(employees);
+		        return null;
+			}
+		
+		});
+
+    }    
+
+    @Test
+    public void testMergeMultiple() {
+        List<Employee> employees =Arrays.asList(
+        		new Employee[] { 
+        				new Employee("MergeMultipleOne", "Hightower"), 
+        				new Employee("MergeMultipleTwo", "Hightower"), 
+        				new Employee("MergeMultipleThree", "Hightower") 
+        				}
+        		);
+        Collection<Employee> results = employeeDao.merge(employees);
+        
+		AssertJUnit.assertTrue(results.size() > 0);
+		// make a change to each of the employees in the 'managed' state
+        for (Employee e : results) {
+        	e.setAge(e.getAge()+1);
+        }
+        results = employeeDao.merge(results);
+        
+        // clean up inserted data
+        for (Employee e : results) {
+        	employeeDao.delete(e);
+        }
+        
+		
+    }    
+    
+    @Test
+    public void testRefreshMultiple() {        
+		List<Employee> employees = employeeDao.find();
+		AssertJUnit.assertTrue(employees.size() > 0);
+        employeeDao.refresh(employees);		
+    } 
+    
+    @Test
+    public void testDeleteMultiple() {        
+    	employeeDao.flushAndClear();
+        List<Employee> employees =Arrays.asList(
+        		new Employee[] { 
+        				new Employee("DeleteMultipleOne", "Hightower"), 
+        				new Employee("DeleteMultipleTwo", "Hightower"), 
+        				new Employee("DeleteMultipleThree", "Hightower") 
+        				}
+        		);
+        employeeDao.persist(employees);
+        employeeDao.delete(employees);		
+    } 
+    
 
     @Test
     public void testStartsLike() throws Exception {

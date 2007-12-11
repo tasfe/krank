@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -71,7 +72,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		T persistedEntity = entity;
 		try {
 			// TODO: the error reporting could be deferred (the entity has an ID
-			// that is in the db but not in the enity manager)
+			// that is in the db but not in the entity manager)
 			getJpaTemplate().persist(entity);
 		} catch (EntityExistsException e) {
 			// if the entity exists then we call merge
@@ -89,6 +90,32 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public T merge(T entity) {
 		return getJpaTemplate().merge(entity);
 	}
+	
+	@Transactional
+	public Collection<T> store(Collection<T> entities) {
+		Collection<T> storedResults = new ArrayList<T>(entities.size());
+		for (T entity : entities) {		
+			storedResults.add(store(entity));
+		}
+		return storedResults;
+	}
+
+	@Transactional
+	public void persist(Collection<T> entities) {
+		for (T entity : entities) {		
+			persist(entity);
+		}
+	}
+
+	@Transactional
+	public Collection<T> merge(Collection<T> entities) {
+		Collection<T> mergedResults = new ArrayList<T>(entities.size());
+		for (T entity : entities) {		
+			mergedResults.add(merge(entity));
+		}
+		return mergedResults;
+	}
+	
 
 	public void setIsDistinct(boolean isDistinct) {
 		this.distinct = isDistinct;
@@ -110,6 +137,13 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 				return null;
 			}
 		});
+	}
+	
+	@Transactional
+	public void delete(final Collection<T> entities) {
+		for (T entity : entities) {
+			delete(entity);
+		}
 	}
 
 	public T read(PK id) {
@@ -143,6 +177,12 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	public void refresh(final T transientObject) {
 		getJpaTemplate().refresh(transientObject);
+	}
+
+	public void refresh(final Collection<T> entities) {
+		for (T entity : entities) {
+			refresh(entity);
+		}
 	}
 
 	@Transactional

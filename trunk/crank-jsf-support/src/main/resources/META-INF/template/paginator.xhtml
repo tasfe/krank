@@ -120,6 +120,16 @@
 		<c:set var="allowExport" value="${not disableExport and not readOnly}" />
 	</c:if>
 	
+	<c:if test="${empty enableAdd}">
+		<c:if test="#{empty initParam['crank.listing.enableAdd']}">
+			<c:set var="enableAdd" value="${true}" />
+		</c:if>
+		<c:if test="#{not empty initParam['crank.listing.enableAdd']}">
+			<c:set var="enableAdd" value="#{initParam['crank.listing.enableAdd']}" />
+		</c:if>
+	</c:if>
+	
+	
 	<c:choose>
 		<c:when test="${not empty reRender}">
 			<c:set var="refreshPaginator" value="${reRender},paginator${id}" />
@@ -128,26 +138,53 @@
 			<c:set var="refreshPaginator" value="paginator${id}" />
 		</c:otherwise>
 	</c:choose>
+	
+	
+	<c:if test="${empty debug}">
+			<c:if test="#{empty initParam['crank.debug']}">
+				<c:set var="debug" value="${false}" />
+			</c:if>
+			<c:if test="#{not empty initParam['crank.debug']}">
+				<c:set var="debug" value="#{initParam['crank.debug']}" />
+			</c:if>
+	</c:if>
+	
 
 	<!-- END DEFINE VARIABLES -->
 
+	<c:if test="${debug}">
+		<table>
+			<tr><td>pageTitle</td>							<td>${pageTitle}</td></tr>
+			<tr><td>ajaxSingle</td>							<td>${ajaxSingle}</td></tr>
+			<tr><td>disableExport</td>						<td>${disableExport}</td></tr>
+			<tr><td>readOnly</td>							<td>${readOnly}</td></tr>
+			<tr><td>allowExport</td>						<td>${allowExport}</td></tr>
+			<tr><td>enableAdd</td>							<td>${enableAdd}</td></tr>
+			<tr><td>reRender</td>							<td>${reRender}</td></tr>
+			<tr><td>refreshPaginator</td>					<td>${refreshPaginator}</td></tr>
+		</table>
+	</c:if>
+	
 	<a4j:outputPanel ajaxRendered="true">
 	<a4j:region id="paginatorRegion${id}">
 	<h:panelGrid id="paginator${id}" columns="2">
 	
+		
 		<!-- TOOL BAR -->
 		<h:panelGroup style="text-align: left;">
-			<crank:commandLink 
-				id="addNewLink${id}"
-				rendered="${not readOnly}"
-				entity="${crud}"
-				action="loadCreate"
-				ajax="false"
-				ajaxSingle="${ajaxSingle}"
-				toolTipText="Click to add a new record...">
-				
-					<h:graphicImage value="${addNewImg}" border="0" styleClass="${listingImageButtonClass}"/>
-			</crank:commandLink>
+			<c:if test="${enableAdd}">
+				<crank:commandLink 
+					id="addNewLink${id}"
+					rendered="${not readOnly and enableAdd}"
+					entity="${crud}"
+					action="loadCreate"
+					ajax="false"
+					ajaxSingle="${ajaxSingle}"
+					toolTipText="Click to add a new record...">
+					
+						<h:graphicImage value="${addNewImg}" border="0" styleClass="${listingImageButtonClass}"/>
+				</crank:commandLink>
+			</c:if>
 
 			<crank:commandLink 
 				id="applyFilter${id}"

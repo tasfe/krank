@@ -29,6 +29,15 @@
 			<c:set var="enableDelete" value="#{initParam['crank.listing.enableDelete']}" />
 		</c:if>
 	</c:if>
+	<c:if test="${empty enableEdit}">
+		<c:if test="#{empty initParam['crank.listing.enableEdit']}">
+			<c:set var="enableEdit" value="true" />
+		</c:if>
+		<c:if test="#{not empty initParam['crank.listing.enableEdit']}">
+			<c:set var="enableEdit" value="#{initParam['crank.listing.enableEdit']}" />
+		</c:if>
+	</c:if>
+	
 	<c:if test="${empty autoLink}">
 		<c:set var="autoLink" value="${true}" />
 	</c:if>
@@ -218,6 +227,7 @@
 	                        <h:commandLink
 								action="${crud.read}"
 								title="Edit this record"
+								rendered="${enableEdit}"
 								onclick="${editFunction}" >
 									<h:graphicImage value="${editImg}" border="0" styleClass="${listingImageButtonClass}" />
 							</h:commandLink>

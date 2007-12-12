@@ -11,9 +11,10 @@
 	xmlns:t="http://myfaces.apache.org/tomahawk"
 	xmlns:crud="http://www.googlecode.com/crank/crud"
 	xmlns:crank="http://www.googlecode.com/crank"
-	xmlns:crankcc="http://www.googlecode.com/crank/comp/components"
 	>
 
+<!-- 	xmlns:crankcc="http://www.googlecode.com/crank/comp/components"
+  -->
 <ui:composition>
 	<c:if test="${empty reportingMode}">
 		<c:set var="reportingMode" value="false" />
@@ -79,7 +80,7 @@
 	</c:if>
 
 	
-	<crankcc:form random="foo">
+	<!-- <crankcc:form random="foo">  -->
 	
 	<h:outputText value="${foo}"/>
 
@@ -244,7 +245,7 @@
 	<c:set var="resetMode" value="" />
 	<c:set var="cancelMode" value="" />
 
-	</crankcc:form>
+	<!--  </crankcc:form>  -->
 </ui:composition>
 
 </html>

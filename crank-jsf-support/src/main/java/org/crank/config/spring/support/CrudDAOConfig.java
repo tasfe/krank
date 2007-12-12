@@ -101,17 +101,23 @@ public abstract class CrudDAOConfig implements InitializingBean {
 	 * @return
 	 * @throws Exception
 	 */
-	@Bean(scope = DefaultScopes.SINGLETON)
-	public EntityManagerFactory entityManagerFactory() throws Exception {
+	@Bean(scope = DefaultScopes.SINGLETON, aliases="entityManagerFactory")
+	public EntityManagerFactory entityManagerFactoryConfig() throws Exception {
 		return entityManagerFactoryFactory().getObject();
 	}
 
-	@Bean(scope = DefaultScopes.SINGLETON)
-	public PlatformTransactionManager transactionManager() throws Exception {
+	@ExternalBean
+	public abstract EntityManagerFactory entityManagerFactory();
+	
+	@Bean(scope = DefaultScopes.SINGLETON, aliases="transactionManager")
+	public PlatformTransactionManager transactionManagerConfig() throws Exception {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
 		transactionManager.setEntityManagerFactory(entityManagerFactory());
 		return transactionManager;
 	}
+	
+	@ExternalBean
+	public abstract PlatformTransactionManager transactionManager(); 
 
 	@Bean(scope = DefaultScopes.SINGLETON)
 	public TransactionInterceptor transactionInterceptor() throws Exception {

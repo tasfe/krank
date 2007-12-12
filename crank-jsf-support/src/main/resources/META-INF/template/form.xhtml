@@ -10,10 +10,11 @@
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:t="http://myfaces.apache.org/tomahawk"
 	xmlns:crud="http://www.googlecode.com/crank/crud"
-	xmlns:crank="http://www.googlecode.com/crank">
+	xmlns:crank="http://www.googlecode.com/crank"
+	xmlns:crankcc="http://www.googlecode.com/crank/comp/components"
+	>
 
 <ui:composition>
-
 	<c:if test="${empty reportingMode}">
 		<c:set var="reportingMode" value="false" />
 	</c:if>
@@ -78,6 +79,9 @@
 	</c:if>
 
 	
+	<crankcc:form random="foo">
+	
+	<h:outputText value="${foo}"/>
 
 	<h:panelGrid columns="1" rendered="${renderExpression}">
 		<!-- Main for fields -->
@@ -240,7 +244,7 @@
 	<c:set var="resetMode" value="" />
 	<c:set var="cancelMode" value="" />
 
-
+	</crankcc:form>
 </ui:composition>
 
 </html>

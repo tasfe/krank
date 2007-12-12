@@ -2,6 +2,7 @@ package org.crank.core.spring.support;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
@@ -44,12 +45,12 @@ public class SelectItemUtils {
      */
     private boolean primitive = false;
 
-    public List createSelectItems( final List list, String idProperty, String labelProperty ) {
+    public List createSelectItems( final Collection list, String idProperty, String labelProperty ) {
     	return createSelectItems(list, idProperty, labelProperty, false);
     }
 
     @SuppressWarnings("unchecked")
-    public List createSelectItems( final List list, String idProperty, String labelProperty, boolean optional ) {
+    public List createSelectItems( final Collection list, String idProperty, String labelProperty, boolean optional ) {
         List selectItems = new ArrayList(list.size()); // new list of selectItems
         if (optional) {
         	selectItems.add(new SelectItem (-1L, this.optionalLabel));
@@ -83,11 +84,11 @@ public class SelectItemUtils {
      * 
      * @return list of SelectItems
      */
-    public List createSelectItems( final List list ) {
+    public List createSelectItems( final Collection list ) {
         return createSelectItems( list, this.getIdPropertyName(), this.getLabelPropertyName(), false );
     }
 
-	public List<SelectItem> createSelectItems(List list, boolean optional) {
+	public List<SelectItem> createSelectItems(Collection list, boolean optional) {
 		return createSelectItems( list, this.getIdPropertyName(), this.getLabelPropertyName(), optional );
 	}
     

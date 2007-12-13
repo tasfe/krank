@@ -9,6 +9,11 @@ import java.util.Map;
  *
  */
 public interface CrudOperations extends Toggleable {
+	/** Delete method constant for deleting by id only. */
+	static final String DELETE_BY_ID = "BY_ID"; 
+	/** Delete method constant for deleting by entity only. */
+	static final String DELETE_BY_ENTITY = "BY_ENTITY";
+	
     /** Create an object. */
     CrudOutcome create();
     /** Load a form to update an object. */
@@ -52,5 +57,4 @@ public interface CrudOperations extends Toggleable {
     void addCrudControllerListener(CrudControllerListener listener);
     void removeCrudControllerListener(CrudControllerListener listener);
     
-
 }

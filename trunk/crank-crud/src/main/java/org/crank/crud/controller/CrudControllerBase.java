@@ -35,6 +35,7 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
     protected Map<String, Object> dynamicProperties = new CrankMap();
     protected FileUploadHandler fileUploadHandler;
 	protected String idParam = "id";
+	protected String deleteStrategy = CrudOperations.DELETE_BY_ID;
     
 
 
@@ -439,6 +440,15 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
         for (CrudControllerListener ccl : listeners) {
             ccl.beforeLoadListing(event);
         }
+	}
+
+	public String getDeleteStrategy() {
+		return deleteStrategy;
+	}
+
+	public void setDeleteStrategy(String deleteStrategy) {
+		System.out.println("cCtlBase Setting deleteStrategy to: " + deleteStrategy);
+		this.deleteStrategy = deleteStrategy;
 	}
     
 

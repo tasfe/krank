@@ -53,7 +53,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 
 	protected Class<T> type = null;
 
-	protected boolean distinct = true;
+	protected boolean distinct = false;
 
 	@PersistenceContext
 	protected EntityManager entityManager;
@@ -92,6 +92,10 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		this.distinct = isDistinct;
 	}
 
+	public void setDistinct(boolean isDistinct) {
+		this.distinct = isDistinct;
+	}
+
 	public boolean isDistinct() {
 		return this.distinct;
 	}
@@ -127,7 +131,11 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	public void delete(T entity) {
 		// TODO: this really should be using the methods on GenericDaoJpa to get
 		// the PK and call delete(PK)
-		getEntityManager().remove(entity);
+		T managedEntity = entity;
+		if (!getEntityManager().contains(entity)) {
+			managedEntity = getEntityManager().merge(entity);
+		}
+		getEntityManager().remove(managedEntity);
 	}
 
 	public T read(PK id) {
@@ -400,14 +408,22 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<T> doFind(Class clazz, OrderBy[] orderBy,
+	private List<T> doFind(Class<T> clazz, OrderBy[] orderBy,
+			final Criterion[] criteria, Fetch[] fetches,
+			final int startPosition, final int maxResult) {
+		return doFind(clazz, this.distinct, orderBy, criteria, fetches, startPosition,
+				maxResult);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<T> doFind(Class clazz, boolean distinctFlag, OrderBy[] orderBy,
 			final Criterion[] criteria, Fetch[] fetches,
 			final int startPosition, final int maxResult) {
 		StringBuilder sbQuery = new StringBuilder(255);
 		final Group group = criteria != null ? Group.and(criteria) : null;
 
 		final String sQuery = sbQuery.append(
-				constructSelect(getEntityName(clazz), "o")).append(
+				constructSelect(getEntityName(clazz), "o", distinctFlag)).append(
 				constructJoins(fetches)).append(constuctWhereClause(group))
 				.append(constructOrderBy(orderBy)).toString();
 
@@ -664,9 +680,9 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return query.toString();
 	}
 
-	private String constructSelect(String entityName, String instanceName) {
+	private String constructSelect(String entityName, String instanceName, boolean distinctFlag) {
 		StringBuilder query = new StringBuilder("SELECT "
-				+ (this.distinct ? "DISTINCT " : "") + instanceName + " FROM ");
+				+ (distinctFlag ? "DISTINCT " : "") + instanceName + " FROM ");
 		query.append(entityName);
 		query.append(" ");
 		query.append(instanceName).append(" ");

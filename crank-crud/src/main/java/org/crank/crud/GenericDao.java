@@ -262,6 +262,10 @@ public interface GenericDao<T, PK extends Serializable> {
 	List<T> find(OrderBy[] orderBy, Criterion... criteria);
 
 	public T readPopulated(final PK id);
+	
+	boolean isDistinct();
+	
+	void setDistinct(boolean flag);
 
 	/**
 	 * @deprecated Use store

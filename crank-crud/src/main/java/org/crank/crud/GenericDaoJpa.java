@@ -121,6 +121,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		this.distinct = isDistinct;
 	}
 
+	public void setDistinct(boolean isDistinct) {
+		this.distinct = isDistinct;
+	}
+
 	public boolean isDistinct() {
 		return this.distinct;
 	}
@@ -429,12 +433,21 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	private List<T> doFind(Class<T> clazz, OrderBy[] orderBy,
 			final Criterion[] criteria, Fetch[] fetches,
 			final int startPosition, final int maxResult) {
+		return doFind(clazz, this.distinct, orderBy, criteria, fetches, startPosition,
+				maxResult);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<T> doFind(Class<T> clazz, boolean distinctFlag, OrderBy[] orderBy,
+
+			final Criterion[] criteria, Fetch[] fetches,
+			final int startPosition, final int maxResult) {
 		StringBuilder sbQuery = new StringBuilder(255);
 		final Group group = criteria != null ? Group.and(criteria)
 				: new Group();
 
 		final String sQuery = sbQuery.append(
-				constructSelect(getEntityName(clazz), "o")).append(
+				constructSelect(getEntityName(clazz), "o", distinctFlag)).append(
 				constructJoins(fetches)).append(constuctWhereClause(group))
 				.append(constructOrderBy(orderBy)).toString();
 
@@ -786,10 +799,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return query.toString();
 	}
 
-	private String constructSelect(String entityName, String instanceName) {
+	private String constructSelect(String entityName, String instanceName, boolean distinctFlag) {
 		StringBuilder query = new StringBuilder(255);
 		query.append("SELECT ");
-		query.append((this.distinct ? " DISTINCT " : " "));
+		query.append((distinctFlag ? " DISTINCT " : " "));
 		if (newSelectStatement == null) {
 			query.append(instanceName);
 		} else {
@@ -857,8 +870,18 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	@Transactional
-	public void delete(T entity) {
-		getJpaTemplate().remove(entity);
+	public void delete(final T entity) {
+		getJpaTemplate().execute(new JpaCallback() {
+			public Object doInJpa(EntityManager entityManager) throws PersistenceException {
+				T managedEntity = entity;
+				if (!entityManager.contains(managedEntity)) {
+					managedEntity = entityManager.merge(entity);
+				}
+				entityManager.remove(managedEntity);
+				return null;
+			}
+		
+		});
 	}
 
 	private EntityManager getTransactionEntityManager() {

@@ -16,7 +16,7 @@ To set a controller to delete full entities –
 
  # Override the controller’s delete strategy in its configuration.
  # Be sure to use the controller for the listing as well as the crud form.
- # Be sure that remove cascade strategy is included for the collections to be deleted with the entity.
+ # Be sure that the remove cascade strategy is included for the collections to be deleted with the entity.
 
 For Example -
 
@@ -92,7 +92,7 @@ Form.xhtml
 ...
 }}}
 
-=== Be sure that remove cascade strategy is included for the collections to be deleted with the entity ===
+=== Be sure that the remove cascade strategy is included for the collections to be deleted with the entity ===
 
 PixelBO.java
 {{{

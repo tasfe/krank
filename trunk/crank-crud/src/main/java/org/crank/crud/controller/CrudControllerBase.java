@@ -447,7 +447,6 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
 	}
 
 	public void setDeleteStrategy(String deleteStrategy) {
-		System.out.println("cCtlBase Setting deleteStrategy to: " + deleteStrategy);
 		this.deleteStrategy = deleteStrategy;
 	}
     

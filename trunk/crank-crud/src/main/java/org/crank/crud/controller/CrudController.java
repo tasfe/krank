@@ -73,7 +73,6 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
 
     @SuppressWarnings("unchecked")
     private void doDelete(Object entity) {
-    	System.out.println("In doDelete, strategy is: " + deleteStrategy  );
     	if (deleteStrategy.equals(CrudOperations.DELETE_BY_ENTITY)) {
     		entity = dao.read((PK) propertyUtil.getPropertyValue( idPropertyName, entity ));
     		dao.delete((T) entity);

@@ -110,6 +110,8 @@
 			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
 		</crank:commandLink>
 		<a4j:outputPanel layout="block">
+			<c:set var="expandText" value=""/>
+			<c:set var="collapseText" value=""/>
 			<ui:insert/>
 		</a4j:outputPanel>
 	</h:panelGrid>

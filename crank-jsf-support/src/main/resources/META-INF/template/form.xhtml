@@ -25,7 +25,7 @@
 	</c:if>
 
 	<c:if test="${empty ajax}">
-		<c:set var="ajax" value="false" />
+		<c:set var="ajax" value="${false}" />
 	</c:if>
 
 	<c:if test="${empty cancelAlwaysOn}">
@@ -204,6 +204,7 @@
 
 		<a4j:outputPanel ajaxRendered="true">
 
+			
 			<h:panelGrid columns="4" rendered="${not ajax}">
 				<h:commandButton rendered="${addCreateMode}"
 					styleClass="${formButtonClass}" immediate="${immediate}"
@@ -219,8 +220,8 @@
 					action="${crud.cancel}" immediate="true" />
 			</h:panelGrid>
 
+			
 			<h:panelGrid columns="4" rendered="${ajax}">
-
 				<a4j:commandButton rendered="${addCreateMode}"
 					reRender="${reRender}" styleClass="${formButtonClass}"
 					value="${createButtonText}" action="${crud.create}" />

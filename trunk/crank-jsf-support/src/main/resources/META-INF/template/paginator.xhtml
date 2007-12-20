@@ -185,18 +185,7 @@
 						<h:graphicImage value="${addNewImg}" border="0" styleClass="${listingImageButtonClass}"/>
 				</crank:commandLink>
 			</c:if>
-
-			<crank:commandLink 
-				id="applyFilter${id}"
-				entity="${paginator}"
-				action="filter"
-				ajaxSingle="${ajaxSingle}"
-				rendered="#{paginator.filtering}"
-				toolTipText="Click to apply column filters"
-				reRender="${reRender}">
-					<h:graphicImage value="${applyFilterImg}" border="0" styleClass="${listingImageButtonClass}"/>
-			</crank:commandLink>
-			<h:graphicImage rendered="#{not paginator.filtering}" value="${applyFilterDisabledImg}" border="0" styleClass="${listingImageButtonClass}"/>
+			
 
 			<crank:commandLink 
 				id="clearFilters${id}"

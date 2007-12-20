@@ -29,7 +29,8 @@
     <h:panelGrid id="${crud.name}_${name}FieldsFormPanelGridId" 
     			columns="3" rowClasses="formRowClass1, formRowClass2">
 		<c:forEach items="${pNames}" var="property">
-			<crank:field entity="${entity}" type="${entity.class}" fieldName="${property}"/>
+			<crank:field entity="${entity}" type="${entity.class}" fieldName="${property}"
+						 prefix="${name}"/>
 		</c:forEach>			
     </h:panelGrid>
 

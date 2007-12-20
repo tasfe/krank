@@ -50,9 +50,13 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
      * @see CrudOperations#create()
      * @retrun outcome
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "deprecation" })
     public CrudOutcome doCreate() {
-        dao.create((T)entity);
+    	if (CrudOperations.ADD_BY_MERGE.equals(addStrategy)) {
+    		dao.merge((T)entity);
+    	} else {
+    		dao.create((T)entity);
+    	}
         this.state = CrudState.UNKNOWN;
         fireToggle();
         return CrudOutcome.LISTING;

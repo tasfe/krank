@@ -36,7 +36,7 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
     protected FileUploadHandler fileUploadHandler;
 	protected String idParam = "id";
 	protected String deleteStrategy = CrudOperations.DELETE_BY_ID;
-    
+	protected String addStrategy = CrudOperations.ADD_BY_CREATE;
 
 
     public CrudControllerBase() {
@@ -448,6 +448,14 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
 
 	public void setDeleteStrategy(String deleteStrategy) {
 		this.deleteStrategy = deleteStrategy;
+	}
+
+	public String getAddStrategy() {
+		return addStrategy;
+	}
+
+	public void setAddStrategy(String addStrategy) {
+		this.addStrategy = addStrategy;
 	}
     
 

@@ -13,6 +13,10 @@ public interface CrudOperations extends Toggleable {
 	static final String DELETE_BY_ID = "BY_ID"; 
 	/** Delete method constant for deleting by entity only. */
 	static final String DELETE_BY_ENTITY = "BY_ENTITY";
+	/** Add method constant for adding by create. */
+	static final String ADD_BY_CREATE = "BY_CREATE";
+	/** Add method constant for adding by merge. */
+	static final String ADD_BY_MERGE = "BY_MERGE";
 	
     /** Create an object. */
     CrudOutcome create();

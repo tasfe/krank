@@ -6,10 +6,9 @@ import javax.faces.application.Application;
 
 public class ApplicationFactory extends javax.faces.application.ApplicationFactory {
     private Application application;
-    
-    {
-        javax.faces.application.ApplicationFactory appFactory =
-            (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+    public ApplicationFactory(javax.faces.application.ApplicationFactory appFactory) {
+//        javax.faces.application.ApplicationFactory appFactory =
+//            (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
 
         Application orgApp = appFactory.getApplication();
         //System.out.println(orgApp.getClass().getName());

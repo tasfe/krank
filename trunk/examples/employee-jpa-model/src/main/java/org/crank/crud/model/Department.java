@@ -22,7 +22,7 @@ import javax.persistence.OneToMany;
 				+ " LEFT JOIN FETCH employee.roles "
 				+ " WHERE department.id=?1"),
 		@NamedQuery(name = "Department.findDepartmentNamed", query = "SELECT o FROM Department o  WHERE  o.name = ?1") })
-public class Department implements Serializable {
+public class Department extends Group implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id

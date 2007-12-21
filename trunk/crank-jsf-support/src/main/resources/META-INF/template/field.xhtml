@@ -184,10 +184,20 @@
 	<c:if test="${simpleType}">
     <c:if test="${crud:isManyToOne(type,fieldName) and not forceInputText}">
         <c:set var="propEntityName" value="${crud:getPropertyEntityName(type,fieldName)}" />
-        <a4j:outputPanel ajaxRendered="true">        
+        <a4j:outputPanel ajaxRendered="true">
+        <h:selectOneMenu id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}"
+        				 required="${not crud:isManyToOneOptional(type,fieldName)}">
+			<c:if test="${not crud:isManyToOneOptional(type,fieldName)}">
+				<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
+			</c:if>
+			<c:if test="${crud:isManyToOneOptional(type,fieldName)}">
+				<f:selectItems value="${selectItemGenerators[propEntityName].listOptional}" />
+			</c:if>
+			<!-- <f:converter converterId="" binding="${converters[propEntityName]}"/>  -->
+			<f:attribute name="beanType" value="${propEntityName}"/>
+		</h:selectOneMenu>
+        <!--         
 		<crud:select id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}" required="${not crud:isManyToOneOptional(type,fieldName)}">
-<!--			        <validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}"/>-->
-
 			<c:if test="${not crud:isManyToOneOptional(type,fieldName)}">
 				<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
 			</c:if>
@@ -196,6 +206,7 @@
 			</c:if>
 			<f:converter converterId="" binding="${converters[propEntityName]}"/>
 		</crud:select>
+		 -->
 		</a4j:outputPanel>		
     </c:if>
 	</c:if>

@@ -84,7 +84,7 @@ public class Employee {
 	@ManyToOne(fetch=FetchType.LAZY, optional=true)
 	private Department department;
 	
-	@ManyToOne(fetch=FetchType.LAZY, optional=false)
+	@ManyToOne(fetch=FetchType.LAZY, optional=true)
 	private Department clientDepartment;
 	
     

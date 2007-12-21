@@ -1,12 +1,13 @@
 package org.crank.crud.controller;
 
 
+import junit.framework.TestCase;
+
 import org.crank.crud.test.model.Employee;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import static org.testng.AssertJUnit.*;
 
-public class CrudUtilsTest {
+public class CrudUtilsTest extends TestCase{
 
     @BeforeMethod
     protected void setUp() throws Exception {
@@ -39,6 +40,9 @@ public class CrudUtilsTest {
     public void testIsManyToOne() {
         assertFalse(CrudUtils.isManyToOne( Employee.class, "age"));
         assertTrue(CrudUtils.isManyToOne( Employee.class, "department"));
+        
+        assertTrue(CrudUtils.isManyToOneOptional(Employee.class, "department"));
+        assertFalse(CrudUtils.isManyToOneOptional(Employee.class, "clientDepartment"));
 
     }
     

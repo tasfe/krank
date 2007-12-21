@@ -120,7 +120,7 @@
 		<function-name>isManyToOneOptional</function-name>
 		<function-class>org.crank.crud.controller.CrudUtils</function-class>
 		<function-signature>
-			boolean isManyToOne(java.lang.Class, java.lang.String)
+			boolean isManyToOneOptional(java.lang.Class, java.lang.String)
 		</function-signature>
 	</function>
 

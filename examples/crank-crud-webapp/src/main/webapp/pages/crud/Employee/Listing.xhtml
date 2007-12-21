@@ -24,8 +24,10 @@
 		<a4j:form id="employeeListingForm">
 				<crank:listing  jsfCrudAdapter="${employeeCrud}" 
 					propertyNames="firstName,lastName,status,active,dob,age,phone,department.name,address.zipCode,specialty.name"
-					parentForm="employeeListingForm" enableAdd="${false}" enableDelete="${false}"
+					parentForm="employeeListingForm" 
 					/>
+					
+					<!--  enableAdd="${false}" enableDelete="${false}" for listing -->
 		</a4j:form>
 				
 	</ui:define>

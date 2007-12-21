@@ -159,6 +159,11 @@
   		<to-view-id>/pages/crud/Role/ExportListing.xhtml</to-view-id>
   	</navigation-case>  	
   </navigation-rule>
+  
+  <converter>
+  	<converter-for-class>org.crank.crud.model.Department</converter-for-class>
+  	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
+  </converter>
 
 
 </faces-config>

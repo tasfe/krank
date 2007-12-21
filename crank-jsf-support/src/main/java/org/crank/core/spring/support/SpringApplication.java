@@ -2,6 +2,7 @@ package org.crank.core.spring.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.crank.crud.controller.CrudUtils;
 
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.jsf.FacesContextUtils;
@@ -10,6 +11,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.el.ELContextListener;
@@ -449,8 +451,6 @@ public class SpringApplication extends Application {
         FacesException originalException = null;
         String marker = "###############################################";
         
-        //System.out.println(marker +  " THIS FAR 1");
-
         try {
             // Create converter with original application
             if (logger.isDebugEnabled()) {
@@ -458,11 +458,9 @@ public class SpringApplication extends Application {
                     targetClass.getName() + "' using original Application");
             }
 
-            System.out.println(marker +  " THIS FAR 2");
             Converter originalConverter = this.originalApplication.createConverter(targetClass);
 
             if (originalConverter != null) {
-                System.out.println(marker +  " THIS FAR 3 " + originalConverter.getClass().getName());
                 return originalConverter;
             }
 
@@ -472,29 +470,15 @@ public class SpringApplication extends Application {
             originalException = e;
         }
 
-        // Get converter from Spring root context
-        String converterBeanName = targetClass.getName().replace( ".", "_") + "_Converter";
-        System.out.println(marker +  " THIS FAR 4 " + converterBeanName );
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("Attempting to find converter '" + converterBeanName +
-                "' in root WebApplicationContext");
-        }
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
 
         WebApplicationContext wac = getWebApplicationContext(facesContext);
-        System.out.println(marker +  " THIS FAR 5 " + wac.containsBean(converterBeanName) );
 
-        if (wac.containsBean(converterBeanName)) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Successfully found converter '" +
-                    converterBeanName + "' in root WebApplicationContext");
-            }
-
-            Converter converter = (Converter) wac.getBean(converterBeanName);
-            System.out.println(marker +  " THIS FAR 5 " + converter.getClass().getName() );
-
+        if (wac.containsBean("converters")) {
+            Map<String, Converter> converters = (Map<String, Converter>)wac.getBean("converters");
+             
+            Converter converter = converters.get(CrudUtils.getClassEntityName(targetClass)); 
             return converter;
         }
         throw originalException;
@@ -527,7 +511,6 @@ public class SpringApplication extends Application {
                 }
                 
         }
-        System.out.println("##################### GET CONVERTER TYPES CALLED");
         return jsfConverterTypes.iterator();
     }
 

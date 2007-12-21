@@ -70,8 +70,15 @@ public class EntityConverter implements Converter, Serializable {
         Serializable entityId = CrudUtils.getIdObject(value, this.idType);
         if (dao == null) {
             ObjectRegistry objectRegistry = CrankContext.getObjectRegistry();
-            Map<String, GenericDao> maps = (Map<String, GenericDao>) objectRegistry.getObject( "converters" );
-            dao = maps.get( managedObject.getName() );
+            Map<String, GenericDao> repos = (Map<String, GenericDao>) objectRegistry.getObject( "repos" );
+            
+            if (managedObject!=null) {
+            	dao = repos.get( managedObject.getName() );
+            } else {
+            	Object key = component.getAttributes().get("beanType");
+            	dao = repos.get((String)key);
+            }
+            
         }
         return dao.read(entityId);            
     }

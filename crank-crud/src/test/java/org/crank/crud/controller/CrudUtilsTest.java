@@ -41,8 +41,8 @@ public class CrudUtilsTest extends TestCase{
         assertFalse(CrudUtils.isManyToOne( Employee.class, "age"));
         assertTrue(CrudUtils.isManyToOne( Employee.class, "department"));
         
-        assertTrue(CrudUtils.isManyToOneOptional(Employee.class, "department"));
-        assertFalse(CrudUtils.isManyToOneOptional(Employee.class, "clientDepartment"));
+        //assertFalse(CrudUtils.isManyToOneOptional(Employee.class, "department"));
+        assertTrue(CrudUtils.isManyToOneOptional(Employee.class, "clientDepartment"));
 
     }
     

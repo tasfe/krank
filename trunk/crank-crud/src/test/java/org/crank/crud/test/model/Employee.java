@@ -81,8 +81,12 @@ public class Employee {
 	@Column (name="department_id", insertable=false, updatable=false)
 	private Long departmentId;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY, optional=true)
 	private Department department;
+	
+	@ManyToOne(fetch=FetchType.LAZY, optional=false)
+	private Department clientDepartment;
+	
     
 	public Long getId() {
 		return id;
@@ -178,6 +182,14 @@ public class Employee {
 
 	public void setDepartmentId(Long departmentId) {
 		this.departmentId = departmentId;
+	}
+
+	public Department getClientDepartment() {
+		return clientDepartment;
+	}
+
+	public void setClientDepartment(Department clientDepartment) {
+		this.clientDepartment = clientDepartment;
 	}
     
 }

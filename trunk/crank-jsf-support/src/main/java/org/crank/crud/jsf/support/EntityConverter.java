@@ -13,6 +13,7 @@ import org.springframework.beans.BeanWrapperImpl;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
@@ -63,7 +64,8 @@ public class EntityConverter implements Converter, Serializable {
      */
     @SuppressWarnings("unchecked")
     public Object getAsObject(final FacesContext facesContext, final UIComponent component, final String value) {
-    	if (value.equals("-1")) {
+    	UIInput input = (UIInput) component;
+    	if (value.equals("-1") && (input.isRequired()||component.getAttributes().get("required_bean")!=null)) {
     		throw new ConverterException(new FacesMessage("Required","Required"));
     	}
     	

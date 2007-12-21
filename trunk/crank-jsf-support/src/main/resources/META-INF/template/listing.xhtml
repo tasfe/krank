@@ -142,13 +142,14 @@
 							                   toolTipText="Click to un-select all rows">
 								<h:graphicImage id="selectNone${id}Img" value="${selectNoneImg}" border="0" styleClass="${listingImageButtonClass}"/>
 							</crank:commandLink>
-							
 							<crank:commandLink id="disableSelected${id}"
 											   rendered="${enableDelete}"
 											   entity="${crud}"
 											   action="deleteSelected"
 											   onclick="if (!confirm('Are you sure you want to disable all selected items?')) return false"
-							                   toolTipText="Click to delete selected rows">
+							                   toolTipText="Click to delete selected rows"
+							                   reRender="${reRender},dataTable${id}"
+							                   ajax="${false}">
 								<h:graphicImage id="disableSelected${id}Img" value="${delAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
 							</crank:commandLink>
 						</h:column>

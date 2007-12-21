@@ -87,11 +87,13 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
     
     public CrudOutcome deleteSelected() {
         List listToDelete = this.getSelectedEntities();
+        fireBeforeDelete();
         /* You could change this to delete a list of ids. */
         for (Object entity : listToDelete) {
-            doDelete( entity );
+            this.doDelete(entity);
         }
-        fireToggle();        
+        fireToggle();
+        fireAfterDelete();
         return CrudOutcome.LISTING;        
     }
 

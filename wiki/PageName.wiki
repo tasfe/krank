@@ -27,4 +27,4 @@ The first solution was to get the JSF components themselves and hack them. This 
 
 }}}
 
-Again the problems seems to be that the Universal EL does not consult the converter that you register with the JSF component via <f:converter, or the converter that you return using a custom JSF Application object.
+Again the problems seems to be that the Universal EL does not consult the converter that you register with the JSF component via <f:converter, or the converter that you return using a custom JSF Application object. If either of these worked then we could provide this feature automatically like we did in JSF 1.1.

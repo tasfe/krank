@@ -99,14 +99,17 @@ public class JsfSelectOneListingController<T, PK extends Serializable> implement
     	if (this.parentEntity != null) {
     		wrappedParentEntity = new BeanWrapperImpl(this.parentEntity);
     	} else {
-    		wrappedParentEntity = new BeanWrapperImpl(controller.getEntity());
+    		if (controller!=null) {
+    			wrappedParentEntity = new BeanWrapperImpl(controller.getEntity());
+    		}
     	}
 		
-    	wrappedParentEntity.setPropertyValue(this.propertyName, value);
+    	if (wrappedParentEntity!=null) {
+    		wrappedParentEntity.setPropertyValue(this.propertyName, value);
+    	}
     	
 		selectSupport.fireSelect(value);
 		this.show = false;
-    	
 	}
 	
 	public void cancel () {

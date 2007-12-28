@@ -83,7 +83,7 @@
 		</c:if>
 		<c:set var="entityName" value="${detailController.relationshipManager.childCollectionProperty}" />
 		<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
-		<c:set var="pNames" value="${fn:split(propertyNames, ', ')}" />
+		<c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
 		<c:if test="${empty useBody}">
 			<c:set var="useBody" value="true" />
 		</c:if>

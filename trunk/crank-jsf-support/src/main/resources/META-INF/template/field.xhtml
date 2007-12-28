@@ -172,8 +172,7 @@
 		<t:calendar id="${fieldId}" renderPopupButtonAsImage="true" 
 	   				 disabled="${disabled}"
 	                   renderAsPopup="true" value="#{entity[fieldName]}" 
-	                   required="${required}"
-	                   styleClass="${formFieldStyleClasses}">
+	                   required="${required}">
 			        <validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}" parentObject="${entity}"/>	                   
 	        <ui:insert />
 		</t:calendar>

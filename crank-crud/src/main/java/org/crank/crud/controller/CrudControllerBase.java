@@ -233,11 +233,16 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
         if (fileUploadHandler!=null) {
             fileUploadHandler.upload( this );
         }
-        fireBeforeCreate();
-        CrudOutcome outcome = doCreate();
-    	MessageManagerUtils.getCurrentInstance().addStatusMessage("Created");        
-        fireAfterCreate();
-        return outcome;
+    	try {
+	        fireBeforeCreate();
+	       	CrudOutcome outcome = doCreate();
+	    	MessageManagerUtils.getCurrentInstance().addStatusMessage("Created");        
+	        fireAfterCreate();
+	        return outcome;
+    	} catch (CrankValidationException e) {
+    		e.printStackTrace();
+    	}
+    	return null;
     }
 
     /** Load create an object. */
@@ -458,5 +463,4 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
 		this.addStrategy = addStrategy;
 	}
     
-
 }

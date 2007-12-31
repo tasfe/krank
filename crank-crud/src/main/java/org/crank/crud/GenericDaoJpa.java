@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.Id;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceException;
@@ -31,6 +32,8 @@ import org.crank.crud.criteria.OrderDirection;
 import org.crank.crud.criteria.VerifiedBetween;
 import org.crank.crud.join.Fetch;
 import org.crank.crud.join.Join;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.orm.jpa.EntityManagerHolder;
 import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.orm.jpa.JpaSystemException;
@@ -179,15 +182,47 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return readExclusive(type, id);
 	}
 
-	public void refresh(final T transientObject) {
-		getJpaTemplate().refresh(transientObject);
+	@SuppressWarnings("unchecked")
+	public T refresh(final T transientObject) {
+		return (T)getJpaTemplate().execute(new JpaCallback() {		
+			public Object doInJpa(EntityManager em) throws PersistenceException {
+				T managedEntity = findManagedEntity(em, transientObject);
+				// now refresh the state of the managed object, discarding any changes that were made
+				em.refresh(managedEntity);
+				return managedEntity;
+			}
+		}); 
 	}
 
-	public void refresh(final Collection<T> entities) {
+	public Collection<T> refresh(final Collection<T> entities) {
+		Collection<T> refreshedResults = new ArrayList<T>(entities.size());
 		for (T entity : entities) {
-			refresh(entity);
+			refreshedResults.add(refresh(entity));
 		}
+		return refreshedResults;
 	}
+	
+	@SuppressWarnings("unchecked")
+	protected T findManagedEntity(EntityManager em, final T entity) {
+		T managedObject = null;
+		if (em.contains(entity)) {
+			// the entity is already managed in this context
+			managedObject = entity;
+		}
+		else {
+			// the entity is not managed in this context, presumedly detached
+			// we'll find it in the context by primary key
+			BeanWrapper bw = new BeanWrapperImpl(entity);
+			PK key = (PK)bw.getPropertyValue(getPrimaryKeyName());
+			Class<T> entityClass = (Class<T>)entity.getClass();
+			managedObject = em.find(entityClass, key);
+			if (managedObject == null) {
+				throw new EntityNotFoundException();
+			}
+		}
+		return managedObject;
+	}
+	
 
 	@Transactional
 	public void flushAndClear() {
@@ -749,7 +784,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return pkName;
 	}
 
-	private String searchMethodsForPK(Class aType) {
+	private String searchMethodsForPK(Class<? super T> aType) {
 		String pkName = null;
 		Method[] methods = aType.getDeclaredMethods();
 		for (Method method : methods) {

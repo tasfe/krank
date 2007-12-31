@@ -43,7 +43,7 @@ public interface GenericDao<T, PK extends Serializable> {
 	 * Merge the entity, returning (a potentially different object) the
 	 * persisted entity. Details of this method are in section 3.2.4.1 of the <a
 	 * href="http://tinyurl.com/2pc93u">JPA spec</a>. Basics - merge will take
-	 * an exiting 'detatched' entity and merge its properties onto an existing
+	 * an exiting 'detached' entity and merge its properties onto an existing
 	 * entity. The entity with the merged state is returned.
 	 * 
 	 * @param entity
@@ -68,16 +68,15 @@ public interface GenericDao<T, PK extends Serializable> {
 	public void persist(Collection<T> entities);
 
 	/**
-	 * Merge the collection of entities, returning (a colleciton of potentially different objects) the
+	 * Merge the collection of entities, returning (a collection of potentially different objects) the
 	 * persisted entities. Details of this method are in section 3.2.4.1 of the <a
 	 * href="http://tinyurl.com/2pc93u">JPA spec</a>. Basics - merge will take
-	 * an exiting 'detatched' entity and merge its properties onto an existing
+	 * an exiting 'detached' entity and merge its properties onto an existing
 	 * entity. The entity with the merged state is returned.
 	 * 
 	 * @param entity
 	 */
 	public Collection<T> merge(Collection<T> entities);
-	
 	
 	/**
 	 * Retrieve an object that was previously persisted to the database using
@@ -102,22 +101,24 @@ public interface GenericDao<T, PK extends Serializable> {
 	T readExclusive(PK id);
 
 	/**
-	 * Refresh a persistent object that may have changed in another
-	 * thread/transaction.
+	 * Refresh an entity that may have changed in another
+	 * thread/transaction.  If the entity is not in the 
+	 * 'managed' state, it is located using EntityManager.find() then 
+	 * refreshed.
 	 * 
 	 * @param transientObject
 	 *            The Object to refresh.
 	 */
-	void refresh(T transientObject);
+	T refresh(T transientObject);
 
 	/**
-	 * Refresh a persistent object that may have changed in another
+	 * Refresh a collection of entities that may have changed in another
 	 * thread/transaction.
 	 * 
 	 * @param transientObject
 	 *            The Object to refresh.
 	 */
-	void refresh(Collection<T> entities);
+	Collection<T> refresh(Collection<T> entities);
 
 	/**
 	 * Write anything to db that is pending operation and clear it.
@@ -132,7 +133,7 @@ public interface GenericDao<T, PK extends Serializable> {
 	 * 
 	 * You can do two things, put all your PK deletes together and then call
 	 * flushAndClear when done, or you can just call the delete method with the
-	 * entity wich will not suffer from this problem.
+	 * entity which will not suffer from this problem.
 	 * 
 	 * @see delete(T entity)
 	 * @param id
@@ -141,7 +142,9 @@ public interface GenericDao<T, PK extends Serializable> {
 	void delete(PK id);
 
 	/**
-	 * Remove an object from persistent storage in the database.
+	 * Remove an entity from persistent storage in the database.  If the entity
+	 * is not in the 'managed' state, it is merged into the persistent context
+	 * then removed.
 	 * 
 	 * @param entity
 	 *            The Primary Key of the object to delete.
@@ -149,7 +152,7 @@ public interface GenericDao<T, PK extends Serializable> {
 	void delete(T entity);
 
 	/**
-	 * Remove an object from persistent storage in the database.
+	 * Remove a collection of entities from persistent storage in the database.
 	 * 
 	 * @param entity
 	 *            The Primary Key of the object to delete.
@@ -178,7 +181,7 @@ public interface GenericDao<T, PK extends Serializable> {
 
 	/**
 	 * Does a query such as select yada from [yourclass] where field=value
-	 * orderby field.
+	 * orderBy field.
 	 * 
 	 * @param propertyNames
 	 *            Names of the fields on which to search.
@@ -192,7 +195,7 @@ public interface GenericDao<T, PK extends Serializable> {
 
 	/**
 	 * Does a query such as select yada from [yourclass] where field=value
-	 * orderby field.
+	 * orderBy field.
 	 * 
 	 * @param propertyValues
 	 *            properties of VO to use as filters
@@ -207,7 +210,7 @@ public interface GenericDao<T, PK extends Serializable> {
 	 * objects. This is like a select "where something = value"
 	 * 
 	 * @param property
-	 *            field in hibernate object
+	 *            field in entity
 	 * @param value
 	 *            value to search on
 	 * @return list of the annotated objects

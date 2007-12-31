@@ -103,13 +103,25 @@ public interface GenericDao<T, PK extends Serializable> {
 	/**
 	 * Refresh an entity that may have changed in another
 	 * thread/transaction.  If the entity is not in the 
+	 * 'managed' state, it is first merged into the persistent
+	 * context, then refreshed.
+	 * 
+	 * @param transientObject
+	 *            The Object to refresh.
+	 */
+	T refresh(T transientObject);
+	
+	/**
+	 * Refresh an entity that may have changed in another
+	 * thread/transaction.  If the entity is not in the 
 	 * 'managed' state, it is located using EntityManager.find() then 
 	 * refreshed.
 	 * 
 	 * @param transientObject
 	 *            The Object to refresh.
 	 */
-	T refresh(T transientObject);
+	T refresh(PK id);
+	
 
 	/**
 	 * Refresh a collection of entities that may have changed in another

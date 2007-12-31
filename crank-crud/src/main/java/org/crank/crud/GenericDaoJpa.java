@@ -186,13 +186,35 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public T refresh(final T transientObject) {
 		return (T)getJpaTemplate().execute(new JpaCallback() {		
 			public Object doInJpa(EntityManager em) throws PersistenceException {
-				T managedEntity = findManagedEntity(em, transientObject);
+				T managedEntity = null;
+				if (em.contains(transientObject)) {
+					managedEntity = transientObject;
+				}
+				else {
+					managedEntity = em.merge(transientObject);
+				}
 				// now refresh the state of the managed object, discarding any changes that were made
 				em.refresh(managedEntity);
 				return managedEntity;
 			}
 		}); 
 	}
+	
+	@SuppressWarnings("unchecked")
+	public T refresh(final PK id) {
+		if (type == null) {
+			throw new UnsupportedOperationException(
+					"The type must be set to use this method.");
+		}
+		return (T)getJpaTemplate().execute(new JpaCallback() {		
+			public Object doInJpa(EntityManager em) throws PersistenceException {
+				T managedEntity = em.find(type, id);
+				// now refresh the state of the managed object, discarding any changes that were made
+				em.refresh(managedEntity);
+				return managedEntity;
+			}
+		}); 
+	}	
 
 	public Collection<T> refresh(final Collection<T> entities) {
 		Collection<T> refreshedResults = new ArrayList<T>(entities.size());

@@ -540,6 +540,37 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     } 
     
     @Test
+    public void testRefreshByFind() {        
+		List<Employee> employees = employeeDao.find();
+		AssertJUnit.assertTrue(employees.size() > 0);
+		
+		for (Employee emp : employees) {
+			String originalFirstName = emp.getFirstName();
+			String modifiedFirstName = originalFirstName + System.currentTimeMillis();
+			emp.setFirstName(modifiedFirstName );
+	        AssertJUnit.assertEquals(modifiedFirstName, emp.getFirstName());
+	        emp = employeeDao.refresh(emp.getId());					
+	        AssertJUnit.assertEquals(originalFirstName, emp.getFirstName());
+		}
+    }     
+    
+    @Test
+    public void testRefreshByMerge() {        
+		List<Employee> employees = employeeDao.find();
+		AssertJUnit.assertTrue(employees.size() > 0);
+		
+		for (Employee emp : employees) {
+			String originalFirstName = emp.getFirstName();
+			String modifiedFirstName = originalFirstName + System.currentTimeMillis();
+			emp.setFirstName(modifiedFirstName );
+	        AssertJUnit.assertEquals(modifiedFirstName, emp.getFirstName());
+	        emp = employeeDao.refresh(emp);					
+	        AssertJUnit.assertEquals(originalFirstName, emp.getFirstName());
+		}
+    }      
+    
+    
+    @Test
     public void testDeleteMultiple() {        
     	employeeDao.flushAndClear();
         List<Employee> employees =Arrays.asList(

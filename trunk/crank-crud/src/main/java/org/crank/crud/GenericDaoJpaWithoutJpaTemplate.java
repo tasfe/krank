@@ -1,6 +1,7 @@
 package org.crank.crud;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.Id;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
@@ -28,6 +31,8 @@ import org.crank.crud.criteria.OrderDirection;
 import org.crank.crud.criteria.VerifiedBetween;
 import org.crank.crud.join.Fetch;
 import org.crank.crud.join.Join;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +57,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		implements GenericDao<T, PK>, Finder<T> {
 
 	protected Class<T> type = null;
+	private String primaryKeyName;
 
 	protected boolean distinct = false;
 
@@ -166,9 +172,87 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return (T) entity;
 	}
 
-	public void refresh(final T transientObject) {
-		getEntityManager().refresh(transientObject);
+	public T refresh(final T transientObject) {
+		EntityManager em = getEntityManager();
+		T managedEntity = findManagedEntity(em, transientObject);		
+		em.refresh(managedEntity);
+		return managedEntity;
 	}
+	
+	@SuppressWarnings("unchecked")
+	protected T findManagedEntity(EntityManager em, final T entity) {
+		T managedObject = null;
+		if (em.contains(entity)) {
+			// the entity is already managed in this context
+			managedObject = entity;
+		}
+		else {
+			// the entity is not managed in this context, presumedly detached
+			// we'll find it in the context by primary key
+			BeanWrapper bw = new BeanWrapperImpl(entity);
+			PK key = (PK)bw.getPropertyValue(getPrimaryKeyName());
+			Class<T> entityClass = (Class<T>)entity.getClass();
+			managedObject = em.find(entityClass, key);
+			if (managedObject == null) {
+				throw new EntityNotFoundException();
+			}
+		}
+		return managedObject;
+	}
+	
+	protected String getPrimaryKeyName(Class<T> aType) {
+		String pkName = searchFieldsForPK(aType);
+		if (null == pkName) {
+			pkName = searchMethodsForPK(aType);
+		}
+		return pkName;
+	}
+
+	protected String getPrimaryKeyName() {
+		if (primaryKeyName == null) {
+			if (type == null) {
+				throw new UnsupportedOperationException(
+						"The type must be set to use this method.");
+			}
+			primaryKeyName = getPrimaryKeyName(this.type);
+		}
+		return primaryKeyName;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private String searchFieldsForPK(Class<T> aType) {
+		String pkName = null;
+		Field[] fields = aType.getDeclaredFields();
+		for (Field field : fields) {
+			Id id = field.getAnnotation(Id.class);
+			if (id != null) {
+				pkName = field.getName();
+				break;
+			}
+		}
+		if (pkName == null && aType.getSuperclass() != null) {
+			pkName = searchFieldsForPK((Class<T>) aType.getSuperclass());
+		}
+		return pkName;
+	}
+
+	private String searchMethodsForPK(Class<? super T> aType) {
+		String pkName = null;
+		Method[] methods = aType.getDeclaredMethods();
+		for (Method method : methods) {
+			Id id = method.getAnnotation(Id.class);
+			if (id != null) {
+				pkName = method.getName().substring(4);
+				pkName = method.getName().substring(3, 4).toLowerCase()
+						+ pkName;
+				break;
+			}
+		}
+		if (pkName == null && aType.getSuperclass() != null) {
+			pkName = searchMethodsForPK(aType.getSuperclass());
+		}
+		return pkName;
+	}	
 
 	public void flushAndClear() {
 		EntityManager entityManager = getEntityManager();
@@ -199,7 +283,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return this.find(orderBy, criteria);
 	}
 
-	public List<T> searchOrdered(Class clazz, Criterion criteria,
+	public List<T> searchOrdered(Class<T> clazz, Criterion criteria,
 			String... orderBy) {
 		return this.find(clazz, orderBy, criteria);
 	}
@@ -208,7 +292,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return find(type, criteria, orderBy);
 	}
 
-	public List<T> find(Class clazz, List<Criterion> criteria,
+	public List<T> find(Class<T> clazz, List<Criterion> criteria,
 			List<String> orderBy) {
 		return find(clazz, orderBy.toArray(new String[orderBy.size()]),
 				(Criterion[]) criteria.toArray(new Criterion[criteria.size()]));
@@ -218,7 +302,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return find(type, criteria, orderBy);
 	}
 
-	public List<T> find(Class clazz, List<Criterion> criteria, String[] orderBy) {
+	public List<T> find(Class<T> clazz, List<Criterion> criteria, String[] orderBy) {
 		return find(clazz, orderBy, (Criterion[]) criteria
 				.toArray(new Criterion[criteria.size()]));
 	}
@@ -227,7 +311,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return find(propertyValues, null);
 	}
 
-	public List<T> find(Class clazz, Map<String, Object> propertyValues) {
+	public List<T> find(Class<T> clazz, Map<String, Object> propertyValues) {
 		return find(clazz, propertyValues, null);
 	}
 
@@ -241,7 +325,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> find(Class clazz, Map<String, Object> propertyValues,
+	public List<T> find(Class<T> clazz, Map<String, Object> propertyValues,
 			String[] orderBy) {
 		return find(clazz, orderBy, Group.and(propertyValues));
 	}
@@ -250,7 +334,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return find(type, property, value);
 	}
 
-	public List<T> find(Class clazz, String property, Object value) {
+	public List<T> find(Class<T> clazz, String property, Object value) {
 		HashMap<String, Object> propertyValues = new HashMap<String, Object>();
 		propertyValues.put(property, value);
 		return find(clazz, propertyValues);
@@ -265,13 +349,12 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		String entityName = getEntityName(type);
 		Query query = getEntityManager().createQuery(
 				"SELECT count(*) FROM " + entityName + " instance");
-		List list = query.getResultList();
-		Long count = (Long) list.get(0);
+		Long count = (Long) query.getResultList().get(0);
 		return count.intValue();
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> find(Class clazz) {
+	public List<T> find(Class<T> clazz) {
 		String entityName = getEntityName(clazz);
 		Query query = getEntityManager().createQuery(
 				"SELECT instance FROM " + entityName + " instance");
@@ -284,7 +367,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> find(Class clazz, String[] propertyNames, Object[] values) {
+	public List<T> find(Class<T> clazz, String[] propertyNames, Object[] values) {
 		return find(clazz, propertyNames, values, null);
 	}
 
@@ -315,12 +398,12 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> find(Class clazz, Criterion... criteria) {
+	public List<T> find(Class<T> clazz, Criterion... criteria) {
 		return find(clazz, (String[]) null, criteria);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> find(Class clazz, String[] propertyNames, Object[] values,
+	public List<T> find(Class<T> clazz, String[] propertyNames, Object[] values,
 			String[] orderBy) {
 		if (propertyNames.length != values.length) {
 			throw new RuntimeException(
@@ -395,7 +478,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> find(Class clazz, String[] orderBy, Criterion... criteria) {
+	public List<T> find(Class<T> clazz, String[] orderBy, Criterion... criteria) {
 		return doFind(clazz, orderBy, criteria, null);
 	}
 
@@ -416,7 +499,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<T> doFind(Class clazz, boolean distinctFlag, OrderBy[] orderBy,
+	private List<T> doFind(Class<T> clazz, boolean distinctFlag, OrderBy[] orderBy,
 			final Criterion[] criteria, Fetch[] fetches,
 			final int startPosition, final int maxResult) {
 		StringBuilder sbQuery = new StringBuilder(255);
@@ -444,7 +527,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<T> doFind(Class clazz, String[] orderBy,
+	private List<T> doFind(Class<T> clazz, String[] orderBy,
 			final Criterion[] criteria, Fetch[] fetches,
 			final int startPosition, final int maxResult) {
 
@@ -464,7 +547,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<T> doFind(Class clazz, String[] orderBy, Criterion[] criteria,
+	private List<T> doFind(Class<T> clazz, String[] orderBy, Criterion[] criteria,
 			Fetch[] fetches) {
 		return doFind(clazz, orderBy, criteria, fetches, -1, -1);
 	}
@@ -709,7 +792,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		}
 	}
 
-	public T readPopulated(Class clazz, final PK id) {
+	public T readPopulated(Class<T> clazz, final PK id) {
 		try {
 			return doReadPopulated(id);
 		} catch (JpaSystemException jpaSystemException) {
@@ -762,10 +845,12 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		
 	}
 
-	public void refresh(Collection<T> entities) {
+	public Collection<T> refresh(Collection<T> entities) {
+		Collection<T> refreshedResults = new ArrayList<T>(entities.size());
 		for (T entity : entities) {
-			refresh(entity);
+			refreshedResults.add(refresh(entity));
 		}
+		return refreshedResults;
 	}
 
 	public Collection<T> store(Collection<T> entities) {

@@ -1,7 +1,6 @@
 package org.crank.crud;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,8 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.Id;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
@@ -31,8 +28,6 @@ import org.crank.crud.criteria.OrderDirection;
 import org.crank.crud.criteria.VerifiedBetween;
 import org.crank.crud.join.Fetch;
 import org.crank.crud.join.Join;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,8 +52,6 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		implements GenericDao<T, PK>, Finder<T> {
 
 	protected Class<T> type = null;
-	private String primaryKeyName;
-
 	protected boolean distinct = false;
 
 	@PersistenceContext
@@ -172,87 +165,31 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return (T) entity;
 	}
 
+	@SuppressWarnings("unchecked")
 	public T refresh(final T transientObject) {
 		EntityManager em = getEntityManager();
-		T managedEntity = findManagedEntity(em, transientObject);		
+		T managedEntity = null;
+		if (em.contains(transientObject)) {
+			managedEntity = transientObject;
+		}
+		else {
+			managedEntity = em.merge(transientObject);
+		}
+		// now refresh the state of the managed object
 		em.refresh(managedEntity);
 		return managedEntity;
 	}
-	
-	@SuppressWarnings("unchecked")
-	protected T findManagedEntity(EntityManager em, final T entity) {
-		T managedObject = null;
-		if (em.contains(entity)) {
-			// the entity is already managed in this context
-			managedObject = entity;
-		}
-		else {
-			// the entity is not managed in this context, presumedly detached
-			// we'll find it in the context by primary key
-			BeanWrapper bw = new BeanWrapperImpl(entity);
-			PK key = (PK)bw.getPropertyValue(getPrimaryKeyName());
-			Class<T> entityClass = (Class<T>)entity.getClass();
-			managedObject = em.find(entityClass, key);
-			if (managedObject == null) {
-				throw new EntityNotFoundException();
-			}
-		}
-		return managedObject;
-	}
-	
-	protected String getPrimaryKeyName(Class<T> aType) {
-		String pkName = searchFieldsForPK(aType);
-		if (null == pkName) {
-			pkName = searchMethodsForPK(aType);
-		}
-		return pkName;
-	}
 
-	protected String getPrimaryKeyName() {
-		if (primaryKeyName == null) {
-			if (type == null) {
-				throw new UnsupportedOperationException(
-						"The type must be set to use this method.");
-			}
-			primaryKeyName = getPrimaryKeyName(this.type);
-		}
-		return primaryKeyName;
+	public T refresh(final PK id) {
+		if (type == null) {
+			throw new UnsupportedOperationException(
+					"The type must be set to use this method.");
+		}		
+		EntityManager em = getEntityManager();
+		T managedEntity = em.find(this.type, id);		
+		em.refresh(managedEntity);
+		return managedEntity;
 	}
-	
-	@SuppressWarnings("unchecked")
-	private String searchFieldsForPK(Class<T> aType) {
-		String pkName = null;
-		Field[] fields = aType.getDeclaredFields();
-		for (Field field : fields) {
-			Id id = field.getAnnotation(Id.class);
-			if (id != null) {
-				pkName = field.getName();
-				break;
-			}
-		}
-		if (pkName == null && aType.getSuperclass() != null) {
-			pkName = searchFieldsForPK((Class<T>) aType.getSuperclass());
-		}
-		return pkName;
-	}
-
-	private String searchMethodsForPK(Class<? super T> aType) {
-		String pkName = null;
-		Method[] methods = aType.getDeclaredMethods();
-		for (Method method : methods) {
-			Id id = method.getAnnotation(Id.class);
-			if (id != null) {
-				pkName = method.getName().substring(4);
-				pkName = method.getName().substring(3, 4).toLowerCase()
-						+ pkName;
-				break;
-			}
-		}
-		if (pkName == null && aType.getSuperclass() != null) {
-			pkName = searchMethodsForPK(aType.getSuperclass());
-		}
-		return pkName;
-	}	
 
 	public void flushAndClear() {
 		EntityManager entityManager = getEntityManager();

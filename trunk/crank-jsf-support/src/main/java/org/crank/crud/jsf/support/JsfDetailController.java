@@ -33,6 +33,10 @@ public class JsfDetailController extends DetailController implements Selectable,
 
     protected Comparator orderByComparator;
     
+    {
+    	super.entityLocator = this;
+    }
+
     public JsfDetailController() {
         super();
     }

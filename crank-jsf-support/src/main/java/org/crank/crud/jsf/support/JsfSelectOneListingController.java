@@ -17,7 +17,7 @@ import org.crank.crud.controller.Selectable;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
-public class JsfSelectOneListingController<T, PK extends Serializable> implements Selectable{
+public class JsfSelectOneListingController<T extends Serializable, PK extends Serializable> implements Selectable{
 	
 	private FilterablePageable paginator;
     private DataModel model = new ListDataModel();

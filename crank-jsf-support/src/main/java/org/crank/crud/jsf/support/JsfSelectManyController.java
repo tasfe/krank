@@ -14,7 +14,7 @@ import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.controller.Row;
 import org.crank.crud.controller.SelectManyController;
 
-public class JsfSelectManyController<T, PK extends Serializable> 
+public class JsfSelectManyController<T extends Serializable, PK extends Serializable> 
 		extends SelectManyController<T, PK> {
 	
     private DataModel model = new ListDataModel();

@@ -9,7 +9,7 @@ import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 
 import org.crank.crud.controller.CrudController;
-import org.crank.crud.controller.CrudControllerListener;
+import org.crank.crud.controller.CrudControllerListenerAdapter;
 import org.crank.crud.controller.CrudEvent;
 import org.crank.crud.controller.CrudOperations;
 import org.crank.crud.controller.EntityLocator;
@@ -30,23 +30,22 @@ import org.crank.crud.controller.Toggleable;
  * @param <T> Type of entity that we are providing CRUD for.
  * @param <PK> Primary key type.
  */
-@SuppressWarnings("unchecked")
-public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator, Serializable {
+public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> implements EntityLocator<T>, Serializable {
 	private static final long serialVersionUID = 1L;
 	private FilterablePageable paginator;
     private DataModel model = new ListDataModel();
-    private CrudOperations controller;
-	private List page;
+    private CrudOperations<T> controller;
+	private List<T> page;
 
     public JsfCrudAdapter() {
         
     }
 
-    public JsfCrudAdapter(FilterablePageable filterablePageable, CrudOperations crudController) {
+    public JsfCrudAdapter(FilterablePageable filterablePageable, CrudOperations<T> crudController) {
         this.paginator = filterablePageable;
         this.controller = crudController;
         if (crudController instanceof CrudController) {
-        	((CrudController)crudController).setEntityLocator( this );
+        	((CrudController<T, PK>)crudController).setEntityLocator( this );
         }
         if (this.controller != null) {
         	setupCrudControllerWiring();
@@ -62,26 +61,13 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
                 JsfCrudAdapter.this.crudChanged();
             }} );
 
-        this.controller.addCrudControllerListener(new CrudControllerListener(){
-
-			public void afterCancel(CrudEvent event) {
-			}
-
+        this.controller.addCrudControllerListener(new CrudControllerListenerAdapter(){
 			public void afterCreate(CrudEvent event) {
 				getPage();
 			}
 
 			public void afterDelete(CrudEvent event) {
 				getPage();
-			}
-
-			public void afterLoadCreate(CrudEvent event) {
-			}
-
-			public void afterLoadListing(CrudEvent event) {
-			}
-
-			public void afterRead(CrudEvent event) {
 			}
 
 			public void afterUpdate(CrudEvent event) {
@@ -92,23 +78,7 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
 				FacesContext.getCurrentInstance().renderResponse();
 			}
 
-			public void beforeCreate(CrudEvent event) {
-			}
-
-			public void beforeDelete(CrudEvent event) {
-			}
-
-			public void beforeLoadCreate(CrudEvent event) {
-			}
-
-			public void beforeLoadListing(CrudEvent event) {
-			}
-
-			public void beforeRead(CrudEvent event) {
-			}
-
-			public void beforeUpdate(CrudEvent event) {
-			}});
+        	});
 	}
 
 	private void setupPaginatorEventWiring() {
@@ -135,14 +105,15 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
     /**
      * @see EntityLocator#getEntity()
      */
-    public Serializable getEntity() {
+    @SuppressWarnings("unchecked")
+	public T getEntity() {
         /** If the selected entity is not equal return it and set it to null. */
        if (selectedEntity!=null) {
     	   Object tmp = selectedEntity;
     	   selectedEntity = null;
-    	   return (Serializable) tmp;
+    	   return (T) tmp;
        }
-       return (Serializable) ((Row)model.getRowData()).getObject();
+       return (T) ((Row)model.getRowData()).getObject();
     }
     
     private Object selectedEntity;
@@ -173,7 +144,7 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
         this.model = model;
     }
 
-    public CrudOperations getController() {
+    public CrudOperations<T> getController() {
         return controller;
     }
 
@@ -182,12 +153,12 @@ public class JsfCrudAdapter<T, PK extends Serializable> implements EntityLocator
     }
 
     @SuppressWarnings("unchecked")
-    public List getSelectedEntities() {
+    public List<T> getSelectedEntities() {
         List<Row> list = (List<Row>) model.getWrappedData();
-        List selectedList = new ArrayList(10);
+        List<T> selectedList = new ArrayList<T>(Math.max(list.size(), 10));
         for (Row row : list){
             if (row.isSelected()) {
-                selectedList.add( row.getObject() );
+                selectedList.add( (T)row.getObject() );
             }
         }
         return selectedList;

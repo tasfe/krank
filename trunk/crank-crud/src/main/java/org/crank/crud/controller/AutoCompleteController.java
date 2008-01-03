@@ -14,7 +14,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import static org.crank.crud.criteria.Comparison.startsLike;
 import static org.crank.crud.criteria.Comparison.eq;
 
-public class AutoCompleteController <T, PK extends Serializable>  implements Selectable {
+public class AutoCompleteController <T extends Serializable, PK extends Serializable>  implements Selectable {
 
     private String propertyName;
     private String fieldName;

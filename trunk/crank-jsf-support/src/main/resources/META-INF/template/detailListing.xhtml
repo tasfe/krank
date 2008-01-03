@@ -14,6 +14,9 @@
 <ui:composition>
 <c:if test="${not empty detailController}">
 <a4j:outputPanel ajaxRendered="true">
+		<c:if test="${empty id}">
+			<c:set var="id" value="DetailListing" />
+		</c:if>
 
 		<c:if test="${empty debug}">
 				<c:if test="#{empty initParam['crank.debug']}">
@@ -191,7 +194,7 @@
 											
 											<crank:commandLink id="disableSelected${id}"
 															   rendered="${enableDelete}"
-															   entity="${crud}"
+															   entity="${detailController}"
 															   action="deleteSelected"
 															   onclick="if (!confirm('Are you sure you want to disable all selected items?')) return false"
 											                   toolTipText="Click to delete selected rows">

@@ -1,8 +1,7 @@
 package org.crank.crud.controller;
 
 import java.io.Serializable;
-import java.util.List;
-import org.crank.annotations.design.ExpectsInjection;
+import java.util.Collection;
 
 /**
  * Controls CRUD operations from an application.
@@ -13,8 +12,13 @@ import org.crank.annotations.design.ExpectsInjection;
  * @see CrudOperations
  * @see Toggleable
  */
-public class CrudController<T, PK extends Serializable> extends CrudControllerBase<T, PK>  {
-    public CrudController () {
+public class CrudController<T extends Serializable, PK extends Serializable> extends CrudControllerBase<T, PK>  {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public CrudController () {
         
     }
     
@@ -26,7 +30,7 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
      */
     @SuppressWarnings("unchecked")
     public CrudOutcome doUpdate() {
-        entity = dao.update((T)entity);
+        entity = dao.update(entity);
         state = CrudState.UNKNOWN; 
         fireToggle();
         return CrudOutcome.LISTING;
@@ -48,14 +52,14 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
      * Create a new instance in the database.
      * Notify listeners that the entity was created.
      * @see CrudOperations#create()
-     * @retrun outcome
+     * @return outcome
      */
     @SuppressWarnings({ "unchecked", "deprecation" })
     public CrudOutcome doCreate() {
     	if (CrudOperations.ADD_BY_MERGE.equals(addStrategy)) {
-    		dao.merge((T)entity);
+    		dao.merge(entity);
     	} else {
-    		dao.create((T)entity);
+    		dao.create(entity);
     	}
         this.state = CrudState.UNKNOWN;
         fireToggle();
@@ -66,43 +70,22 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
      * Delete the entity from the data store.
      * Notify listeners that the model changed.
      * @see CrudOperations#delete()
-     * @retrun outcome
+     * @return outcome
      */
     @SuppressWarnings("unchecked")    
     public CrudOutcome doDelete() {
-        doDelete((T)getCurrentEntity());        
+        doDelete(getCurrentEntity());        
         fireToggle();
         return CrudOutcome.LISTING;
     }
 
-    @SuppressWarnings("unchecked")
-    private void doDelete(Object entity) {
-    	if (deleteStrategy.equals(CrudOperations.DELETE_BY_ENTITY)) {
-    		entity = dao.read((PK) propertyUtil.getPropertyValue( idPropertyName, entity ));
-    		dao.delete((T) entity);
-    	} else { 
-    		dao.delete( (PK) propertyUtil.getPropertyValue( idPropertyName, entity ));
-    	}
-    }
-    
-    public CrudOutcome deleteSelected() {
-        List listToDelete = this.getSelectedEntities();
-        fireBeforeDelete();
-        /* You could change this to delete a list of ids. */
-        for (Object entity : listToDelete) {
-            this.doDelete(entity);
-        }
-        fireToggle();
-        fireAfterDelete();
-        return CrudOutcome.LISTING;        
-    }
 
-    /**
+   /**
      * Read the entity from the data store. If the readPopulated flag is set, read 
      * the entity fully populated. You need to read the entity fully populated for 
      * master detail forms and such.
      * @see CrudOperations#read()
-     * @retrun outcome
+     * @return outcome
      */
     @SuppressWarnings("unchecked")
     public CrudOutcome doRead() {
@@ -111,7 +94,7 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
         
         String sId = this.retrieveId();
         if (sId==null) {
-        	entity = (T)getCurrentEntity();
+        	entity = getCurrentEntity();
         	id = (PK) propertyUtil.getPropertyValue( idPropertyName, entity );
         } else {
         	id = (PK) Long.valueOf(sId);
@@ -123,18 +106,10 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
         return CrudOutcome.FORM;
     }
 
-    protected Object getCurrentEntity() {
+    protected T getCurrentEntity() {
         return entityLocator.getEntity();
     }
 
-    protected List getSelectedEntities() {
-        return entityLocator.getSelectedEntities();
-    }
-
-    @ExpectsInjection
-    public void setEntityLocator( EntityLocator entityLocator ) {
-        this.entityLocator = entityLocator;
-    }
 
     public CrudOutcome doCancel() {
         state = CrudState.UNKNOWN;
@@ -146,6 +121,14 @@ public class CrudController<T, PK extends Serializable> extends CrudControllerBa
 	protected CrudOutcome doLoadListing() {
 		return CrudOutcome.LISTING;
 	}
+
+	@Override
+	public CrudOutcome deleteSelected() {
+		super.deleteSelected();
+		return CrudOutcome.LISTING;
+	}
     
-    
+    public <RE> Collection<RE> manageRelated(Collection<RE> relatedEntities) {
+    	return dao.mergeRelated(relatedEntities);
+    }
 }

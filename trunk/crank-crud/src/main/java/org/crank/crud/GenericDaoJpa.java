@@ -93,6 +93,11 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public T merge(T entity) {
 		return getJpaTemplate().merge(entity);
 	}
+
+	@Transactional
+	public <RE> RE mergeRelated(RE entity) {
+		return getJpaTemplate().merge(entity);
+	}
 	
 	@Transactional
 	public Collection<T> store(Collection<T> entities) {
@@ -115,6 +120,15 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		Collection<T> mergedResults = new ArrayList<T>(entities.size());
 		for (T entity : entities) {		
 			mergedResults.add(merge(entity));
+		}
+		return mergedResults;
+	}
+	
+	@Transactional
+	public <RE> Collection<RE> mergeRelated(Collection<RE> entities) {
+		Collection<RE> mergedResults = new ArrayList<RE>(entities.size());
+		for (RE entity : entities) {		
+			mergedResults.add(mergeRelated(entity));
 		}
 		return mergedResults;
 	}

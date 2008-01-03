@@ -51,6 +51,15 @@ public interface GenericDao<T, PK extends Serializable> {
 	public T merge(T entity);
 
 	/**
+	 * Merge a related entity into the persistent context.  Management of this 
+	 * related entity may be required to detect changes to bidirectional relationships.
+	 * 
+	 * @param relatedEntity
+	 * @return a managed instance of the relatedEntity argument
+	 */
+	public <RE> RE mergeRelated(RE relatedEntity);
+	
+	/**
 	 * This method will get the entity into the db if its a new entity or an
 	 * existing detached entity.
 	 * 
@@ -74,9 +83,23 @@ public interface GenericDao<T, PK extends Serializable> {
 	 * an exiting 'detached' entity and merge its properties onto an existing
 	 * entity. The entity with the merged state is returned.
 	 * 
-	 * @param entity
+	 * @param a collection of entities
+	 * @return a collection of managed entities
+	 * 
 	 */
 	public Collection<T> merge(Collection<T> entities);
+	
+	/**
+	 * Merge the collection of related entities, returning the
+	 * persisted entities (potentially different instances). Details of this method are in section 3.2.4.1 of the <a
+	 * href="http://tinyurl.com/2pc93u">JPA spec</a>. Basics - merge will take
+	 * an exiting 'detached' entity and merge its properties onto an existing
+	 * entity. The entity with the merged state is returned.
+	 * 
+	 * @param a collection of entities
+	 * @return a collection of managed entities
+	 */
+	public <RE> Collection<RE> mergeRelated(Collection<RE> entities);
 	
 	/**
 	 * Retrieve an object that was previously persisted to the database using

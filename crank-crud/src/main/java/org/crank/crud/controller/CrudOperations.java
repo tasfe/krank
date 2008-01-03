@@ -8,7 +8,7 @@ import java.util.Map;
  * @author Rick Hightower
  *
  */
-public interface CrudOperations extends Toggleable {
+public interface CrudOperations<T extends Serializable> extends Toggleable {
 	/** Delete method constant for deleting by id only. */
 	static final String DELETE_BY_ID = "BY_ID"; 
 	/** Delete method constant for deleting by entity only. */
@@ -34,7 +34,7 @@ public interface CrudOperations extends Toggleable {
     CrudOutcome read();
     CrudOutcome delete();
     /** Expose object for creation and updating. Allows object to be edited in the form.*/
-    Serializable getEntity();
+    T getEntity();
     /** Cancel. */
     CrudOutcome cancel();
     /** */
@@ -42,15 +42,15 @@ public interface CrudOperations extends Toggleable {
     /** */
     CrudOutcome deleteSelected();
     /** */
-    Class getEntityClass();
+    Class<T> getEntityClass();
     /** */
     CrudState getState();
     /** */
-    Map<String, DetailController> getChildren();
+    Map<String, DetailController<? extends Serializable, ? extends Serializable>> getChildren();
     /** */
     void init();
     /** */
-    CrudControllerBase addChild (String name, DetailController detailController);
+    <CE extends Serializable, CEPK extends Serializable> CrudControllerBase<CE, CEPK> addChild (String name, DetailController<CE,CEPK> detailController);
     /** */
     boolean isShowListing();
     /** */

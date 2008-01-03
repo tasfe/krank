@@ -1,13 +1,20 @@
 package org.crank.crud.controller;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.logging.Logger;
 
 import org.crank.crud.relationships.RelationshipManager;
 
-public class DetailController<T, PK extends Serializable> extends CrudControllerBase<T, PK> {
-    
-    protected RelationshipManager relationshipManager = new RelationshipManager();
+public class DetailController<T extends Serializable, PK extends Serializable> extends CrudControllerBase<T, PK> {    
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	protected RelationshipManager relationshipManager = new RelationshipManager();
     private boolean showDetails = false;
+    private Collection<T> changedEntities = new HashSet<T>();
     
     public boolean isShowDetails() {
 		return showDetails;
@@ -34,16 +41,39 @@ public class DetailController<T, PK extends Serializable> extends CrudController
     }
     
     @SuppressWarnings("unchecked")
-    public DetailController (final Class entityClass) {
+    public DetailController (final Class<T> entityClass) {
         this.entityClass = entityClass;
         relationshipManager.setEntityClass( entityClass );
     }
 
     @SuppressWarnings("unchecked")
-    public DetailController (final CrudOperations parent, final Class entityClass) {
+    public DetailController (final CrudOperations<?> parent, final Class<T> entityClass) {
         this.entityClass = entityClass;
-        this.parent = parent;
+        setParent(parent);
         relationshipManager.setEntityClass( entityClass );
+    }
+     
+    /*
+     * searches for the top-level CrudController in the CrudOperation hierarchy
+     * returns null if none found
+     */
+	private CrudController<?, ?> findCrudController() {
+    	CrudController<?, ?> rv = null;
+    	CrudOperations<?> ancestor = parent;
+    	while ((ancestor != null)) {
+    		if (ancestor instanceof CrudController) {
+    			rv = (CrudController<?, ?>)ancestor;
+    			break;
+    		}
+    		else if (ancestor instanceof CrudControllerBase) {
+    			ancestor = ((CrudControllerBase<?, ?>)ancestor).parent;
+    		}
+    		else {
+    			// unknown class type for ancestor
+    			break;
+    		}
+    	}
+    	return rv;
     }
     
     public CrudOutcome doCreate() {
@@ -52,20 +82,27 @@ public class DetailController<T, PK extends Serializable> extends CrudController
         /* Add this object to the parent. */
         relationshipManager.addToParent(parent, this.getEntity());
         this.state = CrudState.UNKNOWN;
-        
+        changedEntities.add((T)this.getEntity());
         return null;
     }
 
     public CrudOutcome doDelete() {
         /* Read the entity from the parent object. */
-        this.entity = relationshipManager.readEntityFromParent( parent.getEntity(), retrieveId());
-        /* Now kill it. This only succeeds if they don't click cancel.*/
-        relationshipManager.removeFromParent(parent.getEntity(), this.getEntity());
-        
+        this.entity = (T)relationshipManager.readEntityFromParent( parent.getEntity(), retrieveId());
+        doDelete(entity);
         return null;
     }
     
-    public String getObjectId (Object row) {
+    
+    
+    @Override
+	protected void doDelete(T entity) {
+       	Logger.getAnonymousLogger().info("doDelete() - deleting " + entity);
+        relationshipManager.removeFromParent(parent.getEntity(), entity);
+        changedEntities.add(entity);
+	}
+
+	public String getObjectId (Object row) {
         return this.relationshipManager.getObjectId( parent.getEntity(), row);
     }
 
@@ -88,7 +125,7 @@ public class DetailController<T, PK extends Serializable> extends CrudController
 
 
         /* Read the entity from the parent object. */
-        this.entity = relationshipManager.readEntityFromParent( parent.getEntity(), index );
+        this.entity = (T)relationshipManager.readEntityFromParent( parent.getEntity(), index );
         
         return null;
     }
@@ -105,10 +142,6 @@ public class DetailController<T, PK extends Serializable> extends CrudController
         return null;
     }
         
-    public CrudOutcome deleteSelected() {
-        throw new UnsupportedOperationException();
-    }
-    
     public void toggleShowDetails() {
     	showDetails = !showDetails;
     }
@@ -116,6 +149,33 @@ public class DetailController<T, PK extends Serializable> extends CrudController
 	@Override
 	protected CrudOutcome doLoadListing() {
 		return CrudOutcome.LISTING;
+	}
+
+	@Override
+	public void setParent(CrudOperations<?> parent) {	
+		super.setParent(parent);
+        final CrudController<?, ?> controller = findCrudController();
+        if (controller != null) {
+        	/*
+        	 * this crud listener makes sure that entities changed
+        	 * by this detail controller are part of the persistent
+        	 * context when the top-level operation is persisted.
+        	 */
+        	controller.addCrudControllerListener(new CrudControllerListenerAdapter() {
+				@Override
+				public void afterUpdate(CrudEvent event) {
+					changedEntities.clear();
+				}
+				@Override
+				public void afterCancel(CrudEvent event) {
+					changedEntities.clear();
+				}
+				@Override
+				public void beforeUpdate(CrudEvent event) {
+					changedEntities = controller.manageRelated(changedEntities);
+				}
+			});
+        }
 	}
     
 }

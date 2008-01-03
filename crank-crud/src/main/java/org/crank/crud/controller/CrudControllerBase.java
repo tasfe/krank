@@ -12,32 +12,32 @@ import org.crank.annotations.design.OptionalInjection;
 import org.crank.core.CrankValidationException;
 import org.crank.core.PropertiesUtil;
 import org.crank.core.RequestParameterMapFinder;
+import org.crank.core.spring.support.SpringBeanWrapperPropertiesUtil;
 import org.crank.crud.GenericDao;
 import org.crank.message.MessageManagerUtils;
 import org.crank.web.RequestParameterMapFinderImpl;
 
-public abstract class CrudControllerBase<T, PK extends Serializable> implements CrudOperations, Serializable {
+public abstract class CrudControllerBase<T extends Serializable, PK extends Serializable> implements CrudOperations<T>, Serializable {
 
     protected GenericDao<T, PK> dao;
-    protected EntityLocator entityLocator;
-    protected PropertiesUtil propertyUtil;
+    protected EntityLocator<T> entityLocator;
+    protected PropertiesUtil propertyUtil = new SpringBeanWrapperPropertiesUtil();
     protected String idPropertyName = "id";
     protected boolean readPopulated = true;
     protected Class<T> entityClass;
     protected CrudState state;
-    protected Object entity;
+    protected T entity;
     @SuppressWarnings("unchecked")
-	private Map<String, DetailController> children = new HashMap<String, DetailController>();
+	private Map<String, DetailController<? extends Serializable, ? extends Serializable>> children = new HashMap<String, DetailController<? extends Serializable, ? extends Serializable>>();
     private ToggleSupport toggleSupport = new ToggleSupport();
     private String name;
-    protected CrudOperations parent;
+    protected CrudOperations<?> parent;
     protected RequestParameterMapFinder requestParameterMapFinder = new RequestParameterMapFinderImpl();
     protected Map<String, Object> dynamicProperties = new CrankMap();
     protected FileUploadHandler fileUploadHandler;
 	protected String idParam = "id";
 	protected String deleteStrategy = CrudOperations.DELETE_BY_ID;
 	protected String addStrategy = CrudOperations.ADD_BY_CREATE;
-
 
     public CrudControllerBase() {
         super();
@@ -97,8 +97,8 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
     /** 
      * @see CrudOperations#getEntity()
      */
-    public Serializable getEntity() {
-        return (Serializable) entity;
+    public T getEntity() {
+        return entity;
     }
 
     public void setDao( GenericDao<T, PK> dao ) {
@@ -133,11 +133,12 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
         return state;
     }
 
-    public Map<String, DetailController> getChildren() {
+    @SuppressWarnings("unchecked")
+	public Map<String, DetailController<? extends Serializable, ? extends Serializable>> getChildren() {
         return children;
     }
 
-    public void setChildren( Map<String, DetailController> children ) {
+    public void setChildren( Map<String, DetailController<? extends Serializable, ? extends Serializable>> children ) {
         this.children = children;
     }
 
@@ -149,7 +150,7 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
 
     private void initDetailChildren() {
         if (children!=null) {
-            for (CrudControllerBase<T, PK> detailController : children.values()) {
+            for (CrudControllerBase<? extends Serializable, ? extends Serializable> detailController : children.values()) {
                 detailController.init();
             }
         }
@@ -158,7 +159,7 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
     /** Inject this parent into all Children. It's fathers day. Give all the children a daddy. */
     private void parentChildren() {
         if (children!=null) {
-            for (CrudControllerBase<T, PK> detailController : children.values()) {
+            for (CrudControllerBase<? extends Serializable, ? extends Serializable> detailController : children.values()) {
                 detailController.setParent(this);
             }
         }
@@ -168,15 +169,15 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
      * Call cancelSubForms on all children.
      *
      */
-    protected void cancelChildren() {
+    protected  void cancelChildren() {
         if (children!=null) {
-            for (CrudControllerBase<T, PK> detailController : children.values()) {
+            for  (CrudControllerBase<? extends Serializable, ? extends Serializable> detailController : children.values()) {
                 detailController.cancel();
             }
         }
     }
 
-    public CrudControllerBase<T, PK> addChild( String name, DetailController detailController ) {
+    public <CE extends Serializable, CEPK extends Serializable> CrudControllerBase<CE, CEPK> addChild( String name, DetailController<CE, CEPK> detailController ) {
         this.children.put(name, detailController);
         if (detailController.getRelationshipManager().getChildCollectionProperty() == null ) {
             detailController.getRelationshipManager().setChildCollectionProperty( name );
@@ -191,17 +192,17 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
      */
     protected void createEntity() {
         try {
-            this.entity = (Serializable) entityClass.newInstance();
+            this.entity = entityClass.newInstance();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    public CrudOperations getParent() {
+    public CrudOperations<?> getParent() {
         return parent;
     }
 
-    public void setParent( CrudOperations parent ) {
+    public void setParent( CrudOperations<?> parent ) {
         this.parent = parent;
     }
     
@@ -462,5 +463,36 @@ public abstract class CrudControllerBase<T, PK extends Serializable> implements 
 	public void setAddStrategy(String addStrategy) {
 		this.addStrategy = addStrategy;
 	}
+    
+    public CrudOutcome deleteSelected() {
+        List<T> listToDelete = getSelectedEntities();
+        fireBeforeDelete();
+        /* You could change this to delete a list of ids. */
+        for (T entity : listToDelete) {
+            doDelete(entity);
+        }
+        fireToggle();
+        fireAfterDelete();
+        return null;        
+    }
+
+    protected List<T> getSelectedEntities() {
+        return entityLocator.getSelectedEntities();
+    } 	
+
+    @ExpectsInjection
+    public void setEntityLocator( EntityLocator<T> entityLocator ) {
+        this.entityLocator = entityLocator;
+    }
+    
+    @SuppressWarnings("unchecked")
+    protected void doDelete(T entity) {
+    	if (deleteStrategy.equals(CrudOperations.DELETE_BY_ENTITY)) {
+    		entity = dao.read((PK) propertyUtil.getPropertyValue( idPropertyName, entity ));
+    		dao.delete((T) entity);
+    	} else { 
+    		dao.delete( (PK) propertyUtil.getPropertyValue( idPropertyName, entity ));
+    	}
+    }
     
 }

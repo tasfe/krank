@@ -5,14 +5,14 @@ import java.util.Set;
 
 import org.crank.crud.relationships.SelectManyRelationshipManager;
 
-public abstract class SelectManyController<T, PK extends Serializable> {
+public abstract class SelectManyController<T extends Serializable, PK extends Serializable> {
 	
 	private SelectManyRelationshipManager manager;
     private FilterablePageable paginator;
     private CrudControllerBase<T, PK> controller;
     private boolean show;
 	
-    public SelectManyController (Class clazz, String propertyName, FilterablePageable pageable, CrudOperations crudController) {
+    public SelectManyController (Class clazz, String propertyName, FilterablePageable pageable, CrudOperations<T> crudController) {
     	this.paginator = pageable;
     	this.controller = (CrudControllerBase<T, PK>) crudController;
     	

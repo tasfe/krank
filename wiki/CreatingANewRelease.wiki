@@ -23,13 +23,22 @@ del /S /Q %USERPROFILE%\.m2\repository\org\crank\*.*
 rd /S /Q %USERPROFILE%\.m2\repository\org\crank 
 }}}
 
-Step 3: Run mvn prepare
+Step 3: change dir
+{{{
+cd krank-release
+}}}
+
+Step 4: Build crank
+{{{
+mvn clean install
+}}}
+
+Step 5: Run mvn prepare
 {{{
 mvn release:prepare
 }}}
 
-Step 4: Run mvn perform
-
+Step 6: Run mvn perform
 {{{
 mvn release:perform 
 }}}

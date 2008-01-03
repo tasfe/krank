@@ -1,5 +1,6 @@
 package org.crank.config.spring.support;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +39,9 @@ public abstract class CrudJSFConfig implements InitializingBean {
     /** Creates backing beans for CRUD operations, create, read, delete, etc. */
     @SuppressWarnings("unchecked")
     @Bean (scope = DefaultScopes.SESSION, aliases="cruds") 
-    public Map<String, JsfCrudAdapter> crudControllers() throws Exception {
+    public Map<String, JsfCrudAdapter<? extends Serializable, ? extends Serializable>> crudControllers() throws Exception {
     	/* Cruds holds a map of Crud objects. */
-        Map <String, JsfCrudAdapter> cruds = new HashMap<String, JsfCrudAdapter>();
+        Map <String, JsfCrudAdapter<? extends Serializable, ? extends Serializable>> cruds = new HashMap<String, JsfCrudAdapter<? extends Serializable, ? extends Serializable>>();
         
         
         for (CrudManagedObject mo : managedObjects()) {
@@ -89,8 +90,9 @@ public abstract class CrudJSFConfig implements InitializingBean {
 		return this;
 	}
     
-	public JsfDetailController createDetailController(Class<?> entityClass) {
-		return (JsfDetailController) addJSFMessageHandling(new JsfDetailController(entityClass));
+	@SuppressWarnings("unchecked")
+	public <E extends Serializable, PK extends Serializable> JsfDetailController<E, PK> createDetailController(Class<E> entityClass) {
+		return (JsfDetailController<E, PK>) addJSFMessageHandling(new JsfDetailController<E, PK>(entityClass));
 	}
 	
     @SuppressWarnings("unchecked")
@@ -99,7 +101,7 @@ public abstract class CrudJSFConfig implements InitializingBean {
     
     @SuppressWarnings("unchecked")
     @ExternalBean
-    public abstract Map<String, JsfCrudAdapter> cruds() ; 
+    public abstract Map<String, JsfCrudAdapter<? extends Serializable, ? extends Serializable>> cruds() ; 
 
     @SuppressWarnings("unchecked")
     @ExternalBean

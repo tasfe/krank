@@ -1,5 +1,6 @@
 package org.crank.crud.jsf.support;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,7 +26,7 @@ import org.crank.crud.controller.SelectSupport;
 import org.crank.crud.controller.Selectable;
 
 @SuppressWarnings({ "unchecked", "serial" })
-public class JsfDetailController extends DetailController implements Selectable, EntityLocator {
+public class JsfDetailController<T extends Serializable, PK extends Serializable> extends DetailController<T, PK> implements Selectable, EntityLocator<T> {
 	
 	protected boolean allowsSelection=false;
     protected DataModel model = new ListDataModel();
@@ -167,18 +168,19 @@ public class JsfDetailController extends DetailController implements Selectable,
 		selectSupport.removeSelectListener(listener);
 	}
 
-	public List getSelectedEntities() {
+	public List<T> getSelectedEntities() {
 		if (! allowsSelection) {
 			throw new RuntimeException("The allowSelection property must be set");
 		}
         List<Row> list = (List<Row>) model.getWrappedData();
-        List selectedList = new ArrayList(10);
+        List<T> selectedList = new ArrayList<T>(Math.max(list.size(), 10));
         for (Row row : list){
             if (row.isSelected()) {
-                selectedList.add( row.getObject() );
+                selectedList.add( (T)row.getObject() );
             }
         }
         return selectedList;
 	}
+
 
 }

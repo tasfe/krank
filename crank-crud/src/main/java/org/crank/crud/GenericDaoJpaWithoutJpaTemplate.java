@@ -123,6 +123,11 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return getEntityManager().merge(entity);
 	}
 
+	@Transactional
+	public <RE> RE mergeRelated(RE entity) {
+		return getEntityManager().merge(entity);
+	}
+	
 	public void delete(final PK id) {
 		getEntityManager().remove(read(id));
 	}
@@ -774,6 +779,15 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		}
 		return results;
 	}
+	
+	@Transactional
+	public <RE> Collection<RE> mergeRelated(Collection<RE> entities) {
+		Collection<RE> mergedResults = new ArrayList<RE>(entities.size());
+		for (RE entity : entities) {		
+			mergedResults.add(mergeRelated(entity));
+		}
+		return mergedResults;
+	}	
 
 	public void persist(Collection<T> entities) {
 		for (T entity : entities) {

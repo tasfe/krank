@@ -45,6 +45,10 @@
 		<source>template/paginator.xhtml</source>
 	</tag>
 	<tag>
+		<tag-name>paginatorInForm</tag-name>
+		<source>template/paginatorInForm.xhtml</source>
+	</tag>
+	<tag>
 		<tag-name>listing</tag-name>
 		<source>template/listing.xhtml</source>
 	</tag>

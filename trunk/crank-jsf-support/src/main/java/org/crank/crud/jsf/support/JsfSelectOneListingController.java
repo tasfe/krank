@@ -8,6 +8,7 @@ import java.util.List;
 //import javax.faces.event.PhaseEvent;
 //import javax.faces.event.PhaseId;
 //import javax.faces.event.PhaseListener;
+import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 
@@ -157,6 +158,7 @@ public class JsfSelectOneListingController<T extends Serializable, PK extends Se
     	}
     	
 		selectSupport.fireSelect(valueProperty);
+		FacesContext.getCurrentInstance().renderResponse();
 		this.show = false;
 	}
 	

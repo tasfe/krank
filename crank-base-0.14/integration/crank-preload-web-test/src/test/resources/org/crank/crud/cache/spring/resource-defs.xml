@@ -1,0 +1,35 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <!-- Pull in ehcache configured version of persistence.xml -->
+    <bean id="persistenceUnitManager"
+        class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
+        <property name="persistenceXmlLocations">
+            <list>
+                <value>org/crank/crud/cache/spring/META-INF/persistence.xml</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="entityManagerFactory"
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitManager" ref="persistenceUnitManager"/>
+    </bean>
+
+    <bean id="transactionManager"
+        class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory"
+            ref="entityManagerFactory" />
+    </bean>
+
+    <!--  Test Fixtures  -->
+    <bean id="openEntityManagerInTest" 
+          class="org.crank.crud.test.OpenEntityManagerInTest">
+        <property name="entityManagerFactory">
+            <ref bean="entityManagerFactory" />
+        </property>
+    </bean>
+</beans>

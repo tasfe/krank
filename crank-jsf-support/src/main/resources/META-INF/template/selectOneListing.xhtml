@@ -175,11 +175,11 @@
 			
 				<h:panelGrid id="listPanel${id}" columns="1" width="${dataTableWidth}" 
 				             rendered="${jsfSelectOneController.show}">
-					<crank:paginator paginator="${paginator}" 
+					<crank:paginatorInForm paginator="${paginator}" 
 									 reRender="${reRender}" 
 									 ajaxSingle="${ajaxSingle}" 
 									 readOnly="true"
-									 />
+									 immediate="${immediate}" />
 									 
 					<!-- imgAdjust="-xs"  -->
 		

@@ -22,6 +22,9 @@
 	
 	<!-- DEFINE VARIABLES -->
 	
+	<c:if test="${empty immediate}">
+		<c:set var="immediate" value="true" />
+	</c:if>	
 	<c:if test="${empty selectManyClass}">
 		<c:set var="selectManyClass" value="paginationPageNumberLink" />
 	</c:if>
@@ -100,10 +103,11 @@
 
 		<h:panelGrid id="listPanel${id}" columns="1" width="${dataTableWidth}" 
 		             rendered="${jsfSelectManyController.show}">
-			<crank:paginator paginator="${paginator}" 
+			<crank:paginatorInForm paginator="${paginator}" 
 							 reRender="${reRender}" 
 							 ajaxSingle="${ajaxSingle}" 
 							 readOnly="true"
+							 immediate="${immediate}"
 							 />
 							 
 			<!-- imgAdjust="-xs"  -->

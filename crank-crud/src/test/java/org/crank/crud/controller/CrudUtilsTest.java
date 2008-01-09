@@ -56,6 +56,7 @@ public class CrudUtilsTest extends TestCase{
     public void testIsRequired() {
         assertTrue(CrudUtils.isRequired( Employee.class, "numberOfPromotions"));
         assertTrue(CrudUtils.isRequired( Employee.class, "age"));
+        assertFalse(CrudUtils.isRequired( Employee.class, "department"));
     }
     
 }

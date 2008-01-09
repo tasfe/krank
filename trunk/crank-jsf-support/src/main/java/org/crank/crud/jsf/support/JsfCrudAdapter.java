@@ -26,6 +26,7 @@ import org.crank.crud.controller.Toggleable;
 /**
  * This class adapts a CrudController to the JSF world.
  * @author Rick Hightower
+ *  "I’ll never be afraid of some pilsner fresh fat (guy) who eats donut hamburgers and only gets exercise when he plays World of Warcraft on a DDR pad." --Zed
  *
  * @param <T> Type of entity that we are providing CRUD for.
  * @param <PK> Primary key type.
@@ -138,6 +139,10 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
         }
         model.setWrappedData( wrappedList );
         return model;
+    }
+    
+    public void clear () {
+    	page = null;
     }
 
     public void setModel( DataModel model ) {

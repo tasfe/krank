@@ -46,7 +46,8 @@ public class CrudUtils {
 	        } else {
 	            /*Otherwise check to see if a column annotation data can be found. */
 
-	        	return (isRequiredColumn(map, "column") || isRequiredColumn(map, "joinColumn"));
+	        	return (isRequiredColumnNullable(map, "column") || isRequiredColumnNullable(map, "joinColumn") 
+	        			|| isRequiredColumnOptional(map, "manyToOne"));
 	        }
         } catch (Exception ex) {
     		throw new CrankException(ex, "CrankUtils.isRequired: Problem %s" +
@@ -54,8 +55,8 @@ public class CrudUtils {
         	
         }
     }
-
-    private static boolean isRequiredColumn(Map map, String columnType) {
+    
+    private static boolean isRequiredColumnNullable(Map map, String columnType) {
     	boolean result = false;
     	
         boolean found = map.get( columnType ) != null;
@@ -76,6 +77,28 @@ public class CrudUtils {
         
         return result;
     }
+    
+    private static boolean isRequiredColumnOptional(Map map, String columnType) {
+    	boolean result = false;
+    	
+        boolean found = map.get( columnType ) != null;
+
+        if (found) {
+                AnnotationData ad = (AnnotationData) map.get( columnType );
+                Object object = ad.getValues().get("optional");
+                /* If the optional flag was set, return its value. */
+                if (object != null) {
+                    Boolean bool = (Boolean) object;
+                    return !bool.booleanValue();
+                } else {
+                    /* Otherwise, if the nullable value was not set, then return false. */
+                    return false;
+                }
+        }
+        
+        return result;
+    }
+    
 
     public static boolean isLargeText(Class clazz, String propertyName) {
     	

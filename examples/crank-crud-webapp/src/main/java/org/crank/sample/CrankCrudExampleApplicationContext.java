@@ -12,6 +12,7 @@ import org.crank.config.spring.support.CrudJSFConfig;
 import org.crank.controller.ExcelExportControllerBean;
 import org.crank.controller.SayHelloController;
 import org.crank.controller.SelectEmployeeListingController;
+import org.crank.controller.TagController;
 import org.crank.crud.controller.AutoCompleteController;
 import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.controller.CrudOperations;
@@ -25,6 +26,7 @@ import org.crank.crud.dao.DepartmentDAO;
 import org.crank.crud.dao.EmployeeDAO;
 import org.crank.crud.dao.RoleDAO;
 import org.crank.crud.dao.SpecialtyDAO;
+import org.crank.crud.dao.TagDAO;
 import org.crank.crud.jsf.support.JsfAutoCompleteController;
 import org.crank.crud.jsf.support.JsfCrudAdapter;
 import org.crank.crud.jsf.support.JsfDetailController;
@@ -38,6 +40,7 @@ import org.crank.crud.model.EmployeeStatus;
 import org.crank.crud.model.Role;
 import org.crank.crud.model.Skill;
 import org.crank.crud.model.Specialty;
+import org.crank.crud.model.Tag;
 import org.crank.crud.model.Task;
 import org.crank.crud.relationships.RelationshipManager;
 import org.crank.sample.datasource.EmployeeDataSource;
@@ -54,6 +57,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 
 	private static List<CrudManagedObject> managedObjects;
+	
 
 	@Bean(scope = DefaultScopes.SINGLETON)
 	public List<CrudManagedObject> managedObjects() {
@@ -65,6 +69,10 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 					DepartmentDAO.class));
 			managedObjects.add(new CrudManagedObject(Specialty.class,
 					SpecialtyDAO.class));
+			
+			managedObjects.add(new CrudManagedObject(Tag.class,
+					TagDAO.class));
+			
 			
 			CrudManagedObject crudManagedObject = new CrudManagedObject(Role.class, RoleDAO.class);
 			crudManagedObject.setNewSelect("new Role(o.id, o.name)");
@@ -174,7 +182,6 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		        EmployeeReportObject employeeReportObject = (EmployeeReportObject) object;
 		        Employee employee = new Employee();
 		        employee.setId(employeeReportObject.getId());
-		        //throw new RuntimeException("CAN'T TOUCH THIS");
 		        return employee;
 		     }
 		    
@@ -279,12 +286,23 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	
 	@Bean(scope = DefaultScopes.SESSION) 
 	public SayHelloController hello(){
-		System.out.println("SAY HELLO alakjsfdl;aksjf;lkajf;lkjasfl;kja;kslfja;lsfjlkf;lkasjf;lkas;lkjaslkjs");
 		SayHelloController helloController = new SayHelloController();
 		
 		helloController.setEmployeesController((JsfDetailController) deptCrud().getController().getChildren().get("employees"));
 		return helloController;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Bean(scope = DefaultScopes.REQUEST)
+	public TagController tagController() {
+		TagController tagController = new TagController();
+		tagController.setTagRepo((TagDAO) repos().get("Tag"));
+		JsfCrudAdapter<Employee, Long> jsfCrudAdapter = (JsfCrudAdapter<Employee, Long>) cruds().get("Employee");
+		tagController.setParentCrudController(jsfCrudAdapter.getController());
+		return tagController;
+	}
+	
+	
 	
 
 }

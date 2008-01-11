@@ -6,7 +6,9 @@
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:crank="http://www.googlecode.com/crank"
-	xmlns:t="http://myfaces.apache.org/tomahawk">
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	>
 
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
@@ -20,6 +22,7 @@
 		<crank:crudBreadCrumb crud="${crud}" />
 
 		<span class="pageTitle">Employee Entry</span>
+		<c:set var="ajaxRegion" value="employeeForm"/>
 
 		<a4j:form id="employeeForm" enctype="multipart/form-data">
 
@@ -48,8 +51,29 @@
 
 				<crank:selectOneListing jsfSelectOneController="${employeeToSkillController}"
 					propertyNames="name" parentForm="employeeForm" debug="${false}" />
-
+					
+					
 			</crank:form>
+			
+				Can you see me? <br />
+				#{tagController.availableTags} <br />
+				Can you see me? <br />
+				#{tagController.availableTags.wrappedData} <br />
+				
+				
+				
+						
+			<h:dataTable value="#{tagController.availableTags}" var="row">
+					<h:column>
+						${row.object.name}
+					</h:column>
+					<h:column>
+						<h:selectBooleanCheckbox value="#{row.selected}"/>
+					</h:column>
+			</h:dataTable>
+				
+			<h:commandLink action="#{tagController.process}" value="Process"/>
+			
 		</a4j:form>
 	</ui:define>
 </ui:composition>

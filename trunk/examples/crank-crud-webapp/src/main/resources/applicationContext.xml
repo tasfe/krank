@@ -53,6 +53,6 @@
 
     <bean
         class="org.springframework.config.java.process.ConfigurationPostProcessor" />
-    <import resource="/validationContext.xml" />
+    <import resource="classpath:/validationContext.xml" />
 
 </beans>

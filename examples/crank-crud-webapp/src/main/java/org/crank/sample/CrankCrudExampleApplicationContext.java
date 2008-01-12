@@ -12,6 +12,7 @@ import org.crank.config.spring.support.CrudJSFConfig;
 import org.crank.controller.ExcelExportControllerBean;
 import org.crank.controller.SayHelloController;
 import org.crank.controller.SelectEmployeeListingController;
+import org.crank.controller.SelectManyByIdController;
 import org.crank.controller.TagController;
 import org.crank.crud.controller.AutoCompleteController;
 import org.crank.crud.controller.CrudManagedObject;
@@ -294,7 +295,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	
 	@SuppressWarnings("unchecked")
 	@Bean(scope = DefaultScopes.REQUEST)
-	public TagController tagController() {
+	public TagController tagController1() {
 		TagController tagController = new TagController();
 		tagController.setTagRepo((TagDAO) repos().get("Tag"));
 		JsfCrudAdapter<Employee, Long> jsfCrudAdapter = (JsfCrudAdapter<Employee, Long>) cruds().get("Employee");
@@ -302,6 +303,16 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		return tagController;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Bean(scope = DefaultScopes.REQUEST)
+	public SelectManyByIdController<Employee, Tag, Long> tagController() {
+		SelectManyByIdController<Employee, Tag, Long> tagController = new SelectManyByIdController<Employee, Tag, Long>();
+		tagController.setTargetProperty("employeeId");
+		tagController.setRepo((TagDAO) repos().get("Tag"));
+		JsfCrudAdapter<Employee, Long> jsfCrudAdapter = (JsfCrudAdapter<Employee, Long>) cruds().get("Employee");
+		tagController.setParentCrudController(jsfCrudAdapter.getController());
+		return tagController;
+	}
 	
 	
 

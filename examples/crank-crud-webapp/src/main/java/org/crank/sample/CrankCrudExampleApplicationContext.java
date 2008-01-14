@@ -304,13 +304,16 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Bean(scope = DefaultScopes.REQUEST)
+	@Bean(scope = DefaultScopes.SESSION)
 	public SelectManyByIdController<Employee, Tag, Long> tagController() {
 		SelectManyByIdController<Employee, Tag, Long> tagController = new SelectManyByIdController<Employee, Tag, Long>();
 		tagController.setTargetProperty("employeeId");
 		tagController.setRepo((TagDAO) repos().get("Tag"));
+		tagController.setPaginator(pagers().get("Tag"));
 		JsfCrudAdapter<Employee, Long> jsfCrudAdapter = (JsfCrudAdapter<Employee, Long>) cruds().get("Employee");
 		tagController.setParentCrudController(jsfCrudAdapter.getController());
+		tagController.setEntityClass(Tag.class);
+		tagController.init();
 		return tagController;
 	}
 	

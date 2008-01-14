@@ -16,7 +16,7 @@ import java.util.ArrayList;
 /**
  * Base class for working with spring/testng tests.
  *
- * @author Chris Mathias, cmathias@arcmind.com
+ * @author Chris Mathias, cmathias@arcmind.com, Rick Hightower rhightower@arc-mind.com
  * @version $Revision$
  */
 public abstract class SpringTestNGBase {
@@ -26,9 +26,9 @@ public abstract class SpringTestNGBase {
         PropertyConfigurator.configure( log4j );
     }
 
-    private static final Map<String, ConfigurableApplicationContext> contexts = new HashMap<String, ConfigurableApplicationContext>();
+    protected static final Map<String, ConfigurableApplicationContext> contexts = new HashMap<String, ConfigurableApplicationContext>();
     protected ConfigurableApplicationContext applicationContext;
-    private OpenEntityManagerInTest openEntityManagerInTest;
+    protected OpenEntityManagerInTest openEntityManagerInTest;
     protected Logger logger = Logger.getLogger( getClass() );
 
     public void setUpJndiSpring() {

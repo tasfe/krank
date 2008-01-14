@@ -57,16 +57,25 @@ public class CrudController<T extends Serializable, PK extends Serializable> ext
     @SuppressWarnings({ "unchecked", "deprecation" })
     public CrudOutcome doCreate() {
     	if (CrudOperations.ADD_BY_MERGE.equals(addStrategy)) {
-    		dao.merge(entity);
+    		this.entity = dao.merge(entity);
     	} else {
     		dao.create(entity);
     	}
         this.state = CrudState.UNKNOWN;
         fireToggle();
-        return CrudOutcome.LISTING;
+        return createOutcome;
     }
 
-    /**
+    private CrudOutcome createOutcome = CrudOutcome.LISTING;
+    public CrudOutcome getCreateOutcome() {
+		return createOutcome;
+	}
+
+	public void setCreateOutcome(CrudOutcome createOutcome) {
+		this.createOutcome = createOutcome;
+	}
+
+	/**
      * Delete the entity from the data store.
      * Notify listeners that the model changed.
      * @see CrudOperations#delete()
@@ -106,8 +115,17 @@ public class CrudController<T extends Serializable, PK extends Serializable> ext
         return CrudOutcome.FORM;
     }
 
+    public void stayOnForm() {
+    	state = CrudState.EDIT;
+    }
+    
+    private boolean useEntityAsCurrent = false;
     protected T getCurrentEntity() {
-        return entityLocator.getEntity();
+    	if (useEntityAsCurrent) {
+    		return entityLocator.getEntity()==null?this.getEntity():entityLocator.getEntity();
+    	} else {
+    		return entityLocator.getEntity();
+    	}
     }
 
 
@@ -131,4 +149,12 @@ public class CrudController<T extends Serializable, PK extends Serializable> ext
     public <RE> Collection<RE> manageRelated(Collection<RE> relatedEntities) {
     	return dao.mergeRelated(relatedEntities);
     }
+
+	public boolean isUseEntityAsCurrent() {
+		return useEntityAsCurrent;
+	}
+
+	public void setUseEntityAsCurrent(boolean useEntityAsCurrent) {
+		this.useEntityAsCurrent = useEntityAsCurrent;
+	}
 }

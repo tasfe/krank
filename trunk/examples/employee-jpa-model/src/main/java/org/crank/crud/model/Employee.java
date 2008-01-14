@@ -72,7 +72,7 @@ public class Employee extends Person {
 		    joinColumns={@JoinColumn(name="FK_EMPLOYEE_ID")},
 			inverseJoinColumns={@JoinColumn(name="FK_ROLE_ID")})	    
     private Set<Role> roles = new HashSet<Role>();
-    @ManyToOne(cascade=CascadeType.ALL, optional=false)
+    @ManyToOne(cascade=CascadeType.ALL)
     private Department department;
     @OneToMany( cascade = CascadeType.ALL )
     private Set<Employee> directReports = new HashSet<Employee>();
@@ -85,7 +85,17 @@ public class Employee extends Person {
     @ManyToOne( )
     private Employee manager;
     
-
+    public Employee() {
+    	
+    }
+    
+    public Employee(String aFirstName, String aLastName, Integer numberOfPromotions) {
+    	this.setFirstName(aFirstName);
+    	this.setLastName(aLastName);
+    	this.setNumberOfPromotions(numberOfPromotions);
+    	
+    }
+    
     public Set<Role> getRoles() {
 		return roles;
 	}

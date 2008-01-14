@@ -44,7 +44,7 @@ public class SelectManyByIdControllerTest extends SpringTestNGBase {
 //	private Map<String, JsfCrudAdapter<Employee, Long>> cruds;
 	
 	
-	public void setTagController2(SelectManyByIdController<Employee, Tag, Long> controller) {
+	public void setTagController(SelectManyByIdController<Employee, Tag, Long> controller) {
 		this.tagController = controller;
 	}
 	@Override
@@ -58,7 +58,7 @@ public class SelectManyByIdControllerTest extends SpringTestNGBase {
 		testEmployee  = getEmployeeRepo().store(new Employee("Rick", "Hightower", 5));
 		otherEmployee = getEmployeeRepo().store(new Employee("Foo", "Bar", 5));
 		loadForm();
-		availableTags = tagController.getAvailableTags();
+		availableTags = tagController.getAvailableChoices();
 	}
 	
 	@AfterClass (groups="tearDown")
@@ -71,9 +71,10 @@ public class SelectManyByIdControllerTest extends SpringTestNGBase {
 	@Test 
 	public void testInitsProperly() {
 		assertNotNull("We have the available tags", availableTags);
-		assertEquals("We have 3 tags that are available", 3, availableTags.getRowCount());
 		assertNotNull("We have the selected tags list", tagController.getSelectedChildren());
 		assertEquals("No tags have been selected yet", 0, tagController.getSelectedChildren().size());
+		assertEquals("We have 3 tags that are available", 3, availableTags.getRowCount());
+		
 	}
 	@SuppressWarnings("unchecked")
 	@Test (dependsOnMethods="testInitsProperly")
@@ -119,6 +120,10 @@ public class SelectManyByIdControllerTest extends SpringTestNGBase {
 	private void loadForm() {
 		crankMockObjects.getExternalContext().getRequestParameterMap().put("id", testEmployee.getId().toString());
 		crankMockObjects.getRequest().addParameter("id", testEmployee.getId().toString());
+		
+		
+		assertNotNull(tagController);
+		
 		CrudControllerBase<Employee, Long> controller = (CrudControllerBase<Employee, Long>) tagController.getParentCrudController();
 		controller.setEntityLocator(new EntityLocator<Employee>(){public Employee getEntity() {return null;}
 			public List<Employee> getSelectedEntities() {
@@ -126,6 +131,8 @@ public class SelectManyByIdControllerTest extends SpringTestNGBase {
 				return null;
 			}});
 		tagController.getParentCrudController().read();
+		
+		
 	}
 	
 	private TagDAO getTagRepo() {

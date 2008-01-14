@@ -21,9 +21,7 @@
 	</context-param>
 	<context-param>
 		<param-name>facelets.LIBRARIES</param-name>
-		<param-value>
-			/WEB-INF/tomahawk.taglib.xml
-		</param-value>
+		<param-value>/WEB-INF/proto.taglib.xml;/WEB-INF/tomahawk.taglib.xml</param-value>
 	</context-param>	
 	<context-param>
 		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>

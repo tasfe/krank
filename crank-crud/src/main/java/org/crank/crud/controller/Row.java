@@ -133,4 +133,7 @@ public class Row extends MagicMap implements Serializable {
         this.selected = selected;
     }
 
+    public String toString() {
+    	return "row (" + object + ")";
+    }
 }

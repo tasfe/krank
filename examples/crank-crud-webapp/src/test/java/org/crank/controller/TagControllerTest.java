@@ -9,6 +9,7 @@ import javax.faces.model.DataModel;
 import javax.servlet.http.HttpServletRequest;
 
 import org.crank.crud.GenericDao;
+import org.crank.crud.controller.CollectionUtils;
 import org.crank.crud.controller.CrudControllerBase;
 import org.crank.crud.controller.EntityLocator;
 import org.crank.crud.controller.Row;

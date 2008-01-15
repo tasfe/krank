@@ -7,7 +7,6 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:crank="http://www.googlecode.com/crank"
 	xmlns:t="http://myfaces.apache.org/tomahawk"
-	xmlns:p="http://crankcrud.org/proto"
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 	>
 
@@ -30,7 +29,7 @@
 			<div>
 			CURRENT ID = ${crud.entity.id}
 			</div>
-			<p:selectManyByIdListing jsfSelectManyController="#{tagController}" propertyNames="employeeId,name" />
+			<crank:selectManyByIdListing jsfSelectManyController="#{tagController}" propertyNames="employeeId,name" />
 			
 			<crank:form crud="${crud}" parentForm="employeeForm"
 				propertyNames="firstName,lastName,department,status,description,file,age,numberOfPromotions,specialty:Specialty"

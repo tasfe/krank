@@ -1,4 +1,4 @@
-package org.crank.controller;
+package org.crank.crud.controller;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,21 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.faces.model.DataModel;
 
 import org.crank.crud.GenericDao;
-import org.crank.crud.controller.CrudController;
-import org.crank.crud.controller.CrudControllerListener;
-import org.crank.crud.controller.CrudEvent;
-import org.crank.crud.controller.CrudOperations;
-import org.crank.crud.controller.CrudOutcome;
-import org.crank.crud.controller.CrudUtils;
-import org.crank.crud.controller.FilterablePageable;
-import org.crank.crud.controller.FilteringEvent;
-import org.crank.crud.controller.FilteringListener;
-import org.crank.crud.controller.PaginationEvent;
-import org.crank.crud.controller.PaginationListener;
-import org.crank.crud.controller.Row;
 import org.crank.crud.criteria.Comparison;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -170,7 +157,7 @@ public abstract class SelectManyByIdController<PT extends Serializable, T extend
 		return new BeanWrapperImpl(parentCrudController.getEntity());
 	}
 
-	public abstract DataModel getAvailableChoices();
+	
 	
 
 	@SuppressWarnings("unchecked")

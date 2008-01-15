@@ -5,6 +5,10 @@
 <facelet-taglib>
 	<namespace>http://www.googlecode.com/crank</namespace>
 	<tag>
+		<tag-name>selectManyByIdListing</tag-name>
+		<source>template/selectManyByIdListing.xhtml</source>
+	</tag>		
+	<tag>
 		<tag-name>selectOneListing</tag-name>
 		<source>template/selectOneListing.xhtml</source>
 	</tag>	

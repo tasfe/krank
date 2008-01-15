@@ -1,4 +1,4 @@
-package org.crank.controller;
+package org.crank.crud.controller;
 
 import java.util.Collection;
 

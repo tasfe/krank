@@ -36,7 +36,7 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
     protected Map<String, Object> dynamicProperties = new CrankMap();
     protected FileUploadHandler fileUploadHandler;
 	protected String idParam = "id";
-	protected String deleteStrategy = CrudOperations.DELETE_BY_ID;
+	protected String deleteStrategy = CrudOperations.DELETE_BY_ENTITY;
 	protected String addStrategy = CrudOperations.ADD_BY_CREATE;
 
     public CrudControllerBase() {

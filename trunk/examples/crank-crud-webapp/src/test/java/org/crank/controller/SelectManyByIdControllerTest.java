@@ -29,7 +29,7 @@ import static org.testng.AssertJUnit.*;
 
 
 public class SelectManyByIdControllerTest extends SpringTestNGBase {
-	private SelectManyByIdController<Employee, Tag, Long> tagController;
+	private SelectManyByIdController2<Employee, Tag, Long> tagController;
 	private CrankMockObjects crankMockObjects;
 	private Collection<Tag> testTags;
 	private Employee testEmployee;
@@ -44,7 +44,7 @@ public class SelectManyByIdControllerTest extends SpringTestNGBase {
 //	private Map<String, JsfCrudAdapter<Employee, Long>> cruds;
 	
 	
-	public void setTagController(SelectManyByIdController<Employee, Tag, Long> controller) {
+	public void setTagController(SelectManyByIdController2<Employee, Tag, Long> controller) {
 		this.tagController = controller;
 	}
 	@Override

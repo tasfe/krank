@@ -44,7 +44,7 @@ public class TagControllerTest extends SpringTestNGBase {
 //	private Map<String, JsfCrudAdapter<Employee, Long>> cruds;
 	
 	
-	public void setTagController(TagController controller) {
+	public void setTagController1(TagController controller) {
 		this.tagController = controller;
 	}
 	@Override

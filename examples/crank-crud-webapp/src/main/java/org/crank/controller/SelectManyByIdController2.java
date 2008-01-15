@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
 
 import org.crank.crud.GenericDao;
 import org.crank.crud.controller.CrudController;
@@ -24,12 +23,10 @@ import org.crank.crud.controller.PaginationEvent;
 import org.crank.crud.controller.PaginationListener;
 import org.crank.crud.controller.Row;
 import org.crank.crud.criteria.Comparison;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 
-
-@SuppressWarnings("serial")
-public class SelectManyByIdController<PT extends Serializable, T extends Serializable, PK extends Serializable> implements Serializable {
+public abstract class SelectManyByIdController2<PT extends Serializable, T extends Serializable, PK extends Serializable> {
 
 	/** This is used by the GUI to look up entity name and label and such. */
 	private Class<T> entityClass;
@@ -37,10 +34,13 @@ public class SelectManyByIdController<PT extends Serializable, T extends Seriali
 	private GenericDao<T, PK> repo;
 	private FilterablePageable paginator;
 	private CrudOperations<PT> parentCrudController;
-	private DataModel modelChoices = new ListDataModel();
 	private String targetProperty;
-	private String sourceProperty="id";
+	private String sourceProperty = "id";
 	private boolean show;
+
+	public SelectManyByIdController2() {
+		super();
+	}
 
 	public boolean isShow() {
 		return show;
@@ -50,18 +50,14 @@ public class SelectManyByIdController<PT extends Serializable, T extends Seriali
 		this.show = show;
 	}
 
-	public void cancel () {
+	public void cancel() {
 		this.show = false;
 	}
-	
+
 	public void showSelection() {
 		this.show = true;
 	}
-	
-	public SelectManyByIdController(){
-		
-	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void init() {
 		final CrudController<T, PK> cc = (CrudController<T, PK>) parentCrudController;
@@ -70,73 +66,73 @@ public class SelectManyByIdController<PT extends Serializable, T extends Seriali
 		cc.setAddStrategy(CrudOperations.ADD_BY_MERGE);
 		
 		paginator.addFilteringListener(new FilteringListener(){
-
+	
 			public void afterFilter(FilteringEvent fe) {
 				prepareModelChoices();
 			}
-
+	
 			public void beforeFilter(FilteringEvent fe) {
 				prepareModelChoices();
 			}});
 		
 		paginator.addPaginationListener(new PaginationListener(){
-
+	
 			public void pagination(PaginationEvent pe) {
 				prepareModelChoices();
 			}});
 		
 		parentCrudController.addCrudControllerListener(new CrudControllerListener(){
-
+	
 			public void afterCancel(CrudEvent event) {
 			}
-
+	
 			public void afterCreate(CrudEvent event) {
 				/* Force form to reload in edit mode. */
 				cc.stayOnForm();
 			}
-
+	
 			public void afterDelete(CrudEvent event) {
 			}
-
+	
 			@SuppressWarnings("unchecked")
 			public void afterLoadCreate(CrudEvent event) {
 				System.out.println("LOAD CREATE FOR " + parentCrudController);
 				prepareModelChoices();				
 			}
-
+	
 			public void afterLoadListing(CrudEvent event) {
 			}
-
+	
 			public void afterRead(CrudEvent event) {
 				System.out.println("READ FOR " + parentCrudController);
 				prepareModelChoices();
 			}
-
+	
 			public void afterUpdate(CrudEvent event) {
 			}
-
+	
 			public void beforeCancel(CrudEvent event) {
 			}
-
+	
 			public void beforeCreate(CrudEvent event) {
 			}
-
+	
 			public void beforeDelete(CrudEvent event) {
 			}
-
+	
 			public void beforeLoadCreate(CrudEvent event) {
 			}
-
+	
 			public void beforeLoadListing(CrudEvent event) {
 			}
-
+	
 			public void beforeRead(CrudEvent event) {
 			}
-
+	
 			public void beforeUpdate(CrudEvent event) {
 			}});
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected void prepareModelChoices() {
 		List<Row> availableTags = new ArrayList<Row>();
@@ -150,14 +146,14 @@ public class SelectManyByIdController<PT extends Serializable, T extends Seriali
 			}
 			availableTags.add(row);
 		}
-		modelChoices.setWrappedData(availableTags);
+		prepareModelChoices(availableTags);
 	}
-	
+	abstract protected void prepareModelChoices(List<Row> availableTags);
+
 	public void setRepo(GenericDao<T, PK> dao) {
 		this.repo = dao;
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
 	protected Set<T> getSelectedChildren() {
 		BeanWrapper parent = getParent();
@@ -173,17 +169,13 @@ public class SelectManyByIdController<PT extends Serializable, T extends Seriali
 	protected BeanWrapper getParent() {
 		return new BeanWrapperImpl(parentCrudController.getEntity());
 	}
+
+	public abstract DataModel getAvailableChoices();
 	
-	public DataModel getAvailableChoices() {
-		if (modelChoices.getWrappedData()==null) {
-			prepareModelChoices();
-		}
-		return modelChoices;
-	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void process() {
-		List<Row> availableTags = (List<Row>) modelChoices.getWrappedData();
+		List<Row> availableTags = getRows();
 		List<T> tagsToProcess = new ArrayList<T>();
 		for (Row row : availableTags) {
 			T tag = (T) row.getObject();
@@ -191,7 +183,7 @@ public class SelectManyByIdController<PT extends Serializable, T extends Seriali
 			BeanWrapper parent = getParent();
 			tagsToProcess.add(tag);
 			PK parentId = getParentId(parent);
-
+	
 			if (row.isSelected()) {
 				child.setPropertyValue(targetProperty, parentId);
 			} else {
@@ -204,19 +196,20 @@ public class SelectManyByIdController<PT extends Serializable, T extends Seriali
 		this.repo.merge((List<T>)tagsToProcess);
 	}
 
+	
+	abstract protected List<Row> getRows();
+
 	@SuppressWarnings("unchecked")
 	private PK getParentId(BeanWrapper parent) {
 		PK parentId = (PK) parent.getPropertyValue(sourceProperty);
 		return parentId;
 	}
+
 	private PK getParentId() {
 		return getParentId(getParent());
 	}
-	
 
-
-	public void setParentCrudController(
-			CrudOperations<PT> crudOperations) {
+	public void setParentCrudController(CrudOperations<PT> crudOperations) {
 		this.parentCrudController = crudOperations;
 	}
 
@@ -247,12 +240,15 @@ public class SelectManyByIdController<PT extends Serializable, T extends Seriali
 			return relationshipName;
 		}
 	}
+
 	public void setRelationshipName(String relationshipName) {
 		this.relationshipName = relationshipName;
 	}
+
 	public Class<T> getEntityClass() {
 		return entityClass;
 	}
+
 	public void setEntityClass(Class<T> entityClass) {
 		this.entityClass = entityClass;
 	}
@@ -260,11 +256,10 @@ public class SelectManyByIdController<PT extends Serializable, T extends Seriali
 	public FilterablePageable getPaginator() {
 		return paginator;
 	}
-	
+
 	public boolean isRendered() {
 		
 		return getParentId()!=null;
 	}
 
-	
 }

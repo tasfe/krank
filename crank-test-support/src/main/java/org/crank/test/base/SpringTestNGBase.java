@@ -1,13 +1,13 @@
 package org.crank.test.base;
 
-import org.apache.log4j.PropertyConfigurator;
+//import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.Logger;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.AfterClass;
 
-import java.net.URL;
+//import java.net.URL;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +22,8 @@ import java.util.ArrayList;
 public abstract class SpringTestNGBase {
 
     static {
-        URL log4j = Thread.currentThread().getContextClassLoader().getResource( "log4j.xml" );
-        PropertyConfigurator.configure( log4j );
+//        URL log4j = Thread.currentThread().getContextClassLoader().getResource( "log4j.xml" );
+//        PropertyConfigurator.configure( log4j );
     }
 
     protected static final Map<String, ConfigurableApplicationContext> contexts = new HashMap<String, ConfigurableApplicationContext>();

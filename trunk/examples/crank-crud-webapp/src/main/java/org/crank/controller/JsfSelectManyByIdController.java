@@ -12,7 +12,7 @@ import org.crank.crud.controller.Row;
 
 
 @SuppressWarnings("serial")
-public class JsfSelectManyByIdController<PT extends Serializable, T extends Serializable, PK extends Serializable> extends SelectManyByIdController2<PT, T, PK> implements Serializable {
+public class JsfSelectManyByIdController<PT extends Serializable, T extends Serializable, PK extends Serializable> extends SelectManyByIdController<PT, T, PK> implements Serializable {
 
 	private DataModel modelChoices = new ListDataModel();
 

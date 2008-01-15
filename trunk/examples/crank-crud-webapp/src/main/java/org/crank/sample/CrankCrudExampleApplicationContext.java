@@ -13,7 +13,7 @@ import org.crank.controller.ExcelExportControllerBean;
 import org.crank.controller.SayHelloController;
 import org.crank.controller.SelectEmployeeListingController;
 import org.crank.controller.JsfSelectManyByIdController;
-import org.crank.controller.SelectManyByIdController2;
+import org.crank.controller.SelectManyByIdController;
 import org.crank.controller.TagController;
 import org.crank.crud.controller.AutoCompleteController;
 import org.crank.crud.controller.CrudManagedObject;
@@ -306,8 +306,8 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	
 	@SuppressWarnings("unchecked")
 	@Bean(scope = DefaultScopes.SESSION)
-	public SelectManyByIdController2<Employee, Tag, Long> tagController() {
-		SelectManyByIdController2<Employee, Tag, Long> tagController = new JsfSelectManyByIdController<Employee, Tag, Long>();
+	public SelectManyByIdController<Employee, Tag, Long> tagController() {
+		SelectManyByIdController<Employee, Tag, Long> tagController = new JsfSelectManyByIdController<Employee, Tag, Long>();
 		tagController.setTargetProperty("employeeId");
 		tagController.setRepo((TagDAO) repos().get("Tag"));
 		tagController.setPaginator(pagers().get("Tag"));

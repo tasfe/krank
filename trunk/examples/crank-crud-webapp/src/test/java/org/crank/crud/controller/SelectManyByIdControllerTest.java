@@ -1,4 +1,4 @@
-package org.crank.controller;
+package org.crank.crud.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,8 +12,10 @@ import org.crank.crud.GenericDao;
 import org.crank.crud.controller.CrudControllerBase;
 import org.crank.crud.controller.EntityLocator;
 import org.crank.crud.controller.Row;
+import org.crank.crud.controller.SelectManyByIdController;
 import org.crank.crud.dao.EmployeeDAO;
 import org.crank.crud.dao.TagDAO;
+import org.crank.crud.jsf.support.JsfSelectManyByIdController;
 import org.crank.crud.model.Tag;
 import org.crank.jsfspring.test.CrankMockObjects;
 import org.crank.test.base.SpringTestNGBase;
@@ -29,7 +31,7 @@ import static org.testng.AssertJUnit.*;
 
 
 public class SelectManyByIdControllerTest extends SpringTestNGBase {
-	private SelectManyByIdController<Employee, Tag, Long> tagController;
+	private JsfSelectManyByIdController<Employee, Tag, Long> tagController;
 	private CrankMockObjects crankMockObjects;
 	private Collection<Tag> testTags;
 	private Employee testEmployee;
@@ -44,7 +46,7 @@ public class SelectManyByIdControllerTest extends SpringTestNGBase {
 //	private Map<String, JsfCrudAdapter<Employee, Long>> cruds;
 	
 	
-	public void setTagController(SelectManyByIdController<Employee, Tag, Long> controller) {
+	public void setTagController(JsfSelectManyByIdController<Employee, Tag, Long> controller) {
 		this.tagController = controller;
 	}
 	@Override

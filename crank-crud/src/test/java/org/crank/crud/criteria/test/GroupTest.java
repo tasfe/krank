@@ -88,7 +88,7 @@ public class GroupTest {
 		employee.setAge(40);
 		employee.setLastName(null);
 		assertEquals("3",
-				"(AND [active_EQ_true, age_EQ_40, firstName_EQ_Rick])", example
+				"(AND [active_EQ_true, age_EQ_40, firstName_EQ_Rick], numberOfPromotions_EQ_0, tasks_EQ_[]])", example
 						.toString());
 
 		example = Example.createExample(employee).excludeZeroes().excludeNone();

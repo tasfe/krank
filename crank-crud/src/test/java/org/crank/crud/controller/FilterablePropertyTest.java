@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.crank.crud.criteria.Between;
 import org.crank.crud.criteria.Operator;
+import org.testng.annotations.Test;
 
 import junit.framework.TestCase;
 
@@ -15,6 +16,7 @@ public class FilterablePropertyTest extends TestCase {
     }
 
 
+    @Test
     public void testFilterableProperty() {
         FilterableProperty fp = new FilterableProperty("name", String.class);
         assertEquals( fp.getComparison().getOperator(), Operator.LIKE_START );

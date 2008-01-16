@@ -6,6 +6,7 @@ import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.join.Fetch;
+import org.testng.annotations.Test;
 
 import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
@@ -57,12 +58,14 @@ public class FilteringPaginatorTest extends TestCase {
 		
 	}
 
+	@Test
 	public void testOneToOne() {
 		paginator = new FilteringPaginator(dataSource, A.class);
 		assertNotNull(paginator.getFilterableProperties().get("b.c.name"));
 		
 	}
 
+	@Test
     public void testClearCriteria() {
         paginator = new FilteringPaginator(dataSource, A.class);
         paginator.addCriterion(Comparison.eq("name", "foo"));

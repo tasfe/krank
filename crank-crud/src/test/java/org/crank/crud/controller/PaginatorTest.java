@@ -8,6 +8,8 @@ import java.util.Set;
 import org.crank.crud.controller.Paginator;
 import org.crank.crud.controller.datasource.PagingDataSource;
 import org.crank.crud.controller.datasource.SimplePagingDataSource;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import junit.framework.TestCase;
 
@@ -15,6 +17,7 @@ import junit.framework.TestCase;
 public class PaginatorTest extends TestCase {
     Paginator paginator ;
 
+    @BeforeMethod
     protected void setUp() throws Exception {
         setupPaginator(107);
     }
@@ -32,6 +35,7 @@ public class PaginatorTest extends TestCase {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testGetList() {
         List<String> list = paginator.getPage();
         assertEquals( 10, list.size() );
@@ -40,6 +44,7 @@ public class PaginatorTest extends TestCase {
         assertEquals( "9", list.get(9));
     }
 
+    @Test
     public void testNext() {
         paginator.moveToNextPage();
         List<String> list = paginator.getPage();
@@ -49,6 +54,7 @@ public class PaginatorTest extends TestCase {
         assertEquals( "19", list.get(9));
     }
 
+    @Test
     public void testFastForwardNext() {
         paginator.fastForwardPages();
         List<String> list = paginator.getPage();
@@ -58,6 +64,7 @@ public class PaginatorTest extends TestCase {
         assertEquals( "59", list.get(9));
     }
 
+    @Test
     public void testPrevious() {
         paginator.fastForwardPages();
         paginator.moveToPreviousPage();
@@ -68,6 +75,7 @@ public class PaginatorTest extends TestCase {
         assertEquals( "49", list.get(9));
     }
 
+    @Test
     public void testRewind() {
         paginator.fastForwardPages();
         paginator.moveToNextPage();
@@ -79,6 +87,7 @@ public class PaginatorTest extends TestCase {
         assertEquals( "19", list.get(9));
     }
     
+    @Test
     public void testEnabled() {
         assertTrue(paginator.isMoveToNextPageEnabled());
         assertTrue(paginator.isFastForwardPagesEnabled());
@@ -140,6 +149,7 @@ public class PaginatorTest extends TestCase {
         list.size();
     }
     
+    @Test
     public void testWindow() {
         setupPaginator(1000);
         advanceByPages( 10 );

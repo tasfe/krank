@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 
 import junit.framework.TestCase;
 
@@ -14,6 +17,7 @@ public class SelectManyRelationshipManagerTest extends TestCase {
 	private RoleMock suRole = new RoleMock(1L, "su");
 	
 	
+	@BeforeMethod
 	public void setUp () {
 		manager = new SelectManyRelationshipManager();
 		user = new UserMock();
@@ -26,6 +30,7 @@ public class SelectManyRelationshipManagerTest extends TestCase {
 		
 	}
 
+	@Test
 	public void testProcess() {
 		List<RoleMock> list = new ArrayList<RoleMock>();
 		list.add(new RoleMock(1L, "su"));
@@ -36,6 +41,7 @@ public class SelectManyRelationshipManagerTest extends TestCase {
 		assertEquals("su, foo", manager.getCollectionLabelString());
 	}
 
+	@Test
 	public void testProcessComplex() {
 		user.addRole(new RoleMock(1L, "su"));
 		
@@ -53,6 +59,7 @@ public class SelectManyRelationshipManagerTest extends TestCase {
 		assertEquals("su", manager.getCollectionLabelString());
 	}
 
+	@Test
 	public void testIsSelected() {
 		user.addRole(suRole);
 		user.addRole(new RoleMock(2L, "admin"));
@@ -62,6 +69,7 @@ public class SelectManyRelationshipManagerTest extends TestCase {
 		assertFalse(manager.isSelected(someRole));
 	}
 	
+	@Test
 	public void testGetCollectionLabelString() {
 		user.addRole(suRole);
 		user.addRole(new RoleMock(2L, "admin"));
@@ -69,12 +77,14 @@ public class SelectManyRelationshipManagerTest extends TestCase {
 		assertEquals("su, admin", manager.getCollectionLabelString());
 	}
 
+	@Test
 	public void testGetCollectionLabelOneItem() {
 		user.addRole(new RoleMock(2L, "a"));
 		
 		assertEquals("a", manager.getCollectionLabelString());
 	}
 	
+	@Test
 	public void testGetCollectionLabelNoItems() {
 		
 		assertEquals("", manager.getCollectionLabelString());

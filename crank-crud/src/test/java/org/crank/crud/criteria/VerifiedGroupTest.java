@@ -1,12 +1,14 @@
 package org.crank.crud.criteria;
 
 import org.crank.crud.test.model.Employee;
+import org.testng.annotations.Test;
 
 
 import junit.framework.TestCase;
 
 public class VerifiedGroupTest extends TestCase {
 	
+	@Test
 	public void test() {
 		VerifiedGroup group = new VerifiedGroup(Employee.class);
 		group.eq("firstName", "bar").eq("lastName", "foo").eq("department.name", "qa");

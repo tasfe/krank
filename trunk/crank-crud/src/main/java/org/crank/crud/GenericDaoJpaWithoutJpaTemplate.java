@@ -816,5 +816,10 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	public void run(Runnable runnable) {
 		runnable.run();
 	}
+
+	public int count(Fetch[] fetches, Criterion... criteria) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }

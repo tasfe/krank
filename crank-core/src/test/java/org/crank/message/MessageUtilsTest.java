@@ -1,19 +1,15 @@
 package org.crank.message;
 
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
+
 import java.util.ResourceBundle;
 
+import org.testng.annotations.Test;
+public class MessageUtilsTest{
 
-import junit.framework.TestCase;
-
-public class MessageUtilsTest extends TestCase {
-
-    protected void setUp() throws Exception {
-    }
-
-    protected void tearDown() throws Exception {
-    }
-    
-    public void test () throws Exception {
+	@Test
+	public void test () throws Exception {
     	String label= MessageUtils.getLabel( "allowUSA", ResourceBundle.getBundle( "org/crank/message/resources" ));
         assertNotNull(label);
         assertEquals( "Allow USA", label );

@@ -1,10 +1,12 @@
 package org.crank.core;
 
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertTrue;
+
 import java.util.Date;
 
-import junit.framework.TestCase;
-
-public class TypeUtilsTest extends TestCase {
+public class TypeUtilsTest {
 
     public static class SuperFoo {
         @SuppressWarnings("unused")
@@ -71,19 +73,19 @@ public class TypeUtilsTest extends TestCase {
         }
     }
 
-    protected void setUp() throws Exception {
-    }
-
+    @org.testng.annotations.Test
     public void testGetField() {
         assertNotNull(TypeUtils.getField(Test.class, "theFoo.name"));
         assertNotNull(TypeUtils.getField(Test.class, "theFoo.bar"));
     }
 
+    @org.testng.annotations.Test
     public void testGetProperyDescriptor() {
         assertNotNull(TypeUtils
                 .getPropertyDescriptor(Test.class, "theFoo.name"));
     }
 
+    @org.testng.annotations.Test
     public void testIsText() {
 
         assertFalse(TypeUtils.isText(Test.class, "bool"));
@@ -91,6 +93,7 @@ public class TypeUtilsTest extends TestCase {
 
     }
 
+    @org.testng.annotations.Test
     public void testIsTextCompoundProperty() {
         assertTrue(TypeUtils.isText(Employee.class, "address.line1"));
     }
@@ -100,6 +103,7 @@ public class TypeUtilsTest extends TestCase {
         assertFalse(TypeUtils.isBoolean(Test.class, "text"));
     }
 
+    @org.testng.annotations.Test
     public void testIsDate() {
         assertFalse(TypeUtils.isDate(Test.class, "bool"));
         assertFalse(TypeUtils.isDate(Test.class, "text"));

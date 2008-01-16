@@ -1,12 +1,17 @@
 package org.crank.message;
 
 
-import junit.framework.TestCase;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
 
-public class MessageSpecificationTest extends TestCase {
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+public class MessageSpecificationTest {
 
     private MessageSpecification messageSpecification;
     
+    @BeforeMethod
     protected void setUp() throws Exception {
         messageSpecification = new MessageSpecification();
         messageSpecification.setResourceBundleLocator( new ResourceBundleLocatorTest() );
@@ -14,10 +19,8 @@ public class MessageSpecificationTest extends TestCase {
         messageSpecification.setCurrentSubject(null);
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
 
+    @Test
     public void testCreateDetailMessage() {
         //args
         String string = messageSpecification.createDetailMessage(  );
@@ -25,6 +28,7 @@ public class MessageSpecificationTest extends TestCase {
         assertEquals( "Yo Mtv raps!", string);
     }
 
+    @Test
     public void testCreateDetailMessageWithArgs() {
         //args
         messageSpecification.setDetailMessage( "{foo.bar.withargs}" );
@@ -34,6 +38,7 @@ public class MessageSpecificationTest extends TestCase {
         assertEquals( "Hi Mom and Dad!", string);
     }
 
+    @Test
     public void testCreateDetailMessageUseSubjectAsKey() {
         messageSpecification.setDetailMessage( "{foo.bar}" );
         messageSpecification.setCurrentSubject( "subjectKey" );

@@ -4,13 +4,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.testng.AssertJUnit;
+import org.testng.annotations.Test;
 
-import junit.framework.TestCase;
-
-public class CrankExceptionTest extends TestCase {
+public class CrankExceptionTest {
 
 
-    public void testPrintStackTrace() {
+    @Test
+	public void testPrintStackTrace() {
         PrintStream oldErr = System.err;
         ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
         System.setErr(new PrintStream(baos));

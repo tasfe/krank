@@ -19,6 +19,7 @@ import org.crank.crud.controller.CrudOperations;
 import org.crank.crud.controller.FilteringPaginator;
 import org.crank.crud.controller.Row;
 import org.crank.crud.controller.SelectManyByIdController;
+import org.crank.crud.controller.SelectOneByIdController;
 import org.crank.crud.controller.datasource.DaoFilteringDataSource;
 import org.crank.crud.controller.datasource.EnumDataSource;
 import org.crank.crud.criteria.Comparison;
@@ -33,6 +34,7 @@ import org.crank.crud.jsf.support.JsfCrudAdapter;
 import org.crank.crud.jsf.support.JsfDetailController;
 import org.crank.crud.jsf.support.JsfSelectManyByIdController;
 import org.crank.crud.jsf.support.JsfSelectManyController;
+import org.crank.crud.jsf.support.JsfSelectOneByIdController;
 import org.crank.crud.jsf.support.JsfSelectOneListingController;
 import org.crank.crud.jsf.support.SelectItemGenerator;
 import org.crank.crud.model.ContactInfo;
@@ -318,6 +320,19 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		return tagController;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Bean(scope = DefaultScopes.SESSION)
+	public SelectOneByIdController<Employee, Tag, Long> tagOneController() {
+		SelectOneByIdController<Employee, Tag, Long> tagController = new JsfSelectOneByIdController<Employee, Tag, Long>();
+		tagController.setTargetProperty("employeeId");
+		tagController.setRepo((TagDAO) repos().get("Tag"));
+		tagController.setPaginator(pagers().get("Tag"));
+		JsfCrudAdapter<Employee, Long> jsfCrudAdapter = (JsfCrudAdapter<Employee, Long>) cruds().get("Employee");
+		tagController.setParentCrudController(jsfCrudAdapter.getController());
+		tagController.setEntityClass(Tag.class);
+		tagController.init();
+		return tagController;
+	}
 	
 
 }

@@ -5,5 +5,10 @@
 	<tag>
 		<tag-name>selectManyByIdListing</tag-name>
 		<source>template/selectManyByIdListing.xhtml</source>
+	</tag>
+	<tag>
+		<tag-name>selectOneByIdListing</tag-name>
+		<source>template/selectOneByIdListing.xhtml</source>
 	</tag>	
+		
 </facelet-taglib>

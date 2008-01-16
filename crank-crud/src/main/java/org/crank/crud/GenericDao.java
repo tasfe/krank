@@ -314,5 +314,7 @@ public interface GenericDao<T, PK extends Serializable> {
 	 * @deprecated Use merge
 	 */
 	T update(T transientObject);
+	
+	void run(Runnable runnable);
 
 }

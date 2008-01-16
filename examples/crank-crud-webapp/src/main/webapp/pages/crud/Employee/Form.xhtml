@@ -25,11 +25,11 @@
 		<c:set var="ajaxRegion" value="employeeForm"/>
 
 		<a4j:form id="employeeForm" enctype="multipart/form-data">
-
+		
 			<div>
-			CURRENT ID = ${crud.entity.id}
+			Employee ID = ${crud.entity.id}
 			</div>
-			<crank:selectManyByIdListing jsfSelectManyController="#{tagController}" propertyNames="employeeId,name" />
+			<crank:selectOneByIdListing jsfSelectOneController="#{tagOneController}" propertyNames="employeeId,name" />
 			
 			<crank:form crud="${crud}" parentForm="employeeForm"
 				propertyNames="firstName,lastName,department,status,description,file,age,numberOfPromotions,specialty:Specialty"

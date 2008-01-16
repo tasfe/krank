@@ -1,5 +1,8 @@
 package org.crank.crud.controller;
 
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import junit.framework.TestCase;
 
 class Foo {
@@ -28,10 +31,12 @@ public class RowTest extends TestCase {
 	public Row row;
 	
 	@Override
+	@BeforeMethod
 	protected void setUp() throws Exception {
 		row = new Row(new Foo());
 	}
 
+	@Test
 	public void testGet() {
 		assertEquals("baz", row.get("bar.baz"));
 		assertEquals("baz", row.get("object.bar.baz"));

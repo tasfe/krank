@@ -30,7 +30,7 @@ public class Log {
     public static Log getLog(Class<?> clazz) {
         Log log = logMap.get(clazz);
         if (log !=null) {
-            return null;
+            return log;
         }
         try {
                 Class<?> logClass = Class.forName(CrankConstants.LOG);

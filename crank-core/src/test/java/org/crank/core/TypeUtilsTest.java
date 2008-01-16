@@ -90,6 +90,28 @@ public class TypeUtilsTest {
 
         assertFalse(TypeUtils.isText(Test.class, "bool"));
         assertTrue(TypeUtils.isText(Test.class, "text"));
+    	try {
+    		TypeUtils.isText(null, "test");
+    		assertFalse(true);
+    	}
+    	catch(CrankException ce) {
+    		// expected
+    	}
+       	try {
+    		TypeUtils.isText(Test.class, null);
+    		assertFalse(true);
+    	}
+    	catch(CrankException ce) {
+    		// expected
+    	}
+    	
+    	try {
+    		TypeUtils.isText(Test.class, "notAProperty");
+    		assertFalse(true);
+    	}
+    	catch(CrankException ce) {
+    		// expected
+    	}
 
     }
 
@@ -104,6 +126,29 @@ public class TypeUtilsTest {
         assertFalse(TypeUtils.isDate(Test.class, "text"));
         assertTrue(TypeUtils.isDate(Test.class, "date"));
         assertTrue(TypeUtils.isDate(Test.class, "sqlDate"));
+    	try {
+    		TypeUtils.isDate(null, "test");
+    		assertFalse(true);
+    	}
+    	catch(CrankException ce) {
+    		// expected
+    	}
+       	try {
+    		TypeUtils.isDate(Test.class, null);
+    		assertFalse(true);
+    	}
+    	catch(CrankException ce) {
+    		// expected
+    	}
+    	
+    	try {
+    		TypeUtils.isDate(Test.class, "notAProperty");
+    		assertFalse(true);
+    	}
+    	catch(CrankException ce) {
+    		// expected
+    	}
+        
     }
     
     @org.testng.annotations.Test

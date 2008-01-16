@@ -12,7 +12,13 @@ import java.util.Date;
 public class TypeUtils {
 
     public static boolean isDate( Class<?> type, String propertyName ) {
+    	if (type==null || propertyName==null) {
+    		throw new CrankException("Class type and propertyName must not be null, type=%s, propertyName=%s", type, propertyName );
+    	}
         PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
+        if (pd==null) {
+        	throw new CrankException("The Property was not found!, type=%s, propertyName=%s", type, propertyName );
+        }
         Class<?> propertyType = pd.getPropertyType();
         if (Date.class.isAssignableFrom( propertyType )) {
             return true;
@@ -53,7 +59,13 @@ public class TypeUtils {
     }
 
     public static boolean isText( Class<?> type, String propertyName ) {
+       	if (type==null || propertyName==null) {
+    		throw new CrankException("Class type and propertyName must not be null, type=%s, propertyName=%s", type, propertyName );
+    	}
         PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
+        if (pd==null) {
+        	throw new CrankException("The Property was not found!, type=%s, propertyName=%s", type, propertyName );
+        }
         Class<?> propertyType = pd.getPropertyType();
 
         if (propertyType == String.class || propertyType == Integer.class || propertyType == BigDecimal.class

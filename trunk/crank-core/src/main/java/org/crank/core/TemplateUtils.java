@@ -1,14 +1,15 @@
 package org.crank.core;
 
-import java.util.ArrayList;
-import java.util.Map;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -46,8 +47,8 @@ public class TemplateUtils {
 	 * from the dictionary using the supplied start and stop pattern delimiters.
 	 * @param sSource the string to process for patterns to replace
 	 * @param dictReplace the dictionary used to look up patterns to replace
-	 * @param sStartDelim the string delimeter which indicates the start of a pattern to replace
-	 * @param sStopDelim the string delimeter which indicates the stop or end of a pattern to replace
+	 * @param sStartDelim the string delimiter which indicates the start of a pattern to replace
+	 * @param sStopDelim the string delimiter which indicates the stop or end of a pattern to replace
 	 */
 	public static String newReplaceAll(String sSource, Map<?,?> dictReplace,
 					String sStartDelim, String sStopDelim) {
@@ -120,7 +121,7 @@ public class TemplateUtils {
 
 	public static String replaceAll(String sSource, Map<?,?> dictReplace,
 			String sStartDelim, String sStopDelim) {
-		StringBuffer sb = new StringBuffer(sSource.length());
+		StringBuilder sb = new StringBuilder(sSource.length());
 
 		int startDelimAt = sSource.indexOf(sStartDelim);
 		if (startDelimAt == -1)
@@ -178,19 +179,25 @@ public class TemplateUtils {
 	 * @param sInFile the name of a file to read from
 	 * @param sOutFile the name of a file to write the processed output to
 	 * @param dictReplace the dictionary used to look up patterns to replace
-	 * @param sStartDelim the string delimeter which indicates the start of a pattern to replace
-	 * @param sStopDelim the string delimeter which indicates the stop or end of a pattern to replace
+	 * @param sStartDelim the string delimiter which indicates the start of a pattern to replace
+	 * @param sStopDelim the string delimiter which indicates the stop or end of a pattern to replace
 	 */
 	public static void replaceAll(String sInFile, String sOutFile,
 			Map<?,?> dictReplace, String sStartDelim, String sStopDelim)
 			throws FileNotFoundException, IOException {
 		BufferedReader in = new BufferedReader(new FileReader(sInFile));
-		PrintWriter out = new PrintWriter(new FileOutputStream(sOutFile));
-
-		replaceAll(in, out, dictReplace, sStartDelim, sStopDelim);
-
-		out.close();
-		in.close();
+		try {
+			PrintWriter out = new PrintWriter(new FileWriter(sOutFile));
+			try {
+				replaceAll(in, out, dictReplace, sStartDelim, sStopDelim);
+			}
+			finally {
+				out.close();
+			}
+		}
+		finally {
+			in.close();
+		}
 	}
 
 	/**
@@ -212,19 +219,25 @@ public class TemplateUtils {
 	 * @param fIn the File to read from
 	 * @param fOut the File to write the processed output to
 	 * @param dictReplace the dictionary used to look up patterns to replace
-	 * @param sStartDelim the string delimeter which indicates the start of a pattern to replace
-	 * @param sStopDelim the string delimeter which indicates the stop or end of a pattern to replace
+	 * @param sStartDelim the string delimiter which indicates the start of a pattern to replace
+	 * @param sStopDelim the string delimiter which indicates the stop or end of a pattern to replace
 	 */
 	public static void replaceAll(File fIn, File fOut, Map<?,?> dictReplace,
 			String sStartDelim, String sStopDelim)
 			throws FileNotFoundException, IOException {
 		BufferedReader in = new BufferedReader(new FileReader(fIn));
-		PrintWriter out = new PrintWriter(new FileOutputStream(fOut));
-
-		replaceAll(in, out, dictReplace, sStartDelim, sStopDelim);
-
-		out.close();
-		in.close();
+		try {
+			PrintWriter out = new PrintWriter(new FileWriter(fOut));
+			try {
+				replaceAll(in, out, dictReplace, sStartDelim, sStopDelim);
+			}
+			finally {
+				out.close();
+			}
+		}
+		finally {
+			in.close();
+		}
 	}
 
 	/**
@@ -246,8 +259,8 @@ public class TemplateUtils {
 	 * @param in where to read from
 	 * @param out where to write the processed output to
 	 * @param dictReplace the dictionary used to look up patterns to replace
-	 * @param sStartDelim the string delimeter which indicates the start of a pattern to replace
-	 * @param sStopDelim the string delimeter which indicates the stop or end of a pattern to replace
+	 * @param sStartDelim the string delimiter which indicates the start of a pattern to replace
+	 * @param sStopDelim the string delimiter which indicates the stop or end of a pattern to replace
 	 */
 	public static void replaceAll(BufferedReader in, PrintWriter out,
 			Map<?,?> dictReplace, String sStartDelim, String sStopDelim)
@@ -262,19 +275,23 @@ public class TemplateUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-    public static ArrayList loadTemplate(String sFile)
+    public static List<String> loadTemplate(String sFile)
 			throws FileNotFoundException, IOException {
-		ArrayList l = new ArrayList();
 
 		BufferedReader in = new BufferedReader(new FileReader(sFile));
-		String sLine = in.readLine();
-		while (sLine != null) {
-			l.add(sLine);
-			sLine = in.readLine();
+		try {
+			File f = new File(sFile);
+			int approxSize = (int)Math.max(10, f.length()/80);
+			List<String> l = new ArrayList<String>(approxSize);
+			String sLine = in.readLine();
+			while (sLine != null) {
+				l.add(sLine);
+				sLine = in.readLine();
+			}
+			return l;
 		}
-
-		in.close();
-
-		return l;
+		finally {
+			in.close();
+		}
 	}
 }

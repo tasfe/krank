@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
+import org.testng.annotations.Test;
+
 import junit.framework.TestCase;
 
 public class SelectItemUtilsTest extends TestCase {
@@ -30,6 +32,8 @@ public class SelectItemUtilsTest extends TestCase {
 			this.name = name;
 		}
 	}
+	
+	@Test
 	public void testIt() {
 		SelectItemUtils utils = new SelectItemUtils();
 	    List<Department> list = new ArrayList<Department>();

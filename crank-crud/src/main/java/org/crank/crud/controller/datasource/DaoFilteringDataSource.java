@@ -41,7 +41,7 @@ public class DaoFilteringDataSource<T, PK extends Serializable> extends DaoDataS
     }
 
     public int getCount() {
-        return dao.count( group );
+        return dao.count(fetches, group );
     }
 
 	public void setFetches(Fetch... fetches) {

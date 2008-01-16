@@ -21,44 +21,35 @@ public class TypeUtils {
     }
     
     public static boolean isUrl( Object value ) {
-
-        if (value != null) {
-        	if ( value instanceof String) {
-            	if  (
-                        (value.toString().toLowerCase().indexOf(".com") > 0)  ||
-                        (value.toString().toLowerCase().indexOf(".org") > 0)  ||
-                        (value.toString().toLowerCase().indexOf(".edu") > 0)  ||
-                        (value.toString().toLowerCase().indexOf(".biz") > 0)  ||
-                        (value.toString().toLowerCase().indexOf(".info") > 0) ||
-                        (value.toString().toLowerCase().indexOf(".mobi") > 0) ||
-                        (value.toString().toLowerCase().indexOf(".us") > 0)   ||
-                        (value.toString().toLowerCase().indexOf(".ca") > 0)   ||
-                        (value.toString().toLowerCase().indexOf(".net") > 0)
-                    ) {
-            		return true;
-            	}
+    	boolean rv = false;
+        if (value != null && value instanceof String) {
+    		String lcValue = ((String)value).toLowerCase();
+        	if  (
+                    (lcValue.indexOf(".com") > 0)  ||
+                    (lcValue.indexOf(".org") > 0)  ||
+                    (lcValue.indexOf(".edu") > 0)  ||
+                    (lcValue.indexOf(".biz") > 0)  ||
+                    (lcValue.indexOf(".info") > 0) ||
+                    (lcValue.indexOf(".mobi") > 0) ||
+                    (lcValue.indexOf(".us") > 0)   ||
+                    (lcValue.indexOf(".ca") > 0)   ||
+                    (lcValue.indexOf(".net") > 0)
+                ) {
+        		rv = true;            	
         	}
-            return false;
-        } else {
-            return false;
         }
+        return rv;
     }
 
     public static boolean isInCollection( Object value, Object collection ) {
-
+    	boolean rv = false;
         if ((value != null) && (!"".equals(value)) && (collection != null) && (!"".equals(collection))) {
         	if ((value instanceof String) && (collection instanceof String)) {
-       			String[] items = ((String)collection).split(",");
-       			String val = (String)value;
-       			for (String item : items) {
-       				if (item.equals(val)) {
-       					return true;
-       				}
-       			}
+        		String tmp = "," + collection + ',';
+        		rv =  tmp.contains("," + value + ",");
             }
-        }
-        
-        return false;
+        }        
+        return rv;
     }
 
     public static boolean isText( Class<?> type, String propertyName ) {
@@ -77,7 +68,14 @@ public class TypeUtils {
     }
 
     public static boolean isEnum( final Class<?> type, final String propertyName ) {
+       	if (type==null || propertyName==null) {
+    		throw new CrankException("Class type and propertyName must not be null, type=%s, propertyName=%s", type, propertyName );
+    	}
         PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
+        if (pd==null) {
+        	throw new CrankException("The Property was not found!, type=%s, propertyName=%s", type, propertyName );
+        }
+        
         Class<?> propertyType = pd.getPropertyType();
         if (propertyType == Enum.class) {
             return true;

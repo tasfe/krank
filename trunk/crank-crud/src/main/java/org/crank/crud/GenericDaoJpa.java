@@ -964,5 +964,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public void setNewSelectStatement(String newSelectStatement) {
 		this.newSelectStatement = newSelectStatement;
 	}
+	
+	@Transactional
+	public void run(Runnable runnable) {
+		runnable.run();
+	}
 
 }

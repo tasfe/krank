@@ -126,7 +126,8 @@ public class SelectManyByIdControllerTest extends SpringTestNGBase {
 		
 		assertNotNull(tagController);
 		
-		CrudControllerBase<Employee, Long> controller = (CrudControllerBase<Employee, Long>) tagController.getParentCrudController();
+		CrudControllerBase<Employee, Long> controller = 
+			(CrudControllerBase<Employee, Long>) tagController.getParentCrudController();
 		controller.setEntityLocator(new EntityLocator<Employee>(){public Employee getEntity() {return null;}
 			public List<Employee> getSelectedEntities() {
 				// TODO Auto-generated method stub

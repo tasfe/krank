@@ -812,4 +812,9 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return results;
 	}
 
+	@Transactional
+	public void run(Runnable runnable) {
+		runnable.run();
+	}
+	
 }

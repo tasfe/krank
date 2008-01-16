@@ -263,6 +263,8 @@ public interface GenericDao<T, PK extends Serializable> {
 	int count();
 
 	int count(Criterion... criteria);
+	
+	int count(Fetch[] fetches, Criterion... criteria);
 
 	List<T> find(Criterion... criteria);
 

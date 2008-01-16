@@ -395,6 +395,11 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		sbquery.append(" ");
 		sbquery.append("o").append(" ").append(constuctWhereClause(group));
 
+		return executeCountQuery(group, sbquery, criteria);
+	}
+
+	private int executeCountQuery(final Group group,
+			final StringBuilder sbquery, final Criterion... criteria) {
 		try {
 			return (Integer) this.getJpaTemplate().execute(new JpaCallback() {
 				public Object doInJpa(EntityManager em)
@@ -411,6 +416,20 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		}
 	}
 
+	public int count(Fetch[] fetches, final Criterion... criteria) {
+		final Group group = criteria != null ? Group.and(criteria) : null;
+
+		final StringBuilder sbquery = new StringBuilder("SELECT count("
+				+ (this.distinct ? "DISTINCT " : "") + "o )" + " FROM ");
+		sbquery.append(getEntityName(type));
+		sbquery.append(" ");
+		sbquery.append("o");
+		sbquery.append(constructJoins(fetches));
+		sbquery.append(" ").append(constuctWhereClause(group));
+		return executeCountQuery(group, sbquery, criteria);
+		
+	}
+	
 	public List<T> find(Class<T> clazz, Criterion... criteria) {
 		return find(clazz, (String[]) null, criteria);
 	}
@@ -969,5 +988,6 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public void run(Runnable runnable) {
 		runnable.run();
 	}
+
 
 }

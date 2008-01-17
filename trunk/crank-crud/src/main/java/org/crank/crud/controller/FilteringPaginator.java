@@ -6,7 +6,7 @@ import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.OrderBy;
-import org.crank.crud.join.Fetch;
+import org.crank.crud.join.Join;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -20,13 +20,13 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
     private List<Criterion> criteria;
     private List<OrderBy> orderBy;
     private Class type;
-    private List<Fetch> fetches = new ArrayList<Fetch>();
+    private List<Join> fetches = new ArrayList<Join>();
 
-    public List<Fetch> getFetches() {
+    public List<Join> getFetches() {
         return fetches;
     }
 
-    public void setFetches(List<Fetch> fetches) {
+    public void setFetches(List<Join> fetches) {
         this.fetches = fetches;
     }
 
@@ -106,7 +106,7 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         
         for (PropertyDescriptor propertyDescriptor: propertyDescriptors) {
             if (autoJoin && CrudUtils.isEntity(propertyDescriptor.getPropertyType())) {
-                fetches.add(Fetch.leftJoinFetch(propertyDescriptor.getName()));
+                fetches.add(Join.leftJoinFetch(propertyDescriptor.getName()));
             }
         	if (theType == propertyDescriptor.getPropertyType()) {
         		spds.add(propertyDescriptor);
@@ -197,7 +197,7 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         
         prepareProgramaticCriteriaForFilter();
 
-        filterablePaginatableDataSource().setFetches(this.fetches.toArray(new Fetch[this.fetches.size()]));
+        filterablePaginatableDataSource().setFetches(this.fetches.toArray(new Join[this.fetches.size()]));
 
         fireAfterFilter(filterablePaginatableDataSource().group());        
         reset();

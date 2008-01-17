@@ -30,8 +30,11 @@ import org.crank.crud.criteria.Operator;
 import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.criteria.OrderDirection;
 import org.crank.crud.criteria.VerifiedBetween;
-import org.crank.crud.join.Fetch;
 import org.crank.crud.join.Join;
+import org.crank.crud.join.JoinType;
+import org.crank.crud.join.RelationshipFetch;
+import org.crank.crud.join.RelationshipJoin;
+import org.crank.crud.join.SimpleRelationshipJoin;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.orm.jpa.EntityManagerHolder;
@@ -412,11 +415,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		final Group group = criteria != null ? Group.and(criteria) : null;
 
 		final StringBuilder sbquery = new StringBuilder("SELECT count("
-				+ (this.distinct ? "DISTINCT " : "") + "o )" + " FROM ");
+				+ (this.distinct ? "DISTINCT " : "") + "o ) " + " FROM ");
 		sbquery.append(getEntityName(type));
 		sbquery.append(" ");
 		sbquery.append("o").append(" ").append(constuctWhereClause(group));
-
 		return executeCountQuery(group, sbquery, criteria);
 	}
 
@@ -438,20 +440,27 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		}
 	}
 
-	public int count(Fetch[] fetches, final Criterion... criteria) {
+	public int count(Join[] joins, final Criterion... criteria) {
 		final Group group = criteria != null ? Group.and(criteria) : null;
 
 		final StringBuilder sbquery = new StringBuilder("SELECT count("
-				+ (this.distinct ? "DISTINCT " : "") + "o )" + " FROM ");
-		sbquery.append(getEntityName(type));
+				+ (this.distinct ? "DISTINCT " : "") + "o )  ");
+		sbquery.append(constructFrom(joins));
+		sbquery.append(constructJoins(joins));
 		sbquery.append(" ");
-		sbquery.append("o");
-		sbquery.append(constructJoins(fetches));
-		sbquery.append(" ").append(constuctWhereClause(group));
+		sbquery.append(constuctWhereClause(group));
 		return executeCountQuery(group, sbquery, criteria);
 		
 	}
 	
+	private String constructFrom(Join[] joins) {
+		final StringBuilder sbquery = new StringBuilder(35);
+		sbquery.append(" FROM ");
+		sbquery.append(getEntityName(type));
+		sbquery.append(" o ");
+		return sbquery.toString();
+	}
+
 	public List<T> find(Class<T> clazz, Criterion... criteria) {
 		return find(clazz, (String[]) null, criteria);
 	}
@@ -477,20 +486,20 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return find(type, propertyNames, values, orderBy);
 	}
 
-	public List<T> find(Fetch[] fetches, String[] orderBy,
+	public List<T> find(Join[] fetches, String[] orderBy,
 			Criterion... criteria) {
 		return doFind(this.type, orderBy, criteria, fetches);
 	}
 
-	public List<T> find(Fetch[] fetches, Criterion... criteria) {
+	public List<T> find(Join[] fetches, Criterion... criteria) {
 		return doFind(this.type, null, criteria, fetches);
 	}
 
-	public List<T> find(Fetch... fetches) {
+	public List<T> find(Join... fetches) {
 		return doFind(this.type, null, null, fetches);
 	}
 
-	public List<T> find(Fetch[] fetches, String[] orderBy, int startPosition,
+	public List<T> find(Join[] fetches, String[] orderBy, int startPosition,
 			int maxResults, Criterion... criteria) {
 		return doFind(this.type, orderBy, criteria, fetches, startPosition,
 				maxResults);
@@ -513,7 +522,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 				maxResults);
 	}
 
-	public List<T> find(Fetch[] fetches, OrderBy[] orderBy, int startPosition,
+	public List<T> find(Join[] fetches, OrderBy[] orderBy, int startPosition,
 			int maxResults, Criterion... criteria) {
 		return doFind(this.type, orderBy, criteria, fetches, startPosition,
 				maxResults);
@@ -543,7 +552,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	@SuppressWarnings("unchecked")
 	private List<T> doFind(Class<T> clazz, OrderBy[] orderBy,
-			final Criterion[] criteria, Fetch[] fetches,
+			final Criterion[] criteria, Join[] fetches,
 			final int startPosition, final int maxResult) {
 		return doFind(clazz, this.distinct, orderBy, criteria, fetches, startPosition,
 				maxResult);
@@ -552,15 +561,15 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	@SuppressWarnings("unchecked")
 	private List<T> doFind(Class<T> clazz, boolean distinctFlag, OrderBy[] orderBy,
 
-			final Criterion[] criteria, Fetch[] fetches,
+			final Criterion[] criteria, Join[] joins,
 			final int startPosition, final int maxResult) {
 		StringBuilder sbQuery = new StringBuilder(255);
 		final Group group = criteria != null ? Group.and(criteria)
 				: new Group();
 
 		final String sQuery = sbQuery.append(
-				constructSelect(getEntityName(clazz), "o", distinctFlag)).append(
-				constructJoins(fetches)).append(constuctWhereClause(group))
+				constructSelect(getEntityName(clazz), "o", distinctFlag, joins)).append(
+				constructJoins(joins)).append(constuctWhereClause(group))
 				.append(constructOrderBy(orderBy)).toString();
 
 		try {
@@ -585,7 +594,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	private List<T> doFind(Class<T> clazz, String[] orderBy,
-			final Criterion[] criteria, Fetch[] fetches,
+			final Criterion[] criteria, Join[] fetches,
 			final int startPosition, final int maxResult) {
 
 		if (orderBy != null) {
@@ -604,25 +613,38 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	private List<T> doFind(Class<T> clazz, String[] orderBy,
-			Criterion[] criteria, Fetch[] fetches) {
+			Criterion[] criteria, Join[] fetches) {
 		return doFind(clazz, orderBy, criteria, fetches, -1, -1);
 	}
 
-	private String constructJoins(Fetch[] fetches) {
-		if (fetches == null || fetches.length == 0) {
+	private String constructJoins(Join[] joins) {
+		if (joins == null || joins.length == 0) {
 			return "";
 		}
 		StringBuilder builder = new StringBuilder(255);
-		for (Fetch fetch : fetches) {
-			if (fetch.getJoin() == Join.LEFT) {
-				builder.append(" left ");
+		for (Join join : joins) {
+			if (join instanceof RelationshipJoin) {
+				RelationshipJoin rj = (RelationshipJoin) join;
+
+				
+				if (rj.getJoinType() == JoinType.LEFT) {
+					builder.append(" left ");
+				}
+				
+				if (rj instanceof RelationshipFetch) {
+					builder.append(" join fetch ");
+				} else if (rj instanceof SimpleRelationshipJoin) {
+					builder.append(" join ");
+				}
+
+				builder.append(rj.isAliasedRelationship() ? "" : "o.");
+				builder.append(rj.getRelationshipProperty());
+				builder.append(" ");
+				builder.append(rj.getAlias().equals("") ? rj.getDefaultAlias()
+						: rj.getAlias());
 			}
-			builder.append(" join fetch ").append(
-					fetch.isAliasedRelationship() ? "" : "o.").append(
-					fetch.getRelationshipProperty()).append(" ").append(
-					fetch.getAlias().equals("") ? fetch.getDefaultAlias()
-							: fetch.getAlias());
 		}
+
 		return builder.toString();
 	}
 
@@ -911,7 +933,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return query.toString();
 	}
 
-	private String constructSelect(String entityName, String instanceName, boolean distinctFlag) {
+	private String constructSelect(String entityName, String instanceName, boolean distinctFlag, Join [] joins) {
 		StringBuilder query = new StringBuilder(255);
 		query.append("SELECT ");
 		query.append((distinctFlag ? " DISTINCT " : " "));
@@ -920,10 +942,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		} else {
 			query.append(newSelectStatement);
 		}
-		query.append(" FROM ");
-		query.append(entityName);
-		query.append(" ");
-		query.append(instanceName).append(" ");
+		query.append(constructFrom(joins));
 		return query.toString();
 	}
 

@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.OrderBy;
-import org.crank.crud.join.Fetch;
+import org.crank.crud.join.Join;
 
 public class DaoFilteringDataSource<T, PK extends Serializable> extends DaoDataSource<T, PK> implements FilteringDataSource {
     protected Group group = new Group();
     protected OrderBy[] orderBy = new OrderBy[]{};
-    protected Fetch[] fetches = new Fetch[]{};
+    protected Join[] fetches = new Join[]{};
 
     public DaoFilteringDataSource() {
         super();
@@ -28,7 +28,7 @@ public class DaoFilteringDataSource<T, PK extends Serializable> extends DaoDataS
         this.orderBy = orderBy;
     }
 
-    public Fetch[] fetches() {
+    public Join[] fetches() {
         return fetches;  
     }
 
@@ -44,7 +44,7 @@ public class DaoFilteringDataSource<T, PK extends Serializable> extends DaoDataS
         return dao.count(fetches, group );
     }
 
-	public void setFetches(Fetch... fetches) {
+	public void setFetches(Join... fetches) {
 		this.fetches = fetches;
 	}
     

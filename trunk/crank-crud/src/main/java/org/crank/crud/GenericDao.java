@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.OrderBy;
-import org.crank.crud.join.Fetch;
+import org.crank.crud.join.Join;
 
 /**
  * This is our GenericDAO interface that supports its own Criteria API and finder AOP mixins.
@@ -264,7 +264,7 @@ public interface GenericDao<T, PK extends Serializable> {
 
 	int count(Criterion... criteria);
 	
-	int count(Fetch[] fetches, Criterion... criteria);
+	int count(Join[] fetches, Criterion... criteria);
 
 	List<T> find(Criterion... criteria);
 
@@ -276,16 +276,16 @@ public interface GenericDao<T, PK extends Serializable> {
 
 	List<T> find(List<Criterion> criteria, String[] orderBy);
 
-	List<T> find(Fetch[] fetches, String[] orderBy, Criterion... criteria);
+	List<T> find(Join[] fetches, String[] orderBy, Criterion... criteria);
 
-	List<T> find(Fetch[] fetches, Criterion... criteria);
+	List<T> find(Join[] fetches, Criterion... criteria);
 
-	List<T> find(Fetch... fetches);
+	List<T> find(Join... fetches);
 
-	public List<T> find(Fetch[] fetches, String[] orderBy, int startPosition,
+	public List<T> find(Join[] fetches, String[] orderBy, int startPosition,
 			int maxResults, Criterion... criteria);
 
-	public List<T> find(Fetch[] fetches, OrderBy[] orderBy, int startPosition,
+	public List<T> find(Join[] fetches, OrderBy[] orderBy, int startPosition,
 			int maxResults, Criterion... criteria);
 
 	public List<T> find(String[] orderBy, int startPosition, int maxResults,

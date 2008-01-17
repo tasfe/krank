@@ -26,8 +26,8 @@ import org.crank.crud.criteria.Operator;
 import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.criteria.OrderDirection;
 import org.crank.crud.criteria.VerifiedBetween;
-import org.crank.crud.join.Fetch;
 import org.crank.crud.join.Join;
+import org.crank.crud.join.JoinType;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -367,20 +367,20 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return find(type, propertyNames, values, orderBy);
 	}
 
-	public List<T> find(Fetch[] fetches, String[] orderBy,
+	public List<T> find(Join[] fetches, String[] orderBy,
 			Criterion... criteria) {
 		return doFind(this.type, orderBy, criteria, fetches);
 	}
 
-	public List<T> find(Fetch[] fetches, Criterion... criteria) {
+	public List<T> find(Join[] fetches, Criterion... criteria) {
 		return doFind(this.type, null, criteria, fetches);
 	}
 
-	public List<T> find(Fetch... fetches) {
+	public List<T> find(Join... fetches) {
 		return doFind(this.type, null, null, fetches);
 	}
 
-	public List<T> find(Fetch[] fetches, String[] orderBy, int startPosition,
+	public List<T> find(Join[] fetches, String[] orderBy, int startPosition,
 			int maxResults, Criterion... criteria) {
 		return doFind(this.type, orderBy, criteria, fetches, startPosition,
 				maxResults);
@@ -403,7 +403,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 				maxResults);
 	}
 
-	public List<T> find(Fetch[] fetches, OrderBy[] orderBy, int startPosition,
+	public List<T> find(Join[] fetches, OrderBy[] orderBy, int startPosition,
 			int maxResults, Criterion... criteria) {
 		return doFind(this.type, orderBy, criteria, fetches, startPosition,
 				maxResults);
@@ -434,7 +434,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 
 	@SuppressWarnings("unchecked")
 	private List<T> doFind(Class<T> clazz, OrderBy[] orderBy,
-			final Criterion[] criteria, Fetch[] fetches,
+			final Criterion[] criteria, Join[] fetches,
 			final int startPosition, final int maxResult) {
 		return doFind(clazz, this.distinct, orderBy, criteria, fetches, startPosition,
 				maxResult);
@@ -442,7 +442,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	
 	@SuppressWarnings("unchecked")
 	private List<T> doFind(Class<T> clazz, boolean distinctFlag, OrderBy[] orderBy,
-			final Criterion[] criteria, Fetch[] fetches,
+			final Criterion[] criteria, Join[] fetches,
 			final int startPosition, final int maxResult) {
 		StringBuilder sbQuery = new StringBuilder(255);
 		final Group group = criteria != null ? Group.and(criteria) : null;
@@ -470,7 +470,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 
 	@SuppressWarnings("unchecked")
 	private List<T> doFind(Class<T> clazz, String[] orderBy,
-			final Criterion[] criteria, Fetch[] fetches,
+			final Criterion[] criteria, Join[] fetches,
 			final int startPosition, final int maxResult) {
 
 		if (orderBy != null) {
@@ -490,26 +490,27 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 
 	@SuppressWarnings("unchecked")
 	private List<T> doFind(Class<T> clazz, String[] orderBy, Criterion[] criteria,
-			Fetch[] fetches) {
+			Join[] fetches) {
 		return doFind(clazz, orderBy, criteria, fetches, -1, -1);
 	}
 
-	private String constructJoins(Fetch[] fetches) {
+	private String constructJoins(Join[] fetches) {
 		if (fetches == null || fetches.length == 0) {
 			return "";
 		}
 		StringBuilder builder = new StringBuilder(255);
-		for (Fetch fetch : fetches) {
-			if (fetch.getJoin() == Join.LEFT) {
-				builder.append(" left ");
-			}
-			builder.append(" join fetch ").append(
-					fetch.isAliasedRelationship() ? "" : "o.").append(
-					fetch.getRelationshipProperty()).append(" ").append(
-					fetch.getAlias().equals("") ? fetch.getDefaultAlias()
-							: fetch.getAlias());
-		}
-		return builder.toString();
+//		for (Join fetch : fetches) {
+//			if (fetch.getJoin() == JoinType.LEFT) {
+//				builder.append(" left ");
+//			}
+//			builder.append(" join fetch ").append(
+//					fetch.isAliasedRelationship() ? "" : "o.").append(
+//					fetch.getRelationshipProperty()).append(" ").append(
+//					fetch.getAlias().equals("") ? fetch.getDefaultAlias()
+//							: fetch.getAlias());
+//		}
+		throw new RuntimeException("NOT IMPLEMENTED");
+		//return builder.toString();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -817,7 +818,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		runnable.run();
 	}
 
-	public int count(Fetch[] fetches, Criterion... criteria) {
+	public int count(Join[] fetches, Criterion... criteria) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.crank.core.CrankException;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -119,7 +120,7 @@ import org.springframework.beans.BeanWrapperImpl;
  * @author Rick Hightower
  *
  */
-public abstract class AbstractTreeModelBuilder implements TreeModelBuilder{
+public abstract class AbstractTreeModelBuilder<T, N> implements TreeModelBuilder<T>{
 
 	private boolean noRoot;
 
@@ -131,13 +132,13 @@ public abstract class AbstractTreeModelBuilder implements TreeModelBuilder{
 
 
 	/** Create the table model. */
-	protected abstract Object createTreeModel(Object root);
+	protected abstract T createTreeModel(Object root);
 	/** Add a child node to the parent node. */
-	protected abstract void addToNode(Object parent, Object child);
+	protected abstract void addToNode(N parent, N child);
 	/** Create a new node. */
-	protected abstract Object createFolder(String name);
-	protected abstract Object createNode(String name, Object data);
-	protected abstract Object createRoot(String name);
+	protected abstract N createFolder(String name);
+	protected abstract N createNode(String name, Object data);
+	protected abstract N createRoot(String name);
 
 
 	/**
@@ -145,15 +146,20 @@ public abstract class AbstractTreeModelBuilder implements TreeModelBuilder{
 	 *  @param list A list of objects that will be base objects in the tree.
 	 *  @return A new Table Model
 	 * */
-	public Object createTreeModelFromList(List list) {
-
+	public T createTreeModelFromList(List<?> list) {
+		if (list == null) {
+			throw new CrankException("the list argument cannot be null");			
+		}
+		
 		/* As we build the tree let's walk through an example of parsing a build string like this:
 		  "Departments->this.name->employees.name;groups.name"
 		*/
 		String [] levels = getDirections();
+		if (levels == null || levels.length == 0) {
+			throw new CrankException("the tree build directions could not be interpreted");
+		}
 
-
-		Object root = null;
+		N root = null;
 		/* Create the root Node. */
 		int level = 0; //index=0
 		String mainObjectPropertyLabel = getFirstLevelLabel(levels);
@@ -184,6 +190,9 @@ public abstract class AbstractTreeModelBuilder implements TreeModelBuilder{
 		return createTreeModel(root);
 	}
 	private String getFirstLevelLabel(String[] levels) {
+		if (levels.length < 2) {
+			throw new CrankException("expected at least two levels in getFirstLevelLabel");
+		}
 		String currentBuildDirections = levels[1]; //currentBuildDirections like "this.name"
 		String[] level2 = currentBuildDirections.split("[.]"); //Splits into something like "this", "name"
 		return level2[1]; //grabs the label, i.e., "name".
@@ -197,7 +206,7 @@ public abstract class AbstractTreeModelBuilder implements TreeModelBuilder{
 	 * @param level The current level that we are on.
 	 * @param root The root object that this will be added to.
 	 */
-	protected void createBaseObjects(List list, String[] levels, int level, Object root) {
+	protected void createBaseObjects(List list, String[] levels, int level, N root) {
 
 		String mainObjectPropertyLabel = getFirstLevelLabel(levels);
 		level ++; //walk down the tree. index = 2
@@ -211,7 +220,7 @@ public abstract class AbstractTreeModelBuilder implements TreeModelBuilder{
 			Object object = iterator.next();
 
 			/* Extract the property to display and create the Node with this extracted property. */
-			Object mainObjectNode = createNodeBasedOnObjectProperty(mainObjectPropertyLabel, object);
+			N mainObjectNode = createNodeBasedOnObjectProperty(mainObjectPropertyLabel, object);
 
 			/* Add this new baseObjectNode to the root */
 			addToNode(root, mainObjectNode);
@@ -236,7 +245,7 @@ public abstract class AbstractTreeModelBuilder implements TreeModelBuilder{
 	 * @param branch This is the branch name. The branch is used to identify which directions belong to this node.
 	 */
 	private void processNextLevels(Object baseObject, Object object, String[] levels, int level,
-			                       Object parentNode, String branch) {
+			                       N parentNode, String branch) {
 
 		/* Get the current node build directions. */
 		String sLevel = levels[level]; //"employees.name;groups.name"
@@ -288,13 +297,13 @@ public abstract class AbstractTreeModelBuilder implements TreeModelBuilder{
 				}
 			}
 
-			Object realParentNode = createParentNodeIfNeeded(parentNode, createContainer, listProperty);
+			N realParentNode = createParentNodeIfNeeded(parentNode, createContainer, listProperty);
 			Iterator iterator = getIteratorOfChildObjectsFromParentObject(object, listProperty);
 
 			/* Process the children node. */
 			while(iterator.hasNext()) {
 				Object childObject = iterator.next();
-				Object childNode = createNodeBasedOnObjectProperty(labelProperty, childObject);
+				N childNode = createNodeBasedOnObjectProperty(labelProperty, childObject);
 				boolean handled = false; //has the children nodes been handled?
 				if (level + 2 <= levels.length) {
 					level++;
@@ -304,7 +313,7 @@ public abstract class AbstractTreeModelBuilder implements TreeModelBuilder{
 				/* If the child nodes have not already been handled check to see if this is a recursive node.
 				 * If it is a recursive node, recurse.*/
 				if (!handled && recursive) {
-					/* Notice this level is not incremented becuase we stay at this level's instructions
+					/* Notice this level is not incremented because we stay at this level's instructions
 					 * until the children have no more children.
 					 */
 					processNextLevels(baseObject, childObject, levels, level, childNode, newBranch);
@@ -348,7 +357,7 @@ public abstract class AbstractTreeModelBuilder implements TreeModelBuilder{
 	 * @param object object that we are extracting the label from.
 	 * @return new node
 	 */
-	protected Object createNodeBasedOnObjectProperty(String propertyLabel, Object object) {
+	protected N createNodeBasedOnObjectProperty(String propertyLabel, Object object) {
 		BeanWrapper wrapper = new BeanWrapperImpl(object);
 
 		if (!propertyLabel.contains(",")) {
@@ -376,8 +385,8 @@ public abstract class AbstractTreeModelBuilder implements TreeModelBuilder{
 	 * @param listProperty The list property used to look up the label in the resource bundle.
 	 * @return parentNode
 	 */
-	private Object createParentNodeIfNeeded(Object parentNode, boolean createContainer, String listProperty) {
-		Object realParentNode = null;
+	private N createParentNodeIfNeeded(N parentNode, boolean createContainer, String listProperty) {
+		N realParentNode = null;
 
 		if (createContainer==true) {
 			//TODO look up the label in the resource label ${listProperty}Node.

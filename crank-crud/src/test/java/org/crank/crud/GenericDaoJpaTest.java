@@ -12,9 +12,9 @@ import static org.crank.crud.criteria.Group.orderBy;
 import static org.crank.crud.criteria.OrderBy.asc;
 import static org.crank.crud.criteria.OrderBy.desc;
 import static org.crank.crud.criteria.OrderBy.orderBy;
-import static org.crank.crud.join.Fetch.join;
-import static org.crank.crud.join.Fetch.joinFetch;
-import static org.crank.crud.join.Fetch.leftJoinFetch;
+import static org.crank.crud.join.Join.join;
+import static org.crank.crud.join.Join.joinFetch;
+import static org.crank.crud.join.Join.leftJoinFetch;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +27,9 @@ import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Example;
 import org.crank.crud.criteria.Group;
+import org.crank.crud.join.Join;
+import org.crank.crud.join.JoinType;
+import org.crank.crud.join.SimpleRelationshipJoin;
 import org.crank.crud.test.DbUnitTestBase;
 import org.crank.crud.test.dao.EmployeeDAO;
 import org.crank.crud.test.model.Department;
@@ -174,7 +177,30 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 				"Engineering");
 		AssertJUnit.assertTrue(employees.size() > 0);
 	}
+	
+	@Test
+	public void testFindRelatedField2() {
+		EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
+		SimpleRelationshipJoin srj = new SimpleRelationshipJoin();
+		srj.setAlias("foo");
+		srj.setAliasedRelationship(true);
+		srj.setRelationshipProperty("o.department");
+		List<Employee> employees = employeeDAO.find(new Join[]{srj}, Comparison.eq("foo.name", true, "Engineering"));
+		AssertJUnit.assertTrue(employees.size() > 0);
+	}
+	
+	@Test
+	public void testFetch2() {
+		List<Employee> result = employeeDao.find(join(joinFetch("o.department", true, "foo")),Comparison.eq("foo.name", true, "Engineering"));
+		AssertJUnit.assertTrue(result.size() > 0);
+	}
 
+	@Test
+	public void testFetch3() {
+		List<Employee> result = employeeDao.find(join(joinFetch("department")),Comparison.eq("department.name", true, "Engineering"));
+		AssertJUnit.assertTrue(result.size() > 0);
+	}
+	
 	@Test
 	public void testFindRelatedFieldWithUnderBar() {
 		EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;

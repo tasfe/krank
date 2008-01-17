@@ -60,5 +60,6 @@ public interface CrudOperations<T extends Serializable> extends Toggleable {
     
     void addCrudControllerListener(CrudControllerListener listener);
     void removeCrudControllerListener(CrudControllerListener listener);
+    public void setDeleteStrategy(String value);
     
 }

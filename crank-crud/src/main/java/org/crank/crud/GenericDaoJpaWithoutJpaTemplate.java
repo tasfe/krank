@@ -821,5 +821,15 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void flush() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

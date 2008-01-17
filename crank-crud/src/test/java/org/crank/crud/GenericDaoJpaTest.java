@@ -27,17 +27,12 @@ import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Example;
 import org.crank.crud.criteria.Group;
-import org.crank.crud.join.Join;
-import org.crank.crud.join.JoinType;
-import org.crank.crud.join.SimpleRelationshipJoin;
 import org.crank.crud.test.DbUnitTestBase;
 import org.crank.crud.test.dao.EmployeeDAO;
 import org.crank.crud.test.model.Department;
 import org.crank.crud.test.model.Employee;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.testng.AssertJUnit;
@@ -181,11 +176,11 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 	@Test
 	public void testFindRelatedField2() {
 		EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
-		SimpleRelationshipJoin srj = new SimpleRelationshipJoin();
-		srj.setAlias("foo");
-		srj.setAliasedRelationship(true);
-		srj.setRelationshipProperty("o.department");
-		List<Employee> employees = employeeDAO.find(new Join[]{srj}, Comparison.eq("foo.name", true, "Engineering"));
+//		SimpleRelationshipJoin srj = new SimpleRelationshipJoin();
+//		srj.setAlias("foo");
+//		srj.setAliasedRelationship(true);
+//		srj.setRelationshipProperty("o.department");
+		List<Employee> employees = employeeDAO.find(join(join("o.department", true, "foo")), Comparison.eq("foo.name", true, "Engineering"));
 		AssertJUnit.assertTrue(employees.size() > 0);
 	}
 	

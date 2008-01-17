@@ -81,7 +81,7 @@ public class MessageSpecification implements Serializable {
     	 * */
         if (name == null && parent == null) {
             this.setDetailMessage("{" + this.getClass().getName() + DETAIL_KEY + "}");
-            this.setSummaryMessage("{" + this.getClass().getName() + SUMMARY_KEY);
+            this.setSummaryMessage("{" + this.getClass().getName() + SUMMARY_KEY+ "}");
         /* If the parent is null and the name is not,
          * use the name to load resources.
          */
@@ -196,7 +196,7 @@ public class MessageSpecification implements Serializable {
     	 * resolve it as an Expression (Universal, JSF, OGNL, etc.)
     	 */
     	else if (key.startsWith(this.expressionMarker)) {
-    		message = resovleExpression(key).toString();
+    		message = resolveExpression(key).toString();
     	} else {
     		/* If it does not start with those markers see if 
     		 * it has a ".". If it has a dot, try to look it up.
@@ -235,7 +235,7 @@ public class MessageSpecification implements Serializable {
 	 * @param key
 	 * @return
 	 */
-    private Object resovleExpression(String key) {
+    private Object resolveExpression(String key) {
     	throw new UnsupportedOperationException("future resolve expressions from Universal EL or OGNL");
 	}
 

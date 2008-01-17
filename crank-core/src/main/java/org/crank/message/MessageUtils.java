@@ -13,11 +13,11 @@ public final class MessageUtils {
 	}
 
 	public static String createLabelNoPlural(String fieldName, final ResourceBundle bundle) {
-		if (fieldName.endsWith("s")) {
-			fieldName = fieldName.substring(0, fieldName.length()-1);
-		} else if (fieldName.endsWith("es")) {
+		if (fieldName.endsWith("es")) {
 			fieldName = fieldName.substring(0, fieldName.length()-2);
-		}
+		} else if (fieldName.endsWith("s")) {
+			fieldName = fieldName.substring(0, fieldName.length()-1);
+		} 
 		return getLabel(fieldName, bundle);
 	}
 	
@@ -93,7 +93,7 @@ public final class MessageUtils {
 	 */
 	public static String generateLabelValue(final String fieldName) {
 		
-		final StringBuffer buffer = new StringBuffer(fieldName.length() * 2);
+		final StringBuilder buffer = new StringBuilder(fieldName.length() * 2);
 		
         
         class GenerationCommand {
@@ -137,7 +137,7 @@ public final class MessageUtils {
         		}
             	
             }
-			private void processCharWasNumber(StringBuffer buffer,
+			private void processCharWasNumber(StringBuilder buffer,
 					int index, char cchar) {
 				if (lastCharWasSpecial) {
 					return;
@@ -157,7 +157,7 @@ public final class MessageUtils {
 					lastCharWasNumber = false;
 				}
 			}
-			private char processFirstCharacterCheck(final StringBuffer buffer,
+			private char processFirstCharacterCheck(final StringBuilder buffer,
 					int index, char cchar) {
 				/* Always capitalize the first character. */
 				if (index == 0) {
@@ -175,7 +175,7 @@ public final class MessageUtils {
 				}
 				return cchar;
 			}
-			private void processSpecialChars(final StringBuffer buffer,
+			private void processSpecialChars(final StringBuilder buffer,
 					char cchar) {
 				lastCharWasSpecial = false;
 				/* If the character is '.' or '_' then append a space and mark
@@ -190,7 +190,7 @@ public final class MessageUtils {
 				
 				
 			}
-			private void processCharWasUpperCase(final StringBuffer buffer,
+			private void processCharWasUpperCase(final StringBuilder buffer,
 					int index, char cchar) {
 				/* If the character is uppercase, append a space and keep track
 				 * that the last character was uppercase for the next iteration.

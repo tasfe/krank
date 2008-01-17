@@ -13,10 +13,12 @@
 
 <ui:composition>
 	<c:set var="entityName" value="${jsfSelectManyController.relationshipName}" />
-	<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
 	<c:set var="paginator" value="${jsfSelectManyController.paginator}"/>
 	<c:set var="entityClass" value="${jsfSelectManyController.entityClass}" />
 	
+	<c:if test="${empty entityNameLabel}">
+		<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
+	</c:if>	
 	
 	<div id="editTip${entityName}" class="toolTip">Edit this record</div>
 	<div id="disableTip${entityName}" class="toolTip">Disable this record</div>
@@ -232,13 +234,13 @@
 		</h:panelGrid>
 		<a4j:commandLink action="${jsfSelectManyController.process}" 
 						 rendered="${jsfSelectManyController.show}"
-						 value="Update"
+						 value="Save/Update"
 						 styleClass="${selectManyClass}"
 						 title="Add/Remove items to ${entityNameLabel}"
 						 />
 		<a4j:commandLink action="${jsfSelectManyController.cancel}"
 						 rendered="${jsfSelectManyController.show}"
-						 value="Cancel"
+						 value="Close/Cancel"
 						 styleClass="${selectManyClass}"
 						 immediate="true"
 						 title="Hides the ${entityNameLabel} selection window"

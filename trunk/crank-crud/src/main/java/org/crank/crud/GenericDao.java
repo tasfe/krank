@@ -318,5 +318,9 @@ public interface GenericDao<T, PK extends Serializable> {
 	T update(T transientObject);
 	
 	void run(Runnable runnable);
+	
+	void clear();
+	
+	void flush();
 
 }

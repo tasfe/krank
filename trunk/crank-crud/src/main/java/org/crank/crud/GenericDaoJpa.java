@@ -272,6 +272,28 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		});
 	}
 
+	
+	public void clear() {
+		getJpaTemplate().execute(new JpaCallback() {
+			public Object doInJpa(EntityManager entityManager)
+					throws PersistenceException {
+				entityManager.clear();
+				return null;
+			}
+		});
+	}
+
+	@Transactional
+	public void flush() {
+		getJpaTemplate().execute(new JpaCallback() {
+			public Object doInJpa(EntityManager entityManager)
+					throws PersistenceException {
+				entityManager.flush();
+				return null;
+			}
+		});
+	}
+	
 	/**
 	 * @deprecated use store
 	 */

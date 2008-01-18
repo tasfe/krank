@@ -45,7 +45,9 @@
 					propertyNames="firstName,lastName,description,age,numberOfPromotions" />
 
 				<crank:detailListing detailController="${taskDetailController}"
-					enableGroups="" propertyNames="name,startDate,endDate,complete" />
+					enableGroups="" 
+					formPropertyNames="name,category,startDate,endDate,complete"
+					propertyNames="name,category.name,startDate,endDate,complete" />
 
 				<crank:detailListing detailController="${contactDetailController}"
 					enableGroups="" propertyNames="name,phone" />

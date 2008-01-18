@@ -37,6 +37,7 @@ import org.crank.crud.jsf.support.JsfSelectManyController;
 import org.crank.crud.jsf.support.JsfSelectOneByIdController;
 import org.crank.crud.jsf.support.JsfSelectOneListingController;
 import org.crank.crud.jsf.support.SelectItemGenerator;
+import org.crank.crud.model.Category;
 import org.crank.crud.model.ContactInfo;
 import org.crank.crud.model.Department;
 import org.crank.crud.model.Employee;
@@ -76,6 +77,8 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 			
 			managedObjects.add(new CrudManagedObject(Tag.class,
 					TagDAO.class));
+			managedObjects.add(new CrudManagedObject(Category.class,
+					null));
 			
 			
 			CrudManagedObject crudManagedObject = new CrudManagedObject(Role.class, RoleDAO.class);
@@ -141,8 +144,9 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		adapter.getPaginator().filter();
 
 		/* Setup tasks and contacts DetailControllers. */
+		JsfDetailController taskController = new JsfDetailController(Task.class);
 		adapter.getController().addChild("tasks",
-				new JsfDetailController(Task.class));
+				taskController);
 		adapter.getController().addChild("contacts",
 				new JsfDetailController(ContactInfo.class));
 

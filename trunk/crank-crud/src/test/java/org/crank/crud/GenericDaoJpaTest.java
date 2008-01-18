@@ -14,6 +14,7 @@ import static org.crank.crud.criteria.OrderBy.desc;
 import static org.crank.crud.criteria.OrderBy.orderBy;
 import static org.crank.crud.join.Join.join;
 import static org.crank.crud.join.Join.joinFetch;
+import static org.crank.crud.join.Join.entityJoin;
 import static org.crank.crud.join.Join.leftJoinFetch;
 
 import java.util.ArrayList;
@@ -31,11 +32,14 @@ import org.crank.crud.test.DbUnitTestBase;
 import org.crank.crud.test.dao.EmployeeDAO;
 import org.crank.crud.test.model.Department;
 import org.crank.crud.test.model.Employee;
+import org.crank.crud.test.model.Person;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.testng.AssertJUnit;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
@@ -47,15 +51,30 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 	private GenericDao<Employee, Long> employeeDao;
 	private GenericDao<Department, Long> departmentDao;
 	private PlatformTransactionManager transactionManager;
+	private EmployeeDataCreationUtility creationUtility = new EmployeeDataCreationUtility();
+	private List<Employee> testEmployees;
+	private GenericDao<Person, Long> personDao;
 
 	@Override
 	public String getDataSetXml() {
 		return "data/Employee.xml";
 	}
- 
+	
+	@BeforeClass (dependsOnGroups={"initPersist"})
+	public void setupEmployeeData() {
+		creationUtility.init(employeeDao, departmentDao);
+		creationUtility.setupEmployeeData();
+		testEmployees = creationUtility.getTestEmployees();
+	}
+
+	@AfterClass 
+	public void deleteTestEmployeeData() {
+		employeeDao.delete(testEmployees);
+	}
+	
 	@Test
 	public void testLazyEmployees() {
-		Employee emp = employeeDao.read(1L);
+		Employee emp = employeeDao.read(testEmployees.get(0).getId());
 		System.out.println(emp.getDepartmentId());
 		System.out.println(emp.getDepartment().getId());
 	}
@@ -72,17 +91,16 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
 	@Test
 	public void testDeleteObject() throws Exception {
-		Employee employee = (Employee) employeeDao.read(1L);
+		Employee employee = (Employee) employeeDao.find(
+				Comparison.eq("firstName", "Rick").eq("lastName", "Hightower")).get(0);
+		Long id = employee.getId();
 		AssertJUnit.assertNotNull(employee);
-		AssertJUnit.assertEquals(((Employee) employee).getId(), new Long(1));
-		employeeDao.delete(1L);
+		AssertJUnit.assertEquals(((Employee) employee).getId(), id);
+		employeeDao.delete(id);
 		employeeDao.flushAndClear();
-		employee = (Employee) employeeDao.read(1L);
+		employee = (Employee) employeeDao.read(id);
 		AssertJUnit.assertNull(employee);
 		employeeDao.flushAndClear();
-		initPersistenceStuff();
-		employee = (Employee) employeeDao.read(1L);
-		AssertJUnit.assertNotNull(employee);
 	}
 
 	@Test
@@ -94,19 +112,18 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		Map<String, Object> params = new HashMap<String, Object>();
 		List<Employee> employees = employeeDao.find(params,
 				new String[] { "firstName" });
-		AssertJUnit.assertEquals(((Employee) employees.get(0)).getFirstName(),
-				"Bob");
+		AssertJUnit.assertEquals("Bob",((Employee) employees.get(0)).getFirstName());
 		AssertJUnit.assertEquals(((Employee) employees.get(1)).getFirstName(),
 				"Carlos");
 		employeeDao.flushAndClear();
-		initPersistenceStuff();
 	}
 
 	@Test
 	public void testGetObject() {
-		Employee employee = employeeDao.read(new Long(1));
+		Long id = testEmployees.get(0).getId();
+		Employee employee = employeeDao.read(id);
 		AssertJUnit.assertNotNull(employee);
-		AssertJUnit.assertEquals(employee.getId(), new Long(1));
+		AssertJUnit.assertEquals(employee.getId(), id);
 		AssertJUnit.assertEquals("Rick", employee.getFirstName());
 	}
 
@@ -133,11 +150,14 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 			AssertJUnit.assertTrue(employee.getFirstName().contains("Gak"));
 		}
 		employeeDao.flushAndClear();
-		initPersistenceStuff();
-		employees = employeeDao.find();
-		for (Employee employee : employees) {
-			AssertJUnit.assertTrue(!employee.getFirstName().contains("Gak"));
-		}
+				
+	}
+	
+	@Test (dependsOnMethods="testGetUpdateObjects")
+	public void cleanup() {
+		deleteTestEmployeeData();
+		setupEmployeeData();
+				
 	}
 
 	@Test
@@ -362,7 +382,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("lastName", null);
 		List<Employee> result = employeeDao.find(attributes);
-		AssertJUnit.assertEquals(9, result.size());
+		AssertJUnit.assertEquals(10, result.size());
 	}
 
 	@Test
@@ -372,7 +392,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertEquals(14, result.size());
 		result = employeeDao.find(join(leftJoinFetch("department"),leftJoinFetch("tasks")),
 				orderBy("firstName"), and());
-		AssertJUnit.assertEquals(14, result.size());
+		AssertJUnit.assertEquals(15, result.size());
 
 	}
 
@@ -386,7 +406,8 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
 	@Test
 	public void testReadFully() {
-		Employee employee = employeeDao.readPopulated(1L);
+		
+		Employee employee = employeeDao.readPopulated(testEmployees.get(0).getId());
 		AssertJUnit.assertNotNull(employee);
 
 		Department dept = (Department) departmentDao.readPopulated(1L);
@@ -417,8 +438,8 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 	@Test
 	public void testIn() {
 		List<Long> ids = new ArrayList<Long>();
-		ids.add(1L);
-		ids.add(2L);
+		ids.add(testEmployees.get(0).getId());
+		ids.add(testEmployees.get(1).getId());
 		List<Employee> employees = employeeDao.find(Comparison.in("id", ids));
         AssertJUnit.assertNotNull(employees);
         AssertJUnit.assertEquals(2,employees.size());
@@ -445,7 +466,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		transactionTemplate.execute(
 				new TransactionCallback() {
 					public Object doInTransaction(TransactionStatus ts) {
-						Employee employee =  employeeDao.readExclusive(1L);
+						Employee employee =  employeeDao.readExclusive(testEmployees.get(0).getId());
 						AssertJUnit.assertNotNull("Employee for id=1 not read.", employee);
 						return null;
 					}
@@ -473,7 +494,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
                    Comparison.eq("firstName", "Vanilla")
                 )
         );
-        AssertJUnit.assertEquals(2, find.size());        
+        AssertJUnit.assertEquals(3, find.size());        
     }
     
     @Test
@@ -608,11 +629,10 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
     @Test
     public void testStartsLike() throws Exception {
-	initPersistenceStuff();
 	employeeDao.flushAndClear();
         List<Employee> list = employeeDao.find(
         		Comparison.startsLike("firstName", "Ri")        );
-        AssertJUnit.assertEquals(5, list.size());
+        AssertJUnit.assertEquals(6, list.size());
         list = employeeDao.find(
         		Comparison.startsLike("firstName", "C")        );
         AssertJUnit.assertEquals(2, list.size());
@@ -621,10 +641,22 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 	for(Employee emp : list) {
 	    System.err.println("id = " + emp.getId());
         }
-        AssertJUnit.assertEquals(4, list.size());
+        AssertJUnit.assertEquals(3, list.size());
         list = employeeDao.find(
         		Comparison.startsLike("firstName", "FizBot")        );
         AssertJUnit.assertEquals(0, list.size());
+    }
+    
+    @SuppressWarnings("static-access")
+	@Test
+    public void testJoinEntity() {
+//    	employeeDao.find(join(entityJoin("Person", "p")), 
+//    			Comparison.eq("firstName", "Rick").eq("ssn", "333333311"));
+
+    	personDao.find(join(entityJoin("Employee", "e")), 
+    			Comparison.eq("e.firstName", true, "Rick"), 
+    			Comparison.eq("ssn", "333333311"),
+    			Comparison.objectEq("o","e"));
     }
 
     public void setEmployeeDao(final GenericDao<Employee, Long> baseJpaDao) {
@@ -635,6 +667,10 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		this.departmentDao = departmentDao;
 	}
 
+	public void setPersonDao(GenericDao<Person, Long> personDao) {
+		this.personDao = personDao;
+	}
+	
 	public void setTransactionManager(PlatformTransactionManager transactionManager) {
 		this.transactionManager = transactionManager;
 	}

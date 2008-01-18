@@ -8,6 +8,7 @@ public class Comparison extends Criterion {
 	private Object value;
 	private boolean alias = false;
     private boolean enabled = false;
+    private boolean objectIdentity;
 
 	
 	public static Comparison between (final String name, final Object value1, final Object value2 ) {
@@ -154,5 +155,19 @@ public class Comparison extends Criterion {
     public void disable() {
         this.enabled = false;
     }
+	public static Criterion objectEq(String o1, String o2) {
+		Comparison comp =  new Comparison();
+		comp.setEnabled(true);
+		comp.setName(o1);
+		comp.setValue(o2);
+		comp.setObjectIdentity(true);
+		return comp;
+	}
+	public boolean isObjectIdentity() {
+		return objectIdentity;
+	}
+	public void setObjectIdentity(boolean objectIdentity) {
+		this.objectIdentity = objectIdentity;
+	}
     
 }

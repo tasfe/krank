@@ -27,6 +27,15 @@
 		</property>
 	</bean>
 
+	<bean id="personDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.GenericDao</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.Person</value>
+		</property>
+	</bean>
+
     <bean id="departmentDao" parent="daoFactory">
 		<property name="interface">
 			<value>org.crank.crud.test.dao.DepartmentDAO</value>

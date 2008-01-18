@@ -5,6 +5,9 @@ public class Join {
 	public Join () {
 	}
 
+	public static EntityJoin entityJoin(String entityName, String alias) {
+		return new EntityJoin(entityName, alias);
+	}
 	public static Join join (String property) {
 		return new SimpleRelationshipJoin(JoinType.RIGHT, property);
 	}
@@ -53,6 +56,10 @@ public class Join {
 	public static Join[] join (Join... fetchList) {
 		return fetchList;
 	}
+	public static Join[] joinList (Join... joinList) {
+		return joinList;
+	}
+	
 	public static Join[] fetch (Join... fetchList) {
 		return fetchList;
 	}	

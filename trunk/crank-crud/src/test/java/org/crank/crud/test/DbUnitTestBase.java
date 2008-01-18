@@ -33,6 +33,7 @@ public abstract class DbUnitTestBase extends SpringTestNGBase {
     protected EntityManagerFactory entityManagerFactory;
     private IDatabaseTester databaseTester;
     protected final Logger log = Logger.getLogger(this.getClass());
+    protected boolean ignoreInitPersist = true;
 
     private IDataSet loadDataSet(IDatabaseConnection connection)
             throws Exception {
@@ -97,7 +98,7 @@ public abstract class DbUnitTestBase extends SpringTestNGBase {
         return conn;
     }
 
-    @BeforeClass
+    @BeforeClass (groups="initPersist", dependsOnGroups={"class-init"})
     protected void initPersistenceStuff() throws Exception {
         EntityManager em = null;
         try {
@@ -119,7 +120,9 @@ public abstract class DbUnitTestBase extends SpringTestNGBase {
             databaseTester.onSetup();
         } catch (Exception ex) {
             log.debug("Exception in initializing database", ex);
-            throw ex;
+            if (!this.ignoreInitPersist) {
+                throw ex;            	
+            }
         } finally {
             if (em != null) {
                 em.close();

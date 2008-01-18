@@ -6,17 +6,14 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
 
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
 
+@SuppressWarnings("serial")
 @Entity(name="Employee")
 @NamedQueries( {
 	@NamedQuery(name="Employee.findEmployeesByDepartment",
@@ -33,8 +30,56 @@ import org.hibernate.annotations.LazyToOneOption;
 	)
 	
 })
-public class Employee {
+@PrimaryKeyJoinColumn(name="PERSON_ID")
+public class Employee extends Person {
 
+	private String firstName;
+	
+	private String lastName;
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	
+    public Employee(String firstName, String lastName) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+    
+    public Employee(String firstName, String lastName, 
+    		Department department, boolean active, int age, int numPromos, String ssn) {
+    	this(firstName, lastName);
+    	this.department = department;
+    	this.active = active;
+    	this.age = age;
+    	this.numberOfPromotions = numPromos;
+    	super.setSsn(ssn);
+    }
+
+	@Column (length=81)
+    private String description;
+	
+    private boolean active;
+	
+	private int age;
+
+
+	public Employee() {
+        
+    }
+    
 	@OneToMany
 	private List<Task> tasks = new ArrayList<Task>();
     public List<Task> getTasks() {
@@ -45,29 +90,8 @@ public class Employee {
 		this.tasks = tasks;
 	}
 
-	public Employee() {
-        
-    }
     
-    public Employee(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
 
-    @Id
-    @GeneratedValue( strategy = GenerationType.AUTO )	
-	private Long id;
-
-	private String firstName;
-	
-	private String lastName;
-    
-    @Column (length=81)
-    private String description;
-	
-    private boolean active;
-	
-	private int age;
 	
     @Column (nullable=false)
     private Integer numberOfPromotions = 0;
@@ -88,21 +112,7 @@ public class Employee {
 	private Department clientDepartment;
 	
     
-	public Long getId() {
-		return id;
-	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
 
 	public Department getDepartment() {
 		return department;
@@ -136,13 +146,6 @@ public class Employee {
 		this.numberOfPromotions = numberOfPromotions;
 	}
 
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
 
 	public EmployeeStatus getStatus() {
 		return status;

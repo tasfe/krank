@@ -196,10 +196,6 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 	@Test
 	public void testFindRelatedField2() {
 		EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
-//		SimpleRelationshipJoin srj = new SimpleRelationshipJoin();
-//		srj.setAlias("foo");
-//		srj.setAliasedRelationship(true);
-//		srj.setRelationshipProperty("o.department");
 		List<Employee> employees = employeeDAO.find(join(join("o.department", true, "foo")), Comparison.eq("foo.name", true, "Engineering"));
 		AssertJUnit.assertTrue(employees.size() > 0);
 	}

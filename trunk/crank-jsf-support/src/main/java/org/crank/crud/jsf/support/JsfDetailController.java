@@ -29,6 +29,7 @@ import org.crank.crud.controller.Selectable;
 public class JsfDetailController<T extends Serializable, PK extends Serializable> extends DetailController<T, PK> implements Selectable, EntityLocator<T> {
 	
 	protected boolean allowsSelection=false;
+	protected boolean magicMaps=true;
     protected DataModel model = new ListDataModel();
     protected SelectSupport selectSupport = new SelectSupport();
 
@@ -81,7 +82,7 @@ public class JsfDetailController<T extends Serializable, PK extends Serializable
             if (orderByComparator != null) {
             	Collections.sort(al, orderByComparator);
             }
-            if (allowsSelection) {
+            if (allowsSelection || magicMaps) {
             	al = wrapListElementsInRowObjects(al);
             }
             
@@ -180,6 +181,10 @@ public class JsfDetailController<T extends Serializable, PK extends Serializable
             }
         }
         return selectedList;
+	}
+
+	public void setMagicMaps(boolean magicMaps) {
+		this.magicMaps = magicMaps;
 	}
 
 

@@ -30,6 +30,7 @@ import org.crank.crud.criteria.Operator;
 import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.criteria.OrderDirection;
 import org.crank.crud.criteria.VerifiedBetween;
+import org.crank.crud.join.EntityJoin;
 import org.crank.crud.join.Join;
 import org.crank.crud.join.JoinType;
 import org.crank.crud.join.RelationshipFetch;
@@ -458,6 +459,18 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		sbquery.append(" FROM ");
 		sbquery.append(getEntityName(type));
 		sbquery.append(" o ");
+		if (joins == null || joins.length == 0) {
+			return sbquery.toString();
+		}
+		for (Join join : joins){
+			if (join instanceof EntityJoin) {
+				EntityJoin ej = (EntityJoin) join;
+				sbquery.append(" , ");
+				sbquery.append(ej.getName());
+				sbquery.append(" ");
+				sbquery.append(ej.getAlias());
+			}
+		}
 		return sbquery.toString();
 	}
 
@@ -662,6 +675,11 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 				addGroupParams(query, (Group) criterion, names);
 			} else {
 				Comparison comparison = (Comparison) criterion;
+				
+				if (comparison.isObjectIdentity()) {
+					continue;
+				}
+				
 				String name = ditchDot(comparison.getName());
 
 				name = ensureUnique(names, name);
@@ -799,6 +817,13 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		String var = ":" + ditchDot(comparison.getName());
 		var = ensureUnique(names, var);
 
+		if (comparison.isObjectIdentity()) {
+			builder.append(comparison.getName());
+			builder.append("=");
+			builder.append(comparison.getValue());
+			return;
+		}
+		
 		if (comparison.getValue() != null) {
 			final String sOperator = comparison.getOperator().getOperator();
 

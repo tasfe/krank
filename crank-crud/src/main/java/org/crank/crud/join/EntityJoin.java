@@ -1,6 +1,7 @@
 package org.crank.crud.join;
 
-public class EntityJoin {
+public class EntityJoin extends Join{
+	public EntityJoin() {}
 	
 	private String name;
 	private String alias;
@@ -14,6 +15,11 @@ public class EntityJoin {
 		return alias;
 	}
 	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+	public EntityJoin(String name, String alias) {
+		super();
+		this.name = name;
 		this.alias = alias;
 	}
 }

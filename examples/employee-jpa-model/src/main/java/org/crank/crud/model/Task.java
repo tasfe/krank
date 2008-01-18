@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Task implements Serializable {
@@ -18,6 +20,10 @@ public class Task implements Serializable {
     private String name;
     private String description;
     private boolean complete;
+    
+    @ManyToOne
+    @JoinColumn(name="CAT_ID")
+    private Category category;
 
     public boolean isComplete() {
         return complete;
@@ -66,4 +72,12 @@ public class Task implements Serializable {
     public void setStartDate( Date startDate ) {
         this.startDate = startDate;
     }
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
 }

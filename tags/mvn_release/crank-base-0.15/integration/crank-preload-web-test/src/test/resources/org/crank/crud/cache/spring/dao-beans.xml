@@ -1,0 +1,55 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+
+    <bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <constructor-arg index="0" ref="transactionManager" />
+        <constructor-arg index="1">
+            <bean class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource"></bean>
+        </constructor-arg>
+    </bean>
+
+	<bean id="daoFactory"
+		class="org.crank.crud.GenericDaoFactory"
+		abstract="true">
+		<constructor-arg ref="transactionInterceptor"></constructor-arg>
+		<property name="entityManagerFactory"
+			ref="entityManagerFactory" />
+	</bean>
+	 	      
+    <bean id="preloadingEmployeeDao" parent="daoFactory" lazy-init="true">
+        <property name="interface">
+            <value>org.crank.crud.test.dao.EmployeeDAO</value>
+        </property>
+        <property name="bo">
+            <value>org.crank.crud.test.model.Employee</value>
+        </property>
+        <property name="preloadConfiguration">
+            <bean class="org.crank.crud.cache.PreloadConfiguration">
+                <property name="preloadingRecordCount" value="10" />
+                <property name="childrenToInitialize">
+                    <list>
+                        <value>getDepartment</value>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+              
+    <bean id="preloadingWithHQLEmployeeDao" parent="daoFactory" lazy-init="true">
+        <property name="interface">
+            <value>org.crank.crud.test.dao.EmployeeDAO</value>
+        </property>
+        <property name="bo">
+            <value>org.crank.crud.test.model.Employee</value>
+        </property>
+        <property name="preloadConfiguration">
+            <bean class="org.crank.crud.cache.PreloadConfiguration">
+                <property name="preloadingHQL" value="select employee from Employee employee join fetch employee.department" />
+            </bean>
+        </property>
+    </bean>
+
+</beans>

@@ -86,4 +86,77 @@ class DataBaseMetaDataReader {
 }
 }}}
 
-I figured there was a way to use closures with ResultSet but could not find it.
+=== Creating another closure for iteration and using Groovy-style constructors ===
+
+
+I figured there was a built-in way to use closures with ResultSet but could not find it. If someone can point to a more groovy way to get database metadata, let me know.
+
+I took another swipe at it to add my own groovyness as follows:
+
+{{{
+package com.arcmind.codegen
+import java.sql.*;
+
+class JdbcUtils {
+    String url
+    String driver
+    String userName
+    String password
+
+    def execute(callme) {
+        Class.forName(driver);
+        Connection connection = DriverManager.getConnection(url,userName,password);
+        try {
+            callme(connection)
+        }  finally {
+            connection.close()
+        }
+        
+    }
+
+    def iterate(ResultSet resultSet, callme) {
+        try {
+            while (resultSet.next()) {
+                callme(resultSet)
+            }
+        } finally {
+            resultSet.close()
+        }
+
+    }
+}
+
+}}}
+
+Notice I added the iterate method that takes a closure. Now we use the closure and tried to make the code more groovy by using the property setters in the constructor call.
+
+{{{
+package com.arcmind.codegen
+import java.sql.*;
+
+class DataBaseMetaDataReader {
+    List <Table> tables = []
+    static main (args) {
+        DataBaseMetaDataReader reader = new DataBaseMetaDataReader()
+        JdbcUtils jdbcUtils = new JdbcUtils(url:"jdbc:mysql://localhost:3306/crank_crud?autoReconnect=true",
+                userName:"crank", password:"crank", driver:"com.mysql.jdbc.Driver");
+
+        jdbcUtils.execute ({ Connection connection ->
+               jdbcUtils.iterate(connection.metaData.getTables (null, null, null, null),
+                       { ResultSet resultSet ->
+                         Table table = new Table()
+                         table.name = resultSet.getString ("TABLE_NAME")
+                         reader.tables << table
+                       }
+               )
+        });
+
+        reader.tables.each {Table table ->
+            println table.name
+        }
+
+    }
+}
+}}}
+
+So far I am not sure that Groovy has helped me much yet. I could have done the above in Java but faster. Mainly because I don't know Groovy yet. The code is much shorter. Later I need to use the Groovy CLI and Groovy templates. I thinnk Groovy will be a good fit for code generation for Crank. I will try to write my experiences as I go.

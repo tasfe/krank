@@ -38,7 +38,7 @@ public class JsfSelectOneListingController<T extends Serializable, PK extends Se
 	private String idProperty="id";
 	private String labelProperty="name";
 	private String sourcePropertyName = null;
-	private SelectSupport selectSupport = new SelectSupport();
+	private SelectSupport selectSupport = new SelectSupport(this);
 	private CrudControllerBase<T, PK> controller;	
     
 //	{

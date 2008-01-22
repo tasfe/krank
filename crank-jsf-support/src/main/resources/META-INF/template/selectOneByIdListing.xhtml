@@ -153,18 +153,7 @@
 				<f:facet name="header">
 					<rich:columnGroup>
 						<h:column>
-							<crank:commandLink id="selectAll${id}"
-											   onclick="toggleAllCheckBoxes('${parentForm}',true);"
-							                   toolTipText="Click to select all rows">
-							                   
-								<h:graphicImage id="selectAll${id}Img" value="${selectAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
-							</crank:commandLink>
-							<crank:commandLink id="selectNone${id}"
-							                   onclick="toggleAllCheckBoxes('${parentForm}',false);"
-							                   toolTipText="Click to un-select all rows">
-								<h:graphicImage id="selectNone${id}Img" value="${selectNoneImg}" border="0" styleClass="${listingImageButtonClass}"/>
-							</crank:commandLink>
-							
+							<h:outputText value="" />
 						</h:column>
 						<c:forEach items="${pNames}" var="property">
 							<crank:header fieldName="${property}" paginator="${paginator}"

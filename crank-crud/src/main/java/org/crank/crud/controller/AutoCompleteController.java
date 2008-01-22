@@ -1,31 +1,30 @@
 package org.crank.crud.controller;
 
+import static org.crank.crud.criteria.Comparison.eq;
+import static org.crank.crud.criteria.Comparison.startsLike;
+
 import java.io.Serializable;
 import java.util.List;
 
-import org.crank.crud.controller.CrudControllerListener;
-import org.crank.crud.controller.CrudEvent;
 import org.crank.crud.controller.datasource.FilteringDataSource;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.criteria.OrderDirection;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
-import static org.crank.crud.criteria.Comparison.startsLike;
-import static org.crank.crud.criteria.Comparison.eq;
 
-public class AutoCompleteController <T extends Serializable, PK extends Serializable>  implements Selectable {
+public class AutoCompleteController <S extends Serializable, T extends Serializable>  implements Selectable {
 
     private String propertyName;
     private String fieldName;
     private String value;
-    private FilteringDataSource dataSource;
-    private CrudControllerBase<T, PK> controller; 
-    private SelectSupport selectable = new SelectSupport();
+    private FilteringDataSource<S> dataSource;
+    private CrudOperations<T> controller; 
+    private SelectSupport selectable = new SelectSupport(this);
     private Group group = new Group();
 
 
-	public void setDataSource( FilteringDataSource dataSource ) {
+	public void setDataSource( FilteringDataSource<S> dataSource ) {
         this.dataSource = dataSource;
     }
     
@@ -43,60 +42,33 @@ public class AutoCompleteController <T extends Serializable, PK extends Serializ
 		
 	}
 	
-    public AutoCompleteController(Class sourceClass, String sourceProperty,  
-    		FilteringDataSource dataSource, CrudOperations targetCrudController, 
-    		String targetProperty) {
-    	this.controller = (CrudControllerBase<T, PK>) targetCrudController;
+    public AutoCompleteController(String sourceProperty,  
+    		FilteringDataSource<S> dataSource, String targetProperty,
+    		CrudOperations<T> targetCrudController
+    	) {
+    	this.controller = targetCrudController;
         this.dataSource = dataSource;
         this.propertyName = sourceProperty;
         this.fieldName = targetProperty;
     	
         if (controller!=null) {
-			controller.addCrudControllerListener(new CrudControllerListener() {
-	
-				public void afterCancel(CrudEvent event) {
-				}
-	
+			controller.addCrudControllerListener(new CrudControllerListenerAdapter() {
 				public void afterCreate(CrudEvent event) {
 					handleReadEvent(event);
-				}
-	
-				public void afterDelete(CrudEvent event) {
 				}
 	
 				public void afterLoadCreate(CrudEvent event) {
 	                setValue(null);
 				}
 	
-				public void afterLoadListing(CrudEvent event) {
-				}
-	
 				public void afterRead(CrudEvent event) {
 					handleReadEvent(event);
-				}
-	
-				public void afterUpdate(CrudEvent event) {
-				}
-	
-				public void beforeCancel(CrudEvent event) {
 				}
 	
 				public void beforeCreate(CrudEvent event) {
 					handleCreateUpdate(event);
 				}
-	
-				public void beforeDelete(CrudEvent event) {
-				}
-	
-				public void beforeLoadCreate(CrudEvent event) {
-				}
-	
-				public void beforeLoadListing(CrudEvent event) {
-				}
-	
-				public void beforeRead(CrudEvent event) {
-				}
-	
+
 				public void beforeUpdate(CrudEvent event) {
 					handleCreateUpdate(event);
 				}}
@@ -105,7 +77,7 @@ public class AutoCompleteController <T extends Serializable, PK extends Serializ
    	
     }
     
-    public List autocomplete(Object suggest) {
+    public List<S> autocomplete(Object suggest) {
 
         String pref = (String)suggest;
         
@@ -192,7 +164,7 @@ public class AutoCompleteController <T extends Serializable, PK extends Serializ
 	 * @param pref
 	 * @return
 	 */
-	private List getList(String pref) {
+	private List<S> getList(String pref) {
 		OrderBy orderBy = new OrderBy(propertyName, OrderDirection.ASC);
 		System.out.printf("In getList(String pref) pref: %s, Group: %s\n",pref,group.toString() );
         /* Clear the comparison group b/c we are about to recreate it */
@@ -216,7 +188,7 @@ public class AutoCompleteController <T extends Serializable, PK extends Serializ
 	 * @param pref
 	 * @return
 	 */
-	private List getListExact(String pref) {
+	private List<S> getListExact(String pref) {
 		OrderBy orderBy = new OrderBy(propertyName, OrderDirection.ASC);
 		
         /* Clear the comparison group b/c we are about to recreate it */
@@ -241,7 +213,7 @@ public class AutoCompleteController <T extends Serializable, PK extends Serializ
 		
 	}
 
-	public FilteringDataSource getDataSource() {
+	public FilteringDataSource<S> getDataSource() {
 		return dataSource;
 	}
 

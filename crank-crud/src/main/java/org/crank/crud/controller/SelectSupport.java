@@ -4,7 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SelectSupport implements Selectable {
+	private Object source=this;
     private List<SelectListener> list = new ArrayList<SelectListener>();
+    
+    public SelectSupport() {
+    	
+    }
+    
+    public SelectSupport(Object source) {
+    	this.source = source;
+    }
+    
 	/**
      * @see Selectable#addSelectListener(SelectListener)
      */
@@ -30,7 +40,7 @@ public class SelectSupport implements Selectable {
      *
      */
     public void fireSelect(Object value) {
-    	SelectEvent se = new SelectEvent(this, value);
+    	SelectEvent se = new SelectEvent(source, value);
         for (SelectListener sl : list) {
             sl.select( se );
         }
@@ -48,10 +58,16 @@ public class SelectSupport implements Selectable {
      *
      */
     public void fireUnselect(Object value) {
-    	SelectEvent se = new SelectEvent(this, value);
+    	SelectEvent se = new SelectEvent(source, value);
         for (SelectListener sl : list) {
             sl.unselect(se);
         }
     }
+	public Object getSource() {
+		return source;
+	}
+	public void setSource(Object source) {
+		this.source = source;
+	}
 
 }

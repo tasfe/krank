@@ -1,0 +1,89 @@
+#summary Groovy
+
+= Introduction =
+
+Random thoughts about using Groovy to write a code generator for Crank.
+
+= Details =
+
+I am new to Groovy. I a have been putting it off for two things: good IDE support, and support for Java 5 features like Generics and Enums. Well JetBrains has a great plugin for Groovy and Groovy 1.5 has the Java 5 features so here I am. 
+
+The IDEA plugin for Groovy is excellent. It provides code completion in areas that I would think were not possible. (The last time I tried the Groovy Eclipse plugin, I was majorly dissappointed, and after my recent "Thanks Zed" blog, I learned that IDEA had a great groovy plugin.)
+
+I have played around with Groovy before but still consider myself a complete novice. Here is what I have come up with so far (by just fooling around):
+
+{{{
+package com.arcmind.codegen
+
+class Table {
+    String name    
+
+}
+}}}
+
+The above defines a Java class called Table with a name property with a getter and setter.
+
+Here is a little JDBC utility class that uses a closure:
+
+{{{
+package com.arcmind.codegen
+import java.sql.*;
+
+class JdbcUtils {
+    String url
+    String driver
+    String userName
+    String password
+
+    def execute(callme) {
+        Class.forName(driver);
+        Connection connection = DriverManager.getConnection(url,userName,password);
+        try {
+            callme(connection);
+        }   catch (SQLException sqe) {
+            throw new RuntimeException(sqe);
+        } finally {
+            connection.close();
+        }
+        
+    }
+}
+
+}}}
+
+I thought about using Groovy's GSQL but did not know how to access the database metadata from GSQL.
+
+Now I use the two classes to read the metadata (table name at this point) as follows:
+
+{{{
+package com.arcmind.codegen
+import java.sql.*;
+
+class DataBaseMetaDataReader {
+    List <Table> tables = []
+    static main (args) {
+        DataBaseMetaDataReader reader = new DataBaseMetaDataReader()
+        JdbcUtils jdbcUtils = new JdbcUtils();
+        jdbcUtils.url = "jdbc:mysql://localhost:3306/crank_crud?autoReconnect=true"
+        jdbcUtils.userName = "crank"
+        jdbcUtils.password =  "crank"
+        jdbcUtils.driver = "com.mysql.jdbc.Driver"
+        
+        jdbcUtils.execute ({ Connection connection ->
+               def resultSet = connection.metaData.getTables (null, null, null, null)
+               while(resultSet.next()) {
+                   Table table = new Table()
+                   table.name = resultSet.getString ("TABLE_NAME")
+                   reader.tables << table
+               }
+        });
+
+        reader.tables.each {Table table ->
+            println table.name
+        }
+
+    }
+}
+}}}
+
+I figured there was a way to use closures with ResultSet but could not find it.

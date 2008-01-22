@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.crank.annotations.validation.Email;
 import org.crank.annotations.validation.LongRange;
@@ -63,6 +64,10 @@ public class Employee extends Person {
     private Date dob;
     @Embedded
     private Address address;
+    @OneToOne (cascade=CascadeType.ALL)
+    @JoinColumn( name = "PARKING_SPOT_ID" )
+    private ParkingSpot parkingSpot;
+    
     @OneToMany( cascade = CascadeType.ALL )
     private Set<Task> tasks = new HashSet<Task>();
     @OneToMany( cascade = CascadeType.ALL )
@@ -283,6 +288,17 @@ public class Employee extends Person {
 
 	public void setPrimarySkill(Skill primarySkill) {
 		this.primarySkill = primarySkill;
+	}
+
+	public ParkingSpot getParkingSpot() {
+		if (parkingSpot==null) {
+			parkingSpot = new ParkingSpot();
+		}
+		return parkingSpot;
+	}
+
+	public void setParkingSpot(ParkingSpot parkingSpot) {
+		this.parkingSpot = parkingSpot;
 	}
 
 }

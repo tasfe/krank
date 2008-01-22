@@ -8,7 +8,6 @@ public class SpringSupportTest {
 	@Test
 	public void testNameAwareInjectorBeanPostProcessor() {
 		NameAwareNameInjectorBeanPostProcessor nan = new NameAwareNameInjectorBeanPostProcessor();
-		final String[] nameHolder = new String[1];
 		NameAware testBean = new NameAware(){
 			private String name;
 		

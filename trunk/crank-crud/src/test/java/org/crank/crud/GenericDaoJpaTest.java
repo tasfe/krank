@@ -72,14 +72,14 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		employeeDao.delete(testEmployees);
 	}
 	
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testLazyEmployees() {
 		Employee emp = employeeDao.read(testEmployees.get(0).getId());
 		System.out.println(emp.getDepartmentId());
 		System.out.println(emp.getDepartment().getId());
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testLazy() {
 		List<Department> departments = departmentDao.find();
 		assert departments.size() > 0;
@@ -89,7 +89,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		assert employees.size() > 0;
 	}
 
-	@Test
+	@Test(groups="modifies", dependsOnGroups="reads")
 	public void testDeleteObject() throws Exception {
 		Employee employee = (Employee) employeeDao.find(
 				Comparison.eq("firstName", "Rick").eq("lastName", "Hightower")).get(0);
@@ -103,7 +103,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		employeeDao.flushAndClear();
 	}
 
-	@Test
+	@Test(groups="createsObjectInDB")
 	public void testFetchWithOrderBy() throws Exception {
 		Employee employee = new Employee();
 		employee.setFirstName("Rick");
@@ -118,7 +118,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		employeeDao.flushAndClear();
 	}
 
-	@Test
+	@Test (groups="reads" ,dependsOnGroups="createsObjectInDB")
 	public void testGetObject() {
 		Long id = testEmployees.get(0).getId();
 		Employee employee = employeeDao.read(id);
@@ -127,14 +127,14 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertEquals("Rick", employee.getFirstName());
 	}
 
-	@Test
+	@Test (groups="reads" ,dependsOnGroups="createsObjectInDB")
 	public void testGetObjects() {
 		List<Employee> employees = employeeDao.find();
 		AssertJUnit.assertNotNull(employees);
 		AssertJUnit.assertTrue(employees.size()>=14);
 	}
 
-	@Test
+	@Test (groups="modifies", dependsOnGroups="reads")
 	public void testGetUpdateObjects() throws Exception {
 		List<Employee> employees = employeeDao.find();
 		AssertJUnit.assertNotNull(employees);
@@ -160,7 +160,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 				
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testParameterQuery() {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("firstName", "Rick");
@@ -169,14 +169,14 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertTrue(employees.size() > 0);
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testSingleParameterQuery() {
 		List<Employee> employees = employeeDao.find("firstName", "Rick");
 		AssertJUnit.assertNotNull(employees);
 		AssertJUnit.assertTrue(employees.size() > 0);
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testFinderSupport() {
 		EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
 		List<Employee> employees = employeeDAO
@@ -185,7 +185,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testFindRelatedField() {
 		EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
 		List<Employee> employees = employeeDAO.find("department.name",
@@ -193,26 +193,26 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertTrue(employees.size() > 0);
 	}
 	
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testFindRelatedField2() {
 		EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
 		List<Employee> employees = employeeDAO.find(join(join("o.department", true, "foo")), Comparison.eq("foo.name", true, "Engineering"));
 		AssertJUnit.assertTrue(employees.size() > 0);
 	}
 	
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testFetch2() {
 		List<Employee> result = employeeDao.find(join(joinFetch("o.department", true, "foo")),Comparison.eq("foo.name", true, "Engineering"));
 		AssertJUnit.assertTrue(result.size() > 0);
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testFetch3() {
 		List<Employee> result = employeeDao.find(join(joinFetch("department")),Comparison.eq("department.name", true, "Engineering"));
 		AssertJUnit.assertTrue(result.size() > 0);
 	}
 	
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testFindRelatedFieldWithUnderBar() {
 		EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
 		List<Employee> employees = employeeDAO.find("department_name",
@@ -220,7 +220,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertTrue(employees.size() > 0);
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testFindRelatedFieldWithSearchOrdered() {
 		EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
 		List<Employee> employees = employeeDAO.searchOrdered(eq(
@@ -228,7 +228,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertTrue(employees.size() > 0);
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testFindRelatedFieldWithSearchOrderedWithUnderBar() {
 		EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
 		List<Employee> employees = employeeDAO.searchOrdered(eq(
@@ -285,7 +285,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testFindByCriteria() {
 
 		List<Employee> employees = employeeDao.find(eq("department.name",
@@ -315,7 +315,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertTrue(employees.size() > 0);
 	}
 
-    @Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
     public void testFindByCriteriaIn() {
 
         List<Employee> employees = employeeDao.find(in("age", 1, 2, 3, 4, 5, 6));
@@ -326,14 +326,14 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
     }
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testBetween() {
 
 		List<Employee> employees = employeeDao.find(between("age", 1, 100));
 		AssertJUnit.assertTrue(employees.size() > 0);
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testQBE() {
 
 		Employee employee = new Employee();
@@ -364,7 +364,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testQueryBuildingNullParameter() {
 		GenericDaoJpa<Employee, Long> localDao = new GenericDaoJpa<Employee, Long>();
 
@@ -373,7 +373,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertEquals(" WHERE  o.gimp is null ", gimp);
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testNullParameterQueryExecution() {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("lastName", null);
@@ -381,7 +381,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertEquals(10, result.size());
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testFetch() {
 		List<Employee> result = employeeDao.find(join(joinFetch("department")),
 				orderBy("firstName"), and());
@@ -392,7 +392,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testFetchWithCriteria() {
 		List<Employee> result = employeeDao.find(join(joinFetch("department",
 				"dpt")), orderBy("firstName"), and(eq("dpt.name", true,
@@ -400,7 +400,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertEquals(3, result.size());
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testReadFully() {
 		
 		Employee employee = employeeDao.readPopulated(testEmployees.get(0).getId());
@@ -410,7 +410,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertNotNull(dept);
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testPaginate() {
 		int startPosition = 1;
 		int maxResults = 2;
@@ -420,7 +420,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testOrderBy() {
 		List<Employee> employees = employeeDao.find(orderBy(asc("firstName")));
 		AssertJUnit.assertNotNull(employees);
@@ -431,7 +431,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertEquals("Vanilla", employees.get(0).getFirstName());
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testIn() {
 		List<Long> ids = new ArrayList<Long>();
 		ids.add(testEmployees.get(0).getId());
@@ -442,18 +442,18 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testEagerNplusOne() {
 		List<Department> depts = departmentDao.find(leftJoinFetch("employees"));
 		AssertJUnit.assertNotNull(depts);
 	}
 
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testEmployees() {
 		employeeDao.find();
 	}
 	
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
 	public void testReadExclusive() {
 		
 		TransactionTemplate transactionTemplate = 
@@ -470,7 +470,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
 	}
 
-    @Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
     public void testEntityEquals () {
         Department department = departmentDao.update(new Department("r&d"));
         department = departmentDao.read(department.getId());
@@ -483,7 +483,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         AssertJUnit.assertEquals("Rick", firstname);
     }
 
-    @Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
     public void testSameVarTwice () {
         List<Employee> find = employeeDao.find(
                 or(Comparison.eq("firstName", "Rick"),
@@ -493,7 +493,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         AssertJUnit.assertEquals(3, find.size());        
     }
     
-    @Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
     public void testPersistMultiple() {
         List<Employee> employees =Arrays.asList(
         		new Employee[] { 
@@ -509,7 +509,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
         }
     }
     
-    @Test
+	@Test (groups="createsObjectInDB")
     public void testStoreMultiple() {
         employeeDao.flushAndClear();
     	TransactionTemplate xTemplate = new TransactionTemplate(transactionManager);
@@ -544,7 +544,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
     }    
 
-    @Test
+    @Test(groups="createsObjectInDB")
     public void testMergeMultiple() {
         List<Employee> employees =Arrays.asList(
         		new Employee[] { 
@@ -570,14 +570,14 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		
     }    
     
-    @Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
     public void testRefreshMultiple() {        
 		List<Employee> employees = employeeDao.find();
 		AssertJUnit.assertTrue(employees.size() > 0);
         employeeDao.refresh(employees);		
     } 
     
-    @Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
     public void testRefreshByFind() {        
 		List<Employee> employees = employeeDao.find();
 		AssertJUnit.assertTrue(employees.size() > 0);
@@ -592,7 +592,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		}
     }     
     
-    @Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
     public void testRefreshByMerge() {        
 		List<Employee> employees = employeeDao.find();
 		AssertJUnit.assertTrue(employees.size() > 0);
@@ -608,7 +608,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     }      
     
     
-    @Test
+	@Test(groups="modifies", dependsOnGroups="reads")
     public void testDeleteMultiple() {        
     	employeeDao.flushAndClear();
         List<Employee> employees =Arrays.asList(
@@ -623,7 +623,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     } 
     
 
-    @Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
     public void testStartsLike() throws Exception {
 	employeeDao.flushAndClear();
         List<Employee> list = employeeDao.find(
@@ -644,7 +644,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
     }
     
     @SuppressWarnings("static-access")
-	@Test
+	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
     public void testJoinEntity() {
 //    	employeeDao.find(join(entityJoin("Person", "p")), 
 //    			Comparison.eq("firstName", "Rick").eq("ssn", "333333311"));

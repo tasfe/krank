@@ -2,6 +2,6 @@ package org.crank.crud.controller.datasource;
 
 import java.util.List;
 
-public interface DataSource {
-    public List list();
+public interface DataSource<T> {
+    public List<T> list();
 }

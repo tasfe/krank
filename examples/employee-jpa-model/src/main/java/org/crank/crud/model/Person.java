@@ -9,6 +9,7 @@ import org.crank.annotations.validation.Length;
 import org.crank.annotations.validation.ProperNoun;
 import org.crank.annotations.validation.Required;
 
+@SuppressWarnings("serial")
 @MappedSuperclass
 public class Person implements Serializable {
     @Column( nullable = false, length = 32 )

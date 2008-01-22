@@ -14,6 +14,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 
+@SuppressWarnings("serial")
 @Entity
 @NamedQueries( {
     @NamedQuery( name = "Role.findInRoleIds", query = "SELECT o FROM Role o  WHERE  o.id in  ( ? )" ),

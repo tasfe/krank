@@ -1,9 +1,12 @@
 package org.crank.crud.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 
+@SuppressWarnings("serial")
 @Embeddable
-public class Country {
+public class Country implements Serializable{
 
 	private String name;
 	private int population;

@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 
+@SuppressWarnings("serial")
 @Entity
 public class Specialty implements Serializable {
     

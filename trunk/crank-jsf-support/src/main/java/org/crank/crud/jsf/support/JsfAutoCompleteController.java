@@ -34,8 +34,7 @@ public class JsfAutoCompleteController extends AutoCompleteController {
     public JsfAutoCompleteController(Class sourceClass, String sourceProperty,  
     		FilteringDataSource dataSource, CrudOperations targetCrudController, 
     		String targetProperty) {
-    	super(sourceClass, sourceProperty, dataSource,  targetCrudController, 
-        		targetProperty);
+    	super(sourceProperty, dataSource,  targetProperty, targetCrudController);
     }
 
 	/**

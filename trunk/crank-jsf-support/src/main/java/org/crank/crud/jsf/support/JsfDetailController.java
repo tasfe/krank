@@ -31,7 +31,7 @@ public class JsfDetailController<T extends Serializable, PK extends Serializable
 	protected boolean allowsSelection=false;
 	protected boolean magicMaps=true;
     protected DataModel model = new ListDataModel();
-    protected SelectSupport selectSupport = new SelectSupport();
+    protected SelectSupport selectSupport = new SelectSupport(this);
 
     protected Comparator orderByComparator;
     

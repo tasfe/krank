@@ -20,6 +20,12 @@ public class SayHelloController {
 		this.employeesController = employeesController;
 	}
 	
+	public void sayHello() {
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Hello Task " + 
+				FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id")
+		));
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void hello() {
 		List<Employee> list = employeesController.getSelectedEntities();

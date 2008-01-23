@@ -74,3 +74,5 @@ Good question. Until we hear back from the JSF heroes over at Facelets and Ajax4
 Then you will be able to pass each of these a body and it will get used where apropos. 
 
 If someone else has some other ideas for workaround or better yet a solution to our problem. Please let me know.
+
+For internal team members: We need this for FMT so it has to get done.

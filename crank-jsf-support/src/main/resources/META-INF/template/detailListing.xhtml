@@ -87,8 +87,8 @@
 		<c:set var="entityName" value="${detailController.relationshipManager.childCollectionProperty}" />
 		<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
 		<c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
-		<c:if test="${empty useBody}">
-			<c:set var="useBody" value="true" />
+		<c:if test="${empty useFormBody}">
+			<c:set var="useFormBody" value="true" />
 		</c:if>
 		
 		<c:if test="${debug}">
@@ -107,7 +107,7 @@
 				<tr><td>entityNameLabel</td>		<td>${entityNameLabel}</td></tr>
 				<tr><td>propertyNames</td>					<td>${propertyNames}</td></tr>
 				<tr><td>pNames</td>							<td>${pNames}</td></tr>
-				<tr><td>useBody</td>						<td>${useBody}</td></tr>
+				<tr><td>useFormBody</td>						<td>${useFormBody}</td></tr>
 				<tr><td>detailController</td>				<td>${detailController}</td></tr>
 				<tr><td>detailController.showDetails</td>	<td>${detailController.showDetails}</td></tr>
 				<tr><td>detailController.showForm</td>		<td>${detailController.showForm}</td></tr>
@@ -162,12 +162,9 @@
 									<c:set var="formPropertyNames" value=""/>
 									<c:set var="isSelectableColumnCopy" value="${isSelectableColumn}"/>
 									<c:set var="isSelectableColumn" value=""/>
-									<c:if test="${useBody}">
+									<c:if test="${useFormBody}">
 										<ui:insert/>
 									</c:if>
-									<c:if test="${not useBody}">
-										<ui:insert name="formBody"/>
-									</c:if>									
 									<c:set var="isSelectableColumn" value="${isSelectableColumnCopy}"/>
 								
 							</crank:form>
@@ -308,9 +305,8 @@
 										<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
 									</a4j:commandLink>
-									<!--   <ui:insert name="columnActions"/> -->
-									<c:if test="${columnActions}">
-										<ui:insert />
+									<c:if test="${not useFormBody}">
+										<ui:insert/>
 									</c:if>
 								</h:panelGroup>
 
@@ -330,7 +326,6 @@
 										<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
 									</h:commandLink>
-									<!--   <ui:insert name="columnActions"/> -->
 									<c:if test="${columnActions}">
 										<ui:insert />
 									</c:if>

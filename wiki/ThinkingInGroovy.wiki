@@ -160,3 +160,92 @@ class DataBaseMetaDataReader {
 }}}
 
 So far I am not sure that Groovy has helped me much yet. I could have done the above in Java but faster. Mainly because I don't know Groovy yet. The code is much shorter. Later I need to use the Groovy CLI and Groovy templates. I thinnk Groovy will be a good fit for code generation for Crank. I will try to write my experiences as I go.
+
+=== I spent about another 1/2 hour on my code generator ===
+
+I am working on this a bit at a time at night after I finish all my real tasks, chores and such. I just finished an article for IBM on JSF and posted another story on DZone.
+
+{{{
+package com.arcmind.codegen
+import java.sql.*;
+
+class DataBaseMetaDataReader {
+    List <Table> tables = []
+    String catalog
+    String schema
+    List <String> tableTypes = ["TABLE"]
+    JdbcUtils jdbcUtils
+
+    def processTables() {
+        jdbcUtils.execute ({ Connection connection ->
+               //jdbcUtils.iterate(connection.metaData.getTables (catalog, schema, null, tableTypes),
+               jdbcUtils.iterate(connection.metaData.getTables (null, null, null, null),
+                       { ResultSet resultSet ->
+                         Table table = new Table()
+                         table.name = resultSet.getString ("TABLE_NAME")
+                         tables << table
+                       }
+               )
+        });
+    }
+
+    def processColumns() {
+        tables.each {Table table ->
+            println table.name
+            jdbcUtils.execute ({ Connection connection ->
+                   //jdbcUtils.iterate(connection.metaData.getColumns(catalog, schema, table.name, null)
+                   jdbcUtils.iterate(connection.metaData.getColumns(null, null, table.name, null),
+                           { ResultSet resultSet ->
+                             Column column = new Column()
+                             column.name = resultSet.getString ("COLUMN_NAME")
+                             int type = resultSet.getInt ("DATA_TYPE")
+                             println "${column.name} ${type}"
+                             table.columns << column;
+                           }
+                   )
+            })
+        }
+    }
+    
+    static main (args) {
+
+        JdbcUtils jdbcUtils = new JdbcUtils(url:"jdbc:mysql://localhost:3306/crank_crud?autoReconnect=true",
+                userName:"crank", password:"crank", driver:"com.mysql.jdbc.Driver");
+        DataBaseMetaDataReader reader = new DataBaseMetaDataReader()
+        reader.jdbcUtils = jdbcUtils
+        reader.processTables()
+        reader.processColumns()
+    }
+}
+}}}
+
+{{{
+package com.arcmind.codegen
+
+class Table {
+    String name    
+    List <Column> columns = []
+}
+}}}
+
+{{{
+package com.arcmind.codegen;
+
+public enum ColumnType {
+    VARCHAR, INTEGER, LONG;
+}
+
+}}}
+
+Note that ColumnType is in Java not groovy when I tried to do an enum in Groovy, IDEA barfed.
+
+{{{
+package com.arcmind.codegen
+
+class Column {
+    String name
+    ColumnType type
+}
+}}}
+
+It still has a way to go. I want to try out the CLI and Groovy template soon. I still need to convert Table/Column to Class/Property. Now I go to bed.

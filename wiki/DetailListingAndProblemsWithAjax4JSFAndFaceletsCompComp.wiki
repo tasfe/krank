@@ -1,13 +1,31 @@
-#summary One-sentence summary of this page.
+#summary detailListing problems with Ajax4JSF and Facelets Composition components
 
-= Introduction =
+Facelets has composition components which are very similar to working with Facelets templates. You can for example pass a composition component ui:defines tag in its body as well at attributes. In the composition component you use named ui:inserts to pull the ui:defines into various parts of the body. The docs for this are a bit sketchy, but I did write a prototype and it worked.
 
-Add your content here.
+However when using named ui:inserts/ui:defines with Ajax4JSF the named ui:inserts don't seem to work. Tom has documented more about this here and here (TBD).
 
+For example here is how we would like to use detailListing composition component:
 
-= Details =
+{{{
+<crank:detailListing detailController="${taskDetailController}"
+					enableGroups="" 
+					formPropertyNames="name,category,startDate,endDate,complete"
+					propertyNames="name,category.name,startDate,endDate,complete"
+					useFormBody="${true}">
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+	<ui:define name="formBody">
+            <h:outputText value="Hello World!" />
+        </ui:define>
+
+	<ui:define name="columActions">
+ 	    <a4j:commandLink action="#{hello.sayHello}" value="hello" >
+											  
+                  <f:param name="id" value="${row.id}" />
+										  
+            </a4j:commandLink>
+        </ui:define>
+
+					
+</crank:detailListing>
+
+}}}

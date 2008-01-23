@@ -8,24 +8,25 @@ For example here is how we would like to use detailListing composition component
 
 {{{
 <crank:detailListing detailController="${taskDetailController}"
-					enableGroups="" 
-					formPropertyNames="name,category,startDate,endDate,complete"
-					propertyNames="name,category.name,startDate,endDate,complete"
-					useFormBody="${true}">
+
+                    propertyNames="name,startDate,endDate,complete">
 
 	<ui:define name="formBody">
+
             <h:outputText value="Hello World!" />
+
         </ui:define>
 
 	<ui:define name="columActions">
+
  	    <a4j:commandLink action="#{hello.sayHello}" value="hello" >
 											  
                   <f:param name="id" value="${row.id}" />
 										  
             </a4j:commandLink>
-        </ui:define>
 
-					
+        </ui:define>
+		
 </crank:detailListing>
 
 }}}

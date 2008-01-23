@@ -49,7 +49,10 @@
 			value="${rendered and ((crud.state=='ADD') or (crud.state == 'EDIT'))}" />
 	</c:if>
 
-
+	<c:if test="${not empty formFieldLabels}">
+		<c:set var="fieldLabels"
+			value="${fn:split(formFieldLabels, '[,]')}" />
+	</c:if>
 
 	<c:when test="${ajax}">
 		<c:set var="reRender" value="${reRender},buttons${id}" />
@@ -88,11 +91,22 @@
 			columnClasses="topLeft">
 			<c:if test="${not empty propertyNames}">
 				<c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
+				<c:set var="labelIndex" value="0"/>
 				<c:forEach items="${pNames}" var="property">
-					<crank:field entity="#{crud.entity}" crud="${crud}"
-						type="${crud.entityClass}" fieldName="${property}"
-						entityName="${entityName}"
-						disabled="${crud:isInCollection(property, readOnlyProperties)}" />
+					<c:if test="${not empty fieldLabels}">
+						<crank:field entity="#{crud.entity}" crud="${crud}"
+							type="${crud.entityClass}" fieldName="${property}"
+							entityName="${entityName}"
+							label="${fieldLabels[labelIndex]}"
+							disabled="${crud:isInCollection(property, readOnlyProperties)}" />
+							<c:set var="labelIndex" value="${labelIndex + 1}"/>			
+					</c:if>
+					<c:if test="${empty fieldLabels}">
+						<crank:field entity="#{crud.entity}" crud="${crud}"
+							type="${crud.entityClass}" fieldName="${property}"
+							entityName="${entityName}"
+							disabled="${crud:isInCollection(property, readOnlyProperties)}" />
+					</c:if>
 				</c:forEach>
 			</c:if>
 		</h:panelGrid>

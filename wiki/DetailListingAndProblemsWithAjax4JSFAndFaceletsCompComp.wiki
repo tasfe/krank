@@ -68,8 +68,8 @@ The hack works as long as you want a form body or column actions. What if you wa
 
 Good question. Until we hear back from the JSF heroes over at Facelets and Ajax4JSF we are going to create two tags as follows:
 
-<crank:detailForm />
-<crank:detailListing />
+ * <crank:detailForm />
+ * <crank:detailTable />
 
 Then you will be able to pass each of these a body and it will get used where apropos. 
 

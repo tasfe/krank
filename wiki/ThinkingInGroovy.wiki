@@ -249,3 +249,59 @@ class Column {
 }}}
 
 It still has a way to go. I want to try out the CLI and Groovy template soon. I still need to convert Table/Column to Class/Property. Now I go to bed.
+
+=== Another late night with my new toy ===
+Okay here is my first Groovy complaint. I have this class as follows:
+
+{{{
+...
+class DataBaseMetaDataReader {
+    List <Table> tables = []
+    String catalog
+    String schema
+    List <String> tableTypes = ["TABLE"]
+    JdbcUtils jdbcUtils
+
+    def processTables() {
+        jdbcUtils.execute ({ Connection connection ->
+               jdbcUtils.iterate(connection.metaData.getTables (catalog, schema, null, tableTypes.toArray(new String[tableTypes.size()])),
+                       { ResultSet resultSet ->
+                         Table table = new Table()
+                         table.name = resultSet.getString ("TABLE_NAME")
+                         tables << table
+                       }
+               )
+        });
+    }
+...
+}}}
+
+Focus on List `<String> tableTypes` and `tableTypes.toArray(new String[tableTypes.size()]))`. Now my assumption was that this would work
+
+{{{
+...
+class DataBaseMetaDataReader {
+    List <Table> tables = []
+    String catalog
+    String schema
+    List <String> tableTypes = ["TABLE"]
+    JdbcUtils jdbcUtils
+
+    def processTables() {
+        jdbcUtils.execute ({ Connection connection ->
+               jdbcUtils.iterate(connection.metaData.getTables (catalog, schema, null,  
+                       tableTypes,
+                       { ResultSet resultSet ->
+                         Table table = new Table()
+                         table.name = resultSet.getString ("TABLE_NAME")
+                         tables << table
+                       }
+               )
+        });
+    }
+...
+}}}
+
+Say what... Yes I expected Groovy would convert the `List` into a `String array` automatically. Why you say? Why would I expect such a thing? Well, because Jython (then called JPython) could do it 10 years ago. Just a thought.... Just trying to use some pent up Jython Foo on a Groovy project.
+
+This is not a complaint, but a feature request. Maybe it does not fit the language design but it seems like it should happen.

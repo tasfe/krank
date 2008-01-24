@@ -79,3 +79,14 @@ class Select {
    String name; //must be an alias entity join
 }
 }}}
+
+We need an extra property added to `FilterableProperty`
+
+{{{
+public class FilterableProperty implements Serializable, Toggleable {
+    public Comparison comparison;
+    public OrderByWithEvents orderBy;
+    private Class type;
+    private boolean useAlias; //new property
+...
+}}}

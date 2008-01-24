@@ -340,15 +340,27 @@
 					<h:graphicImage value="${pageLastImg}" border="0" styleClass="${paginatorImageButtonClass}"/>
 			</crank:commandLink>
 			<h:graphicImage value="${pageLastDisabledImg}" border="0" rendered="#{not paginator.moveToEndPageEnabled}" styleClass="${paginatorImageButtonClass}"/>
+
+			<c:if test="${ paginator.allowAllRows }">
+				<h:selectOneMenu value="#{paginator.itemsPerPage}" styleClass="dropdownSmall" title="Click to select the number of items per page">
+					<f:selectItem itemLabel="10 rows" itemValue="10"/>
+					<f:selectItem itemLabel="20 rows" itemValue="20"/>
+					<f:selectItem itemLabel="50 rows" itemValue="50"/>
+					<f:selectItem itemLabel="100 rows" itemValue="100"/>
+					<f:selectItem itemLabel="All rows" itemValue="${paginator.maxItemsPerPage}"/>
+					<a4j:support action="#{paginator.reset}" event="onchange" ajaxSingle="true" reRender="${refreshPaginator}" /> 
+				</h:selectOneMenu>
+			</c:if>
+			<c:if test="${ not paginator.allowAllRows }">
+				<h:selectOneMenu value="#{paginator.itemsPerPage}" styleClass="dropdownSmall" title="Click to select the number of items per page">
+					<f:selectItem itemLabel="10 rows" itemValue="10"/>
+					<f:selectItem itemLabel="20 rows" itemValue="20"/>
+					<f:selectItem itemLabel="50 rows" itemValue="50"/>
+					<f:selectItem itemLabel="100 rows" itemValue="100"/>
+					<a4j:support action="#{paginator.reset}" event="onchange" ajaxSingle="true" reRender="${refreshPaginator}" /> 
+				</h:selectOneMenu>
+			</c:if>
 			
-			<h:selectOneMenu value="#{paginator.itemsPerPage}" styleClass="dropdownSmall" title="Click to select the number of items per page">
-				<f:selectItem itemLabel="10 rows" itemValue="10"/>
-				<f:selectItem itemLabel="20 rows" itemValue="20"/>
-				<f:selectItem itemLabel="50 rows" itemValue="50"/>
-				<f:selectItem itemLabel="100 rows" itemValue="100"/>
-				<f:selectItem itemLabel="All rows" itemValue="100000"/>
-				<a4j:support action="#{paginator.reset}" event="onchange" ajaxSingle="true" reRender="${refreshPaginator}" /> 
-			</h:selectOneMenu>
 			<a4j:status startText="Paginating..." stopText="" for="paginatorRegion${id}"
 					startStyleClass="statusStartStyleClass" stopStyleClass="statusStopStyleClass" />	
 			

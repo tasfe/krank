@@ -39,3 +39,43 @@ One possible solution to the above is to rewrite the query as:
 There might be a better way. If there is, please share it.
 
 === Proposed update ===
+
+I added support for entity joins in the Crank Criteria DSL. The trick is to use those enity joins from the `FilterablePageable` controller.
+
+{{{
+public interface FilterablePageable extends Pageable {
+    Map<String, FilterableProperty> getFilterableProperties();
+    void filter();
+    void clearAll();
+    boolean isSorting();
+    boolean isFiltering();
+    void disableSorts();
+    void disableFilters();
+    Class getType();
+    void addCriterion(Criterion criterion);
+    List<Criterion> getCriteria();
+    void addFilteringListener(FilteringListener listener);
+    void removeFilteringListener(FilteringListener listener);
+    void addOrderBy(OrderBy orderBy);
+    /* List of Joins can be Fetch, Join or Entity Join. */
+    List<Join> getJoins();
+    void setJoins(List<Join> joins);
+
+    /* New Method */
+    void addSelect(Select select);
+
+
+    @Deprecated
+    List<Join> getFetches();
+    @Deprecated
+    void setFetches(List<Join> fetches);
+}
+}}}
+
+We need to add a class to represent the item we are selecting (pseudo code).
+{{{
+class Select {
+   boolean distinct;
+   String name; //must be an alias entity join
+}
+}}}

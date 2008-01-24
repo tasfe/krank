@@ -21,9 +21,20 @@ The question is while searching for `PetStoreLead`s how do you access properties
 This query drives JPA(Hibernate) wild and causes an error:
 
 {{{
-select lead from PetStoreLead lead where lead.inquiry.a
+SELECT lead FROM PetStoreLead lead WHERE lead.inquiry.a='a'
 }}}
 
 The error you get is that `lead.inquiry` does not have a property called `a`.
+The problem is that `Inquiry` does no have a property `a`, its subclass `PetStoreInquiry` does.
+
+One possible solution to the above is to rewrite the query as:
+
+{{{
+        SELECT lead 
+        FROM PetStoreLead lead, PetStoreInquiry inquiry 
+        WHERE inquiry.a='a' AND lead.inquiry=inquiry
+}}}
+
+There might be a better way. If there is, please share it.
 
 === Proposed update ===

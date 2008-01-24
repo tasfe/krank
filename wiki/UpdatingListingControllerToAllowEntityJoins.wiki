@@ -88,5 +88,5 @@ public class FilterableProperty implements Serializable, Toggleable {
     public OrderByWithEvents orderBy;
     private Class type;
     private boolean useAlias; //new property
-...
+...//setter / getter removed
 }}}

@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+
+<faces-config>
+
+	<validator>
+		<validator-id>JSFBridgeMetaDataDrivenValidator</validator-id>
+		<validator-class>
+			org.crank.web.validation.jsf.support.JSFBridgeMetaDataDrivenValidator
+		</validator-class>
+	</validator>
+
+	<component>
+		<component-type>
+			org.crank.ValidationScriptGenerator
+		</component-type>
+		<component-class>
+			org.crank.web.validation.jsf.support.ValidationScriptGeneratorComponent
+		</component-class>
+		<property>
+			<property-name>formClass</property-name>
+			<property-class>java.lang.Class</property-class>
+		</property>
+		<property>
+			<property-name>fieldName</property-name>
+			<property-class>java.lang.String</property-class>
+		</property>
+		<property>
+			<property-name>parentObject</property-name>
+			<property-class>java.lang.Object</property-class>
+		</property>
+
+	</component>
+
+	<lifecycle>
+		<phase-listener>
+			org.crank.web.validation.jsf.support.ValidatorResourceLoaderPhaseListener
+		</phase-listener>
+	</lifecycle>
+
+</faces-config>

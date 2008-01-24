@@ -149,3 +149,7 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
         return model;
     }
 }}}
+
+Then change `listing` composition component to use row.related.inquiry.brand.name.
+
+This is a rough list. I am sure there are 20 things I forgot.

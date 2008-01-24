@@ -10,5 +10,13 @@
 		<tag-name>selectOneByIdListing</tag-name>
 		<source>template/selectOneByIdListing.xhtml</source>
 	</tag>	
+	<tag>
+		<tag-name>detailForm</tag-name>
+		<source>template/detailForm.xhtml</source>
+	</tag>
+	<tag>
+		<tag-name>detailTable</tag-name>
+		<source>template/detailTable.xhtml</source>
+	</tag>
 		
 </facelet-taglib>

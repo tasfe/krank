@@ -122,3 +122,30 @@ Next we need to add a new method to `GenericDao` that finds more than one object
 }}}
 
 Notice this method uses the new `Select` class.
+
+The `FilterablePageable` needs a new property to tell whether we are using entity joins or not. We need a getPage that returns Object[] not the Entity (breaks generics a bit).
+
+We need to change JsfCrudAdapter to use the new data based on the new flag. It needs to populate the new data in the Row.
+
+{{{
+public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> implements EntityLocator<T>, Serializable {
+    ...
+    public DataModel getModel() {
+    	if (page == null) {
+    		page = paginator.getPage();
+    	}
+        //ADD TODO check for new entiy join mode and process as needed
+        //Add to Row map a 'related' virtual property
+        //Extract entity put as normal, add related objects in map
+        /* Note if you wire in events from paginators, you will only have to change this
+         * when there is a next page event.
+         */
+        List<Row> wrappedList = new ArrayList<Row>(page.size());
+        for (Object rowData : page) {
+            wrappedList.add(new Row(rowData));
+        }
+        model.setWrappedData( wrappedList );
+
+        return model;
+    }
+}}}

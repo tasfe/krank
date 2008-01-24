@@ -335,3 +335,30 @@ class DataBaseMetaDataReader {
 Nope. This works in Jython. Should it work in Groovy?
 
 I can't deal with {{{tableTypes.toArray(new String[tableTypes.size()])}}} in a scripting language. Yikes.
+
+Okay so I settled on this:
+
+{{{
+class DataBaseMetaDataReader {
+    List <Table> tables = []
+    String catalog
+    String schema
+    String[] tableTypes = ["TABLE"]
+    JdbcUtils jdbcUtils
+
+    def processTables() {
+
+        jdbcUtils.execute ({ Connection connection ->
+               jdbcUtils.iterate(connection.metaData.getTables (catalog, schema, null, tableTypes),
+                       { ResultSet resultSet ->
+                         Table table = new Table()
+                         table.name = resultSet.getString ("TABLE_NAME")
+                         tables << table
+                       }
+               )
+        });
+    }
+
+}}}
+
+I wanted the list to be mutable, but not that much. It is really only going to be ["TABLE"] or ["TABLE", "VIEW"].

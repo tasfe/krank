@@ -1,0 +1,6 @@
+#summary Updating Listing Controller to Allow Entity Joins
+
+= Problem =
+
+
+= Proposed update =

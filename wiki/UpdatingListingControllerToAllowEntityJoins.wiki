@@ -25,7 +25,7 @@ SELECT lead FROM PetStoreLead lead WHERE lead.inquiry.a='a'
 }}}
 
 The error you get is that `lead.inquiry` does not have a property called `a`.
-The problem is that `Inquiry` does no have a property `a`, its subclass `PetStoreInquiry` does.
+The problem is that `Inquiry` does no have a property `a`, its subclass `PetStoreInquiry` does. (We are using joined subclasses different mapping like class hierarchy in the same table seem to work.)
 
 One possible solution to the above is to rewrite the query as:
 

@@ -47,21 +47,21 @@
 					detailController="${directReportDetailController}" enableGroups=""
 					propertyNames="firstName,lastName,description,age,numberOfPromotions" />
 
-<crank:detailListing detailController="${taskDetailController}"
+<br />
+<h4>Add Tasks</h4>
+<crank:detailForm detailController="${taskDetailController}"
 	enableGroups="" 
 	formPropertyNames="name,category,startDate,endDate,complete"
-	propertyNames="name,category.name,startDate,endDate,complete"
-	useFormBody="${true}">
-
-		<h:outputText value="Hello World!" />
-				<!-- 
-						<a4j:commandLink
-							action="#{hello.sayHello}" value="hello" >
-							<f:param name="id" value="${row.id}" />
-						</a4j:commandLink>
-					-->
-	
-</crank:detailListing>
+	propertyNames="name,category.name,startDate,endDate,complete">
+	<h:outputText value="Add your tasks here and they show up in the listing below" />
+</crank:detailForm>
+<crank:detailTable detailController="${taskDetailController}"
+	propertyNames="name,category.name,startDate,endDate,complete">
+		<a4j:commandLink
+			action="#{hello.sayHello}" value="hello" >
+			<f:param name="id" value="${row.id}" />
+		</a4j:commandLink>
+</crank:detailTable>
 
 				<crank:detailListing detailController="${contactDetailController}"
 					enableGroups="" propertyNames="name,phone" />

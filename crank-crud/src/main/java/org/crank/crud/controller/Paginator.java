@@ -13,6 +13,7 @@ public class Paginator implements Pageable, Serializable {
     protected int itemsPerPage=10;
     protected int startItemIndexCurrentPage=0;
     protected int numberOfPages;
+    protected int maxItemsPerPage=500;
     protected PagingDataSource dataSource;
     protected int count;
     protected List<Integer> pageNumberList;
@@ -31,7 +32,15 @@ public class Paginator implements Pageable, Serializable {
         reset();
     }
     
-    public int getNumberOfPages() {
+    public int getMaxItemsPerPage() {
+		return maxItemsPerPage;
+	}
+
+	public void setMaxItemsPerPage(int maxItemsPerPage) {
+		this.maxItemsPerPage = maxItemsPerPage;
+	}
+
+	public int getNumberOfPages() {
         return numberOfPages;
     }
 
@@ -209,6 +218,16 @@ public class Paginator implements Pageable, Serializable {
 			}
 		}
 		return false;
+	}
+
+    /**
+     * Used to evaluate whether or not to display the All Rows option
+     */
+	public boolean isAllowAllRows() {
+		if ( dataSource.getCount() > maxItemsPerPage ) {
+			return false;
+		}
+		return true;
 	}
 
     /**

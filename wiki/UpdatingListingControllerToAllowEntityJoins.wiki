@@ -30,6 +30,7 @@ The problem is that `Inquiry` does no have a property `a`, its subclass `PetStor
 One possible solution to the above is to rewrite the query as:
 
 {{{
+
         SELECT lead 
         FROM PetStoreLead lead, PetStoreInquiry inquiry 
         WHERE inquiry.a='a' AND lead.inquiry=inquiry

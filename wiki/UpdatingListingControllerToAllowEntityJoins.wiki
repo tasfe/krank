@@ -1,6 +1,29 @@
 #summary Updating Listing Controller to Allow Entity Joins
 
-= Problem =
+=== Problem ===
 
+Let's say we have classes as follows:
 
-= Proposed update =
+{{{
+//inquiries
+class Inquiry
+class PetStoreInquiry extends Inquiry has property a
+class PetClinicInquiry extends Inquiry has property b
+
+//leads
+class Lead has an Inquiry (one to one)
+class PetStoreLead extends Lead
+class PetClinicLead extends Lead
+}}}
+
+The question is while searching for `PetStoreLead`s how do you access properties of the inquiry subclass?
+
+This query drives JPA(Hibernate) wild and causes an error:
+
+{{{
+select lead from PetStoreLead lead where lead.inquiry.a
+}}}
+
+The error you get is that `lead.inquiry` does not have a property called `a`.
+
+=== Proposed update ===

@@ -305,3 +305,33 @@ class DataBaseMetaDataReader {
 Say what... Yes I expected Groovy would convert the `List` into a `String array` automatically. Why you say? Why would I expect such a thing? Well, because Jython (then called JPython) could do it 10 years ago. Just a thought.... Just trying to use some pent up Jython Foo on a Groovy project.
 
 This is not a complaint, but a feature request. Maybe it does not fit the language design but it seems like it should happen.
+
+Then I figured maybe it is becuase I typed it to begin with so I tried this:
+
+{{{
+class DataBaseMetaDataReader {
+    List <Table> tables = []
+    String catalog
+    String schema
+    def tableTypes = ["TABLE"]
+    JdbcUtils jdbcUtils
+
+    def processTables() {
+
+        jdbcUtils.execute ({ Connection connection ->
+               //jdbcUtils.iterate(connection.metaData.getTables (catalog, schema, null, tableTypes.toArray(new String[tableTypes.size()])),
+               jdbcUtils.iterate(connection.metaData.getTables (catalog, schema, null, tableTypes),
+                       { ResultSet resultSet ->
+                         Table table = new Table()
+                         table.name = resultSet.getString ("TABLE_NAME")
+                         tables << table
+                       }
+               )
+        });
+    }
+
+}}}
+
+Nope. This works in Jython. Should it work in Groovy?
+
+I can't deal with {{{tableTypes.toArray(new String[tableTypes.size()])}}} in a scripting language. Yikes.

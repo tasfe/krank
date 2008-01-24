@@ -38,6 +38,8 @@ One possible solution to the above is to rewrite the query as:
 
 There might be a better way. If there is, please share it.
 
+We updated our Criteria API to support entity joins see: http://code.google.com/p/krank/wiki/CriteriaDSLUpdate
+
 === Proposed update ===
 
 I added support for entity joins in the Crank Criteria DSL. The trick is to use those enity joins from the `FilterablePageable` controller.

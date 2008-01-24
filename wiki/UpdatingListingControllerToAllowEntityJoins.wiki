@@ -90,3 +90,35 @@ public class FilterableProperty implements Serializable, Toggleable {
     private boolean useAlias; //new property
 ...//setter / getter removed
 }}}
+
+Next we need to update `FilteringPaginator` to use this new property from `FilterableProperty.useAlias`.
+
+{{{
+public class FilteringPaginator extends Paginator implements FilterablePageable, Serializable {
+
+
+	private List<OrderBy> prepareUserFiltersAndExtractOrderBysForFilter() {
+        /* Clear the comparison group b/c we are about to recreate it */
+        filterablePaginatableDataSource().group().clear();
+
+		/* OrderBy collection list. */
+        List<OrderBy> orderBys = new ArrayList<OrderBy>();
+        
+        /* Iterator through the filters. */
+        Collection<FilterableProperty> values = filterableProperties.values();
+        for (FilterableProperty fp : values) {
+}}}
+
+Next we need to add a new method to `GenericDao` that finds more than one object in the select.
+
+{{{
+	public List<Object[]> find(Select[] select, 
+                                   Join[] fetches, 
+                                   OrderBy[] orderBy, 
+                                   int startPosition,
+                                   int maxResults, 
+                                   Criterion... criteria);
+
+}}}
+
+Notice this method uses the new `Select` class.

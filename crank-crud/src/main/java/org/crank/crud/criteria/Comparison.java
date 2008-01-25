@@ -2,6 +2,7 @@ package org.crank.crud.criteria;
 
 import java.util.Arrays;
 
+@SuppressWarnings("serial")
 public class Comparison extends Criterion {
 	private String name;
 	private Operator operator;

@@ -44,6 +44,61 @@
 			<value>org.crank.crud.test.model.Department</value>
 		</property>
 	</bean>	
+
+	<bean id="inquiryDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.GenericDao</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.Inquiry</value>
+		</property>
+	</bean>
+
+	<bean id="leadDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.GenericDao</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.Lead</value>
+		</property>
+	</bean>
+
+	<bean id="petClinicLeadDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.GenericDao</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.PetClinicLead</value>
+		</property>
+	</bean>
+	
+	<bean id="petStoreLeadDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.GenericDao</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.PetStoreLead</value>
+		</property>
+	</bean>
+	
+	<bean id="petStoreInquiryDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.GenericDao</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.PetStoreInquiry</value>
+		</property>
+	</bean>
+	
+	<bean id="petClinicInquiryDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.GenericDao</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.PetClinicInquiry</value>
+		</property>
+	</bean>
+
 	
 	<bean id="paginatableDataSource" class="org.crank.crud.controller.datasource.DaoPagingDataSource">
 		<property name="dao" ref="employeeDao"/>

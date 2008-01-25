@@ -25,6 +25,7 @@ import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.Operator;
 import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.criteria.OrderDirection;
+import org.crank.crud.criteria.Select;
 import org.crank.crud.criteria.VerifiedBetween;
 import org.crank.crud.join.Join;
 import org.crank.crud.join.JoinType;
@@ -831,6 +832,13 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	public void flush() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public List<Object[]> find(Select[] select, Join[] joins,
+			OrderBy[] orderBy, int startPosition, int maxResults,
+			Criterion... criteria) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

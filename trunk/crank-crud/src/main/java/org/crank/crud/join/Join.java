@@ -8,6 +8,7 @@ public class Join {
 	public static EntityJoin entityJoin(String entityName, String alias) {
 		return new EntityJoin(entityName, alias);
 	}
+		
 	public static Join join (String property) {
 		return new SimpleRelationshipJoin(JoinType.RIGHT, property);
 	}

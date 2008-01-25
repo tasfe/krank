@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.OrderBy;
+import org.crank.crud.criteria.Select;
 import org.crank.crud.join.Join;
 
 /**
@@ -322,5 +323,12 @@ public interface GenericDao<T, PK extends Serializable> {
 	void clear();
 	
 	void flush();
+	
+	List<Object[]> find(Select[] select, 
+			Join[] joins,
+			OrderBy[] orderBy,
+			int startPosition,
+			int maxResults,
+			Criterion... criteria);
 
 }

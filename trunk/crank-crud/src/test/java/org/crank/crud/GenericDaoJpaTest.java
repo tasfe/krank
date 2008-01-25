@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.crank.crud.criteria.Comparison;
-import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Example;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.test.DbUnitTestBase;

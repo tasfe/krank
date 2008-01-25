@@ -29,6 +29,7 @@ import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.Operator;
 import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.criteria.OrderDirection;
+import org.crank.crud.criteria.Select;
 import org.crank.crud.criteria.VerifiedBetween;
 import org.crank.crud.join.EntityJoin;
 import org.crank.crud.join.Join;
@@ -567,26 +568,30 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	private List<T> doFind(Class<T> clazz, OrderBy[] orderBy,
 			final Criterion[] criteria, Join[] fetches,
 			final int startPosition, final int maxResult) {
-		return doFind(clazz, this.distinct, orderBy, criteria, fetches, startPosition,
+		return doFind(clazz, null, this.distinct, orderBy, criteria, fetches, startPosition,
 				maxResult);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<T> doFind(Class<T> clazz, boolean distinctFlag, OrderBy[] orderBy,
+	private List<T> doFind(Class<T> clazz, Select[] selects, boolean distinctFlag, OrderBy[] orderBy,
+			final Criterion[] criteria, Join[] joins, final int startPosition, final int maxResult) {
 
-			final Criterion[] criteria, Join[] joins,
-			final int startPosition, final int maxResult) {
-		StringBuilder sbQuery = new StringBuilder(255);
 		final Group group = criteria != null ? Group.and(criteria)
 				: new Group();
 
-		final String sQuery = sbQuery.append(
-				constructSelect(getEntityName(clazz), "o", distinctFlag, joins)).append(
-				constructJoins(joins)).append(constuctWhereClause(group))
-				.append(constructOrderBy(orderBy)).toString();
+		final String sQuery = createQuery(clazz, selects, distinctFlag,
+				orderBy, joins, group);
 
+		return (List<T>)executeQueryWithJPA(criteria, startPosition, maxResult, group,
+				sQuery);
+	}
+
+	@SuppressWarnings("unchecked")
+	private List executeQueryWithJPA(final Criterion[] criteria,
+			final int startPosition, final int maxResult, final Group group,
+			final String sQuery) {
 		try {
-			return (List<T>) this.getJpaTemplate().execute(new JpaCallback() {
+			return (List) this.getJpaTemplate().execute(new JpaCallback() {
 				public Object doInJpa(EntityManager em)
 						throws PersistenceException {
 					Query query = em.createQuery(sQuery);
@@ -604,6 +609,18 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 			logger.debug("failed to run a query", ex);
 			throw new RuntimeException("Unable to run query : " + sQuery, ex);
 		}
+	}
+
+	private String createQuery(Class<T> clazz, Select[] selects,
+			boolean distinctFlag, OrderBy[] orderBy, Join[] joins,
+			final Group group) {
+		StringBuilder sbQuery = new StringBuilder(255);
+		final String sQuery = sbQuery
+				.append(	constructSelect(selects, getEntityName(clazz), "o", distinctFlag))
+				.append(    constructFrom(joins) )
+				.append(    constructJoins(joins)).append(constuctWhereClause(group))
+				.append(	constructOrderBy(orderBy)).toString();
+		return sQuery;
 	}
 
 	private List<T> doFind(Class<T> clazz, String[] orderBy,
@@ -958,17 +975,28 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return query.toString();
 	}
 
-	private String constructSelect(String entityName, String instanceName, boolean distinctFlag, Join [] joins) {
+	private String constructSelect(Select[] selects, String entityName, String instanceName, boolean distinctFlag) {
 		StringBuilder query = new StringBuilder(255);
 		query.append("SELECT ");
-		query.append((distinctFlag ? " DISTINCT " : " "));
-		if (newSelectStatement == null) {
-			query.append(instanceName);
-		} else {
+
+		if (newSelectStatement != null) {
 			query.append(newSelectStatement);
-		}
-		query.append(constructFrom(joins));
-		return query.toString();
+			return query.toString();
+		}			
+		query.append((distinctFlag ? " DISTINCT " : " "));
+		query.append(instanceName);
+		
+		if (selects == null || selects.length == 0) {
+			return query.toString();
+		} else {
+			query.append(", ");
+			for (Select select : selects) {
+				query.append((select.isDistinct() ? " DISTINCT " : " "));
+				query.append(select.getName());
+				query.append(", ");
+			}
+			return query.substring(0, query.length()-2);			
+		}		
 	}
 
 	private String ditchDot(String propName) {
@@ -1053,6 +1081,20 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	@Transactional
 	public void run(Runnable runnable) {
 		runnable.run();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Object[]> find(Select[] selects, Join[] joins,
+			OrderBy[] orderBy, final int startPosition, final int maxResults,
+			final Criterion... criteria) {
+		final Group group = criteria != null ? Group.and(criteria)
+				: new Group();
+
+		final String sQuery = createQuery(this.type, selects, this.distinct,
+				orderBy, joins, group);
+
+		return (List<Object[]>)executeQueryWithJPA(criteria, startPosition, maxResults, group,
+				sQuery);
 	}
 
 

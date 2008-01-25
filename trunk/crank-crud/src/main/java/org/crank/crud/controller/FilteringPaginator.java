@@ -20,15 +20,22 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
     private List<Criterion> criteria;
     private List<OrderBy> orderBy;
     private Class type;
-    private List<Join> fetches = new ArrayList<Join>();
+    private List<Join> joins = new ArrayList<Join>();
 
     public List<Join> getFetches() {
-        return fetches;
+        return joins;
     }
 
     public void setFetches(List<Join> fetches) {
-        this.fetches = fetches;
+        this.joins = fetches;
     }
+	public List<Join> getJoins() {
+		return joins;
+	}
+	public void setJoins(List<Join> joins) {
+		this.joins = joins;
+	}
+    
 
     private String name;
     
@@ -106,7 +113,7 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         
         for (PropertyDescriptor propertyDescriptor: propertyDescriptors) {
             if (autoJoin && CrudUtils.isEntity(propertyDescriptor.getPropertyType())) {
-                fetches.add(Join.leftJoinFetch(propertyDescriptor.getName()));
+                joins.add(Join.leftJoinFetch(propertyDescriptor.getName()));
             }
         	if (theType == propertyDescriptor.getPropertyType()) {
         		spds.add(propertyDescriptor);
@@ -197,7 +204,7 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
         
         prepareProgramaticCriteriaForFilter();
 
-        filterablePaginatableDataSource().setFetches(this.fetches.toArray(new Join[this.fetches.size()]));
+        filterablePaginatableDataSource().setFetches(this.joins.toArray(new Join[this.joins.size()]));
 
         fireAfterFilter(filterablePaginatableDataSource().group());        
         reset();
@@ -384,5 +391,6 @@ public class FilteringPaginator extends Paginator implements FilterablePageable,
             fl.afterFilter( fe );
         }
     }
+
 
 }

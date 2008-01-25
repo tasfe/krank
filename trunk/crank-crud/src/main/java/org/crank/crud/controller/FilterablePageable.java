@@ -22,8 +22,11 @@ public interface FilterablePageable extends Pageable {
     void addFilteringListener(FilteringListener listener);
     void removeFilteringListener(FilteringListener listener);
     void addOrderBy(OrderBy orderBy);
+    List<Join> getJoins();
+    void setJoins(List<Join> joins);
 
+    @Deprecated
     List<Join> getFetches();
-
+    @Deprecated
     void setFetches(List<Join> fetches);
 }

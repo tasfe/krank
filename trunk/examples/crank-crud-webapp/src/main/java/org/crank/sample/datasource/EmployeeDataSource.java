@@ -151,5 +151,14 @@ public class EmployeeDataSource implements FilteringPagingDataSource {
 		}
 		return values.toArray(new Object[values.size()]);
 	}
+
+	public Join[] joins() {
+		
+		return fetches();
+	}
+
+	public void setJoins(Join[] fetches) {
+		setFetches(fetches);
+	}
 	
 }

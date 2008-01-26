@@ -28,6 +28,7 @@ public class DaoFilteringDataSource<T, PK extends Serializable> extends DaoDataS
         this.orderBy = orderBy;
     }
 
+    @Deprecated
     public Join[] fetches() {
         return fetches;  
     }
@@ -44,8 +45,18 @@ public class DaoFilteringDataSource<T, PK extends Serializable> extends DaoDataS
         return dao.count(fetches, group );
     }
 
+    @Deprecated
 	public void setFetches(Join... fetches) {
 		this.fetches = fetches;
+	}
+
+	public Join[] joins() {
+		// TODO Auto-generated method stub
+		return fetches;  
+	}
+
+	public void setJoins(Join[] fetches) {
+		this.fetches = fetches;		
 	}
     
 

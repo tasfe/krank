@@ -18,22 +18,22 @@ public class FilterablePropertyTest extends TestCase {
 
     @Test
     public void testFilterableProperty() {
-        FilterableProperty fp = new FilterableProperty("name", String.class);
+        FilterableProperty fp = new FilterableProperty("name", String.class, FilterablePropertyTest.class);
         assertEquals( fp.getComparison().getOperator(), Operator.LIKE_START );
         
-        fp = new FilterableProperty("check", Boolean.class);
+        fp = new FilterableProperty("check", Boolean.class, FilterablePropertyTest.class);
         assertEquals( fp.getComparison().getOperator(), Operator.EQ );
 
-        fp = new FilterableProperty("foo", Date.class);
+        fp = new FilterableProperty("foo", Date.class, FilterablePropertyTest.class);
         assertTrue( fp.getComparison() instanceof Between);
         
-        fp = new FilterableProperty("foo", Long.class);
+        fp = new FilterableProperty("foo", Long.class, FilterablePropertyTest.class);
         assertTrue( fp.isLong());
 
-        fp = new FilterableProperty("foo", Integer.class);
+        fp = new FilterableProperty("foo", Integer.class, FilterablePropertyTest.class);
         assertTrue( fp.isInteger());
         
-        fp = new FilterableProperty("foo", String.class);
+        fp = new FilterableProperty("foo", String.class, FilterablePropertyTest.class);
         assertFalse( fp.isInteger());
         assertTrue( fp.isString());
 

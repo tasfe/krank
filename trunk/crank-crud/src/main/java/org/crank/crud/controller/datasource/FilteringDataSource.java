@@ -8,7 +8,14 @@ public interface FilteringDataSource<T> extends DataSource<T>{
     Group group();
     OrderBy[] orderBy();
     void setOrderBy( OrderBy[] orderBy );
+    
+    @Deprecated
     Join[] fetches();
+    @Deprecated
     void setFetches( Join[] fetches );
+    
+    Join[] joins();
+    void setJoins( Join[] fetches );
+    
 
 }

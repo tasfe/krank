@@ -24,10 +24,12 @@ public class FilteringPaginatorTest extends TestCase {
 			return 0;
 		}
 
+		@SuppressWarnings("unchecked")
 		public List list(int startItem, int numItems) {
 			return null;
 		}
 
+		@SuppressWarnings("unchecked")
 		public List list() {
 			return null;
 		}
@@ -50,6 +52,16 @@ public class FilteringPaginatorTest extends TestCase {
         public void setFetches(Join[] fetches) {
             //To change body of implemented methods use File | Settings | File Templates.
         }
+
+		public Join[] joins() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public void setJoins(Join[] fetches) {
+			// TODO Auto-generated method stub
+			
+		}
 
 
     };

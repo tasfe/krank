@@ -7,6 +7,7 @@ import java.util.List;
 import org.crank.core.RequestParameterMapFinder;
 import org.crank.crud.controller.datasource.PagingDataSource;
 
+@SuppressWarnings("serial")
 public class Paginator implements Pageable, Serializable {
 
     protected int currentPage=0;
@@ -153,7 +154,8 @@ public class Paginator implements Pageable, Serializable {
         this.currentPage = 0;
     }
 
-    public List getPage() {
+    @SuppressWarnings("unchecked")
+	public List getPage() {
         if (currentPage < 0) {
             currentPage = 0;
         }

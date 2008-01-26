@@ -1,6 +1,9 @@
 package org.crank.sample.datasource;
 
-public class EmployeeReportObject {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class EmployeeReportObject implements Serializable {
 	
 	private String lastName;
 	private String firstName;

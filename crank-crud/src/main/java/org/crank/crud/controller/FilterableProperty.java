@@ -40,7 +40,7 @@ public class FilterableProperty implements Serializable, Toggleable {
     /** Init filter. */
     @SuppressWarnings("unchecked")
 	public FilterableProperty(String name,
-			Class parentType, Class type) {
+			Class type, Class parentType) {
     	this(name, type, parentType, true);
 	}
 

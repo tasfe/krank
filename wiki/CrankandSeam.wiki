@@ -1,4 +1,4 @@
-Installing Crank with Seam (Part 1, getting it working)
+#summary Installing Crank with Seam (Part 1, getting it working)
 
 = Introduction =
 

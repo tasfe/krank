@@ -235,4 +235,4 @@ and don't forget to add the helper.js and stylesheet to the template
 }}}
 
 
-Any qeustions/troubles, just ask in the forum. I will see if I can help.
+Any questions/troubles, just ask in the forum. I will see if I can help.

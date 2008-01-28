@@ -6,6 +6,7 @@ import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.OrderBy;
+import org.crank.crud.criteria.Select;
 import org.crank.crud.join.Join;
 import org.hibernate.Criteria;
 import org.testng.annotations.Test;
@@ -102,6 +103,12 @@ public class FilteringPaginatorTest extends TestCase {
 		Group group = dataSource.group();
 		Iterator<Criterion> iter = group.iterator(); iter.next();
 		assertEquals("o_null_zalias", iter.next().toString());
+		
+		List<Select> selects = paginator.getSelects();
+		for (Select select : selects) {
+			System.out.println(select);
+		}
+		
 	}
 
 	@Test

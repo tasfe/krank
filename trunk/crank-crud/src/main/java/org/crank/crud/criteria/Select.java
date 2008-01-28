@@ -36,4 +36,8 @@ public class Select {
 		this.name = name;
 	}
 	
+	public String toString() {
+		return String.format("Select %s %s", this.name, this.distinct);
+	}
+	
 }

@@ -40,6 +40,9 @@ public class RowTest extends TestCase {
 	public void testGet() {
 		assertEquals("baz", row.get("bar.baz"));
 		assertEquals("baz", row.get("object.bar.baz"));
+		assertNull(row.get("somepath.that.does.not.exist"));
+		row.put("somepath.that.does.not.exist", "foo");
+		assertEquals("foo", row.get("somepath.that.does.not.exist"));
 	}
 
 }

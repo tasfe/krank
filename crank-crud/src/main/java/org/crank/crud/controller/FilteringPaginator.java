@@ -656,4 +656,8 @@ public class FilteringPaginator extends Paginator implements
 		}
 		
 	}
+
+	public List<Select> getSelects() {
+		return selects;
+	}
 }

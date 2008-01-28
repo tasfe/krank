@@ -2,18 +2,19 @@ package org.crank.crud.controller;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 
-import org.crank.core.CrankException;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
 @SuppressWarnings("serial")
 class MagicMap implements Map<String, Object>, Serializable {
     private BeanWrapper beanWrapper;
-    private BeanWrapper thisWrapper;    
+    private BeanWrapper thisWrapper;
+    private Map<String, Object> map = new HashMap<String, Object>();
     
     public MagicMap (Object object){
         init(object);
@@ -49,8 +50,10 @@ class MagicMap implements Map<String, Object>, Serializable {
             String key = (String) oKey;
             if (beanWrapper.isReadableProperty(key)) {
             	return beanWrapper.getPropertyValue( key );
-            } else {
+            } else if (thisWrapper.isReadableProperty(key)){
             	return thisWrapper.getPropertyValue( key ) ;
+            } else {
+            	return this.map.get(oKey);
             }
         } catch (org.springframework.beans.NullValueInNestedPathException nvinpe) {
             return null;
@@ -71,8 +74,10 @@ class MagicMap implements Map<String, Object>, Serializable {
         String key = (String) oKey;
         if (beanWrapper.isWritableProperty(key)) {
         	beanWrapper.setPropertyValue( key, value );
-        } else {
+        } else if (thisWrapper.isWritableProperty(key)){
         	thisWrapper.setPropertyValue( key, value );
+        } else {
+        	return map.put(oKey, value);
         }
         return null;
     }

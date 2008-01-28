@@ -77,7 +77,7 @@ public class FilteringPaginatorTest extends TestCase {
 	@Test
 	public void testEntityJoin() {
 		paginator = new FilteringPaginator(dataSource, A.class);
-		paginator.addFilterableEntityJoin(Z.class, "Z", "zalias", new String []{"name"});
+		paginator.addFilterableEntityJoin(Z.class, "Z", "zalias", new String []{"name"}, "o");
 		Map<String, FilterableProperty> filterableProperties = paginator.getFilterableProperties();
 //		for (Map.Entry<String, FilterableProperty> entry : filterableProperties.entrySet()) {
 //			System.out.println(entry.getKey());
@@ -101,7 +101,7 @@ public class FilteringPaginatorTest extends TestCase {
 	
 		Group group = dataSource.group();
 		Iterator<Criterion> iter = group.iterator(); iter.next();
-		assertEquals("o_null_alias", iter.next().toString());
+		assertEquals("o_null_zalias", iter.next().toString());
 	}
 
 	@Test

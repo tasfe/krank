@@ -28,7 +28,7 @@ public interface FilterablePageable extends Pageable {
     void setJoins(List<Join> joins);
     void addSelect(Select select);
     @SuppressWarnings("unchecked")
-	void addFilterableEntityJoin(Class entityClass, String entityName, String alias, String properties[]);
+	void addFilterableEntityJoin(Class entityClass, String entityName, String alias, String properties[], String joinBy);
 
     @Deprecated
     List<Join> getFetches();

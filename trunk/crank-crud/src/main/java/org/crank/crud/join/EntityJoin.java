@@ -22,4 +22,8 @@ public class EntityJoin extends Join{
 		this.name = name;
 		this.alias = alias;
 	}
+	
+	public String toString() {
+		return String.format("%s name=%s alias=%s", getClass().getSimpleName(), getName(), getAlias());
+	}
 }

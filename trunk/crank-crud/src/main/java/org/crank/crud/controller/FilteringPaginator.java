@@ -36,7 +36,8 @@ import java.util.*;
  * """True genius and creativity is always despised by the mundanes of the
  * world. When people tell their friends, "That (Rick) is such an (jerk)." Their
  * friends, reply: "I know. What a (jerk)." When I tell my friends that my
- * enemies are jerks they reply, "Who?"""" --Zed Shaw (with slight edits). RISA
+ * enemies are jerks they reply, "Who?"""" --Zed Shaw (with slight edits). RISA.
+ * It is a joke so...
  * 
  * @author Rick Hightower
  * 
@@ -617,7 +618,7 @@ public class FilteringPaginator extends Paginator implements
 
 	@SuppressWarnings("unchecked")
 	public void addFilterableEntityJoin(Class entityClass, String entityName, String alias, String properties[]) {
-		selects.add(Select.select(alias, false));
+		addSelect(Select.select(alias, false));
 		joins.add(Join.entityJoin(entityName, alias));
 
 
@@ -640,10 +641,17 @@ public class FilteringPaginator extends Paginator implements
 			FilterableProperty filterableProperty = new FilterableProperty(
 					propertyName, props.get(property).getPropertyType(), entityClass, false);
 
+			/* Register our toggle listener to be notified if the end user activates this property. */
+			filterableProperty
+					.addToggleListener(new FPToggleListener(property));
+			
+			
 			/* Add it to our list of filterableProperties. */ 
-			filterableProperties.put(property, filterableProperty);
+			filterableProperties.put(propertyName, filterableProperty);
 			
 		}
+		
+		this.addCriterion(Comparison.objectEq("o", "alias"));
 		
 	}
 }

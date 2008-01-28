@@ -63,5 +63,9 @@ public class Join {
 	
 	public static Join[] fetch (Join... fetchList) {
 		return fetchList;
-	}	
+	}
+	
+	public String toString() {
+		return String.format("%s id=%s", this.getClass().getSimpleName(), this.hashCode());
+	}
 }

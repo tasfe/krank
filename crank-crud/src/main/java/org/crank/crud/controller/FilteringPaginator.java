@@ -617,7 +617,7 @@ public class FilteringPaginator extends Paginator implements
 	}
 
 	@SuppressWarnings("unchecked")
-	public void addFilterableEntityJoin(Class entityClass, String entityName, String alias, String properties[]) {
+	public void addFilterableEntityJoin(Class entityClass, String entityName, String alias, String properties[], String joinBy) {
 		addSelect(Select.select(alias, false));
 		joins.add(Join.entityJoin(entityName, alias));
 
@@ -651,7 +651,9 @@ public class FilteringPaginator extends Paginator implements
 			
 		}
 		
-		this.addCriterion(Comparison.objectEq("o", "alias"));
+		if (joinBy!=null) {
+			this.addCriterion(Comparison.objectEq(joinBy, alias));
+		}
 		
 	}
 }

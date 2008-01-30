@@ -16,4 +16,49 @@ We did a major update to the `FilteringPaginator` and the Criteria DSL to suppor
 
 ==== Unable to sort, filter on fields in a sublcass ====
 
+You can't access properties of a subclass when sorting and filtering. This needs explanation.
+
+Let's say we have classes as follows:
+
+{{{
+//inquiries
+class Inquiry
+class PetStoreInquiry extends Inquiry has property a
+class PetClinicInquiry extends Inquiry has property b
+
+//leads
+class Lead has an Inquiry (one to one)
+class PetStoreLead extends Lead
+class PetClinicLead extends Lead
+}}}
+
+In this example: A `Lead` is a sales lead. An `Inquiry` generates a `Lead`. The `Lead` has a reference to the `Inquiry` that generated the lead. There are two subclasses of `Inquiry`, namely, `PetStoreInquiry` and `PetClinicInquiry`.
+
+The question is while searching for `PetStoreLead`s how do you access properties of the `Inquiry` subclass?
+
+This query JPA(Hibernate) does not work (expected):
+
+{{{
+SELECT lead FROM PetStoreLead lead WHERE lead.inquiry.a='a'
+}}}
+
+The error you get is that `lead.inquiry` does not have a property called `a`.
+The problem is that `Inquiry` does no have a property `a`, its subclass `PetStoreInquiry` does. (We are using joined subclasses different mappings may work.)
+
+One possible solution to the above is to rewrite the query as:
+
+{{{
+
+        SELECT lead 
+        FROM PetStoreLead lead, PetStoreInquiry inquiry 
+        WHERE inquiry.a='a' AND lead.inquiry=inquiry
+}}}
+
+
+We updated our Criteria API to support entity joins see: [CriteriaDSLUpdate]
+
+We also changed the `FilteringPaginator` which backs the `<crank:listing` composition component to perform this time of join.
+
+This document has a step by step of example using the PetClinic example. 
+
 ==== Unable to sort, filter on fields that don't have a relationship to entity ====

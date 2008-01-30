@@ -1,10 +1,19 @@
 #summary How to Join Multiple Entities using Crank's FilteringPaginator support
 
-== Introduction ==
+==== Introduction ====
 
+Crank and Presto before it has always had the ability to create paginateable, sortable listings for several years now. Lately we ran into two issues as follows:
 
+ # Unable to sort, filter on fields in a sublcass
+ # Unable to sort, filter on fields that don't have a relationship to entity
 
-== Related Entries ==
+We did a major update to the `FilteringPaginator` and the Criteria DSL to support selecting and filtering multiple entities in a single listing.
 
- * UpdatingListingControllerToAllowEntityJoins
- * [CriteriaDSLUpdate]
+==== Related Entries ====
+
+ * UpdatingListingControllerToAllowEntityJoins Problem defininion and notes on impl
+ * [CriteriaDSLUpdate] Documentation on updates to the DSL to support new features related to Entity joins
+
+==== Unable to sort, filter on fields in a sublcass ====
+
+==== Unable to sort, filter on fields that don't have a relationship to entity ====

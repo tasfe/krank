@@ -63,6 +63,13 @@
 
   <navigation-rule>
   	<navigation-case>
+  		<from-outcome>INQUIRY</from-outcome>
+  		<to-view-id>/pages/crud/inquiry/listing.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+  	<navigation-case>
   		<from-outcome>SKILLS</from-outcome>
   		<to-view-id>/pages/crud/Skill/Listing.xhtml</to-view-id>
   	</navigation-case>
@@ -160,6 +167,15 @@
   	</navigation-case>  	
   </navigation-rule>
   
+  <converter>
+  	<converter-for-class>org.crank.crud.model.inquiry.PetClinicInquiry</converter-for-class>
+  	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
+  </converter>
+  <converter>
+  	<converter-for-class>org.crank.crud.model.inquiry.Inquiry</converter-for-class>
+  	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
+  </converter>
+
   <converter>
   	<converter-for-class>org.crank.crud.model.Department</converter-for-class>
   	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>

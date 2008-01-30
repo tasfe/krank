@@ -147,7 +147,7 @@ public class FilteringPaginator extends Paginator implements
 	 */
 	private void createFilterProperties() {
 		filterableProperties = new HashMap<String, FilterableProperty>();
-		createFilterProperties(type, null, new PropertyScanner());
+		createFilterProperties(type, type, null, new PropertyScanner());
 	}
 
 	/**
@@ -204,7 +204,7 @@ public class FilteringPaginator extends Paginator implements
 	 * @param ps
 	 */
 	@SuppressWarnings("unchecked")
-	private void createFilterProperties(final Class theType,
+	private void createFilterProperties(final Class parentType, final Class theType,
 			final String propertyName, PropertyScanner ps) {
 		
 		/* Get the beaninfo from the type object. */
@@ -238,8 +238,8 @@ public class FilteringPaginator extends Paginator implements
 				pds.add(propertyDescriptor);
 			}
 		}
-		setupFilters(theType, propertyName, ps, pds);
-		setupFilters(theType, propertyName, ps, spds);
+		setupFilters(parentType, theType, propertyName, ps, pds);
+		setupFilters(parentType, theType, propertyName, ps, spds);
 	}
 
 	/**
@@ -250,7 +250,7 @@ public class FilteringPaginator extends Paginator implements
 	 * @param pds
 	 */
 	@SuppressWarnings("unchecked")
-	private void setupFilters(final Class theType, final String propertyName,
+	private void setupFilters(final Class parentType, final Class theType, final String propertyName,
 			PropertyScanner ps, List<PropertyDescriptor> pds) {
 		
 		String key;
@@ -269,7 +269,7 @@ public class FilteringPaginator extends Paginator implements
 
 			/* Create the new filterableProperty. */
 			FilterableProperty filterableProperty = new FilterableProperty(
-					property, propertyDescriptor.getPropertyType(), theType);
+					property, propertyDescriptor.getPropertyType(), parentType);
 
 			/* Add it to our list of filterableProperties. */ 
 			filterableProperties.put(property, filterableProperty);
@@ -302,7 +302,7 @@ public class FilteringPaginator extends Paginator implements
 				 */
 				if (ps.canIAddThisToTheFilterableProperties(key)) {
 
-					createFilterProperties(
+					createFilterProperties(parentType,
 							propertyDescriptor.getPropertyType(), property, ps);
 
 				}

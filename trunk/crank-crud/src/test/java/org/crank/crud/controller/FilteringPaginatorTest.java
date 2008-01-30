@@ -92,6 +92,7 @@ public class FilteringPaginatorTest extends TestCase {
 		FilterableProperty filterableProperty = filterableProperties.get("zalias.name");
 		assertNotNull(filterableProperty);
 		assertEquals("zalias.name", filterableProperty.getComparison().getName());
+		assertNotNull(filterableProperty.getParentType());
 		
 		filterableProperty.getComparison().setValue("Ric");
 		filterableProperty.getComparison().enable();

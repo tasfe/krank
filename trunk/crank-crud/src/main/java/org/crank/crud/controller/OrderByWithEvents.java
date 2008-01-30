@@ -17,6 +17,12 @@ public class OrderByWithEvents extends OrderBy implements Serializable, Toggleab
     public OrderByWithEvents( String aName, OrderDirection aDirection ) {
         super( aName, aDirection );
     }
+    
+    public OrderByWithEvents( String aName, OrderDirection aDirection, boolean alias ) {
+        super( aName, aDirection );
+        super.setAlias(alias);
+    }
+    
 
     public List<ToggleListener> getToggleListeners(){
         return list;

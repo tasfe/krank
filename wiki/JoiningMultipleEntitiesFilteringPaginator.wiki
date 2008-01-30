@@ -14,7 +14,7 @@ This document describes how to use this new feature.
 
 ==== Related Entries ====
 || Wiki Entry || Description ||
-|| UpdatingListingControllerToAllowEntityJoins || Problem defininion and notes on impl, shows error messages that JPA throws when filtering on fields that don't have a relationship to entity ||
+|| UpdatingListingControllerToAllowEntityJoins || Problem defininion and notes on impl, shows error messages that JPA throws when filtering on fields in a sublcass  ||
 || [CriteriaDSLUpdate] || Documentation on updates to the DSL to support new features related to Entity joins ||
 
 ==== Unable to sort, filter on fields that don't have a relationship to entity ====

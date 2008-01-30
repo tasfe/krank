@@ -58,9 +58,9 @@ class PetClinicLead extends Lead
 In this example: A `Lead` is a sales lead. An `Inquiry` generates a `Lead`. The `Lead` has a reference to the `Inquiry` that generated the lead. There are two subclasses of `Inquiry`, namely, `PetStoreInquiry` and `PetClinicInquiry` see figure 1.
 
 _*Figure 1*_
----- 
+___
 http://krank.googlecode.com/svn/trunk/docs/images/inquiryExample.png
----- 
+___
 
 The question is while searching for `PetStoreLead`s how do you access properties of the `Inquiry` subclass?
 
@@ -172,8 +172,7 @@ To configure the `<crank:listing` tag you would do the following (in a Facelet):
 
 Notice that the `propertyNames` specifies the `inquiry.anotherProperty` as we can now include this in the listing as if it were any other property. See figure 2, it shows both sorting and filtering working with this `entityJoin`.
 
-Figure 2
+_*Figure 2*_
 ___
-
 http://krank.googlecode.com/svn/trunk/docs/images/donutBurger.png
 ___

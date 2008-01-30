@@ -6,5 +6,5 @@
 
 == Related Entries ==
 
-# UpdatingListingControllerToAllowEntityJoins
-# CriteriaDSLUpdate
+ * UpdatingListingControllerToAllowEntityJoins
+ * CriteriaDSLUpdate

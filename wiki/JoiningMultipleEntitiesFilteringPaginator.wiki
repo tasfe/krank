@@ -145,6 +145,21 @@ Then we pull the `JsfCrudAdapter` for lead and configure its paginator to do an 
 
 }}}
 
+By adding the above we change the query to:
+
+{{{
+SELECT o FROM PetStoreLead o WHERE <fitlers go here> ORDER BY <sorts go here>
+}}}
+
+To this JPA query:
+
+{{{
+
+SELECT o, inquiry FROM PetStoreLead o, PetStoreInquiry inquiry WHERE o.inquiry=inquiry AND (<filters go here>) ORDER BY <sorts go here>
+}}}
+
+
+
 From a visual standpoint, this adds an extra column to our listing that the end user can filter and sort. The `addFilterableEntityJoin` is a convience method since we have an app that has to do this quite a bit, you could do similar stuff by configuring a hierarchy of `Select`, `FilteringProperty`, `EntityJoin`, `Comparison`, etc., but that would be very error prone for most folks not familiar with the Criteria DSL that Crank relies on (see [UsingDAO], [CriteriaDSLUpdate] and [Blog entry on Criteria | http://www.jroller.com/RickHigh/entry/i_implemented_a_detached_criteria]) for more details on the Crank Criteria DSL.
 
 To configure the `<crank:listing` tag you would do the following (in a Facelet):
@@ -155,4 +170,10 @@ To configure the `<crank:listing` tag you would do the following (in a Facelet):
 
 }}}
 
-Notice that the `propertyNames` specifies the `inquiry.anotherProperty` as we can now include this in the listing as if it were any other property.
+Notice that the `propertyNames` specifies the `inquiry.anotherProperty` as we can now include this in the listing as if it were any other property. See figure 2, it shows both sorting and filtering working with this `entityJoin`.
+
+Figure 2
+___
+
+http://krank.googlecode.com/svn/trunk/docs/images/donutBurger.png
+___

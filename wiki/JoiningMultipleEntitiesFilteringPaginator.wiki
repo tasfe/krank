@@ -13,9 +13,9 @@ We did a major update to the `FilteringPaginator` and the Criteria DSL to suppor
 This document describes how to use this new feature.
 
 ==== Related Entries ====
- || Wiki Entry || Description ||
- || UpdatingListingControllerToAllowEntityJoins || Problem defininion and notes on impl ||
- || [CriteriaDSLUpdate] || Documentation on updates to the DSL to support new features related to Entity joins ||
+|| Wiki Entry || Description ||
+|| UpdatingListingControllerToAllowEntityJoins || Problem defininion and notes on impl ||
+|| [CriteriaDSLUpdate] || Documentation on updates to the DSL to support new features related to Entity joins ||
 
 ==== Unable to sort, filter on fields that don't have a relationship to entity ====
 
@@ -92,3 +92,55 @@ This document has a step by step of example using the `PetClinic` example.
 
 
 ==== Step by Step example ====
+This assumes you are familiar with Crank and have followed the getting started guide (see [GettingStartedWithCrank] and [GettingStartedWithCrankPresentation] if you have not used Crank yet).
+
+Step 1 add the entities to the Spring configuration so the base class config can process them:
+
+{{{
+...
+import org.springframework.config.java.annotation.Bean;
+import org.springframework.config.java.annotation.Configuration;
+...
+
+@Configuration(defaultLazy = Lazy.TRUE)
+public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
+
+	@Bean(scope = DefaultScopes.SINGLETON)
+	public List<CrudManagedObject> managedObjects() {
+		if (managedObjects == null) {
+			managedObjects = new ArrayList<CrudManagedObject>();
+                        ...
+			managedObjects.add(new CrudManagedObject(PetClinicInquiry.class,
+					null));
+			managedObjects.add(new CrudManagedObject(Inquiry.class,
+					null));
+			managedObjects.add(new CrudManagedObject(PetClinicLead.class,
+					null));			
+                        ...
+			
+		 return managedObjects;
+}}}
+
+Then we pull the `JsfCrudAdapter` for lead and configure its paginator to do an entity join, i.e., we join to o.inquiry (o is the alias for the main entity).
+
+{{{
+	@SuppressWarnings("unchecked")
+	@Bean(scope = DefaultScopes.SESSION)
+	public JsfCrudAdapter petClinicLeadCrud() throws Exception {
+		/* Pull out the existing CrudAdapter. */
+		JsfCrudAdapter adapter = cruds().get("PetClinicLead");
+		/* Grab its filtering paginator and configure it. */
+		FilterablePageable paginator = adapter.getPaginator();
+		/* Call addFilterableEntityJoin padding the class we are joining to,
+		 * the name of the entity, the name of the alias, 
+		 * an array of property names, and an optional join that will be added to the where clause.
+		 */
+		paginator.addFilterableEntityJoin(PetClinicInquiry.class, //Class we are joining
+					"PetClinicInquiry", //Entity name
+					"inquiry", //
+					new String []{"anotherProp"}, //Array of property names we want to join to. 
+					"o.inquiry"); //How to join to the PetClinicLead 
+		return adapter;
+	}
+
+}}}

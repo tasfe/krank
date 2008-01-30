@@ -58,7 +58,9 @@ class PetClinicLead extends Lead
 In this example: A `Lead` is a sales lead. An `Inquiry` generates a `Lead`. The `Lead` has a reference to the `Inquiry` that generated the lead. There are two subclasses of `Inquiry`, namely, `PetStoreInquiry` and `PetClinicInquiry` see figure 1.
 
 _*Figure 1*_
+---- 
 http://krank.googlecode.com/svn/trunk/docs/images/inquiryExample.png
+---- 
 
 The question is while searching for `PetStoreLead`s how do you access properties of the `Inquiry` subclass?
 
@@ -90,4 +92,3 @@ This document has a step by step of example using the `PetClinic` example.
 
 
 ==== Step by Step example ====
-

@@ -61,7 +61,7 @@ We updated our Criteria API to support entity joins see: [CriteriaDSLUpdate]
 
 We also changed the `FilteringPaginator` which backs the `<crank:listing` composition component to perform this type of join.
 
-This document has a step by step of example using the PetClinic example. 
+This document has a step by step of example using the `PetClinic` example. 
 
 ==== Unable to sort, filter on fields that don't have a relationship to entity ====
 

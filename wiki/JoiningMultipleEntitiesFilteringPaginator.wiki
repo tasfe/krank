@@ -7,4 +7,4 @@
 == Related Entries ==
 
  * UpdatingListingControllerToAllowEntityJoins
- * CriteriaDSLUpdate
+ * [CriteriaDSLUpdate]

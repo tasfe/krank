@@ -1,5 +1,7 @@
 package org.crank.crud.model.inquiry;
 
+import java.io.Serializable;
+
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -17,7 +19,7 @@ import javax.persistence.Table;
 @Inheritance( strategy = InheritanceType.JOINED )
 @DiscriminatorColumn( name = "LEAD_TYPE_ID", discriminatorType = DiscriminatorType.STRING )
 @Table( name = "BASE_LEAD" )
-public class Lead {
+public class Lead implements Serializable{
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )	
 	private Long id;

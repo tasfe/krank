@@ -1,5 +1,7 @@
 package org.crank.crud.model.inquiry;
 
+import java.io.Serializable;
+
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -14,7 +16,7 @@ import javax.persistence.Table;
 @Inheritance( strategy = InheritanceType.JOINED )
 @DiscriminatorColumn( name = "INQUIRY_TYPE_ID", discriminatorType = DiscriminatorType.STRING )
 @Table( name = "BASE_INQUIRY" )
-public class Inquiry {
+public class Inquiry implements Serializable {
 	
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )

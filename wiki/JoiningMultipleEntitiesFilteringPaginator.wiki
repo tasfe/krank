@@ -79,6 +79,9 @@ The `ServiceB` module depends on the `ServiceA` and `CoreBiz`.
 
 Imagine that each tier has an hierarchy of Objects that are mapped to a set of Database tables via JPA. Thus there are relationships in the database that do not exist in the Object model, but are instead managed by `ServiceManagers`. Otherwise we would have one giant module with one huge Object graph mapped to the database. However, we do need to join objects at times for listings for Admin tools. Whew! Clear? Probably not.
 
-Let's say I have a library that manages Tags and you can associate and Employee with a tag, but you only store the tag id not the Tag.
+Let's say I have a library that manages Tags and you can associate and Employee with a tag, but you only store the tag id not the Tag. This new feature can support this as well.
 
-So this new feature can support this as well.
+
+==== Step by Step example ====
+
+http://krank.googlecode.com/svn/trunk/docs/images/inquiryExample.png

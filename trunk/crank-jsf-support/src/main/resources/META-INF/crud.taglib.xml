@@ -5,12 +5,22 @@
 <facelet-taglib>
 	<namespace>http://www.googlecode.com/crank/crud</namespace>
 	<function>
+		<function-name>createLabelNoPlural</function-name>
+		<function-class>org.crank.web.jsf.support.JSFMessageUtils</function-class>
+		<function-signature>
+			java.lang.String createLabelNoPlural(java.lang.String)
+		</function-signature>
+	</function>
+
+	<function>
 		<function-name>createEnumLabel</function-name>
 		<function-class>org.crank.crud.controller.CrudUtils</function-class>
 		<function-signature>
 			java.lang.String generateEnumLabelValue(java.lang.String)
 		</function-signature>
 	</function>
+	
+	
 	<function>
 		<function-name>isEnum</function-name>
 		<function-class>org.crank.core.TypeUtils</function-class>
@@ -227,12 +237,35 @@
 			java.lang.String createLabelWithNameSpace(java.lang.String, java.lang.String)
 		</function-signature>
 	</function>
+
 	<function>
-		<function-name>createLabelNoPlural</function-name>
-		<function-class>org.crank.web.jsf.support.JSFMessageUtils</function-class>
+		<function-name>isFilterPropertyBoolean</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
 		<function-signature>
-			java.lang.String createLabelNoPlural(java.lang.String)
+			boolean isFilterPropertyBoolean(boolean, java.lang.Class, java.lang.String)
 		</function-signature>
 	</function>
-	
+
+	<function>
+		<function-name>isFilterPropertyEnum</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isFilterPropertyEnum(boolean, java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isFilterPropertyDate</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isFilterPropertyDate(boolean, java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isFilterPropertyText</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isFilterPropertyText(boolean, java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+
 </facelet-taglib>

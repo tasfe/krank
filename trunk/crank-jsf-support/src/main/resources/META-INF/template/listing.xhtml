@@ -123,6 +123,19 @@
 		<h:panelGrid id="listPanel${id}" columns="1" width="${dataTableWidth}">
 			<crank:paginator paginator="${paginator}" reRender="${reRender}" ajaxSingle="${ajaxSingle}" readOnly="${readOnly}"/>
 
+ 
+<!-- 				
+				<c:forEach items="${pNames}" var="property">
+				
+						property = ${property} <br />
+						autoCreatePrependParentAlias = ${paginator.filterableProperties[property].autoCreatePrependParentAlias} <br />
+						type = ${paginator.filterableProperties[property].type} <br />
+						parentType = ${paginator.filterableProperties[property].parentType} <br />
+						name = ${paginator.filterableProperties[property].comparison.name} <br />
+						paginator.filterableProperties = ${paginator.filterableProperties} <br />
+						
+				</c:forEach>
+ -->			
 			<rich:dataTable width="${dataTableWidth}" id="dataTable${id}"
 				rows="#{paginator.itemsPerPage}" columnClasses="${listingDataTableColumnClasses}"
 				rowClasses="${listingDataTableRowClasses}"
@@ -183,11 +196,11 @@
 						<c:choose>
 							<c:when test="${crud:contains(property, '.')}">
 								<c:choose>
-									<c:when test="${crud:isBoolean(crud.entityClass,property)}">
+									<c:when test="${crud:isFilterPropertyBoolean(paginator.filterableProperties[property].autoCreatePrependParentAlias, paginator.filterableProperties[property].parentType, property)}">
 										<h:graphicImage value="${booleanImg}" rendered="${(row.map[property] == 'true')}" styleClass="imageCenter"/>
 										<c:set var="renderAsText" value="${false}"/>
 									</c:when>
-									<c:when test="${crud:isEnum(crud.entityClass,property)}">
+									<c:when test="${crud:isFilterPropertyEnum(paginator.filterableProperties[property].autoCreatePrependParentAlias, paginator.filterableProperties[property].parentType, property)}">
 										<c:set var="outputText" value="#{crud:createEnumLabel(row.map[property])}"/>
 									</c:when>
 									<c:otherwise>
@@ -197,11 +210,12 @@
 							</c:when>
 							<c:otherwise>
 								<c:choose>
-									<c:when test="${crud:isBoolean(crud.entityClass,property)}">
+								
+									<c:when test="${crud:isFilterPropertyBoolean(paginator.filterableProperties[property].autoCreatePrependParentAlias, paginator.filterableProperties[property].parentType, property)}">
 										<h:graphicImage value="${booleanImg}" rendered="${(row.object[property] == 'true')}" styleClass="imageCenter"/>
 										<c:set var="renderAsText" value="${false}"/>
 									</c:when>
-									<c:when test="${crud:isEnum(crud.entityClass,property)}">
+									<c:when test="${crud:isFilterPropertyEnum(paginator.filterableProperties[property].autoCreatePrependParentAlias, paginator.filterableProperties[property].parentType, property)}">
 										<c:set var="outputText" value="#{crud:createEnumLabel(row.object[property])}"/>
 									</c:when>
 									<c:otherwise>
@@ -247,7 +261,6 @@
 				</h:column>
 				
 			</rich:dataTable>
-
 		</h:panelGrid>
 		</a4j:outputPanel>
 </ui:composition>

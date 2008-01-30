@@ -1,0 +1,10 @@
+#summary How to Join Multiple Entities using Crank's FilteringPaginator support
+
+== Introduction ==
+
+
+
+== Related Entries ==
+
+# UpdatingListingControllerToAllowEntityJoins
+# CriteriaDSLUpdate

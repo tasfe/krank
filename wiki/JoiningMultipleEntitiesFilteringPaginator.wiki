@@ -196,3 +196,5 @@ _*Figure 2 Example showing filtering and sorting working*_
 ___
 http://krank.googlecode.com/svn/trunk/docs/images/donutBurger.png
 ___
+
+The crank-crud-sample webapp has this example in it. Please refer to it.

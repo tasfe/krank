@@ -16,11 +16,14 @@ import org.crank.controller.TagController;
 import org.crank.crud.controller.AutoCompleteController;
 import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.controller.CrudOperations;
+import org.crank.crud.controller.FilterablePageable;
+import org.crank.crud.controller.FilterableProperty;
 import org.crank.crud.controller.FilteringPaginator;
 import org.crank.crud.controller.Row;
 import org.crank.crud.controller.SelectManyByIdController;
 import org.crank.crud.controller.SelectOneByIdController;
 import org.crank.crud.controller.datasource.DaoFilteringDataSource;
+import org.crank.crud.controller.datasource.DaoFilteringPagingDataSource;
 import org.crank.crud.controller.datasource.EnumDataSource;
 import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.OrderBy;
@@ -47,6 +50,9 @@ import org.crank.crud.model.Skill;
 import org.crank.crud.model.Specialty;
 import org.crank.crud.model.Tag;
 import org.crank.crud.model.Task;
+import org.crank.crud.model.inquiry.Inquiry;
+import org.crank.crud.model.inquiry.PetClinicInquiry;
+import org.crank.crud.model.inquiry.PetClinicLead;
 import org.crank.crud.relationships.RelationshipManager;
 import org.crank.sample.datasource.EmployeeDataSource;
 import org.crank.sample.datasource.EmployeeReportObject;
@@ -77,9 +83,15 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 			
 			managedObjects.add(new CrudManagedObject(Tag.class,
 					TagDAO.class));
-			managedObjects.add(new CrudManagedObject(Category.class,
-					null));
 			
+			managedObjects.add(new CrudManagedObject(Category.class,null));
+			
+			managedObjects.add(new CrudManagedObject(PetClinicInquiry.class,
+					null));
+			managedObjects.add(new CrudManagedObject(Inquiry.class,
+					null));
+			managedObjects.add(new CrudManagedObject(PetClinicLead.class,
+					null));			
 			
 			CrudManagedObject crudManagedObject = new CrudManagedObject(Role.class, RoleDAO.class);
 			crudManagedObject.setNewSelect("new Role(o.id, o.name)");
@@ -129,6 +141,16 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		return adapter;
 	}
 
+	
+	@SuppressWarnings("unchecked")
+	@Bean(scope = DefaultScopes.SESSION)
+	public JsfCrudAdapter petClinicLeadCrud() throws Exception {
+		JsfCrudAdapter adapter = cruds().get("PetClinicLead");
+		FilterablePageable paginator = adapter.getPaginator();
+		paginator.addFilterableEntityJoin(PetClinicInquiry.class, "PetClinicInquiry", "inquiry", new String []{"anotherProp"}, "o.inquiry");
+		return adapter;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Bean(scope = DefaultScopes.SESSION, aliases = "empCrud")
 	public JsfCrudAdapter employeeCrud() throws Exception {
@@ -240,6 +262,13 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		dataSource.setType(EmployeeStatus.class);
 		selectItemGenerator.setDataSource(dataSource);
 		selectItemGenerators.put("EmployeeStatus", selectItemGenerator);
+		
+		SelectItemGenerator daoSelectItemGenerator = new SelectItemGenerator();
+		DaoFilteringPagingDataSource daoDataSource = new DaoFilteringPagingDataSource();
+		daoDataSource.setDao(repos().get("PetClinicInquiry"));
+		daoSelectItemGenerator.setDataSource(daoDataSource);
+		selectItemGenerators.put("Inquiry", daoSelectItemGenerator);
+		selectItemGenerators.put("inquiry", daoSelectItemGenerator);
 		return selectItemGenerators;
 	}
 

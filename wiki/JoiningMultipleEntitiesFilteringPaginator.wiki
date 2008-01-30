@@ -7,7 +7,9 @@ Crank and Presto before it has always had the ability to create paginateable, so
  # Unable to sort, filter on fields in a sublcass
  # Unable to sort, filter on fields that don't have a relationship to entity
 
-We did a major update to the `FilteringPaginator` and the Criteria DSL to support selecting and filtering multiple entities in a single listing.
+We did a major update to the `FilteringPaginator` and the Criteria DSL to support selecting and filtering multiple entities in a single listing. 
+
+This document describes how to use this new feature.
 
 ==== Related Entries ====
 
@@ -57,8 +59,26 @@ One possible solution to the above is to rewrite the query as:
 
 We updated our Criteria API to support entity joins see: [CriteriaDSLUpdate]
 
-We also changed the `FilteringPaginator` which backs the `<crank:listing` composition component to perform this time of join.
+We also changed the `FilteringPaginator` which backs the `<crank:listing` composition component to perform this type of join.
 
 This document has a step by step of example using the PetClinic example. 
 
 ==== Unable to sort, filter on fields that don't have a relationship to entity ====
+
+This is another problem that this new feature should fix (example to follow). Essentially we have a tiered architecture where we have three libraries as follows:
+
+ * `CoreBiz` module
+ * `ServiceA` module
+ * `ServiceB` module
+
+Think of the modules as Java jar files or seperate maven projects pom.xml (which in our case they actually are both).
+
+The `CoreBiz` module does not depend on the `ServiceA` module or the `ServiceB` module.
+The `ServiceA` module does not depend on the `ServiceB` but does depend on `CoreBiz`.
+The `ServiceB` module depends on the `ServiceA` and `CoreBiz`.
+
+Imagine that each tier has an hierarchy of Objects that are mapped to a set of Database tables via JPA. Thus there are relationships in the database that do not exist in the Object model, but are instead managed by `ServiceManagers`. Otherwise we would have one giant module with one huge Object graph mapped to the database. However, we do need to join objects at times for listings for Admin tools. Whew! Clear? Probably not.
+
+Let's say I have a library that manages Tags and you can associate and Employee with a tag, but you only store the tag id not the Tag.
+
+So this new feature can support this as well.

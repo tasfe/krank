@@ -4,8 +4,9 @@
 
 Crank and Presto before it has always had the ability to create paginateable, sortable listings for several years now. Lately we ran into two issues as follows:
 
- # Unable to sort, filter on fields in a sublcass
- # Unable to sort, filter on fields that don't have a relationship to entity
+  # Unable to sort, filter on fields that don't have a relationship to entity
+  # Unable to sort, filter on fields in a sublcass
+
 
 We did a major update to the `FilteringPaginator` and the Criteria DSL to support selecting and filtering multiple entities in a single listing. 
 
@@ -16,10 +17,30 @@ This document describes how to use this new feature.
  * UpdatingListingControllerToAllowEntityJoins Problem defininion and notes on impl
  * [CriteriaDSLUpdate] Documentation on updates to the DSL to support new features related to Entity joins
 
+==== Unable to sort, filter on fields that don't have a relationship to entity ====
+
+This is another problem that this new feature should fix (example to follow). Essentially we have a tiered architecture where we have three libraries as follows:
+
+ * `CoreBiz` module
+ * `ServiceA` module
+ * `ServiceB` module
+
+Think of the modules as Java jar files or seperate maven projects pom.xml (which in our case they actually are both).
+
+The `CoreBiz` module does not depend on the `ServiceA` module or the `ServiceB` module.
+The `ServiceA` module does not depend on the `ServiceB` but does depend on `CoreBiz`.
+The `ServiceB` module depends on the `ServiceA` and `CoreBiz`.
+
+Imagine that each tier has an hierarchy of Objects that are mapped to a set of Database tables via JPA. Thus there are relationships in the database that do not exist in the Object model, but are instead managed by `ServiceManagers`. Otherwise we would have one giant module with one huge Object graph mapped to the database. However, we do need to join objects at times for listings for Admin tools. Whew! Clear? Probably not.
+
+Let's say I have a library that manages Tags and you can associate and Employee with a tag, but you only store the tag id not the Tag. This new feature can support this as well.
+
+
 ==== Unable to sort, filter on fields in a sublcass ====
 
 You can't access properties of a subclass when sorting and filtering. This needs explanation.
 
+==== Sample Classes ====
 Let's say we have classes as follows:
 
 {{{
@@ -34,7 +55,10 @@ class PetStoreLead extends Lead
 class PetClinicLead extends Lead
 }}}
 
-In this example: A `Lead` is a sales lead. An `Inquiry` generates a `Lead`. The `Lead` has a reference to the `Inquiry` that generated the lead. There are two subclasses of `Inquiry`, namely, `PetStoreInquiry` and `PetClinicInquiry`.
+In this example: A `Lead` is a sales lead. An `Inquiry` generates a `Lead`. The `Lead` has a reference to the `Inquiry` that generated the lead. There are two subclasses of `Inquiry`, namely, `PetStoreInquiry` and `PetClinicInquiry` see figure 1.
+
+_*Figure 1*_
+http://krank.googlecode.com/svn/trunk/docs/images/inquiryExample.png
 
 The question is while searching for `PetStoreLead`s how do you access properties of the `Inquiry` subclass?
 
@@ -63,25 +87,7 @@ We also changed the `FilteringPaginator` which backs the `<crank:listing` compos
 
 This document has a step by step of example using the `PetClinic` example. 
 
-==== Unable to sort, filter on fields that don't have a relationship to entity ====
-
-This is another problem that this new feature should fix (example to follow). Essentially we have a tiered architecture where we have three libraries as follows:
-
- * `CoreBiz` module
- * `ServiceA` module
- * `ServiceB` module
-
-Think of the modules as Java jar files or seperate maven projects pom.xml (which in our case they actually are both).
-
-The `CoreBiz` module does not depend on the `ServiceA` module or the `ServiceB` module.
-The `ServiceA` module does not depend on the `ServiceB` but does depend on `CoreBiz`.
-The `ServiceB` module depends on the `ServiceA` and `CoreBiz`.
-
-Imagine that each tier has an hierarchy of Objects that are mapped to a set of Database tables via JPA. Thus there are relationships in the database that do not exist in the Object model, but are instead managed by `ServiceManagers`. Otherwise we would have one giant module with one huge Object graph mapped to the database. However, we do need to join objects at times for listings for Admin tools. Whew! Clear? Probably not.
-
-Let's say I have a library that manages Tags and you can associate and Employee with a tag, but you only store the tag id not the Tag. This new feature can support this as well.
 
 
 ==== Step by Step example ====
 
-http://krank.googlecode.com/svn/trunk/docs/images/inquiryExample.png

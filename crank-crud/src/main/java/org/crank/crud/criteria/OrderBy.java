@@ -7,8 +7,15 @@ public class OrderBy implements Serializable{
 	private OrderDirection direction;
     private boolean enabled = false;
     private Integer sequence = 0;
+    private boolean alias;
 
-    public Integer getSequence() {
+    public boolean isAlias() {
+		return alias;
+	}
+	public void setAlias(boolean alias) {
+		this.alias = alias;
+	}
+	public Integer getSequence() {
         return sequence;
     }
     public void setSequence( Integer sequence ) {

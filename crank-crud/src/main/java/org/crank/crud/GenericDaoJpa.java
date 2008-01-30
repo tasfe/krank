@@ -964,7 +964,11 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		if (null != orderBy && orderBy.length > 0) {
 			query.append(" ORDER BY ");
 			for (int index = 0; index < orderBy.length; index++) {
-				query.append("o." + orderBy[index].getName());
+				if (!orderBy[index].isAlias()) {
+					query.append("o." + orderBy[index].getName());
+				} else {
+					query.append(orderBy[index].getName());
+				}
 				query.append(" ");
 				query.append(orderBy[index].getDirection().toString());
 				if (index + 1 < orderBy.length) {

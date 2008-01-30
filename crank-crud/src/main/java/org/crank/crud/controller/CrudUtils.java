@@ -21,8 +21,40 @@ public class CrudUtils {
     static {
         allowedPackages.add( "javax.persistence" );
     }
+    public static boolean isFilterPropertyText(boolean autoCreatePrependParentAlias, Class<?> parentType, String property) {
+    	if (autoCreatePrependParentAlias) {
+    		return TypeUtils.isText(parentType, property);
+    	} else {
+        	String propMinusLeadingName = property.substring(property.indexOf('.')+1, property.length());
+    		return TypeUtils.isText(parentType, propMinusLeadingName);
+    	}
+    }    
+    public static boolean isFilterPropertyDate(boolean autoCreatePrependParentAlias, Class<?> parentType, String property) {
+    	if (autoCreatePrependParentAlias) {
+    		return TypeUtils.isDate(parentType, property);
+    	} else {
+        	String propMinusLeadingName = property.substring(property.indexOf('.')+1, property.length());
+    		return TypeUtils.isDate(parentType, propMinusLeadingName);
+    	}
+    }    
+    public static boolean isFilterPropertyBoolean(boolean autoCreatePrependParentAlias, Class<?> parentType, String property) {
+    	if (autoCreatePrependParentAlias) {
+    		return TypeUtils.isBoolean(parentType, property);
+    	} else {
+        	String propMinusLeadingName = property.substring(property.indexOf('.')+1, property.length());
+    		return TypeUtils.isBoolean(parentType, propMinusLeadingName);
+    	}
+    }
+    public static boolean isFilterPropertyEnum(boolean autoCreatePrependParentAlias, Class<?> parentType, String property) {
+    	if (autoCreatePrependParentAlias) {
+    		return TypeUtils.isEnum(parentType, property);
+    	} else {
+        	String propMinusLeadingName = property.substring(property.indexOf('.')+1, property.length());
+    		return TypeUtils.isEnum(parentType, propMinusLeadingName);
+    	}
+    }
     
-    public static boolean isRequired(Class clazz, String propertyName) {
+    public static boolean isRequired(Class<?> clazz, String propertyName) {
     	
     	if (clazz == null || propertyName == null) {
     		throw new CrankException("CrankUtils.isRequired: Null arguments are not allowed " +
@@ -312,5 +344,9 @@ public class CrudUtils {
 		return buffer.toString();
 	}
 
-    
+    public static void main (String[] args) {
+    	String foo = "foo.bar";
+    	foo = foo.substring(foo.indexOf('.')+1, foo.length());
+    	System.out.println(foo);
+    }
 }

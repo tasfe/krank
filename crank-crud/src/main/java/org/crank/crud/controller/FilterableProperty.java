@@ -47,6 +47,7 @@ public class FilterableProperty implements Serializable, Toggleable {
     /** Init filter. */
     @SuppressWarnings("unchecked")
     public FilterableProperty(String name, Class type, Class parentType, boolean autoCreatePrependParentAlias) {
+    	this.parentType = parentType;
         this.type = type;
         this.autoCreatePrependParentAlias = autoCreatePrependParentAlias;
         if (this.type.isAssignableFrom( String.class )) {
@@ -56,7 +57,7 @@ public class FilterableProperty implements Serializable, Toggleable {
         } else {
             comparison = new ComparisonWithEvents(name, Operator.EQ, null, !autoCreatePrependParentAlias);
         }
-        orderBy = new OrderByWithEvents(name, OrderDirection.ASC);
+        orderBy = new OrderByWithEvents(name, OrderDirection.ASC, !autoCreatePrependParentAlias);
         this.type = type;
     }
 

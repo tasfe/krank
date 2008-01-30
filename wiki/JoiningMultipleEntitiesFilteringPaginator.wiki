@@ -14,7 +14,7 @@ This document describes how to use this new feature.
 
 ==== Related Entries ====
 || Wiki Entry || Description ||
-|| UpdatingListingControllerToAllowEntityJoins || Problem defininion and notes on impl ||
+|| UpdatingListingControllerToAllowEntityJoins || Problem defininion and notes on impl, shows error messages that JPA throws when filtering on fields that don't have a relationship to entity ||
 || [CriteriaDSLUpdate] || Documentation on updates to the DSL to support new features related to Entity joins ||
 
 ==== Unable to sort, filter on fields that don't have a relationship to entity ====
@@ -146,3 +146,13 @@ Then we pull the `JsfCrudAdapter` for lead and configure its paginator to do an 
 }}}
 
 From a visual standpoint, this adds an extra column to our listing that the end user can filter and sort. The `addFilterableEntityJoin` is a convience method since we have an app that has to do this quite a bit, you could do similar stuff by configuring a hierarchy of `Select`, `FilteringProperty`, `EntityJoin`, `Comparison`, etc., but that would be very error prone for most folks not familiar with the Criteria DSL that Crank relies on (see [UsingDAO], [CriteriaDSLUpdate] and [Blog entry on Criteria | http://www.jroller.com/RickHigh/entry/i_implemented_a_detached_criteria]) for more details on the Crank Criteria DSL.
+
+To configure the `<crank:listing` tag you would do the following (in a Facelet):
+{{{
+<crank:listing jsfCrudAdapter="${petClinicLeadCrud}"
+            propertyNames="name,inquiry.anotherProp"
+            parentForm="petClinicLeadListForm" />
+
+}}}
+
+Notice that the `propertyNames` specifies the `inquiry.anotherProperty` as we can now include this in the listing as if it were any other property.

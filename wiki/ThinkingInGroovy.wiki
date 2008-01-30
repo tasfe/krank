@@ -362,3 +362,91 @@ class DataBaseMetaDataReader {
 }}}
 
 I wanted the list to be mutable, but not that much. It is really only going to be ["TABLE"] or ["TABLE", "VIEW"].
+
+== More fun with Groovy ==
+
+A bit at a time. Today I learned a bit more about Groovy. It has been a few days since I played with my new toy. I been busy writing JSF articles over at developeWorks, posting on java.dzone.com(I am a zone leader for Java), working on a new listing feature to join abstract class properties (done BTW), and then keeping up with four kids.
+
+Trying to figure out how to parse table names like EMPLOYEE, DEPT_FOO to Employee and DeptFoo using Groovy.
+
+I needed to figure out how to use the String indexing notation which is similar to Pythons (but its been a while since I pythoned as well). I tried a few combos (and read the docs). Enter stage left... Groovy Console. Fired up the up Groovy console, typed some Groovy code (or what I thought was Groovy code), and it yelled at me (no thats not it). Finally bent it to my will. I really dig the Groovy console... I forgot how much fun it was to use an iteractive console....
+
+This is what I came up with:
+
+{{{
+String tableName = "FOO_BOB"
+StringBuilder builder = new StringBuilder()
+tableName.split("_").each{ String namePart ->
+       builder.append(namePart[0].toUpperCase() + namePart[1..-1].toLowerCase())
+}
+println builder.toString()
+}}}
+
+The above converts FOO_BOB to FooBob as expected. I love this syntax namePart[1..-1], and I miss it from my Python days. This is the same as saying namePart.subString(1, namePart.length-1) in Java, i.e., 
+
+{{{
+//Groovy
+namePart[1..-1]
+
+//Java
+namePart.subString(1, namePart.length-1)
+}}}
+
+For some reason I assumed that "<<" would work with StringBuilder, but not so much.
+
+{{{
+       builder << (namePart[0].toUpperCase() + namePart[1..-1].toLowerCase()) //don't work
+
+}}}
+
+
+Now I get this far....
+
+{{{
+...
+    static main (args) {
+
+        JdbcUtils jdbcUtils = new JdbcUtils(url:"jdbc:mysql://localhost:3306/crank_crud?autoReconnect=true",
+                userName:"crank", password:"crank", driver:"com.mysql.jdbc.Driver");
+        DataBaseMetaDataReader reader = new DataBaseMetaDataReader()
+        reader.jdbcUtils = jdbcUtils
+        reader.processDB()
+    }
+
+...
+...
+
+    def processDB(){
+         processTables()
+         processColumns()
+         tables.each{Table table ->
+            StringBuilder builder = new StringBuilder();
+            table.name.split("_").each{ String namePart ->
+                    builder.append(namePart[0].toUpperCase() + namePart[1..-1].toLowerCase())
+            }
+            println builder
+            classes << new JavaClass(name:builder.toString())
+         }
+         classes.each{JavaClass javaClass ->
+            println javaClass.name
+         }
+    }
+
+
+}}}
+
+I am having fun with Groovy. Oh yeah... I used the map literal too:
+
+{{{
+static Map <Integer, JavaType> mappings = [(Types.CHAR) : JavaType.STRING , (Types.VARCHAR) : JavaType.STRING]
+}}}
+
+I thought
+
+{{{
+static Map <Integer, JavaType> mappings = [Types.CHAR : JavaType.STRING , Types.VARCHAR : JavaType.STRING]
+}}}
+
+would work, but the keys needed to in parenthesis.
+
+I am really liking the strong typing mixed with scripting... terse, tight and I get code completion from Idea.... I am digging it.

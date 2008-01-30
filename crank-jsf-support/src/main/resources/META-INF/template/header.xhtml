@@ -114,11 +114,11 @@
 				</a4j:commandLink>
 				</div>
 				
-				<a4j:outputPanel axajRendered="true" rendered="#{comparison.enabled and not crud:isDate(paginator.type,fieldName)}">
+				<a4j:outputPanel axajRendered="true" rendered="#{comparison.enabled and not crud:isFilterPropertyDate(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
 					<h:inputText        styleClass="${headerFilterInputTextClass}" 
 										value="#{comparison.value}"
 										size="5"
-										rendered="${crud:isText(paginator.type,fieldName)}"
+										rendered="${crud:isFilterPropertyText(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}"
 										>
 								<c:choose>											
 									<c:when test="${filter.long}">
@@ -146,20 +146,20 @@
 								
 					</h:inputText>
 
-					<h:panelGroup rendered="${crud:isEnum(paginator.type,fieldName)}">
-				        <c:set var="propEntityName" value="${crud:getPropertyEntityName(paginator.type,fieldName)}" />
+					<h:panelGroup rendered="${crud:isFilterPropertyEnum(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
+				        <c:set var="propEntityName" value="${crud:getPropertyEntityName(filter.parentType,fieldName)}" />
 				        <h:selectOneMenu value="#{comparison.value}">
 							<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
 						</h:selectOneMenu>
 					</h:panelGroup>
 
-					<h:panelGroup rendered="${crud:isBoolean(paginator.type,fieldName)}">
+					<h:panelGroup rendered="${crud:isFilterPropertyBoolean(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
 						<h:selectBooleanCheckbox styleClass="${headerFilterInputTextClass}" 
 											value="#{comparison.value}"/>
 					</h:panelGroup>
 
 					<a4j:commandLink  
-						rendered="${not crud:isEnum(paginator.type,fieldName)}"
+						rendered="${not crud:isFilterPropertyEnum(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}"
 						reRender="${reRender}"
 						action="#{comparison.disable}"
 						title="${filterRemTip}"
@@ -168,7 +168,7 @@
 					</a4j:commandLink>
 				</a4j:outputPanel>
 					<br />
-					<h:panelGrid columns="3" rendered="${comparison.enabled and crud:isDate(paginator.type,fieldName)}">
+					<h:panelGrid columns="3" rendered="${comparison.enabled and crud:isFilterPropertyDate(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
 					
 						<h:outputText value=""/>
 				        <t:calendar renderAsPopup="true" renderPopupButtonAsImage="true" 

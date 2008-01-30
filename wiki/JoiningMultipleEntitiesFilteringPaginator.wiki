@@ -131,7 +131,7 @@ Then we pull the `JsfCrudAdapter` for lead and configure its paginator to do an 
 		JsfCrudAdapter adapter = cruds().get("PetClinicLead");
 		/* Grab its filtering paginator and configure it. */
 		FilterablePageable paginator = adapter.getPaginator();
-		/* Call addFilterableEntityJoin padding the class we are joining to,
+		/* Call addFilterableEntityJoin adding the class we are joining to,
 		 * the name of the entity, the name of the alias, 
 		 * an array of property names, and an optional join that will be added to the where clause.
 		 */
@@ -144,3 +144,5 @@ Then we pull the `JsfCrudAdapter` for lead and configure its paginator to do an 
 	}
 
 }}}
+
+From a visual standpoint, this adds an extra column to our listing that the end user can filter and sort. The `addFilterableEntityJoin` is a convience method since we have an app that has to do this quite a bit, you could do similar stuff by configuring a hierarchy of `Select`, `FilteringProperty`, `EntityJoin`, `Comparison`, etc., but that would be very error prone for most folks not familiar with the Criteria DSL that Crank relies on (see [UsingDAO], [CriteriaDSLUpdate] and [Blog entry on Criteria| http://www.jroller.com/RickHigh/entry/i_implemented_a_detached_criteria]) for more details on the Crank Criteria DSL.

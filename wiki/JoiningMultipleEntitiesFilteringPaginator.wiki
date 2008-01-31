@@ -2,7 +2,7 @@
 
 ==== Introduction ====
 
-Crank and Presto before it has always had the ability to create paginateable, filterable, sortable listings for several years now. Lately we ran into two issues as follows:
+Crank, and Presto before it, has always had the ability to create paginateable, filterable, sortable listings for several years now. Lately we ran into two issues as follows:
 
   # Unable to sort, filter on fields that don't have a relationship to entity
   # Unable to sort, filter on fields in a sublcass

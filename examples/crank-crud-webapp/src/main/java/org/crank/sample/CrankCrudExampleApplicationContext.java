@@ -17,7 +17,6 @@ import org.crank.crud.controller.AutoCompleteController;
 import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.controller.CrudOperations;
 import org.crank.crud.controller.FilterablePageable;
-import org.crank.crud.controller.FilterableProperty;
 import org.crank.crud.controller.FilteringPaginator;
 import org.crank.crud.controller.Row;
 import org.crank.crud.controller.SelectManyByIdController;
@@ -145,9 +144,19 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	@SuppressWarnings("unchecked")
 	@Bean(scope = DefaultScopes.SESSION)
 	public JsfCrudAdapter petClinicLeadCrud() throws Exception {
+		/* Pull out the existing CrudAdapter. */
 		JsfCrudAdapter adapter = cruds().get("PetClinicLead");
+		/* Grab its filtering paginator and configure it. */
 		FilterablePageable paginator = adapter.getPaginator();
-		paginator.addFilterableEntityJoin(PetClinicInquiry.class, "PetClinicInquiry", "inquiry", new String []{"anotherProp"}, "o.inquiry");
+		/* Call addFilterableEntityJoin padding the class we are joining to,
+		 * the name of the entity, the name of the alias, 
+		 * an array of property names, and an optional join that will be added to the where clause.
+		 */
+		paginator.addFilterableEntityJoin(PetClinicInquiry.class, //Class we are joining
+					"PetClinicInquiry", //Entity name
+					"inquiry", //
+					new String []{"anotherProp"}, //Array of property names we want to join to. 
+					"o.inquiry"); //How to join to the PetClinicLead 
 		return adapter;
 	}
 	

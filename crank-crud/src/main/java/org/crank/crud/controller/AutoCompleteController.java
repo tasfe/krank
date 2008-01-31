@@ -4,6 +4,10 @@ import static org.crank.crud.criteria.Comparison.eq;
 import static org.crank.crud.criteria.Comparison.startsLike;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.crank.crud.controller.datasource.FilteringDataSource;
@@ -22,6 +26,9 @@ public class AutoCompleteController <S extends Serializable, T extends Serializa
     private CrudOperations<T> controller; 
     private SelectSupport selectable = new SelectSupport(this);
     private Group group = new Group();
+    private boolean dataCached = false;
+    private String cacheKey;
+    private List<S> cachedData;
 
 
 	public void setDataSource( FilteringDataSource<S> dataSource ) {
@@ -78,10 +85,41 @@ public class AutoCompleteController <S extends Serializable, T extends Serializa
     }
     
     public List<S> autocomplete(Object suggest) {
+        List<S> rv = null;
 
         String pref = (String)suggest;
-        
-        return getList(pref);
+        if (isDataCached()) {
+        	pref = pref.toUpperCase();
+        	if (cacheKey != null && pref.startsWith(cacheKey)) {
+        		List<S> tmp = new ArrayList<S>(cachedData.size());
+     	       	BeanWrapper entityProp = null;
+        		for (S s : cachedData) {
+         	       	if (entityProp == null) {
+         	       		entityProp = new BeanWrapperImpl(s);
+         	       	}
+         	       	else {
+         	       		entityProp.setWrappedInstance(s);
+         	       	}         	       	
+                    Object beanPropertyValue = entityProp.getPropertyValue(propertyName);
+                    if (beanPropertyValue != null) {
+                    	String ucValue = beanPropertyValue.toString().toUpperCase();
+                    	if (ucValue.startsWith(pref)) {
+                    		tmp.add(s);
+                    	}
+                    }
+          		}
+        		rv = tmp;        		
+        	}
+        	else {
+                rv = getList(pref);                  
+        	}
+            cachedData = rv;
+            cacheKey = pref;
+        }
+        else {
+            rv = getList(pref);
+        }
+        return rv;
     }
 
 
@@ -123,15 +161,15 @@ public class AutoCompleteController <S extends Serializable, T extends Serializa
 	protected void textChanged(String value) {
 		List<?> list = getListExact(value);
 		long time = System.currentTimeMillis();
-		System.out.printf("%s %s \n", Thread.currentThread().getName(), time);
+//		System.out.printf("%s %s \n", Thread.currentThread().getName(), time);
 		if (list.size() == 1) {
 			Object newValue = list.get(0);
-			System.out.printf("FOUND %s %s %s\n", Thread.currentThread().getName(), time, value);			
+//			System.out.printf("FOUND %s %s %s\n", Thread.currentThread().getName(), time, value);			
 			selectable.fireSelect(newValue);
 			found = true;
 			
 		} else {
-			System.out.printf("NOT FOUND %s %s %s\n", Thread.currentThread().getName(), time, value);			
+//			System.out.printf("NOT FOUND %s %s %s\n", Thread.currentThread().getName(), time, value);			
 			selectable.fireUnselect();
 			found = false;
 		}
@@ -219,6 +257,14 @@ public class AutoCompleteController <S extends Serializable, T extends Serializa
 
 	public Group getGroup() {
 		return group;
+	}
+
+	public boolean isDataCached() {
+		return dataCached;
+	}
+
+	public void setDataCached(boolean dataCached) {
+		this.dataCached = dataCached;
 	}
 
 }

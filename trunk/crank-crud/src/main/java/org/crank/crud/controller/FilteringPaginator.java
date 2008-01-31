@@ -178,7 +178,10 @@ public class FilteringPaginator extends Paginator implements
 		public FPToggleListener() {
 		}
 
-		/** This method is the callback listener and gets notified of filteableProperties that change. */
+		/**
+		 * This method is the callback listener and gets notified of
+		 * filteableProperties that change.
+		 */
 		public void toggle(ToggleEvent event) {
 			if (event.getSource() instanceof OrderBy) {
 				OrderBy orderBy = (OrderBy) event.getSource();
@@ -189,24 +192,24 @@ public class FilteringPaginator extends Paginator implements
 		}
 	}
 
-	
 	/**
 	 * This method creates the filter properties list using reflection.
 	 * 
-	 * This method is recursive in that it calls setupFilters which can call createFilterProperties.
+	 * This method is recursive in that it calls setupFilters which can call
+	 * createFilterProperties.
 	 * 
-	 *   REFACTOR: Seems spds and pds both get processed the same way so not sure why we need 
-	 *   the delination of two lists. Please refactor.
-	 *   
+	 * REFACTOR: Seems spds and pds both get processed the same way so not sure
+	 * why we need the delination of two lists. Please refactor.
+	 * 
 	 * @author Rick Hightower
 	 * @param theType
 	 * @param propertyName
 	 * @param ps
 	 */
 	@SuppressWarnings("unchecked")
-	private void createFilterProperties(final Class parentType, final Class theType,
-			final String propertyName, PropertyScanner ps) {
-		
+	private void createFilterProperties(final Class parentType,
+			final Class theType, final String propertyName, PropertyScanner ps) {
+
 		/* Get the beaninfo from the type object. */
 		BeanInfo beanInfo = null;
 		try {
@@ -222,16 +225,16 @@ public class FilteringPaginator extends Paginator implements
 
 		/* Iterate through the properties in this type. */
 		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-			
-			/* If autoJoin is enabled, then left fetch join the property. 
+
+			/*
+			 * If autoJoin is enabled, then left fetch join the property.
 			 * 
-			 * */
+			 */
 			if (autoJoin
 					&& CrudUtils.isEntity(propertyDescriptor.getPropertyType())) {
 				joins.add(Join.leftJoinFetch(propertyDescriptor.getName()));
 			}
-			
-			
+
 			if (theType == propertyDescriptor.getPropertyType()) {
 				spds.add(propertyDescriptor);
 			} else {
@@ -250,16 +253,17 @@ public class FilteringPaginator extends Paginator implements
 	 * @param pds
 	 */
 	@SuppressWarnings("unchecked")
-	private void setupFilters(final Class parentType, final Class theType, final String propertyName,
-			PropertyScanner ps, List<PropertyDescriptor> pds) {
-		
+	private void setupFilters(final Class parentType, final Class theType,
+			final String propertyName, PropertyScanner ps,
+			List<PropertyDescriptor> pds) {
+
 		String key;
-		
+
 		/* Iterate through the properties. */
 		for (PropertyDescriptor propertyDescriptor : pds) {
-			
+
 			String property = null;
-			
+
 			/* Build the property path name. ex. o.employee.department.name */
 			if (propertyName != null) {
 				property = propertyName + "." + propertyDescriptor.getName();
@@ -271,39 +275,44 @@ public class FilteringPaginator extends Paginator implements
 			FilterableProperty filterableProperty = new FilterableProperty(
 					property, propertyDescriptor.getPropertyType(), parentType);
 
-			/* Add it to our list of filterableProperties. */ 
+			/* Add it to our list of filterableProperties. */
 			filterableProperties.put(property, filterableProperty);
-			
-			/* Register our toggle listener to be notified if the end user activates this property. */
+
+			/*
+			 * Register our toggle listener to be notified if the end user
+			 * activates this property.
+			 */
 			filterableProperty
 					.addToggleListener(new FPToggleListener(property));
-			
-			/* Build a key to uniquely identify this property so we don't add it twice to the
-			 * filterableProperties.
+
+			/*
+			 * Build a key to uniquely identify this property so we don't add it
+			 * twice to the filterableProperties.
 			 */
 			/* Get the parent class name. */
 			String parentClassName = theType.getName();
 			String childClassName = propertyDescriptor.getPropertyType()
 					.getName();
-			
+
 			key = parentClassName + "." + childClassName + "."
 					+ propertyDescriptor.getName();
 
 			/*
-			 * See if this property is an entity or a embeddable object. 
+			 * See if this property is an entity or a embeddable object.
 			 */
 			if (CrudUtils.isEntity(propertyDescriptor.getPropertyType())
 					|| CrudUtils.isEmbeddable(propertyDescriptor
 							.getPropertyType())) {
-				/* Ask the property scanner if we can recurse on this property or if 
-				 * we have recursed on it too many time already. This is to help us
-				 * get rid of recursive loops which are as fun a barrel of monkey's 
-				 * infected with ebola virus.
+				/*
+				 * Ask the property scanner if we can recurse on this property
+				 * or if we have recursed on it too many time already. This is
+				 * to help us get rid of recursive loops which are as fun a
+				 * barrel of monkey's infected with ebola virus.
 				 */
 				if (ps.canIAddThisToTheFilterableProperties(key)) {
 
-					createFilterProperties(parentType,
-							propertyDescriptor.getPropertyType(), property, ps);
+					createFilterProperties(parentType, propertyDescriptor
+							.getPropertyType(), property, ps);
 
 				}
 			}
@@ -313,10 +322,11 @@ public class FilteringPaginator extends Paginator implements
 
 	private static int pscount;
 
-	/** This class helps getting rid of the recursive loops, e.g., 
-	 * employee.manager where manager is an employee 
-	 * who has employees who have managers who have employees 
-	 * who have manager who have employees.*/ 
+	/**
+	 * This class helps getting rid of the recursive loops, e.g.,
+	 * employee.manager where manager is an employee who has employees who have
+	 * managers who have employees who have manager who have employees.
+	 */
 	class PropertyScanner implements Serializable {
 
 		int number = 0;
@@ -331,16 +341,19 @@ public class FilteringPaginator extends Paginator implements
 		private boolean canIAddThisToTheFilterableProperties(String key) {
 			/* Check to see if we visited this unique key already. */
 			Integer visits = visitorSet.get(key);
-			
+
 			/* Nope we have not been here before. */
 			if (visits == null) {
 				visitorSet.put(key, 0);
 				return true;
-				
-				/* We have been here before and now lets see if we have the proper depth.
-				 * For example we might allow employee.manager.employees.manager.employees.name but no further.
-				 * The default property depth is 1 b/c this recurive loop only is a problem for 1 to 1 relationships.
-				 * This code could use some refactoring.
+
+				/*
+				 * We have been here before and now lets see if we have the
+				 * proper depth. For example we might allow
+				 * employee.manager.employees.manager.employees.name but no
+				 * further. The default property depth is 1 b/c this recurive
+				 * loop only is a problem for 1 to 1 relationships. This code
+				 * could use some refactoring.
 				 */
 			} else if (visits < propertyDepth) {
 				int newVisits = visits.intValue() + 1;
@@ -362,10 +375,11 @@ public class FilteringPaginator extends Paginator implements
 
 	private int propertyDepth = 1;
 
-
-	/** The filter method fires a before filter event, prepares user filters (comparisons), prepares orderBys,
-	 * prepares programatic criteria, then sets up the joins for the datasource, calls reset, 
-	 * lastly fires an after filter event.
+	/**
+	 * The filter method fires a before filter event, prepares user filters
+	 * (comparisons), prepares orderBys, prepares programatic criteria, then
+	 * sets up the joins for the datasource, calls reset, lastly fires an after
+	 * filter event.
 	 */
 	public void filter() {
 		fireBeforeFilter(filterablePaginatableDataSource().group());
@@ -380,7 +394,7 @@ public class FilteringPaginator extends Paginator implements
 				this.joins.toArray(new Join[this.joins.size()]));
 
 		fireAfterFilter(filterablePaginatableDataSource().group());
-		
+
 		/* Reset the page count and such for pagination. */
 		reset();
 	}
@@ -395,7 +409,10 @@ public class FilteringPaginator extends Paginator implements
 		}
 	}
 
-	/** Builds the order by clause for default <code>order by</code> or end user <code>order by</code>. */
+	/**
+	 * Builds the order by clause for default <code>order by</code> or end
+	 * user <code>order by</code>.
+	 */
 	private void prepareOrderByClauseProgramaticOrUserForFilter(
 			List<OrderBy> orderBys) {
 		/* Sort the orderBys. */
@@ -505,7 +522,7 @@ public class FilteringPaginator extends Paginator implements
 		return false;
 	}
 
-	/** Disable all of the sorts.  */
+	/** Disable all of the sorts. */
 	public void disableSorts() {
 		sequence = 0;
 		Collection<FilterableProperty> values = filterableProperties.values();
@@ -515,7 +532,7 @@ public class FilteringPaginator extends Paginator implements
 		filter();
 	}
 
-	/** Disable all of the filters.  */
+	/** Disable all of the filters. */
 	public void disableFilters() {
 		Collection<FilterableProperty> values = filterableProperties.values();
 		for (FilterableProperty fp : values) {
@@ -529,7 +546,6 @@ public class FilteringPaginator extends Paginator implements
 		return filterableProperties;
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	public Class getType() {
 		return type;
@@ -608,7 +624,7 @@ public class FilteringPaginator extends Paginator implements
 	}
 
 	private List<Select> selects;
-	
+
 	public void addSelect(Select select) {
 		if (selects == null) {
 			selects = new ArrayList<Select>();
@@ -616,11 +632,49 @@ public class FilteringPaginator extends Paginator implements
 		selects.add(select);
 	}
 
+	/**
+	 * 
+	 * <p>
+	 * The addFilterableEntityJoin method allows us to join subclasses.
+	 * </p>
+	 * 
+	 * <p>
+	 * To call addFilterableEntityJoin we pass the class we are joining to, the
+	 * name of the entity, the name of the alias, an array of property names,
+	 * and an optional join that will be added to the where clause.
+	 * </p>
+	 * 
+	 * <p>
+	 * See http://code.google.com/p/krank/w/list and search for this method name
+	 * to see how to use this method. It is in the crank-crud webapp example.
+	 * Other methods which they could be like this method.
+	 * </p>
+	 * 
+	 * <code><pre>
+	 * paginator.addFilterableEntityJoin(PetClinicInquiry.class, //Class we are joining 
+	 * 		&quot;PetClinicInquiry&quot;, //Entity name         
+	 * 		&quot;inquiry&quot;, //Alias   
+	 * 		new String[] { &quot;anotherProp&quot; }, //Array of property names we want to join to. 
+	 * 		&quot;o.inquiry&quot;); //How to join to the PetClinicLead
+	 * </pre></code>
+	 * 
+	 * @author Rick Hightower
+	 * @param entityClass
+	 *            the class we are joining to
+	 * @param alias
+	 *            the name of the alias
+	 * @param properties
+	 *            array of property names
+	 * @param joinBy
+	 *            (optional if null ignored) How to join to the PetClinicLead
+	 * 
+	 * 
+	 */
 	@SuppressWarnings("unchecked")
-	public void addFilterableEntityJoin(Class entityClass, String entityName, String alias, String properties[], String joinBy) {
+	public void addFilterableEntityJoin(Class entityClass, String entityName,
+			String alias, String properties[], String joinBy) {
 		addSelect(Select.select(alias, false));
 		joins.add(Join.entityJoin(entityName, alias));
-
 
 		BeanInfo beanInfo = null;
 		try {
@@ -628,33 +682,35 @@ public class FilteringPaginator extends Paginator implements
 		} catch (IntrospectionException ie) {
 			throw new RuntimeException(ie);
 		}
-		
-		Map<String, PropertyDescriptor> props = MapUtils.convertArrayToMap("name",  beanInfo
-				.getPropertyDescriptors());
-		
+
+		Map<String, PropertyDescriptor> props = MapUtils.convertArrayToMap(
+				"name", beanInfo.getPropertyDescriptors());
+
 		for (String property : properties) {
-			
+
 			String propertyName = alias + "." + property;
-			
 
 			/* Create the new filterableProperty. */
 			FilterableProperty filterableProperty = new FilterableProperty(
-					propertyName, props.get(property).getPropertyType(), entityClass, false);
+					propertyName, props.get(property).getPropertyType(),
+					entityClass, false);
 
-			/* Register our toggle listener to be notified if the end user activates this property. */
+			/*
+			 * Register our toggle listener to be notified if the end user
+			 * activates this property.
+			 */
 			filterableProperty
 					.addToggleListener(new FPToggleListener(property));
-			
-			
-			/* Add it to our list of filterableProperties. */ 
+
+			/* Add it to our list of filterableProperties. */
 			filterableProperties.put(propertyName, filterableProperty);
-			
+
 		}
-		
-		if (joinBy!=null) {
+
+		if (joinBy != null) {
 			this.addCriterion(Comparison.objectEq(joinBy, alias));
 		}
-		
+
 	}
 
 	public List<Select> getSelects() {

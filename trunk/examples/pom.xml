@@ -18,6 +18,8 @@
       <module>crank-crud-webapp</module>
       <module>crank-validation-jsf-webapp</module>
       <module>crank-validation-springmvc-webapp</module>
+	  <module>blank-project</module>
+	  <module>todo-example</module>
     </modules>
 
 </project>

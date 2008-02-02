@@ -7,10 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
 
-@Table(name="IN3_USER")
-@Entity(name="In3User")
+@SuppressWarnings("serial")
+@Entity()
 @PrimaryKeyJoinColumn(name="USER_ID")
 @AssociationOverrides (value={
 			@AssociationOverride(name="contactInfo",

@@ -10,16 +10,14 @@ import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-//import javax.persistence.OrderBy; See NOTE
 import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
 
 
-@NamedQuery(name = "in3.loadGroup", 
+@SuppressWarnings("serial")
+@NamedQuery(name = "Group.loadGroup", 
 		query = "select group from In3Group "
 	+ " group where group.name = :name")	
-@Table(name="IN3_GROUP")
-@Entity(name="In3Group")
+@Entity()
 @PrimaryKeyJoinColumn(name="GROUP_ID")
 @AssociationOverrides (value={
 			@AssociationOverride(name="contactInfo",
@@ -29,14 +27,13 @@ import javax.persistence.Table;
 public class Group extends Subject{
 
 
-	//NOTE @OrderBy("name ASC") We add to remove this b/c the name is in the Subject table not the user table.
 	@OneToMany(mappedBy="parentGroup",
 		cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	private Set<User> users;
 
 	
 	
-	
+	 
 	public void addUser(User user) {
 		user.setParentGroup(this);
 		getUsers().add(user);		

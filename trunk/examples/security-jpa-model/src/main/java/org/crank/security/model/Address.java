@@ -1,9 +1,12 @@
 package org.crank.security.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 
+@SuppressWarnings("serial")
 @Embeddable
-public class Address {
+public class Address implements Serializable {
 	private String line1;
 	private String line2;
 	private String zip;

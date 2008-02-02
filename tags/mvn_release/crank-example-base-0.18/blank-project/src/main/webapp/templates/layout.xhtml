@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich">
+
+	<head>
+	  	<title><ui:insert name="title">CRANK!</ui:insert></title>
+		<script type="text/javascript" src="${request.contextPath}/helpers.js"/>
+ 		<link rel="stylesheet" type="text/css" href="${request.contextPath}/css/main.css" />
+	</head>
+
+	<body>
+			<h:panelGrid columns="1" width="60%">
+				<h:graphicImage value="/images/crank-header.jpg" alt="CRANK!" border="0" />
+			</h:panelGrid>
+
+		<table>
+		<tr>
+		<td valign="top">
+		</td>
+		<td valign="top">
+				<ui:insert name="content"/>
+		</td>
+		</tr>
+		</table>
+	</body>
+	<ui:debug hotkey="d" rendered="#{initParam['facelets.DEBUG']}"/>
+	
+</html>

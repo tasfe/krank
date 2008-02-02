@@ -1,0 +1,141 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" version="2.0"
+	xmlns:validation="http://code.google.com/p/krank/validation">
+	
+	<ui:composition>
+		<html>	
+		<head>
+			<title>User</title>
+		</head>
+		
+		<body>
+		<h1>User Registration</h1>
+		<h:form id="userForm" >
+			<div id="clientValidationSummary" />
+			
+			<h:messages showDetail="false" showSummary="true" layout="table"/>
+			
+			${UserReg.userStatus}
+			<h:panelGrid columns="4">
+				
+				<h:outputLabel value="First Name" for="firstName" />
+				<h:inputText id="firstName" value="#{UserReg.user.firstName}"
+					required="true">
+					<validation:validateBasedOnMetaData/> 
+				</h:inputText> 
+				<div id="firstNameError"/>
+				<h:message for="firstName" showSummary="false" showDetail="true"/>
+
+				<h:outputLabel value="Email" for="email" />
+				<h:inputText id="email" value="#{UserReg.user.email}"
+					required="true" >
+					<!--   onblur="return validateEmailViaAjax(true)" -->
+					<validation:validateBasedOnMetaData/> 
+				</h:inputText> 
+				<div id="emailError"/>
+				<h:message for="email" showSummary="false" showDetail="true"/>
+
+				<h:outputLabel value="Last Name" for="lastName" />
+				<h:inputText id="lastName" value="#{UserReg.user.lastName}"
+					required="true">
+					<validation:validateBasedOnMetaData/> 
+				</h:inputText> 
+				<div id="lastNameError"/>
+				<h:message for="lastName" showSummary="false" showDetail="true"/>
+
+				<h:outputLabel value="Age" for="age" />
+				<h:inputText id="age" value="#{UserReg.user.age}"
+					required="true">
+					<validation:validateBasedOnMetaData/> 
+				</h:inputText> 
+				<div id="ageError"/>
+				<h:message for="age" showSummary="false" showDetail="true"/>
+
+				<h:outputLabel value="Birth Date" for="birthDate" />
+				<h:inputText id="birthDate" value="#{UserReg.user.birthDate}"
+					required="true">
+					<validation:validateBasedOnMetaData/> 
+				</h:inputText> 
+				<div id="birthDateError"/>
+				<h:message for="birthDate" showSummary="false" showDetail="true"/>
+
+				<h:outputLabel value="User Name" for="userName" />
+				<h:inputText id="userName" value="#{UserReg.user.userName}"
+					required="true">
+					<validation:validateBasedOnMetaData/> 
+				</h:inputText> 
+				<div id="userNameError"/>
+				<h:message for="userName" showSummary="false" showDetail="true"/>
+
+
+				<h:outputLabel value="Password" for="password" />
+				<h:inputText id="password" value="#{UserReg.user.password}"
+					required="true">
+					<validation:validateBasedOnMetaData/> 
+				</h:inputText> 
+				<div id="passwordError"/>
+				<h:message for="password" showSummary="false" showDetail="true"/>
+
+				<h:outputLabel value="Password" for="password2" />
+				<h:inputText id="password2" value="#{UserReg.user.password2}"
+					required="true">
+					<validation:validateBasedOnMetaData/> 
+				</h:inputText> 
+				<div id="password2Error"/>
+				<h:message for="password2" showSummary="false" showDetail="true"/>
+
+				<h:outputLabel value="Salary" for="salary" />
+				<h:inputText id="salary" value="#{UserReg.user.salary}"
+					required="true">
+					<validation:validateBasedOnMetaData/> 
+				</h:inputText> 
+				<div id="salaryError"/>
+				<h:message for="salary" showSummary="false" showDetail="true"/>
+
+
+				<h:outputLabel value="Grade Point Average" for="gpa" />
+				<h:inputText id="gpa" value="#{UserReg.user.gpa}"
+					required="true">
+					<validation:validateBasedOnMetaData/> 
+				</h:inputText> 
+				<div id="gpaError"/>
+				<h:message for="gpa" showSummary="false" showDetail="true"/>
+
+
+				<h:outputLabel value="Phone" for="phone" />
+				<h:inputText id="phone" value="#{UserReg.user.phone}"
+					required="true">
+					<validation:validateBasedOnMetaData/> 
+				</h:inputText> 
+				<div id="phoneError"/>
+				<h:message for="phone" showSummary="false" showDetail="true"/>
+
+				<h:outputLabel value="Zip code" for="zip" />
+				<h:inputText id="zip" value="#{UserReg.user.zip}"
+					required="true">
+					<validation:validateBasedOnMetaData/> 
+				</h:inputText> 
+				<div id="zipError"/>
+				<h:message for="zip" showSummary="false" showDetail="true"/>
+
+
+			</h:panelGrid>
+
+		<h:panelGroup>
+			<h:commandButton id="register" action="#{UserReg.registerUser}" 
+			    value="Register User" onclick="return validate();" />
+
+		</h:panelGroup>
+		
+		<br />
+		<validation:clientValidator  objectExpression="#{UserReg.user}" 
+		    propertyNames="firstName,lastName,userName,email,birthDate,age,password,password2,salary,phone,gpa,zip" />
+		           
+		<br />
+		</h:form>
+	</body>
+	</html>
+	</ui:composition>
+</jsp:root>

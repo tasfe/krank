@@ -1,0 +1,16 @@
+1) Refactor CrankCrudExampleApplicationContext to put into new package
+2) Create Task object
+	2.1) Create id
+	2.2) create name
+	2.3) create description
+	
+3) Modify home.xhtml
+	3.1) Add tag libs
+	3.2) Add form
+	3.3) Add listing
+	
+4) Add entry in app context for Task
+
+5) Add persistence.xml entry for task
+org.crank.todo.Task.java
+

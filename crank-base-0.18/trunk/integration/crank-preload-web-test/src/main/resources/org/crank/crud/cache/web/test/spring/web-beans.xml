@@ -1,0 +1,26 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+       
+    <bean name="/listEmployees.html"
+        class="org.crank.cache.controller.test.EmployeeListController">
+        <property name="employeeDao" ref="employeeDao" />
+    </bean> 
+    
+    <!-- Below here is spring mvc-specific stuff -->
+    <!-- Maps flow view-state view names to JSP templates -->
+    <bean id="viewResolver"
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <bean id="handlerMapping"
+        class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">
+    </bean>       
+
+</beans>

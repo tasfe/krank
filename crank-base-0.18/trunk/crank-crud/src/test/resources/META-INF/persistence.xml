@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
+			http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+    version="1.0">
+
+    <persistence-unit name="crank-crud-test"
+        transaction-type="RESOURCE_LOCAL">
+        <provider>${krank.persistence.provider}</provider>
+
+        <class>org.crank.crud.test.model.Address</class>
+        <class>org.crank.crud.test.model.Department</class>
+        <class>org.crank.crud.test.model.Employee</class>
+        <class>org.crank.crud.test.model.EmployeeRank</class>
+        <class>org.crank.crud.test.model.EmployeeStatus</class>
+        <class>org.crank.crud.test.model.Task</class>
+
+        <properties>
+            <property name="openjpa.ConnectionURL"
+                value="${krank.jdbc.url}" />
+            <property name="openjpa.ConnectionDriverName"
+                value="${krank.jdbc.driver}" />
+            <property name="openjpa.ConnectionUserName"
+                value="${krank.jdbc.user}" />
+            <property name="openjpa.ConnectionPassword"
+                value="${krank.jdbc.password}" />
+            <property name="openjpa.jdbc.SynchronizeMappings"
+                value="buildSchema(SchemaAction='add')" />
+            <property name="openjpa.Log"
+                value="DefaultLevel=TRACE,SQL=TRACE" />
+
+            <property name="hibernate.connection.driver_class"
+                value="${krank.jdbc.driver}" />
+            <property name="hibernate.connection.url"
+                value="${krank.jdbc.url}" />
+            <property name="hibernate.connection.username"
+                value="${krank.jdbc.user}" />
+            <property name="hibernate.connection.password"
+                value="${krank.jdbc.password}" />
+            <property name="hibernate.dialect"
+                value="${krank.hibernate.dialect}" />
+
+            <property name="hibernate.hbm2ddl.auto" value="${krank.hibernate.hbm2ddl}" />
+            <property
+                name="hibernate.connection.hsqldb.default_table_type"
+                value="cached" />
+
+            <property name="hibernate.show_sql" value="${krank.hibernate.show_sql}" />
+            <property name="hibernate.format_sql" value="true" />
+            <property name="hibernate.use_sql_comments" value="true" />
+            <property name="hibernate.query.substitutions"
+                value="true 1, false 0" />
+        </properties>
+    </persistence-unit>
+
+</persistence>

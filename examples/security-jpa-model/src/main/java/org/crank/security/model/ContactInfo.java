@@ -1,5 +1,6 @@
 package org.crank.security.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,9 +17,10 @@ import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-@Table(name="IN3_CONTACT_INFO")
-@Entity(name="In3ContactInfo")
-public class ContactInfo {
+@SuppressWarnings("serial")
+@Table(name="CONTACT_INFO")
+@Entity()
+public class ContactInfo implements Serializable {
 	@Id
 	@GeneratedValue
 	private Long id;

@@ -5,8 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table(name="IN3_PHONE_NUMBER")
-@Entity(name="In3PhoneNumber")
+@Table()
+@Entity()
 public class PhoneNumber {
 
 	@Id @GeneratedValue

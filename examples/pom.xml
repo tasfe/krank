@@ -9,7 +9,7 @@
     <groupId>org.crank.example</groupId>
     <artifactId>crank-example-base</artifactId>
     <packaging>pom</packaging>
-    <version>0.18</version>
+    <version>0.19-SNAPSHOT</version>
     <name>Crank :: Example Base</name>
 
     <modules>
@@ -21,10 +21,4 @@
 	  <module>blank-project</module>
 	  <module>todo-example</module>
     </modules>
-
-
-  <scm>
-    <connection>scm:svn:http://krank.googlecode.com/svn/tags/mvn_release/crank-example-base-0.18</connection>
-    <developerConnection>scm:svn:https://krank.googlecode.com/svn/tags/mvn_release/crank-example-base-0.18</developerConnection>
-  </scm>
 </project>

@@ -3,7 +3,7 @@
     <parent>
         <artifactId>crank-base</artifactId>
         <groupId>org.crank</groupId>
-        <version>0.18</version>
+        <version>0.19-SNAPSHOT</version>
     </parent>
 
     <groupId>org.crank.example</groupId>

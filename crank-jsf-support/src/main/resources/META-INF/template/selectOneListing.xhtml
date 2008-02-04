@@ -203,9 +203,9 @@
 						
 						<f:facet name="footer">
 							<h:panelGroup styleClass="${listingFooterClass}">
-								<h:outputText
-									styleClass="${listingOutputTextClass}"
-									value="Page #{paginator.currentPageNumber+1} of #{paginator.pageCount}" />
+							<h:outputText
+								styleClass="${listingOutputTextClass}"
+								value="Page #{paginator.currentPageNumber+1} of #{paginator.pageCount == 0 ? 1 : paginator.pageCount}" />
 							</h:panelGroup>
 						</f:facet>
 						

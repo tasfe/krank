@@ -13,7 +13,7 @@
 <ui:composition template="/templates/layout.xhtml">
 
 	<ui:define name="content">
-		<c:set var="crud" value="${deptCrud.controller}"/>
+		<c:set var="crud" value="${deptCrud.controller}" />
 		<c:set var="employeeDetailController" value="${crud.children.employees}" />
 		<c:set var="taskDetailController" value="${crud.children.employees.children.tasks}" />
 	
@@ -21,15 +21,16 @@
 		<span class="pageTitle">Department Entry Form</span>
 
 		<a4j:form id="departmentForm">
-
-				<crank:form crud="${crud}" propertyNames="name">
-
-					<crank:detailListing 
+				<crank:form crud="${crud}" 
+					propertyNames="name" 
+					property.name.editor="/templates/departmentName.xhtml" 
+					property.name.showLabel="false"
+					property.name.showMessages="true"
+				 >
+					<crank:detailForm
 						detailController="${employeeDetailController}" 
 						propertyNames="firstName,lastName,active,dob,age,numberOfPromotions"
-						parentForm="departmentForm"
-						>
-						
+						parentForm="departmentForm"					>
  						<crank:selectOneListing jsfSelectOneController="${employeeToSkillController}"
 							propertyNames="name"
 							parentForm="departmentForm"
@@ -39,8 +40,13 @@
 							propertyNames="name,startDate,endDate,complete"
 							parentForm="departmentForm"
 							/>
-
-					</crank:detailListing>
+					</crank:detailForm>
+					<crank:detailTable 
+						detailController="${employeeDetailController}" 
+						propertyNames="firstName,lastName,active,dob,age,numberOfPromotions"
+						parentForm="departmentForm"
+						>
+					</crank:detailTable>
 					<a4j:commandLink action="#{hello.hello}" value="Say hello"/>
  				</crank:form>
 		</a4j:form>

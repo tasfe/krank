@@ -92,5 +92,13 @@
 		<tag-name>autoComplete</tag-name>
 		<source>template/autoComplete.xhtml</source>
 	</tag>
+	<tag>
+		<tag-name>webInclude</tag-name>
+		<handler-class>org.crank.crud.jsf.support.WebIncludeHandler</handler-class>
+	</tag>
+	<tag>
+		<tag-name>ifdef</tag-name>
+		<handler-class>org.crank.crud.jsf.support.IfDefHandler</handler-class>
+	</tag>
 
 </facelet-taglib>

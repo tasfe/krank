@@ -16,15 +16,17 @@
 	<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
 	<c:set var="paginator" value="${jsfSelectManyController.paginator}"/>
 	<c:set var="entityClass" value="${jsfSelectManyController.manager.entityClass}" />
+	<c:if test="${empty immediate}">
+	    <c:set var="immediate" value="${false}" />
+	</c:if>
+
 	
 	<div id="editTip${entityName}" class="toolTip">Edit this record</div>
 	<div id="disableTip${entityName}" class="toolTip">Disable this record</div>
 	
-	<!-- DEFINE VARIABLES -->
 	
-	<c:if test="${empty immediate}">
-		<c:set var="immediate" value="true" />
-	</c:if>	
+	
+	<!-- DEFINE VARIABLES -->	
 	<c:if test="${empty selectManyClass}">
 		<c:set var="selectManyClass" value="paginationPageNumberLink" />
 	</c:if>
@@ -98,7 +100,8 @@
 		<a4j:commandLink rendered="${not jsfSelectManyController.show}" 
 		                 action="${jsfSelectManyController.showSelection}" 
 		                 value="..."
-		                 title="Show the selection window for ${entityNameLabel}"/>
+		                 title="Show the selection window for ${entityNameLabel}"
+		                 immediate="${immediate}"/>
 
 
 		<h:panelGrid id="listPanel${id}" columns="1" width="${dataTableWidth}" 
@@ -122,13 +125,16 @@
 						<h:column>
 							<crank:commandLink id="selectAll${id}"
 											   onclick="toggleAllCheckBoxes('${parentForm}',true);"
-							                   toolTipText="Click to select all rows">
+							                   toolTipText="Click to select all rows"
+							                   immediate="${immediate}"
+							                   >
 							                   
 								<h:graphicImage id="selectAll${id}Img" value="${selectAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
 							</crank:commandLink>
 							<crank:commandLink id="selectNone${id}"
 							                   onclick="toggleAllCheckBoxes('${parentForm}',false);"
-							                   toolTipText="Click to un-select all rows">
+							                   toolTipText="Click to un-select all rows"
+							                   immediate="${immediate}">
 								<h:graphicImage id="selectNone${id}Img" value="${selectNoneImg}" border="0" styleClass="${listingImageButtonClass}"/>
 							</crank:commandLink>
 							
@@ -150,7 +156,7 @@
 				</f:facet>
 				
 				<h:column>
-	   				<h:selectBooleanCheckbox value="#{row.selected}" styleClass="imageCenter"/>
+	   				<h:selectBooleanCheckbox value="#{row.selected}" styleClass="imageCenter" immediate="true"/>
 				</h:column>
 				
 				<c:forEach items="${pNames}" var="property">
@@ -200,17 +206,19 @@
 				</c:forEach>				
 			</rich:dataTable>
 		</h:panelGrid>
-		<a4j:commandLink action="${jsfSelectManyController.process}" 
+		<h:commandLink action="${jsfSelectManyController.process}" 
 						 rendered="${jsfSelectManyController.show}"
 						 value="Update"
 						 styleClass="${selectManyClass}"
 						 title="Add/Remove items to ${entityNameLabel}"
+						 immediate="${immediate}"
 						 />
-		<a4j:commandLink action="${jsfSelectManyController.cancel}"
+		<h:commandLink action="${jsfSelectManyController.cancel}"
 						 rendered="${jsfSelectManyController.show}"
 						 value="Cancel"
 						 styleClass="${selectManyClass}"
 						 title="Hides the ${entityNameLabel} selection window"
+						 immediate="${immediate}"
 						 />
 		</a4j:outputPanel>
 </ui:composition>

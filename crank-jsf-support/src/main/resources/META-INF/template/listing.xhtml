@@ -16,6 +16,11 @@
 	<c:set var="entityName" value="${crud.name}" />
 	<c:set var="entityNameLabel" value="${crud:createLabel(crud.name)}" />
 	<c:set var="paginator" value="${jsfCrudAdapter.paginator}"/>
+	
+	<c:if test="${empty immediate}">
+		<c:set var="immediate" value="false" />
+	</c:if>	
+	
 
 	<!-- DEFINE VARIABLES -->
 	<c:if test="${empty id}">
@@ -146,13 +151,17 @@
 						<h:column>
 							<crank:commandLink id="selectAll${id}"
 											   onclick="toggleAllCheckBoxes('${parentForm}',true);"
-							                   toolTipText="Click to select all rows">
+							                   toolTipText="Click to select all rows"
+							                   immediate="${immediate}"
+							                   >
 							                   
 								<h:graphicImage id="selectAll${id}Img" value="${selectAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
 							</crank:commandLink>
 							<crank:commandLink id="selectNone${id}"
 							                   onclick="toggleAllCheckBoxes('${parentForm}',false);"
-							                   toolTipText="Click to un-select all rows">
+							                   toolTipText="Click to un-select all rows"
+							                   immediate="${immediate}"
+							                   >
 								<h:graphicImage id="selectNone${id}Img" value="${selectNoneImg}" border="0" styleClass="${listingImageButtonClass}"/>
 							</crank:commandLink>
 							<crank:commandLink id="disableSelected${id}"
@@ -162,7 +171,9 @@
 											   onclick="if (!confirm('Are you sure you want to delete all selected items?')) return false"
 							                   toolTipText="Click to delete selected rows"
 							                   reRender="${reRender},dataTable${id}"
-							                   ajax="${false}">
+							                   ajax="${false}"
+							                   immediate="${immediate}"
+							                   >
 								<h:graphicImage id="disableSelected${id}Img" value="${delAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
 							</crank:commandLink>
 						</h:column>
@@ -243,7 +254,9 @@
 								action="${crud.read}"
 								title="Edit this record"
 								rendered="${enableEdit}"
-								onclick="${editFunction}" >
+								onclick="${editFunction}" 
+								immediate="${immediate}"
+								>
 									<h:graphicImage value="${editImg}" border="0" styleClass="${listingImageButtonClass}" />
 							</h:commandLink>
 	
@@ -251,7 +264,9 @@
 								action="${crud.delete}"  
 								rendered="${enableDelete}"
 								title="Delete this record"
-								onclick="if (!confirm('Are you sure you want to delete this item?')) return false" >
+								onclick="if (!confirm('Are you sure you want to delete this item?')) return false" 
+								immediate="${immediate}"
+								>
 									<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
 							</h:commandLink>
                         </c:if> 

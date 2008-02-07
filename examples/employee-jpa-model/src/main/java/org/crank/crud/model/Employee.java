@@ -29,7 +29,8 @@ import org.crank.crud.model.PersistedFile;
 @Entity
 @NamedQueries( {
         @NamedQuery( name = "Employee.findEmployeesByDepartment", 
-		     query = "SELECT employee FROM Employee employee WHERE employee.department.name=?1" ),
+		     query = "SELECT employee FROM Employee employee " +
+		     		" WHERE employee.department.name=?1" ),
         @NamedQuery( name = "Employee.readPopulated", 
                 query = "SELECT DISTINCT employee FROM Employee employee " +
                         "LEFT OUTER JOIN FETCH employee.department " +
@@ -42,9 +43,11 @@ import org.crank.crud.model.PersistedFile;
         @NamedQuery( name = "Employee.findInEmployeeIds", 
 		     query = "SELECT o FROM Employee o  WHERE  o.id in  ( ?1 )" ),
         @NamedQuery( name = "Employee.findSalaryEmployees", 
-		     query = "SELECT o FROM Employee o  WHERE o.status = org.crank.crud.model.EmployeeStatus.SALARY" ),
+		     query = "SELECT o FROM Employee o  WHERE o.status = " +
+		     		" org.crank.crud.model.EmployeeStatus.SALARY" ),
         @NamedQuery( name = "Employee.findExcellentEmployees", 
-		     query = "SELECT o FROM Employee o WHERE o.rank = org.crank.crud.model.EmployeeRank.EXCELLENT" )
+		     query = "SELECT o FROM Employee o WHERE o.rank = " +
+		     		" org.crank.crud.model.EmployeeRank.EXCELLENT" )
 
 } )
 public class Employee extends Person {
@@ -163,11 +166,6 @@ public class Employee extends Person {
         return age;
     }
 
-    @Required
-    @LongRange( min = 18L, max = 135L )
-    public void setAge( int age ) {
-        this.age = age;
-    }
 
     public Integer getNumberOfPromotions() {
         return numberOfPromotions;
@@ -215,13 +213,21 @@ public class Employee extends Person {
         return email;
     }
 
+
+    public String getPhone() {
+        return phone;
+    }
+
+
     @Email
     public void setEmail( String email ) {
         this.email = email;
     }
-
-    public String getPhone() {
-        return phone;
+    
+    @Required
+    @LongRange( min = 18L, max = 135L )
+    public void setAge( int age ) {
+        this.age = age;
     }
 
     @Phone

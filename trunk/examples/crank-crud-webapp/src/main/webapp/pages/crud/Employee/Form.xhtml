@@ -26,14 +26,9 @@
 
 		<a4j:form id="employeeForm" enctype="multipart/form-data">
 		
-			<div>
-			Employee ID = ${crud.entity.id}
-			</div>
-			<crank:selectOneByIdListing jsfSelectOneController="#{tagOneController}" propertyNames="employeeId,name" />
-			
+			<!-- description, -->
 			<crank:form crud="${crud}" parentForm="employeeForm"
-				propertyNames="firstName,lastName,department,status,description,file,age,numberOfPromotions,specialty:Specialty"
-				enableGroups="active:dob:phone:email">
+				propertyNames="firstName,lastName,active,dob,age,phone,email,department,status,file,numberOfPromotions,specialty:Specialty">
 			
 				
 				<crank:compositePanel entity="${crud.entity.address}" name="address"
@@ -43,10 +38,34 @@
 					propertyNames="spaceId" />
 
 
+				<crank:detailListing detailController="${taskDetailController}"
+					enableGroups="" 
+					formPropertyNames="name,category,startDate,endDate,complete"
+					propertyNames="name,category.name,startDate,endDate,complete">
+				</crank:detailListing>
+
 				<crank:detailListing
 					detailController="${directReportDetailController}" enableGroups=""
 					propertyNames="firstName,lastName,description,age,numberOfPromotions" />
 
+
+				<crank:detailListing detailController="${contactDetailController}"
+					enableGroups="" propertyNames="name,phone" />
+					
+				<crank:selectMany jsfSelectManyController="${employeeToRoleController}" 
+					propertyNames="name" parentForm="employeeForm" />
+
+				<crank:selectOneListing jsfSelectOneController="${employeeToSkillController}"
+					propertyNames="name" parentForm="employeeForm" />
+					
+			
+			</crank:form>
+			
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+
+<!-- 
 <br />
 <h4>Add Tasks</h4>
 <crank:detailForm detailController="${taskDetailController}"
@@ -63,21 +82,11 @@
 		</a4j:commandLink>
 </crank:detailTable>
 
-				<crank:detailListing detailController="${contactDetailController}"
-					enableGroups="" propertyNames="name,phone" />
-					
-				<crank:selectMany jsfSelectManyController="${employeeToRoleController}" 
-					propertyNames="name"
-					parentForm="employeeForm"
-					/>
 
-				<crank:selectOneListing jsfSelectOneController="${employeeToSkillController}"
-					propertyNames="name" parentForm="employeeForm" debug="${false}" />
-					
-			
-			</crank:form>
-			
-		</a4j:form>
-	</ui:define>
-</ui:composition>
+			<div>
+			Employee ID = ${crud.entity.id}
+			</div>
+			<crank:selectOneByIdListing jsfSelectOneController="#{tagOneController}" propertyNames="employeeId,name" />
+
+ -->
 </html>

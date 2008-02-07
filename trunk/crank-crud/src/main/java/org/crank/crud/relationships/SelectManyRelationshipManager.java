@@ -10,6 +10,7 @@ import java.util.Set;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
+@SuppressWarnings("serial")
 public class SelectManyRelationshipManager extends RelationshipManager {
 	private Object parentObject;
 	private String idProperty="id";
@@ -17,29 +18,40 @@ public class SelectManyRelationshipManager extends RelationshipManager {
 
 	@SuppressWarnings("unchecked")
 	public void process(Set<Object> selectedRelatedEntities, Set<Object> entitiesInView) {
-		Object collection = getChildCollection(parentObject);
-		if (collection == null) {
+		/* Grab the child collection from the parent object, i.e., roles from Employee */
+		Object childCollection = getChildCollection(parentObject);
+		if (childCollection == null) {
 			return;
 		}
-		Iterator<Object> iterator = iterator(collection);
 		
-		Set currentValues = toSet(collection);
+		/* Create an iterator based on the childCollection. */
+		Iterator<Object> childCollectioniterator = iterator(childCollection);
+		
+		/* Create a set based on the childCollection. */
+		Set currentValuesInChildCollection = toSet(childCollection);
 		
 		
-		while (iterator.hasNext()) {
-			Object currentObject = iterator.next();
+		/*
+		 * Iterate through the children objects that are already in the parent object, e.g.,
+		 * iterate through the roles already in the Employee. 
+		 */
+		while (childCollectioniterator.hasNext()) {
+			Object currentChildObject = childCollectioniterator.next();
 			
-			/* If the current object is in the view, operate on it. */
-			if (entitiesInView.contains(currentObject)) {
+			/* If the current object is in the view, operate on it. Don't mess with objects
+			 * that are not on the current page. */
+			if (entitiesInView.contains(currentChildObject)) {
 				/* If the current object was in the view but not selected then remove it. */
-				if (! selectedRelatedEntities.contains(currentObject)) {
-					removeFromParent(parentObject, currentObject);
+				if (! selectedRelatedEntities.contains(currentChildObject)) {
+					removeFromParent(parentObject, currentChildObject);
 				}
 			}			
 		}
 		
+		/* Iterate through the selected entities. */
 		for (Object selected : selectedRelatedEntities) {
-			if (!currentValues.contains(selected)) {
+			/* If the entity is not already added, add it. */
+			if (!currentValuesInChildCollection.contains(selected)) {
 				addToParent(parentObject, selected);
 			}
 		}

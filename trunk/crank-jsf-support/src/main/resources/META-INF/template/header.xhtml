@@ -15,6 +15,10 @@
 <ui:composition>
 
 	<!-- DEFINE VARIABLES --> 
+	<c:if test="${empty immeidate}">
+	    <c:set var="immeidate" value="${true}" />
+	</c:if>
+
 	<c:if test="${empty label}">
 	    <c:set var="label" value="${crud:replace(crud:createLabelWithNameSpace(entityName,fieldName),'.','_')}" />
 	</c:if>
@@ -65,7 +69,8 @@
 				<a4j:commandLink styleClass="${headerLinkClass}" 
 				    value="${label}" reRender="${reRender}"
 				    title="${sortTip}"
-					action="#{orderBy.toggle}"/>
+					action="#{orderBy.toggle}"
+					immediate="${immediate}"/>
 
 				
 				<h:outputText value="&#160; ${(orderBy.sequence+1)}" rendered="${orderBy.enabled}" styleClass="${headerLinkClass}"/>
@@ -82,7 +87,9 @@
 					reRender="${reRender}"
 					rendered="#{orderBy.asc and orderBy.enabled}"
 					title="${sortAscTip}"
-					action="#{orderBy.toggle}">
+					action="#{orderBy.toggle}"
+					immediate="${immediate}"
+					>
 					
 					<h:graphicImage value="${sortDescImg}" border="0" />
 				</a4j:commandLink>
@@ -93,7 +100,9 @@
 				    reRender="${reRender}"
 					rendered="#{orderBy.desc and orderBy.enabled}"
 					title="${sortDescTip}"
-					action="#{orderBy.toggle}">
+					action="#{orderBy.toggle}"
+					immediate="${immediate}"
+					>
 					<h:graphicImage value="${sortAscImg}" border="0"/>
 				</a4j:commandLink>
 				
@@ -102,7 +111,9 @@
 					action="#{comparison.enable}"
 					rendered="#{not comparison.enabled}"
 					title="${filterTip}"
-					styleClass="${headerLinkClass}">
+					styleClass="${headerLinkClass}"
+					immediate="${immediate}"
+					>
 					<h:graphicImage value="${filterOnImg}" border="0"/>
 				</a4j:commandLink>
 				
@@ -110,7 +121,9 @@
 				<a4j:commandLink action="${paginator.filter}"
 							rendered="#{paginator.filtering and comparison.enabled}"
 							title="Click to apply column filters"
-							styleClass="${headerLinkClass}" value="filter">
+							styleClass="${headerLinkClass}" value="filter"
+							immediate="${immediate}"
+							>
 				</a4j:commandLink>
 				</div>
 				
@@ -163,7 +176,9 @@
 						reRender="${reRender}"
 						action="#{comparison.disable}"
 						title="${filterRemTip}"
-						styleClass="${headerLinkClass}">
+						styleClass="${headerLinkClass}"
+						immediate="${immediate}"
+						>
 						<h:graphicImage value="${filterOffImg}" border="0"/>
 					</a4j:commandLink>
 				</a4j:outputPanel>
@@ -184,7 +199,8 @@
 						<a4j:commandLink  reRender="${reRender}"
 										  action="#{comparison.disable}"
 										  title="${filterRemTip}"
-										  styleClass="${headerLinkClass}"								  
+										  styleClass="${headerLinkClass}"
+										  immediate="${immediate}"								  
 										  >
 							<h:graphicImage value="${filterOffImg}" border="0"/>
 						</a4j:commandLink>

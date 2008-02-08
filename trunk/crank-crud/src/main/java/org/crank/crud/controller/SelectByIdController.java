@@ -83,7 +83,6 @@ public abstract class SelectByIdController<PT extends Serializable, T extends Se
 	
 			@SuppressWarnings("unchecked")
 			public void afterLoadCreate(CrudEvent event) {
-				System.out.println("LOAD CREATE FOR " + parentCrudController);
 				prepareModelChoices();				
 			}
 	
@@ -91,7 +90,6 @@ public abstract class SelectByIdController<PT extends Serializable, T extends Se
 			}
 	
 			public void afterRead(CrudEvent event) {
-				System.out.println("READ FOR " + parentCrudController);
 				prepareModelChoices();
 			}
 	

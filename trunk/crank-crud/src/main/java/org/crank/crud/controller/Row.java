@@ -139,6 +139,6 @@ public class Row extends MagicMap implements Serializable {
     }
 
     public String toString() {
-    	return "row (" + object + ")";
+    	return String.format("row ((%s) selected=%s)", object, selected);
     }
 }

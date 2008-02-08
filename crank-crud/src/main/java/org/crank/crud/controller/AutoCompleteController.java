@@ -40,8 +40,6 @@ public class AutoCompleteController <S extends Serializable, T extends Serializa
 	}
 
 	public void setValue(String value) {
-//		System.out.printf("setValue(): fieldName: %s, value: %s, group: %s\n", 
-//				fieldName, value, group);
 		this.value = value;
 	}
 
@@ -161,15 +159,12 @@ public class AutoCompleteController <S extends Serializable, T extends Serializa
 	protected void textChanged(String value) {
 		List<?> list = getListExact(value);
 		long time = System.currentTimeMillis();
-//		System.out.printf("%s %s \n", Thread.currentThread().getName(), time);
 		if (list.size() == 1) {
 			Object newValue = list.get(0);
-//			System.out.printf("FOUND %s %s %s\n", Thread.currentThread().getName(), time, value);			
 			selectable.fireSelect(newValue);
 			found = true;
 			
 		} else {
-//			System.out.printf("NOT FOUND %s %s %s\n", Thread.currentThread().getName(), time, value);			
 			selectable.fireUnselect();
 			found = false;
 		}
@@ -204,7 +199,6 @@ public class AutoCompleteController <S extends Serializable, T extends Serializa
 	 */
 	private List<S> getList(String pref) {
 		OrderBy orderBy = new OrderBy(propertyName, OrderDirection.ASC);
-		System.out.printf("In getList(String pref) pref: %s, Group: %s\n",pref,group.toString() );
         /* Clear the comparison group b/c we are about to recreate it */
         dataSource.group().clear();
         

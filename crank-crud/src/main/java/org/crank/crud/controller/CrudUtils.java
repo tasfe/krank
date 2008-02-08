@@ -344,9 +344,4 @@ public class CrudUtils {
 		return buffer.toString();
 	}
 
-    public static void main (String[] args) {
-    	String foo = "foo.bar";
-    	foo = foo.substring(foo.indexOf('.')+1, foo.length());
-    	System.out.println(foo);
-    }
 }

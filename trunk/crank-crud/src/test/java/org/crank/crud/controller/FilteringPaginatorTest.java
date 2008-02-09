@@ -89,7 +89,15 @@ public class FilteringPaginatorTest extends TestCase {
 //			System.out.println("---");
 //		}
 		
-		FilterableProperty filterableProperty = filterableProperties.get("zalias.name");
+		FilterableProperty filterableProperty = filterableProperties.get("type");
+		assertNotNull(filterableProperty);
+		
+		filterableProperty = filterableProperties.get("b.type");
+		assertNotNull(filterableProperty);
+		assertNotNull(filterableProperty.getParentType());
+		
+		
+		filterableProperty = filterableProperties.get("zalias.name");
 		assertNotNull(filterableProperty);
 		assertEquals("zalias.name", filterableProperty.getComparison().getName());
 		assertNotNull(filterableProperty.getParentType());
@@ -150,6 +158,16 @@ public class FilteringPaginatorTest extends TestCase {
 		
 		@ManyToOne
 		private A aparent;
+		@OneToOne
+		private B type;
+
+		public B getType() {
+			return type;
+		}
+
+		public void setType(B type) {
+			this.type = type;
+		}
 		
 
 		@OneToOne
@@ -201,6 +219,17 @@ public class FilteringPaginatorTest extends TestCase {
 	class B {
 		
 		private String name;
+
+		@ManyToOne( )
+		private C type;
+		
+		public C getType() {
+			return type;
+		}
+
+		public void setType(C type) {
+			this.type = type;
+		}
 		
 		@ManyToOne( )
 		private C c;

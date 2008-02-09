@@ -309,12 +309,12 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
         //        the property of the target entity to be completed by the 
         //        auto-complete value.	
         AutoCompleteController autoController = new JsfAutoCompleteController( 
-        		Specialty.class, "name", dataSource, controller, "specialty");
+        		Specialty.class, "name", dataSource, controller, "type");
         
         // Add to the auto-complete map...
         //     This will be accessed via the field.xhtml as the AutoComplete 
         //     controller for the associated target property.
-        autocomplete.put("Specialty", autoController);
+        autocomplete.put("Type", autoController);
         return autocomplete;
     }
 

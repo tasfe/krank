@@ -34,7 +34,7 @@ import org.crank.crud.model.PersistedFile;
         @NamedQuery( name = "Employee.readPopulated", 
                 query = "SELECT DISTINCT employee FROM Employee employee " +
                         "LEFT OUTER JOIN FETCH employee.department " +
-                        "LEFT OUTER JOIN FETCH employee.specialty " + 
+                        "LEFT OUTER JOIN FETCH employee.type " + 
                         "LEFT OUTER JOIN FETCH employee.tasks " +
                         "LEFT OUTER JOIN FETCH employee.contacts " +
                         "LEFT OUTER JOIN FETCH employee.directReports " +
@@ -85,7 +85,7 @@ public class Employee extends Person {
     @OneToMany( cascade = CascadeType.ALL )
     private Set<Employee> directReports = new HashSet<Employee>();
     @ManyToOne()
-    private Specialty specialty;
+    private Specialty type;
     @ManyToOne()
     private Skill primarySkill;
     private PersistedFile file;
@@ -264,12 +264,12 @@ public class Employee extends Person {
         this.contacts = contacts;
     }
 
-	public Specialty getSpecialty() {
-		return specialty;
+	public Specialty getType() {
+		return type;
 	}
 
-	public void setSpecialty(Specialty specialty) {
-		this.specialty = specialty;
+	public void setType(Specialty type) {
+		this.type = type;
 	}
 
 	public Set<Employee> getDirectReports() {

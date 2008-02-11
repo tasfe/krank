@@ -20,9 +20,9 @@ There are no screen refreshes as we are using Ajax for all operations. It has a 
 
 
 Here is our task list:
- # Add the many to many relationship to `Employee` to `Role`
- # Configure the controllers needed for the `selectMany` tag
- # Use the `selectMany` tag on the `Employee` form.
+# Add the many to many relationship to `Employee` to `Role`
+# Configure the controllers needed for the `selectMany` tag
+# Use the `selectMany` tag on the `Employee` form.
  
 
 == Add the many to many relationship to `Employee` to `Role` ==
@@ -278,4 +278,3 @@ public class Role {
 }}}
 
 If you are using Eclipse there are several plugins that will genearate `equals` and `hashCode` for you. If you are using IntelliJ, equals and hashCode generation are built it. The above works for our purposes but is not the best implementation.
-

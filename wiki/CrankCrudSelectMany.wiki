@@ -20,9 +20,9 @@ There are no screen refreshes as we are using Ajax for all operations. It has a 
 
 
 Here is our task list:
-# Add the many to many relationship to `Employee` to `Role`
-# Configure the controllers needed for the `selectMany` tag
-# Use the `selectMany` tag on the `Employee` form.
+ # Add the many to many relationship to `Employee` to `Role`
+ # Configure the controllers needed for the `selectMany` tag
+ # Use the `selectMany` tag on the `Employee` form.
  
 
 == Add the many to many relationship to `Employee` to `Role` ==

@@ -11,14 +11,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
 
 @SuppressWarnings("serial")
 @NamedQuery(name = "Group.loadGroup", 
-		query = "select group from In3Group "
+		query = "select group from SecurityGroup "
 	+ " group where group.name = :name")	
-@Entity()
+@Entity(name="SecurityGroup")
 @PrimaryKeyJoinColumn(name="GROUP_ID")
+@Table(name="CRANK_GROUP")
 @AssociationOverrides (value={
 			@AssociationOverride(name="contactInfo",
 				joinColumns={@JoinColumn(name="GROUP_CONTACTINFO_ID")})

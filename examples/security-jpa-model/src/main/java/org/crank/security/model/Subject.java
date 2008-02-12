@@ -23,11 +23,11 @@ public abstract class Subject implements Serializable {
 	@Id @GeneratedValue @Column(name="SUBJECT_ID")
 	private Long id;
 	
-	@Column (name="SUBJECT_NAME")
+	@Column (name="SUBJECT_NAME", length=15)
 	private String name;
 	
 	@ManyToMany(fetch=FetchType.EAGER)
-	@JoinTable(name="IN3_GROUP_ROLE", 
+	@JoinTable(name="GROUP_ROLE", 
 			    joinColumns={@JoinColumn(name="FK_GROUP_ID")},
 				inverseJoinColumns={@JoinColumn(name="FK_ROLE_ID")})	
 	private Set<Role> roles;

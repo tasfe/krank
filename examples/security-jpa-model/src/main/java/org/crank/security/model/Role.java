@@ -11,7 +11,7 @@ import javax.persistence.NamedQuery;
 
 @SuppressWarnings("serial")
 @NamedQuery(name = "Role.loadRole", 
-		query = "select role from In3Role role where role.name=:name")
+		query = "select role from Role role where role.name=:name")
 @Entity()
 public class Role implements Serializable {
 	

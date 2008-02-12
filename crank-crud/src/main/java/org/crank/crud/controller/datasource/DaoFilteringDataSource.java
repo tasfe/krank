@@ -7,7 +7,7 @@ import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.join.Join;
 
-public class DaoFilteringDataSource<T, PK extends Serializable> extends DaoDataSource<T, PK> implements FilteringDataSource {
+public class DaoFilteringDataSource<T, PK extends Serializable> extends DaoDataSource<T, PK> implements FilteringDataSource<T> {
     protected Group group = new Group();
     protected OrderBy[] orderBy = new OrderBy[]{};
     protected Join[] fetches = new Join[]{};

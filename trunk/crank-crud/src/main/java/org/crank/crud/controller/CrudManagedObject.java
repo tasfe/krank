@@ -20,6 +20,10 @@ public class CrudManagedObject implements Serializable {
 	public CrudManagedObject () {
         
     }
+    public CrudManagedObject (final Class entityType) {
+    	this(entityType, null);
+    }
+	
     public CrudManagedObject (final Class entityType, final Class daoInterface) {
         this.entityType = entityType;
         this.daoInterface = daoInterface;

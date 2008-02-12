@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+    <bean class="org.crank.security.app.SecurityApplicationContext" />
+
+    <bean id="employeeDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close" lazy-init="true">
+        <property name="driverClassName" value="${krank.jdbc.driver}" />
+        <property name="url" value="${krank.jdbc.url}" />
+        <property name="username" value="${krank.jdbc.user}" />
+        <property name="password" value="${krank.jdbc.password}" />
+        <property name="minIdle" value="5" />
+        <property name="maxIdle" value="15" />
+        <property name="initialSize" value="200" />
+        <property name="maxOpenPreparedStatements" value="100" />
+        <property name="maxWait" value="3000" />
+        <property name="timeBetweenEvictionRunsMillis" value="3600000" />
+    </bean>
+
+    <bean id="jpaConfigProperties"
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="classpath:jpa.properties" />
+    </bean>
+
+    <bean name="jpaVendorAdapter"
+        class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="showSql" value="false" />
+        <property name="databasePlatform" value="${krank.hibernate.dialect}" />
+    </bean>
+
+    <bean class="org.crank.config.spring.support.CrudDAOConfig">
+        <property name="dataSource" ref="employeeDataSource" />
+        <property name="jpaProperties" ref="jpaConfigProperties" />
+    </bean>
+
+    <bean
+        class="org.springframework.config.java.process.ConfigurationPostProcessor" />
+    <import resource="/validationContext.xml" />
+
+</beans>

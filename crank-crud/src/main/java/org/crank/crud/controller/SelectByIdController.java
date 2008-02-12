@@ -68,17 +68,11 @@ public abstract class SelectByIdController<PT extends Serializable, T extends Se
 				prepareModelChoices();
 			}});
 		
-		parentCrudController.addCrudControllerListener(new CrudControllerListener(){
-	
-			public void afterCancel(CrudEvent event) {
-			}
+		parentCrudController.addCrudControllerListener(new CrudControllerListenerAdapter(){
 	
 			public void afterCreate(CrudEvent event) {
 				/* Force form to reload in edit mode. */
 				cc.stayOnForm();
-			}
-	
-			public void afterDelete(CrudEvent event) {
 			}
 	
 			@SuppressWarnings("unchecked")
@@ -86,43 +80,18 @@ public abstract class SelectByIdController<PT extends Serializable, T extends Se
 				prepareModelChoices();				
 			}
 	
-			public void afterLoadListing(CrudEvent event) {
-			}
-	
 			public void afterRead(CrudEvent event) {
 				prepareModelChoices();
 			}
 	
-			public void afterUpdate(CrudEvent event) {
-			}
-	
-			public void beforeCancel(CrudEvent event) {
-			}
-	
-			public void beforeCreate(CrudEvent event) {
-			}
-	
-			public void beforeDelete(CrudEvent event) {
-			}
-	
-			public void beforeLoadCreate(CrudEvent event) {
-			}
-	
-			public void beforeLoadListing(CrudEvent event) {
-			}
-	
-			public void beforeRead(CrudEvent event) {
-			}
-	
-			public void beforeUpdate(CrudEvent event) {
-			}});
+			});
 	}
 
 	@SuppressWarnings("unchecked")
 	protected void prepareModelChoices() {
-		List<Row> availableTags = new ArrayList<Row>();
 		Set<T> selectedTags = (Set<T>) new TreeSet<T>(this.getSelectedChildren());
 		List<T> allTags = (List<T>) paginator.getPage();
+		List<Row> availableTags = new ArrayList<Row>(allTags.size());
 		for (T availableTag : allTags) {
 			Row row = new Row();
 			row.setObject(availableTag);
@@ -155,24 +124,20 @@ public abstract class SelectByIdController<PT extends Serializable, T extends Se
 		return new BeanWrapperImpl(parentCrudController.getEntity());
 	}
 
-	
-	
-
 	@SuppressWarnings("unchecked")
 	public void process() {
 		List<Row> availableTags = getRows();
-		List<T> tagsToProcess = new ArrayList<T>();
+		List<T> tagsToProcess = new ArrayList<T>(availableTags.size());
+		BeanWrapper parent = getParent();
+		PK parentId = getParentId(parent);
+		BeanWrapper child = new BeanWrapperImpl();
 		for (Row row : availableTags) {
 			T tag = (T) row.getObject();
-			BeanWrapper child = new BeanWrapperImpl(tag);
-			BeanWrapper parent = getParent();
+			child.setWrappedInstance(tag);
 			tagsToProcess.add(tag);
-			PK parentId = getParentId(parent);
-	
 			if (row.isSelected()) {
 				child.setPropertyValue(targetProperty, parentId);
-			} else {
-				
+			} else {				
 				if (parentId!= null && parentId.equals(child.getPropertyValue(targetProperty))) {
 					child.setPropertyValue(targetProperty, null);
 				}

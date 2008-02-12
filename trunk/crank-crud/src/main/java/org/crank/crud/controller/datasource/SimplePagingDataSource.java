@@ -2,10 +2,10 @@ package org.crank.crud.controller.datasource;
 
 import java.util.List;
 
-public class SimplePagingDataSource implements PagingDataSource {
-    private List list;
+public class SimplePagingDataSource<T> implements PagingDataSource<T> {
+    private List<T> list;
     
-    public SimplePagingDataSource(final List list) {
+    public SimplePagingDataSource(final List<T> list) {
         this.list = list;
     }
     
@@ -13,7 +13,7 @@ public class SimplePagingDataSource implements PagingDataSource {
         return list.size();
     }
 
-    public List list( int startItem, int numItems ) {
+    public List<T> list( int startItem, int numItems ) {
         int end = startItem + numItems;
         if ((end) > list.size()) {
             end = list.size();
@@ -21,7 +21,7 @@ public class SimplePagingDataSource implements PagingDataSource {
         return list.subList( startItem, end );
     }
 
-    public List list() {
+    public List<T> list() {
         return list;
     }
 

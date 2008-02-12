@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.crank.crud.GenericDao;
 
-public class DaoPagingDataSource<T, PK extends Serializable> implements PagingDataSource{
+public class DaoPagingDataSource<T, PK extends Serializable> implements PagingDataSource<T>{
 
     private GenericDao<T, PK> dao;
 
@@ -13,7 +13,7 @@ public class DaoPagingDataSource<T, PK extends Serializable> implements PagingDa
         return dao.count();
     }
 
-    public List list( int startItem, int numItems ) {
+    public List<T> list( int startItem, int numItems ) {
         return dao.find(startItem, numItems);
     }
 
@@ -21,7 +21,7 @@ public class DaoPagingDataSource<T, PK extends Serializable> implements PagingDa
         this.dao = dao;
     }
 
-    public List list() {
+    public List<T> list() {
         return dao.find();
     }
 

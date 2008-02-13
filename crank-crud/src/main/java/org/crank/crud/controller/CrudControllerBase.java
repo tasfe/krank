@@ -278,10 +278,10 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 
     /** Update an object. */
     public CrudOutcome delete() {
-        fireBeforeDelete();
+        fireBeforeDelete(this.entity);
         CrudOutcome outcome = doDelete();
     	MessageManagerUtils.getCurrentInstance().addStatusMessage("Deleted");        
-        fireAfterDelete();
+        fireAfterDelete(this.entity);
         return outcome;
     }
 
@@ -404,15 +404,15 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
         }
     }
 
-    protected void fireBeforeDelete() {
-        CrudEvent event = new CrudEvent(this, this.entity);
+    protected void fireBeforeDelete(T beforeDeleteEntity) {
+        CrudEvent event = new CrudEvent(this, beforeDeleteEntity);
         for (CrudControllerListener ccl : listeners) {
             ccl.beforeDelete(event);
         }
     }
 
-    protected void fireAfterDelete() {
-        CrudEvent event = new CrudEvent(this, this.entity);
+    protected void fireAfterDelete(T afterDeleteEntity) {
+        CrudEvent event = new CrudEvent(this, afterDeleteEntity);
         for (CrudControllerListener ccl : listeners) {
             ccl.afterDelete(event);
         }
@@ -466,13 +466,13 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
     
     public CrudOutcome deleteSelected() {
         List<T> listToDelete = getSelectedEntities();
-        fireBeforeDelete();
         /* You could change this to delete a list of ids. */
         for (T entity : listToDelete) {
+            fireBeforeDelete(entity);
             doDelete(entity);
+            fireAfterDelete(entity);
         }
         fireToggle();
-        fireAfterDelete();
         return null;        
     }
 

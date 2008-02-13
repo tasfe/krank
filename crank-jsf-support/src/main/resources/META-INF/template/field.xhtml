@@ -127,7 +127,7 @@
 					                     required="${required}" 
 					                     styleClass="${formFieldStyleClasses}"
 					                     cols="50" rows="${numRows}">
-					        <validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}" parentObject="${entity}"/>
+					        <validation:validateBasedOnMetaData formClass="${type}" fieldName="${fieldName}" parentObject="${entity}"/>
 							<c:if test="${crud:textSize(type,fieldName)>0}">
 								<f:validateLength maximum="${crud:textSize(type,fieldName)}" />
 							</c:if>
@@ -151,7 +151,7 @@
 							                 value="#{entity[fieldName]}" 
 							                 required="${required}" 
 							                 styleClass="${formFieldStyleClasses}">
-					        		<validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}" parentObject="${entity}"/>							
+					        		<validation:validateBasedOnMetaData  formClass="${type}" fieldName="${fieldName}" parentObject="${entity}"/>							
 									<c:if test="${crud:textSize(type,fieldName)>0}">
 										<f:validateLength maximum="${crud:textSize(type,fieldName)}" />
 									</c:if>
@@ -189,7 +189,7 @@
 			   				 disabled="${disabled}"
 			                   renderAsPopup="true" value="#{entity[fieldName]}" 
 			                   required="${required}">
-					        <validation:validateBasedOnMetaData id="${fieldId}Validator" formClass="${type}" fieldName="${fieldName}" parentObject="${entity}"/>	                   
+					        <validation:validateBasedOnMetaData  formClass="${type}" fieldName="${fieldName}" parentObject="${entity}"/>	                   
 			        <ui:insert />
 				</t:calendar>
 				</a4j:outputPanel>

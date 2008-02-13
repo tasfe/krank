@@ -98,9 +98,15 @@
 		</a4j:outputPanel>
 	</c:if>
 	
-	<crank:ifdef test="property.#{fieldName}.editor" tovar="editorResource"/>
+	<crank:ifdef test="property.#{fieldName}.editor" notdef="" tovar="editorResource"/>
 	<c:choose>
 		<c:when test="#{not empty editorResource}">
+			<c:set var="property.#{fieldName}.editor" value=""/>
+			<c:set var="formPropertyNames" value=""/>			
+			<c:set var="fieldId" value=""/>
+			<c:set var="isSelectableColumn" value=""/>
+			<c:set var="label" value=""/>
+			<c:set var="fieldName" value=""/>
 			<crank:webInclude resource="#{editorResource}"/>
 		</c:when>
 		<c:otherwise>

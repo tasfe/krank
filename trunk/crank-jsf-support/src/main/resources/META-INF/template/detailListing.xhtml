@@ -91,6 +91,7 @@
 			<c:set var="useFormBody" value="true" />
 		</c:if>
 		
+		<c:set var="detailControllerModel" value="#{detailController.model}"/>
 		<c:if test="${debug}">
 			<h4>Debug for detailListing id=${id}</h4>
 			<table>
@@ -113,7 +114,7 @@
 				<tr><td>detailController.showForm</td>		<td>${detailController.showForm}</td></tr>
 				<tr><td>parentForm</td>						<td>${parentForm}</td></tr>
 				<tr><td>reRender</td>						<td>${reRender}</td></tr>
-				<tr><td>detailController.model.wrappedData</td>		<td>${detailController.model.wrappedData}</td></tr>
+				<tr><td>detailController.model.wrappedData</td>		<td>${detailControllerModel.wrappedData}</td></tr>
 			</table>
 		</c:if>
 
@@ -171,7 +172,7 @@
 						</c:if>
 						
 						<!-- The actual listing. -->
-						<rich:dataTable value="#{detailController.model}" var="row">
+						<rich:dataTable value="#{detailControllerModel}" var="row">
 							<!-- Header for the listing. -->
 							<f:facet name="header">
 								<rich:columnGroup>

@@ -83,14 +83,12 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 			managedObjects.add(new CrudManagedObject(Tag.class,
 					TagDAO.class));
 			
-			managedObjects.add(new CrudManagedObject(Category.class,null));
+			managedObjects.add(new CrudManagedObject(Category.class));
 			
-			managedObjects.add(new CrudManagedObject(PetClinicInquiry.class,
-					null));
-			managedObjects.add(new CrudManagedObject(Inquiry.class,
-					null));
-			managedObjects.add(new CrudManagedObject(PetClinicLead.class,
-					null));			
+			managedObjects.add(new CrudManagedObject(PetClinicInquiry.class));
+			managedObjects.add(new CrudManagedObject(Inquiry.class));
+			managedObjects.add(new CrudManagedObject(PetClinicLead.class));			
+			managedObjects.add(new CrudManagedObject(Task.class));
 			
 			CrudManagedObject crudManagedObject = new CrudManagedObject(Role.class, RoleDAO.class);
 			crudManagedObject.setNewSelect("new Role(o.id, o.name)");
@@ -178,6 +176,8 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		JsfDetailController taskController = new JsfDetailController(Task.class);
 		adapter.getController().addChild("tasks",
 				taskController);
+		taskController.setForceUpdate(true);
+		taskController.setDao(repos().get("Task"));
 		adapter.getController().addChild("contacts",
 				new JsfDetailController(ContactInfo.class));
 

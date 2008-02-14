@@ -7,13 +7,32 @@ import java.util.logging.Logger;
 
 import org.crank.crud.relationships.RelationshipManager;
 
+/**
+ * 
+ * @author Rick Hightower, Tom Cellucci
+ *
+ * @param <T> Entity type
+ * @param <PK> primary key type
+ */
+
 public class DetailController<T extends Serializable, PK extends Serializable> extends CrudControllerBase<T, PK> {    
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
+	/** manage the relationship with the parent entity object. */
 	protected RelationshipManager relationshipManager = new RelationshipManager();
+	
     private boolean showDetails = false;
+    
+    /** Always synchronize to the database, can't be rolled back by hitting cancel. */
+    private boolean forceUpdate = false;
+    
+    /** Because we needed to keep track of the items that were modified; they need to become part of the persistent context
+     * when the parent entity is saved or if the parent collection isn't the owner
+     * there was a case where you'd remove an parent-child relationship
+     * but it would never stick because the child was the owner
+     * updating the parent wouldn't save your change
+     * @author Tom Cellucci
+     */
     private Collection<T> changedEntities = new HashSet<T>();
     
     public boolean isShowDetails() {
@@ -54,7 +73,7 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
     }
      
     /*
-     * searches for the top-level CrudController in the CrudOperation hierarchy
+     * Searches for the top-level CrudController in the CrudOperation hierarchy
      * returns null if none found
      */
 	private CrudController<?, ?> findCrudController() {
@@ -82,11 +101,24 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
         /* Add this object to the parent. */
         relationshipManager.addToParent(parent, this.getEntity());
         this.state = CrudState.UNKNOWN;
-        changedEntities.add((T)this.getEntity());
+        
+        if (forceUpdate) {
+        	checkDao();
+        	dao.merge(this.getEntity());
+        } else {
+        	changedEntities.add((T)this.getEntity());        	
+        }
         return null;
     }
 
-    public CrudOutcome doDelete() {
+    private final void checkDao() {
+    	if (dao==null) {
+    		throw new RuntimeException("If force merge is set to true, then the dao object must already be set");
+    	}
+	}
+
+	@SuppressWarnings("unchecked")
+	public CrudOutcome doDelete() {
         /* Read the entity from the parent object. */
         this.entity = (T)relationshipManager.readEntityFromParent( parent.getEntity(), retrieveId());
         doDelete(entity);
@@ -99,7 +131,12 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
 	protected void doDelete(T entity) {
        	Logger.getAnonymousLogger().info("doDelete() - deleting " + entity);
         relationshipManager.removeFromParent(parent.getEntity(), entity);
-        changedEntities.add(entity);
+        if (forceUpdate) {
+        	checkDao();
+        	dao.merge(entity);        	
+        } else {
+        	changedEntities.add(entity);
+        }
 	}
 
 	public String getObjectId (Object row) {
@@ -114,7 +151,8 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
         return null;
     }
 
-    public CrudOutcome doRead() {
+    @SuppressWarnings("unchecked")
+	public CrudOutcome doRead() {
         /* Initialize this form and subForms to their initial state. */
         init();
 
@@ -132,6 +170,10 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
 
     protected CrudOutcome doUpdate() {
         this.state = CrudState.UNKNOWN;
+        if (forceUpdate) {
+        	checkDao();
+        	dao.merge(entity);        	
+        }
         return null;
     }
 
@@ -176,6 +218,14 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
 				}
 			});
         }
+	}
+
+	public boolean isForceUpdate() {
+		return forceUpdate;
+	}
+
+	public void setForceUpdate(boolean forceUpdate) {
+		this.forceUpdate = forceUpdate;
 	}
     
 }

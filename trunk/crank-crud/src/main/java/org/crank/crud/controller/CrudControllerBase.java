@@ -16,7 +16,13 @@ import org.crank.core.spring.support.SpringBeanWrapperPropertiesUtil;
 import org.crank.crud.GenericDao;
 import org.crank.message.MessageManagerUtils;
 import org.crank.web.RequestParameterMapFinderImpl;
-
+/**
+ * 
+ * @author Rick Hightower, Tom Cellucci
+ *
+ * @param <T> Entity type
+ * @param <PK> primary key type
+ */
 public abstract class CrudControllerBase<T extends Serializable, PK extends Serializable> implements CrudOperations<T>, Serializable {
 
     protected GenericDao<T, PK> dao;

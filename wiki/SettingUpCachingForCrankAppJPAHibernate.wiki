@@ -43,7 +43,7 @@ The xml file sets up the folowing caches (one for a realtionship and one for a c
 
 The ehcache by default is expected to be in the root classpath as follows:
 
-h4. ehcache.xml
+==== ehcache.xml ====
 
 {{{
 <ehcache>

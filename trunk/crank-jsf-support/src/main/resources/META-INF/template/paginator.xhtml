@@ -78,6 +78,11 @@
 	<c:if test="${empty pageLastDisabledImg}">
 		<c:set var="pageLastDisabledImg" value="/images/page_last_btn_disabled.gif"/>
 	</c:if>
+	
+	<c:if test="${empty ajax}">
+		<c:set var="ajax" value="${false}"/>
+	</c:if>
+	
 
 	<!-- DEFINE VARIABLES -->
 	<c:if test="${empty paginatorCommandButtonClass}">
@@ -178,7 +183,7 @@
 					rendered="${not readOnly and enableAdd}"
 					entity="${crud}"
 					action="loadCreate"
-					ajax="false"
+					ajax="${ajax}"
 					ajaxSingle="${ajaxSingle}"
 					toolTipText="Click to add a new record...">
 					

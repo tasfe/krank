@@ -21,6 +21,10 @@
 		<c:set var="immediate" value="false" />
 	</c:if>	
 	
+	<c:if test="${empty ajax}">
+		<c:set var="ajax" value="${false}"/>
+	</c:if>
+	
 
 	<!-- DEFINE VARIABLES -->
 	<c:if test="${empty id}">

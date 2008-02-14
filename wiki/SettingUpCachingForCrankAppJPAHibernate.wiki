@@ -34,8 +34,8 @@ The xml file sets up the folowing caches (one for a realtionship and one for a c
 <hibernate-configuration>
 
     <session-factory name="crank-security">
-    	<class-cache usage="read-only" class="org.crank.security.model.Role" />
-    	<collection-cache usage="read-only" collection="org.crank.security.model.Subject.roles"/>
+    	<class-cache usage="read-write" class="org.crank.security.model.Role" />
+    	<collection-cache usage="read-write" collection="org.crank.security.model.Subject.roles"/>
     </session-factory>
 
 </hibernate-configuration>

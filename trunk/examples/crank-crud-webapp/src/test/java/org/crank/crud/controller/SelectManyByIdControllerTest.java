@@ -12,7 +12,6 @@ import org.crank.crud.GenericDao;
 import org.crank.crud.controller.CrudControllerBase;
 import org.crank.crud.controller.EntityLocator;
 import org.crank.crud.controller.Row;
-import org.crank.crud.controller.SelectManyByIdController;
 import org.crank.crud.dao.EmployeeDAO;
 import org.crank.crud.dao.TagDAO;
 import org.crank.crud.jsf.support.JsfSelectManyByIdController;

@@ -131,6 +131,7 @@
 							<c:if test="${crud:textSize(type,fieldName)>0}">
 								<f:validateLength maximum="${crud:textSize(type,fieldName)}" />
 							</c:if>
+							<ui:insert />
 						</h:inputTextarea>
 						</a4j:outputPanel>
 					</c:when>
@@ -155,6 +156,7 @@
 									<c:if test="${crud:textSize(type,fieldName)>0}">
 										<f:validateLength maximum="${crud:textSize(type,fieldName)}" />
 									</c:if>
+									<ui:insert />
 								</h:inputText>
 								</a4j:outputPanel>
 							</c:otherwise>
@@ -175,6 +177,7 @@
 								 onclick="${onclick}" 
 								 required="${required}" 
 								 styleClass="fieldSelectBooleanCheckbox">
+			    <ui:insert />								 
 				</h:selectBooleanCheckbox>
 				</a4j:outputPanel>
 			</c:if>
@@ -217,6 +220,7 @@
 					<c:if test="${not crud:isManyToOneOptional(type,fieldName)}">
 						<f:attribute name="required_bean" value="${propEntityName}"/>
 					</c:if>
+					<ui:insert />
 				</h:selectOneMenu>
 		        <!--         
 				<crud:select id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}" required="${not crud:isManyToOneOptional(type,fieldName)}">
@@ -239,6 +243,7 @@
 		        <a4j:outputPanel ajaxRendered="true">
 		        <h:selectOneMenu id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}">
 					<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
+					<ui:insert />
 				</h:selectOneMenu>
 				</a4j:outputPanel>
 		    </c:if>
@@ -254,7 +259,9 @@
 		  			required="${required}" 
 		            value="${crud.dynamicProperties[mapKeyName]}"
 		            storage="file"
-		            maxlength="${crud:columnSize(type,fieldName)}"/>
+		            maxlength="${crud:columnSize(type,fieldName)}">
+		            <ui:insert />
+		        </t:inputFileUpload>
 		    </c:if>
 			</c:if>
 		</c:otherwise>

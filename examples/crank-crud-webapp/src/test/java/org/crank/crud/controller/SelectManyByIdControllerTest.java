@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.faces.model.DataModel;
 import javax.servlet.http.HttpServletRequest;
 
+import org.crank.core.CollectionUtils;
 import org.crank.crud.GenericDao;
 import org.crank.crud.controller.CrudControllerBase;
 import org.crank.crud.controller.EntityLocator;

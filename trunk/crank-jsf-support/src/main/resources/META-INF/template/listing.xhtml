@@ -254,25 +254,49 @@
 				<h:column>
 					<h:panelGroup>
                         <c:if test="${not readOnly}">
-	                        <h:commandLink
-								action="${crud.read}"
-								title="Edit this record"
-								rendered="${enableEdit}"
-								onclick="${editFunction}" 
-								immediate="${immediate}"
-								>
-									<h:graphicImage value="${editImg}" border="0" styleClass="${listingImageButtonClass}" />
-							</h:commandLink>
-	
-							<h:commandLink
-								action="${crud.delete}"  
-								rendered="${enableDelete}"
-								title="Delete this record"
-								onclick="if (!confirm('Are you sure you want to delete this item?')) return false" 
-								immediate="${immediate}"
-								>
-									<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
-							</h:commandLink>
+                        	<c:if test="${ajax}">
+		                        <a4j:commandLink
+									action="${crud.read}"
+									title="Edit this record"
+									rendered="${enableEdit}"
+									onclick="${editFunction}" 
+									immediate="${immediate}"
+									>
+										<h:graphicImage value="${editImg}" border="0" styleClass="${listingImageButtonClass}" />
+								</a4j:commandLink>
+		
+								<a4j:commandLink
+									action="${crud.delete}"  
+									rendered="${enableDelete}"
+									title="Delete this record"
+									onclick="if (!confirm('Are you sure you want to delete this item?')) return false" 
+									immediate="${immediate}"
+									>
+										<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
+								</a4j:commandLink>
+							</c:if>
+                        	<c:if test="${not ajax}">
+		                        <h:commandLink
+									action="${crud.read}"
+									title="Edit this record"
+									rendered="${enableEdit}"
+									onclick="${editFunction}" 
+									immediate="${immediate}"
+									>
+										<h:graphicImage value="${editImg}" border="0" styleClass="${listingImageButtonClass}" />
+								</h:commandLink>
+		
+								<h:commandLink
+									action="${crud.delete}"  
+									rendered="${enableDelete}"
+									title="Delete this record"
+									onclick="if (!confirm('Are you sure you want to delete this item?')) return false" 
+									immediate="${immediate}"
+									>
+										<h:graphicImage value="${delImg}" border="0" styleClass="${listingImageButtonClass}"/>
+								</h:commandLink>
+							</c:if>
+
                         </c:if> 
                         <ui:insert />
 

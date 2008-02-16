@@ -1,5 +1,7 @@
 package org.crank.crud;
 
+import java.util.List;
+
 import javax.persistence.EntityManagerFactory;
 
 import org.springframework.aop.framework.ProxyFactoryBean;
@@ -22,6 +24,8 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
     private Class bo;
 
     private EntityManagerFactory entityManagerFactory;
+    
+    private List<QueryHint<?>> queryHints;
 
     private boolean preloadEnabled = false;
     {
@@ -80,6 +84,7 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
         GenericDaoJpa dao = new GenericDaoJpa( bo );
         dao.setNewSelectStatement(newSelect);
         dao.setEntityManagerFactory( entityManagerFactory );
+        dao.setQueryHints(queryHints);
         return dao;
     }
 
@@ -91,6 +96,7 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
         dao.setPreloadConfiguration( preloadConfiguration );
         dao.setEntityManagerFactory( entityManagerFactory );
         dao.setNewSelectStatement(newSelect);
+        dao.setQueryHints(queryHints);        
         dao.preload();
         this.addAdvisor( new CachingAdvisor() );
         return dao;
@@ -108,5 +114,9 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
 	public void setNewSelect(String newSelect) {
 		this.newSelect = newSelect;
 		
+	}
+
+	public void setQueryHints(List<QueryHint<?>> queryHints) {
+		this.queryHints = queryHints;
 	}
 }

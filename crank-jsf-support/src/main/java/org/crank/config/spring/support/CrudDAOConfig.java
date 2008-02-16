@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 import org.crank.crud.GenericDao;
 import org.crank.crud.GenericDaoFactory;
+import org.crank.crud.GenericDaoJpa;
 import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.jsf.support.JsfCrudAdapter;
 import org.springframework.beans.factory.InitializingBean;
@@ -57,7 +58,7 @@ public abstract class CrudDAOConfig implements InitializingBean {
 		Map<String, GenericDao> repositories = new HashMap<String, GenericDao>();
 
 		for (CrudManagedObject mo : managedObjects()) {
-			GenericDao dao = createDao(mo.getDaoInterface(), mo.getEntityType(), mo.getNewSelect());
+			GenericDao dao = createDao(mo);
 			repositories.put(mo.getName(), dao);
 		}
 
@@ -128,18 +129,18 @@ public abstract class CrudDAOConfig implements InitializingBean {
 	}
 
 	@SuppressWarnings("unchecked")
-	public GenericDao createDao(Class daoClass, Class entityClass, String newSelect)
+	public GenericDao createDao(CrudManagedObject cmo)
 			throws Exception {
 		GenericDaoFactory genericDaoFactory = new GenericDaoFactory(
 				transactionInterceptor());
-		if (daoClass == null) {
+		if (cmo.getDaoInterface() == null) {
 			genericDaoFactory.setInterface(GenericDao.class);
 		} else {
-			genericDaoFactory.setInterface(daoClass);
+			genericDaoFactory.setInterface(cmo.getDaoInterface());
 		}
-		
-		genericDaoFactory.setNewSelect(newSelect);
-		genericDaoFactory.setBo(entityClass);
+		genericDaoFactory.setQueryHints(cmo.getQueryHints());
+		genericDaoFactory.setNewSelect(cmo.getNewSelect());
+		genericDaoFactory.setBo(cmo.getEntityType());
 		genericDaoFactory.setEntityManagerFactory(entityManagerFactory());
 		genericDaoFactory.afterPropertiesSet();
 		return (GenericDao) genericDaoFactory.getObject();

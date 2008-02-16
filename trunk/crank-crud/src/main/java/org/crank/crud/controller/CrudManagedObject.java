@@ -1,6 +1,9 @@
 package org.crank.crud.controller;
 
 import java.io.Serializable;
+import java.util.List;
+
+import org.crank.crud.QueryHint;
 
 public class CrudManagedObject implements Serializable {
     private Class idType = Long.class;
@@ -10,8 +13,16 @@ public class CrudManagedObject implements Serializable {
     private boolean needsConverter;
     private boolean needsDropDownSupport;
     private String newSelect = null;
+	private List<QueryHint<?>> queryHints;
+    
 
-    public String getNewSelect() {
+    public List<QueryHint<?>> getQueryHints() {
+		return queryHints;
+	}
+	public void setQueryHints(List<QueryHint<?>> queryHints) {
+		this.queryHints = queryHints;
+	}
+	public String getNewSelect() {
 		return newSelect;
 	}
 	public void setNewSelect(String newSelect) {

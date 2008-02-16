@@ -67,6 +67,12 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	protected Logger logger = Logger.getLogger(GenericDaoJpa.class);
 	
 	private String newSelectStatement = null;
+	
+	private List<QueryHint<?>> queryHints;
+
+	public void setQueryHints(List<QueryHint<?>> queryHints) {
+		this.queryHints = queryHints;
+	}
 
 	public GenericDaoJpa(final Class<T> aType) {
 		this.type = aType;
@@ -381,24 +387,33 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	@SuppressWarnings("unchecked")
 	public int count() {
-		String entityName = getEntityName(type);
-		List<T> list = (List<T>) getJpaTemplate().find(
-				"SELECT count(*) FROM " + entityName + " instance");
-		Long count = (Long) list.get(0);
-		return count.intValue();
+		final String entityName = getEntityName(type);
+		return (Integer) getJpaTemplate().execute(new JpaCallback() {
+
+			public Object doInJpa(EntityManager em) throws PersistenceException {
+				Query query = em.createQuery("SELECT count(*) FROM " + entityName + " instance");
+				prepareQueryHintsIfNeeded(query);
+				Long count = (Long) query.getResultList().get(0);
+				return count.intValue();
+			}});
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<T> find(Class<T> clazz) {
 		String entityName = getEntityName(clazz);
+		String sQuery = null;
 		if (newSelectStatement == null) {
-			return (List<T>) getJpaTemplate().find(
-				"SELECT instance FROM " + entityName + " instance");
+			sQuery = "SELECT instance FROM " + entityName + " instance";
 		} else {
-			return (List<T>) getJpaTemplate().find(
-					"SELECT " + newSelectStatement + " FROM " + entityName + " o");
-			
+			sQuery =  "SELECT " + newSelectStatement + " FROM " + entityName + " o";
 		}
+		final String fQuery = sQuery; 
+		return (List<T>) getJpaTemplate().execute(new JpaCallback() {
+			public Object doInJpa(EntityManager em) throws PersistenceException {
+				Query query = em.createQuery(fQuery);
+				prepareQueryHintsIfNeeded(query);
+				return query.getResultList();
+			}});
 	}
 
 	public List<T> find(String[] propertyNames, Object[] values) {
@@ -602,12 +617,22 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 						query.setFirstResult(startPosition);
 						query.setMaxResults(maxResult);
 					}
+					prepareQueryHintsIfNeeded(query);
 					return query.getResultList();
 				}
+
 			});
 		} catch (Exception ex) {
 			logger.debug("failed to run a query", ex);
 			throw new RuntimeException("Unable to run query : " + sQuery, ex);
+		}
+	}
+
+	private final void prepareQueryHintsIfNeeded(Query query) {
+		if (queryHints!=null && queryHints.size()>0) {
+			for (QueryHint<?> qh : queryHints) {
+				query.setHint(qh.getName(), qh.getValue());
+			}
 		}
 	}
 

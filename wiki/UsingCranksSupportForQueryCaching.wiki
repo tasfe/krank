@@ -4,7 +4,7 @@ Cranks has support for query caching. You merely need to specify query hints tha
 
 Here is what the configuration might look like before query caching:
 
-h4.
+
 {{{
 @Configuration(defaultLazy = Lazy.TRUE)
 public abstract class SecurityApplicationContext extends CrudJSFConfig {
@@ -188,4 +188,3 @@ The above generates the following debug logging:
 [2008-02-15 15:37:34,046] DEBUG org.hibernate.cache.ReadWriteCache Cache hit: org.crank.security.model.Role#4 
 9-#######################################-
 }}}
-

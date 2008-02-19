@@ -119,15 +119,26 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
 
 	@SuppressWarnings("unchecked")
 	public CrudOutcome doDelete() {
-        /* Read the entity from the parent object. */
-        this.entity = (T)relationshipManager.readEntityFromParent( parent.getEntity(), retrieveId());
         doDelete(entity);
         return null;
     }
+
+    /** 
+     * We're overriding the delete method in this case to ensure that a
+     * non-null entity is passed in the fireBeforeDelete/fireAfterDelete methods.
+     * The base class implementation passes its internal 'entity' member which
+     * appears to be null at least some of the time. To fix, we explicitly set 
+     * super.entity prior to invoking the super implementation. 
+     * 
+     */    
+	@Override
+	public CrudOutcome delete() {
+        /* Read the entity from the parent object. */
+        this.entity = (T)relationshipManager.readEntityFromParent( parent.getEntity(), retrieveId());
+		return super.delete();
+	}
     
-    
-    
-    @Override
+	@Override
 	protected void doDelete(T entity) {
        	Logger.getAnonymousLogger().info("doDelete() - deleting " + entity);
         relationshipManager.removeFromParent(parent.getEntity(), entity);

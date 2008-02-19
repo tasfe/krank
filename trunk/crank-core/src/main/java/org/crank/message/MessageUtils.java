@@ -2,6 +2,8 @@ package org.crank.message;
 
 import java.util.*;
 
+import org.crank.core.CrankContext;
+
 /**
  * Functions to aid developing JSF applications.
  */
@@ -81,6 +83,16 @@ public final class MessageUtils {
 
 		return label;
 	}
+	
+	public static String createLabelWithNameSpace(final String namespace, final String fieldName) {
+
+		return createLabelWithNameSpace(namespace, fieldName, CrankContext.getResourceBundleLocator().getBundle());
+	}
+	
+	public static String createLabel(final String fieldName) {
+		return createLabelWithNameSpace(null, fieldName, CrankContext.getResourceBundleLocator().getBundle());
+	}	
+	
 
 	/**
 	 * Generate the field. Transforms firstName into First Name. This allows

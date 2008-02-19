@@ -17,6 +17,11 @@ public class CrankContext {
 		}
 		return objectRegistry;
 	}
+	
+	public static ResourceBundleLocator getResourceBundleLocator() {
+		return (ResourceBundleLocator) getObjectRegistry().getObjectsByType(ResourceBundleLocator.class)[0];
+	}
+	
 
 	public static void setObjectRegistry(ObjectRegistry objectRegistry) {
 		CrankContext.objectRegistry = objectRegistry;

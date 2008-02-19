@@ -69,6 +69,9 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	private String newSelectStatement = null;
 	
 	private List<QueryHint<?>> queryHints;
+	
+	protected String idPropertyName = "id";
+
 
 	public void setQueryHints(List<QueryHint<?>> queryHints) {
 		this.queryHints = queryHints;
@@ -85,14 +88,42 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public T store(T entity) {
 		T persistedEntity = entity;
 		try {
-			// TODO: the error reporting could be deferred (the entity has an ID
-			// that is in the db but not in the entity manager)
-			getJpaTemplate().persist(entity);
+			/*
+			 * If the entity manager does not contain this entity or
+			 * the entity has a null id, then use the persist method,
+			 * otherwise use the merge method.
+			 */
+			if (!hasId(entity)) {
+				// TODO: the error reporting could be deferred (the entity has an ID
+				// that is in the db but not in the entity manager)
+				getJpaTemplate().persist(entity);
+			} else {
+				persistedEntity = (T) getJpaTemplate().merge(entity);
+			}
 		} catch (EntityExistsException e) {
 			// if the entity exists then we call merge
 			persistedEntity = (T) getJpaTemplate().merge(entity);
 		}
 		return persistedEntity;
+	}
+
+	protected boolean hasId(T entity) {
+		BeanWrapper bw = new BeanWrapperImpl(entity);
+		Object propertyValue = bw.getPropertyValue(this.idPropertyName);
+		if (propertyValue==null) {
+			return false;
+		}
+		
+		if (propertyValue instanceof Number) {
+			Number number = (Number) propertyValue;
+			if (number.longValue() <= 0) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		
+		return true;
 	}
 
 	@Transactional
@@ -1053,7 +1084,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		});
 	}
 
-	public T readPopulated(Class clazz, final PK id) {
+	public T readPopulated(Class<?> clazz, final PK id) {
 		try {
 			return doReadPopulated(id);
 		} catch (JpaSystemException jpaSystemException) {
@@ -1126,5 +1157,12 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 				sQuery);
 	}
 
+	public String getIdPropertyName() {
+		return idPropertyName;
+	}
+
+	public void setIdPropertyName(String idPropertyName) {
+		this.idPropertyName = idPropertyName;
+	}
 
 }

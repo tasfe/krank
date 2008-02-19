@@ -32,7 +32,7 @@ public class CrudController<T extends Serializable, PK extends Serializable> ext
      */
     @SuppressWarnings("unchecked")
     public CrudOutcome doUpdate() {
-        entity = dao.update(entity);
+        entity = dao.store(entity);
         state = CrudState.UNKNOWN; 
         fireToggle();
         return CrudOutcome.LISTING;
@@ -61,7 +61,7 @@ public class CrudController<T extends Serializable, PK extends Serializable> ext
     	if (CrudOperations.ADD_BY_MERGE.equals(addStrategy)) {
     		this.entity = dao.merge(entity);
     	} else {
-    		dao.create(entity);
+    		dao.store(entity);
     	}
         this.state = CrudState.UNKNOWN;
         fireToggle();

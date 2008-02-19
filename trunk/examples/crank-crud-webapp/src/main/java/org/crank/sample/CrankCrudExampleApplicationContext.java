@@ -177,7 +177,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		adapter.getController().addChild("tasks",
 				taskController);
 		taskController.setForceUpdate(true);
-		taskController.setDao(repos().get("Task"));
+		//taskController.setDao(repos().get("Task"));
 		adapter.getController().addChild("contacts",
 				new JsfDetailController(ContactInfo.class));
 

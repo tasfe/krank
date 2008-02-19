@@ -3,6 +3,8 @@ package org.crank.crud.controller;
 import java.io.Serializable;
 import java.util.Collection;
 
+import org.crank.message.MessageManagerUtils;
+
 /**
  * Controls CRUD operations from an application.
  * @author Rick
@@ -88,6 +90,22 @@ public class CrudController<T extends Serializable, PK extends Serializable> ext
         return CrudOutcome.LISTING;
     }
 
+    /** 
+     * We're overriding the delete method in this case to ensure that the
+     * correct entity is passed in the fireBeforeDelete/fireAfterDelete methods.
+     * The base class implementation passes its 'entity' member which
+     * is only sometimes correct because it differs from getCurrentEntity().
+     * 
+     */
+    @Override
+    public CrudOutcome delete() {    	
+    	T entity = getCurrentEntity();
+        fireBeforeDelete(entity);
+        CrudOutcome outcome = doDelete();
+    	MessageManagerUtils.getCurrentInstance().addStatusMessage("Deleted");        
+        fireAfterDelete(entity);
+        return outcome;
+    }
 
    /**
      * Read the entity from the data store. If the readPopulated flag is set, read 

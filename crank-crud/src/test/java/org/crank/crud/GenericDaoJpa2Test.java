@@ -17,7 +17,7 @@ import static org.testng.AssertJUnit.assertEquals;
 
 /**
  * 
- * @version $Revision:$
+ * @version $Revision$
  * @author Rick Hightower
  */
 public class GenericDaoJpa2Test extends DbUnitTestBase {
@@ -124,6 +124,26 @@ public class GenericDaoJpa2Test extends DbUnitTestBase {
 		
 		
     }
+	
+	@Test (groups="updates")
+    public void testUpdateWithStore() {
+		Employee employee = testEmployees.get(0);
+		employee.setFirstName("monkey");
+		employeeDao.store(employee);
+		employee = employeeDao.read(employee.getId());
+		assert employee.getFirstName().equals("monkey");
+	}
+	
+	@Test (groups="updates")
+    public void testCreateEmployeeWithStore() {
+		Employee employee = new Employee();
+		employee.setLastName("boy");
+		employee.setFirstName("monkey");
+		employeeDao.store(employee);
+		employee = employeeDao.read(employee.getId());
+		assert employee.getFirstName().equals("monkey");
+		assert employee.getLastName().equals("boy");
+	}
 	
     public void setEmployeeDao(final GenericDao<Employee, Long> baseJpaDao) {
 		this.employeeDao = baseJpaDao;

@@ -15,6 +15,7 @@ import org.crank.core.RequestParameterMapFinder;
 import org.crank.core.spring.support.SpringBeanWrapperPropertiesUtil;
 import org.crank.crud.GenericDao;
 import org.crank.message.MessageManagerUtils;
+import org.crank.message.MessageUtils;
 import org.crank.web.RequestParameterMapFinderImpl;
 /**
  * 
@@ -243,7 +244,7 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
     	try {
 	        fireBeforeCreate();
 	       	CrudOutcome outcome = doCreate();
-	    	MessageManagerUtils.getCurrentInstance().addStatusMessage("Created");        
+	    	MessageManagerUtils.getCurrentInstance().addStatusMessage("Created %s", MessageUtils.createLabel(this.getName()));        
 	        fireAfterCreate();
 	        return outcome;
     	} catch (CrankValidationException e) {
@@ -273,7 +274,7 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
         try {
 	        fireBeforeUpdate();
 	        CrudOutcome outcome = doUpdate();
-	    	MessageManagerUtils.getCurrentInstance().addStatusMessage("Updated");
+	    	MessageManagerUtils.getCurrentInstance().addStatusMessage("Updated %s", MessageUtils.createLabel(this.getName()));
 	        fireAfterUpdate();
 	        return outcome;
 		} catch (CrankValidationException e) {
@@ -286,7 +287,7 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
     public CrudOutcome delete() {
         fireBeforeDelete(this.entity);
         CrudOutcome outcome = doDelete();
-    	MessageManagerUtils.getCurrentInstance().addStatusMessage("Deleted");        
+    	MessageManagerUtils.getCurrentInstance().addStatusMessage("Deleted %s", MessageUtils.createLabel(this.getName()));        
         fireAfterDelete(this.entity);
         return outcome;
     }

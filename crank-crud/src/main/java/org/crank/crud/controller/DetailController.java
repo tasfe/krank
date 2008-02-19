@@ -14,7 +14,6 @@ import org.crank.crud.relationships.RelationshipManager;
  * @param <T> Entity type
  * @param <PK> primary key type
  */
-
 public class DetailController<T extends Serializable, PK extends Serializable> extends CrudControllerBase<T, PK> {    
 	private static final long serialVersionUID = 1L;
 	
@@ -103,19 +102,20 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
         this.state = CrudState.UNKNOWN;
         
         if (forceUpdate) {
-        	checkDao();
-        	dao.merge(this.getEntity());
+        	if (dao!=null) {
+        		dao.merge(this.getEntity());
+        	} else {
+        		CrudController<?, ?> crudController = findCrudController();
+        		crudController.update();
+        		crudController.state = CrudState.EDIT;
+        	}
         } else {
         	changedEntities.add((T)this.getEntity());        	
         }
+        parent = (Object) this.parent.getEntity();
         return null;
     }
 
-    private final void checkDao() {
-    	if (dao==null) {
-    		throw new RuntimeException("If force merge is set to true, then the dao object must already be set");
-    	}
-	}
 
 	@SuppressWarnings("unchecked")
 	public CrudOutcome doDelete() {
@@ -143,8 +143,11 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
        	Logger.getAnonymousLogger().info("doDelete() - deleting " + entity);
         relationshipManager.removeFromParent(parent.getEntity(), entity);
         if (forceUpdate) {
-        	checkDao();
-        	dao.merge(entity);        	
+        	if (dao!=null) {
+        		dao.merge(entity);
+        	} else {
+        		findCrudController().update();
+        	}
         } else {
         	changedEntities.add(entity);
         }
@@ -182,8 +185,11 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
     protected CrudOutcome doUpdate() {
         this.state = CrudState.UNKNOWN;
         if (forceUpdate) {
-        	checkDao();
-        	dao.merge(entity);        	
+        	if (dao!=null) {
+        		dao.merge(entity);
+        	} else {
+        		findCrudController().update();
+        	}
         }
         return null;
     }

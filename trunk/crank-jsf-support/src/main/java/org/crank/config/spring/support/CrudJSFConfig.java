@@ -70,10 +70,14 @@ public abstract class CrudJSFConfig implements InitializingBean {
             /* Put the controller into the map. */
             cruds.put(StringUtils.unCapitalize(mo.getName()), jsfCrudAdapter);
             cruds.put(mo.getName(), jsfCrudAdapter);
+            crudAdded(mo.getName(), jsfCrudAdapter);
         }
         
         return cruds;
     }
+
+	protected void crudAdded(String name, JsfCrudAdapter<?, ?> jsfCrudAdapter) {
+	}
 
 	public Object addJSFMessageHandling(
 			Object target) {

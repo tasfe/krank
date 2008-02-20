@@ -11,7 +11,7 @@
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
 
-		<rich:tabPanel>
+		<rich:tabPanel switchType="client">
 			<!-- User Tab  -->
 			<rich:tab
 				label="${crud:createLabel(cruds.securityUser.controller.name)}"
@@ -30,7 +30,8 @@
 
 				<a4j:form id="userListing">
 					<crank:listing jsfCrudAdapter="${cruds.securityUser}"
-						propertyNames="name,email,parentGroup.name" parentForm="userListing" />
+						propertyNames="name,email,parentGroup.name" parentForm="userListing" 
+						ajax="true"/>
 				</a4j:form>
 
 			</rich:tab>
@@ -46,7 +47,9 @@
 
 				<a4j:form id="groupListing">
 					<crank:listing jsfCrudAdapter="${cruds.securityGroup}"
-						propertyNames="name" parentForm="userListing" />
+						propertyNames="name" parentForm="groupListing" 
+						ajax="true"
+						/>
 				</a4j:form>
 
 			</rich:tab>
@@ -62,7 +65,7 @@
 
 				<a4j:form id="roleListing">
 					<crank:listing jsfCrudAdapter="${cruds.role}"
-						propertyNames="name" parentForm="userListing" />
+						propertyNames="name" parentForm="roleListing" ajax="true"/>
 				</a4j:form>
 
 			</rich:tab>

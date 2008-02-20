@@ -2,13 +2,13 @@
     <parent>
         <artifactId>crank-base</artifactId>
         <groupId>org.crank</groupId>
-        <version>0.19-SNAPSHOT</version>
+        <version>0.19</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.crank</groupId>
     <artifactId>crank-jsf-support</artifactId>
     <name>crank-jsf-support</name>
-    <version>0.19-SNAPSHOT</version>
+    <version>0.19</version>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>

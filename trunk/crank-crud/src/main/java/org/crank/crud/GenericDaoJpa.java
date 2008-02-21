@@ -59,7 +59,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  */
 public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		implements GenericDao<T, PK>, Finder<T> {
-
+	
 	protected Class<T> type = null;
 
 	protected boolean distinct = false;
@@ -88,21 +88,32 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public T store(T entity) {
 		T persistedEntity = entity;
 		try {
-			/*
-			 * If the entity manager does not contain this entity or
-			 * the entity has a null id, then use the persist method,
-			 * otherwise use the merge method.
-			 */
-			if (!hasId(entity)) {
-				// TODO: the error reporting could be deferred (the entity has an ID
-				// that is in the db but not in the entity manager)
-				getJpaTemplate().persist(entity);
-			} else {
+			try {
+				/*
+				 * If the entity manager does not contain this entity or
+				 * the entity has a null id, then use the persist method,
+				 * otherwise use the merge method.
+				 */
+				if (!hasId(entity)) {
+					// TODO: the error reporting could be deferred (the entity has an ID
+					// that is in the db but not in the entity manager)
+					getJpaTemplate().persist(entity);
+				} else {
+					persistedEntity = (T) getJpaTemplate().merge(entity);
+				}
+			} catch (EntityExistsException e) {
+				// if the entity exists then we call merge
 				persistedEntity = (T) getJpaTemplate().merge(entity);
 			}
-		} catch (EntityExistsException e) {
-			// if the entity exists then we call merge
-			persistedEntity = (T) getJpaTemplate().merge(entity);
+		} catch (Exception ex) { //We want to try to merge no matter what was thrown.
+			try {
+				// Force merge
+				persistedEntity = (T) getJpaTemplate().merge(entity);
+			} catch (Exception ex2) {
+				logger.warn(String.format("Unable to store object %s exception %s original exception %s", entity, ex2.getMessage(), ex.getMessage()), ex2);
+				throw new RuntimeException(ex);
+			}
+			
 		}
 		return persistedEntity;
 	}

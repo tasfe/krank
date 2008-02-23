@@ -59,6 +59,7 @@ public class TreeModelBuilderTest {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testEmptyList() {
 		TestTreeModelBuilder builder = new TestTreeModelBuilder();
@@ -79,6 +80,7 @@ public class TreeModelBuilderTest {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testCreateTreeModelFromList() {
 		TestTreeModelBuilder builder = new TestTreeModelBuilder();
@@ -110,6 +112,7 @@ public class TreeModelBuilderTest {
 	    assertEquals("employee three average ", emp3Data.name);
 	}	
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testCreateTreeModelFromListNoRoot() {
 		TestTreeModelBuilder builder = new TestTreeModelBuilder();
@@ -140,6 +143,7 @@ public class TreeModelBuilderTest {
 	    assertEquals("employee three average ", emp3Data.name);
 	}		
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testCreateTreeModelFromListWithWildcard() {
 		TestTreeModelBuilder builder = new TestTreeModelBuilder();

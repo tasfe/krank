@@ -85,7 +85,8 @@ public class TypeUtils {
     	}
         PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
         if (pd==null) {
-        	throw new CrankException("The Property was not found!, type=%s, propertyName=%s", type, propertyName );
+        	//throw new CrankException("The Property was not found!, type=%s, propertyName=%s", type, propertyName );
+        	return false;
         }
         
         Class<?> propertyType = pd.getPropertyType();
@@ -103,7 +104,8 @@ public class TypeUtils {
     	}
         PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
         if (pd==null) {
-        	throw new CrankException("The Property was not found!, type=%s, propertyName=%s", type, propertyName );
+        	//throw new CrankException("The Property was not found!, type=%s, propertyName=%s", type, propertyName );
+        	return false;
         }
         Class<?> propertyType = pd.getPropertyType();
         if (propertyType == Boolean.class) {
@@ -206,6 +208,10 @@ public class TypeUtils {
                 if (pd.getName().equals( propertyName )) {
                     return pd;
                 }
+            }
+            Class<?> superclass = type.getSuperclass();
+            if (superclass!=null) {
+            	return doGetPropertyDescriptor(superclass, propertyName);
             }
             return null;
    

@@ -12,6 +12,7 @@ import org.crank.model.AbstractTreeModelBuilder;
  * @author Rick Hightower
  *
  */
+@SuppressWarnings("unchecked")
 public class TomahawkOriginalModelBuilder extends AbstractTreeModelBuilder{
 
 	/**

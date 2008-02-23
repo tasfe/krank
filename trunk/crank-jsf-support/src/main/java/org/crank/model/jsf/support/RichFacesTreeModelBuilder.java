@@ -13,6 +13,7 @@ import org.springframework.beans.BeanWrapperImpl;
  * @author Rick Hightower
  *
  */
+@SuppressWarnings("unchecked")
 public class RichFacesTreeModelBuilder extends AbstractTreeModelBuilder{
 	private String idProperty = "id";
 

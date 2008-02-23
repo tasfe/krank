@@ -17,7 +17,7 @@ public class TypeUtils {
     	}
         PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
         if (pd==null) {
-        	throw new CrankException("The Property was not found!, type=%s, propertyName=%s", type, propertyName );
+        	return false;
         }
         Class<?> propertyType = pd.getPropertyType();
         if (Date.class.isAssignableFrom( propertyType )) {
@@ -64,7 +64,7 @@ public class TypeUtils {
     	}
         PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
         if (pd==null) {
-        	throw new CrankException("The Property was not found!, type=%s, propertyName=%s", type, propertyName );
+        	return false;
         }
         Class<?> propertyType = pd.getPropertyType();
 

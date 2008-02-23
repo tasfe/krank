@@ -8,7 +8,6 @@ import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.criteria.Select;
 import org.crank.crud.join.Join;
-import org.hibernate.Criteria;
 import org.testng.annotations.Test;
 
 import javax.persistence.Embeddable;
@@ -21,7 +20,7 @@ import java.util.Map;
 
 public class FilteringPaginatorTest extends TestCase {
 	private FilteringPaginator paginator;
-	private FilteringPagingDataSource dataSource = new FilteringPagingDataSource() {
+	private FilteringPagingDataSource<?> dataSource = new FilteringPagingDataSource() {
 		
 		private Join[] joins;
         private Group group = new Group();
@@ -69,6 +68,16 @@ public class FilteringPaginatorTest extends TestCase {
 			this.joins = joins;
 			
 		}
+
+		public Select[] selects() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public void setSelects(Select[] selects) {
+			// TODO Auto-generated method stub
+			
+		}
     };
 	
 	protected void setUp() throws Exception {
@@ -80,14 +89,14 @@ public class FilteringPaginatorTest extends TestCase {
 		paginator = new FilteringPaginator(dataSource, A.class);
 		paginator.addFilterableEntityJoin(Z.class, "Z", "zalias", new String []{"name"}, "o");
 		Map<String, FilterableProperty> filterableProperties = paginator.getFilterableProperties();
-//		for (Map.Entry<String, FilterableProperty> entry : filterableProperties.entrySet()) {
-//			System.out.println(entry.getKey());
-//			System.out.println(entry.getValue().getComparison());
-//			System.out.println(entry.getValue().getOrderBy());
-//			System.out.println(entry.getValue().getParentType());
-//			System.out.println(entry.getValue().getType());
-//			System.out.println("---");
-//		}
+		for (Map.Entry<String, FilterableProperty> entry : filterableProperties.entrySet()) {
+			System.out.println(entry.getKey());
+			System.out.println(entry.getValue().getComparison());
+			System.out.println(entry.getValue().getOrderBy());
+			System.out.println("parent " + entry.getValue().getParentType());
+			System.out.println(entry.getValue().getType());
+			System.out.println("---");
+		}
 		
 		FilterableProperty filterableProperty = filterableProperties.get("type");
 		assertNotNull(filterableProperty);

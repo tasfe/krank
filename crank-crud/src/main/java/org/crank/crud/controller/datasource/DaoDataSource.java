@@ -12,7 +12,7 @@ public class DaoDataSource<T, PK extends Serializable> implements DataSource<T> 
         this.dao = dao;
     }
 
-    public List<T> list() {
+    public List<?> list() {
         return dao.find(  );
     }
     

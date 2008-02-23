@@ -7,8 +7,8 @@ public class DaoFilteringPagingDataSource<T, PK extends Serializable> extends Da
 
     
 
-    public List<T> list( int startItem, int numItems ) {
-        return dao.find(this.fetches, this.orderBy, startItem, numItems, this.group);
+    public List<?> list( int startItem, int numItems ) {
+        return dao.find(this.selects, this.fetches, this.orderBy, startItem, numItems, this.group);
     }
 
 

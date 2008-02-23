@@ -7,6 +7,15 @@ import javax.persistence.Entity;
 @DiscriminatorValue( "PC_INQ" )
 public class PetClinicInquiry extends Inquiry {
 	private String bb;
+	private String anotherProp;
+
+	public String getAnotherProp() {
+		return anotherProp;
+	}
+
+	public void setAnotherProp(String anotherProp) {
+		this.anotherProp = anotherProp;
+	}
 
 	public String getBb() {
 		return bb;

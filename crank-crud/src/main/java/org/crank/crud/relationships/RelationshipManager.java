@@ -369,7 +369,8 @@ public class RelationshipManager implements Serializable {
         }
     }
 
-    private Object initChildCollection( Object parent ) throws Exception {
+    @SuppressWarnings("unchecked")
+	private Object initChildCollection( Object parent ) throws Exception {
         BeanWrapper wrapper = new BeanWrapperImpl (parent);
         Object childCollection=null;
         Class propertyType = wrapper.getPropertyType( this.childCollectionProperty );

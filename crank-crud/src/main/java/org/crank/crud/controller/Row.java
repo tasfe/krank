@@ -48,12 +48,14 @@ class MagicMap implements Map<String, Object>, Serializable {
     public Object get( Object oKey ) {
         try {
             String key = (String) oKey;
-            if (beanWrapper.isReadableProperty(key)) {
+            if (this.map.containsKey(key)) {
+            	return this.map.get(key);
+            } else if (beanWrapper.isReadableProperty(key)) {
             	return beanWrapper.getPropertyValue( key );
             } else if (thisWrapper.isReadableProperty(key)){
             	return thisWrapper.getPropertyValue( key ) ;
             } else {
-            	return this.map.get(oKey);
+            	return this.map.get(key);
             }
         } catch (org.springframework.beans.NullValueInNestedPathException nvinpe) {
             return null;
@@ -80,6 +82,9 @@ class MagicMap implements Map<String, Object>, Serializable {
         	return map.put(oKey, value);
         }
         return null;
+    }
+    public Object putInMap( String oKey, Object value ) {
+    	return map.put(oKey, value);
     }
 
     public void putAll( Map<? extends String, ? extends Object> arg0 ) {

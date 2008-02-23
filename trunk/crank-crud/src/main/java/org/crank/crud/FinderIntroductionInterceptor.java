@@ -30,7 +30,8 @@ public class FinderIntroductionInterceptor implements IntroductionInterceptor {
         }
     }
 
-    public boolean implementsInterface( Class intf ) {
+    @SuppressWarnings("unchecked")
+	public boolean implementsInterface( Class intf ) {
         return intf.isInterface() && Finder.class.isAssignableFrom( intf );
     }
 

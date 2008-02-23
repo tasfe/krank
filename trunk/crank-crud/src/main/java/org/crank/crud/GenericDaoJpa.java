@@ -638,6 +638,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 		final String sQuery = createQuery(clazz, selects, distinctFlag,
 				orderBy, joins, group);
+		
+		
 
 		return (List<T>)executeQueryWithJPA(criteria, startPosition, maxResult, group,
 				sQuery);
@@ -687,6 +689,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 				.append(    constructFrom(joins) )
 				.append(    constructJoins(joins)).append(constuctWhereClause(group))
 				.append(	constructOrderBy(orderBy)).toString();
+		logger.debug(String.format("Query %s ", sQuery));
 		return sQuery;
 	}
 

@@ -47,7 +47,7 @@ public class FilteringPaginator extends Paginator implements
 		FilterablePageable, Serializable {
 
 	/** User filters. A filter is a combination of a Comparison and an OrderBy. */
-	private Map<String, FilterableProperty> filterableProperties = null;
+	private Map<String, FilterableProperty> filterableProperties = new HashMap<String, FilterableProperty>();
 	/**
 	 * Programmaticly setup Criteria. This allows developer to pre-filter a
 	 * listing, for example only showing employees in a certain department. This
@@ -71,6 +71,9 @@ public class FilteringPaginator extends Paginator implements
 	 * listing, but not prevented.
 	 */
 	private List<Join> joins = new ArrayList<Join>();
+	
+	private List<Select> selects = new ArrayList<Select>();
+
 
 	/** The user friendly name of the object we are creating this listing for. */
 	private String name;
@@ -146,7 +149,7 @@ public class FilteringPaginator extends Paginator implements
 	 * reflection.
 	 */
 	private void createFilterProperties() {
-		filterableProperties = new HashMap<String, FilterableProperty>();
+		
 		createFilterProperties(type, type, null, new PropertyScanner());
 	}
 
@@ -392,7 +395,9 @@ public class FilteringPaginator extends Paginator implements
 
 		filterablePaginatableDataSource().setJoins(
 				this.joins.toArray(new Join[this.joins.size()]));
-
+		
+		filterablePaginatableDataSource().setSelects(this.selects.toArray(new Select[this.selects.size()]));
+		
 		fireAfterFilter(filterablePaginatableDataSource().group());
 
 		/* Reset the page count and such for pagination. */
@@ -623,7 +628,6 @@ public class FilteringPaginator extends Paginator implements
 		this.autoJoin = autoJoin;
 	}
 
-	private List<Select> selects;
 
 	public void addSelect(Select select) {
 		if (selects == null) {
@@ -692,7 +696,7 @@ public class FilteringPaginator extends Paginator implements
 
 			/* Create the new filterableProperty. */
 			FilterableProperty filterableProperty = new FilterableProperty(
-					propertyName, props.get(property).getPropertyType(),
+					propertyName, props.get(property) == null ? String.class : props.get(property).getPropertyType(),
 					entityClass, false);
 
 			/*

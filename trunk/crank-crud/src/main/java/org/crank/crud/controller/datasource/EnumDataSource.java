@@ -22,6 +22,7 @@ public class EnumDataSource<T> implements DataSource {
         return list;
     }
 
+	@SuppressWarnings("unchecked")
 	private void buildList() {
 
         try {

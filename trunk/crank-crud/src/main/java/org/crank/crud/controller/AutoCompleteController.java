@@ -212,7 +212,7 @@ public class AutoCompleteController <S extends Serializable, T extends Serializa
         /* Set the orderBy list. */
         dataSource.setOrderBy( new OrderBy[]{orderBy} );
         
-        return dataSource.list();
+        return (List<S>) dataSource.list();
 	}
 
 	/**
@@ -232,7 +232,7 @@ public class AutoCompleteController <S extends Serializable, T extends Serializa
         /* Set the orderBy list. */
         dataSource.setOrderBy( new OrderBy[]{orderBy} );
         
-        return dataSource.list();
+        return (List<S>) dataSource.list();
 	}
 
 	public void addSelectListener(SelectListener listener) {

@@ -136,22 +136,23 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
          */
         List<Row> wrappedList = new ArrayList<Row>(page.size());
         for (Object rowData : page) {
+        	Row row = null;
         	
         	/* If the rowData is an Object array it means we have select statements. */
         	if (rowData instanceof Object[]) {
         		Object [] columns = (Object[]) rowData;
         		/* First column is always the entity in question. */
-        		Row row = new Row(columns[0]);
+        		row = new Row(columns[0]);
         		
         		/* Extract the rest of the columns. Skip the first one, which is the entity.*/
         		List<Select> selects = paginator.getSelects();
         		for (int index = 1; index < columns.length; index++) {
-        			row.put(selects.get(index-1).getName(), columns[index]);
+        			row.putInMap(selects.get(index-1).getName(), columns[index]);
         		}
         	} else {
-        		/* This is the normal case. */
-        		wrappedList.add(new Row(rowData));
+        		row = new Row(rowData);
         	}
+        	wrappedList.add(row);
         }
         model.setWrappedData( wrappedList );
         return model;

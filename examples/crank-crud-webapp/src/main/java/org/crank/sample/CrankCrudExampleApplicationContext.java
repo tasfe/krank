@@ -155,6 +155,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 					"inquiry", //
 					new String []{"anotherProp"}, //Array of property names we want to join to. 
 					"o.inquiry"); //How to join to the PetClinicLead 
+		paginator.filter();
 		return adapter;
 	}
 	

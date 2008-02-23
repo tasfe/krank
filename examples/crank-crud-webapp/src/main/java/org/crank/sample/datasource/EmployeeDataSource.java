@@ -9,6 +9,7 @@ import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Group;
 import org.crank.crud.criteria.Operator;
 import org.crank.crud.criteria.OrderBy;
+import org.crank.crud.criteria.Select;
 import org.crank.crud.join.Join;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -159,6 +160,13 @@ public class EmployeeDataSource implements FilteringPagingDataSource {
 
 	public void setJoins(Join[] fetches) {
 		setFetches(fetches);
+	}
+
+	public Select[] selects() {
+		return null;
+	}
+
+	public void setSelects(Select[] arg0) {
 	}
 	
 }

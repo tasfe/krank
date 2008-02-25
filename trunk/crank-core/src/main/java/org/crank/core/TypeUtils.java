@@ -64,7 +64,7 @@ public class TypeUtils {
     	}
         PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
         if (pd==null) {
-        	return false;
+        	return true;
         }
         Class<?> propertyType = pd.getPropertyType();
 

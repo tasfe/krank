@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -80,7 +81,7 @@ public class Employee extends Person {
 		    joinColumns={@JoinColumn(name="FK_EMPLOYEE_ID")},
 			inverseJoinColumns={@JoinColumn(name="FK_ROLE_ID")})	    
     private Set<Role> roles = new HashSet<Role>();
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     private Department department;
     @OneToMany( cascade = CascadeType.ALL )
     private Set<Employee> directReports = new HashSet<Employee>();

@@ -54,6 +54,10 @@
 			value="${fn:split(formFieldLabels, '[,]')}" />
 	</c:if>
 
+	<c:if test="${empty formFieldLabels}">
+		<c:set var="fieldLabels" value="" />
+	</c:if>
+
 	<c:when test="${ajax}">
 		<c:set var="reRender" value="${reRender},buttons${id}" />
 	</c:when>

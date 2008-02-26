@@ -81,7 +81,7 @@ public class Employee extends Person {
 		    joinColumns={@JoinColumn(name="FK_EMPLOYEE_ID")},
 			inverseJoinColumns={@JoinColumn(name="FK_ROLE_ID")})	    
     private Set<Role> roles = new HashSet<Role>();
-    @ManyToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @ManyToOne(cascade=CascadeType.ALL)
     private Department department;
     @OneToMany( cascade = CascadeType.ALL )
     private Set<Employee> directReports = new HashSet<Employee>();

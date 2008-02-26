@@ -1,2 +1,7 @@
-call mvn -o -Dsun.lang.ClassLoader.allowArraySyntax=true -Dmaven.test.skip=true -Ddb=mysql jetty:run 
+call mvn ^
+-Ddb=mysql ^
+-Dmaven.test.skip=true  ^
+-Dlog4j.configuration=file:./log4j.xml ^
+jetty:run ^
+-o
 

@@ -12,6 +12,7 @@ public class CrudManagedObject implements Serializable {
     private String name;
     private boolean needsConverter;
     private boolean needsDropDownSupport;
+    private boolean transactionalController;
     private String newSelect = null;
 	private List<QueryHint<?>> queryHints;
     
@@ -86,4 +87,10 @@ public class CrudManagedObject implements Serializable {
     public void setNeedsDropDownSupport( boolean needsDropDownSupport ) {
         this.needsDropDownSupport = needsDropDownSupport;
     }
+	public boolean isTransactionalController() {
+		return transactionalController;
+	}
+	public void setTransactionalController(boolean transactionalController) {
+		this.transactionalController = transactionalController;
+	}
 }

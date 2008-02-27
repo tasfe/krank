@@ -17,12 +17,15 @@ import org.crank.crud.GenericDao;
 import org.crank.message.MessageManagerUtils;
 import org.crank.message.MessageUtils;
 import org.crank.web.RequestParameterMapFinderImpl;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 
  * @author Rick Hightower, Tom Cellucci
  *
  * @param <T> Entity type
  * @param <PK> primary key type
+ * 
+ * Please note that some methods are marked transactional but are not unless this gets proxied.
  */
 public abstract class CrudControllerBase<T extends Serializable, PK extends Serializable> implements CrudOperations<T>, Serializable {
 
@@ -45,8 +48,17 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 	protected String idParam = "id";
 	protected String deleteStrategy = CrudOperations.DELETE_BY_ENTITY;
 	protected String addStrategy = CrudOperations.ADD_BY_CREATE;
+	protected boolean transactional = false;
 
-    public CrudControllerBase() {
+    public boolean isTransactional() {
+		return transactional;
+	}
+
+	public void setTransactional(boolean transactional) {
+		this.transactional = transactional;
+	}
+
+	public CrudControllerBase() {
         super();
     }
 
@@ -237,6 +249,7 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
     }
     
     /** Create an object. */
+    @Transactional
     public CrudOutcome create() {
         if (fileUploadHandler!=null) {
             fileUploadHandler.upload( this );
@@ -247,8 +260,10 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 	    	MessageManagerUtils.getCurrentInstance().addStatusMessage("Created %s", MessageUtils.createLabel(this.getName()));        
 	        fireAfterCreate();
 	        return outcome;
-    	} catch (CrankValidationException e) {
-    		e.printStackTrace();
+    	} catch (CrankValidationException ex) {
+    		if (transactional==true) {
+    			throw ex;
+    		}
     	}
     	return null;
     }
@@ -267,6 +282,7 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
     }
     
     /** Update an object. */
+    @Transactional
     public CrudOutcome update() {
         if (fileUploadHandler!=null) {
             fileUploadHandler.upload( this );
@@ -277,13 +293,16 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 	    	MessageManagerUtils.getCurrentInstance().addStatusMessage("Updated %s", MessageUtils.createLabel(this.getName()));
 	        fireAfterUpdate();
 	        return outcome;
-		} catch (CrankValidationException e) {
-			e.printStackTrace();
+		} catch (CrankValidationException ex) {
+    		if (transactional==true) {
+    			throw ex;
+    		}
 		}
 		return null;
     }
 
     /** Update an object. */
+    @Transactional
     public CrudOutcome delete() {
         fireBeforeDelete(this.entity);
         CrudOutcome outcome = doDelete();
@@ -293,6 +312,7 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
     }
 
     /** Update an object. */
+    @Transactional
     public CrudOutcome read() {
         fireBeforeRead();
         CrudOutcome outcome = doRead();

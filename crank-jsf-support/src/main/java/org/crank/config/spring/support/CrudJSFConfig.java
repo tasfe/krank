@@ -27,6 +27,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.config.java.annotation.Bean;
 import org.springframework.config.java.annotation.ExternalBean;
 import org.springframework.config.java.util.DefaultScopes;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.interceptor.TransactionInterceptor;
 
 
 public abstract class CrudJSFConfig implements InitializingBean {
@@ -65,7 +67,9 @@ public abstract class CrudJSFConfig implements InitializingBean {
             JsfCrudAdapter jsfCrudAdapter = new JsfCrudAdapter(
             		pagers().get(StringUtils.unCapitalize(mo.getName())), crudControllerTarget);
             
-            
+            if (mo.isTransactionalController()) {
+            	jsfCrudAdapter = addTransactionSupport(jsfCrudAdapter);  
+            }
             
             /* Put the controller into the map. */
             cruds.put(StringUtils.unCapitalize(mo.getName()), jsfCrudAdapter);
@@ -167,4 +171,18 @@ public abstract class CrudJSFConfig implements InitializingBean {
         }
         return converters;
     }
+    
+	@ExternalBean
+	public abstract TransactionInterceptor transactionInterceptor();
+	
+	public <T> T addTransactionSupport(T target) {
+		ProxyFactoryBean proxyCreatorSupport = new ProxyFactoryBean();
+		proxyCreatorSupport.setTarget(target);
+		proxyCreatorSupport.addAdvice(transactionInterceptor());
+		proxyCreatorSupport.setOptimize(true);
+		proxyCreatorSupport.setOpaque(false);
+		return (T)proxyCreatorSupport.getObject();
+	}
+	
+    
 }

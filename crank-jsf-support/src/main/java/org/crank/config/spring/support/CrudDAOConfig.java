@@ -10,7 +10,6 @@ import javax.sql.DataSource;
 
 import org.crank.crud.GenericDao;
 import org.crank.crud.GenericDaoFactory;
-import org.crank.crud.GenericDaoJpa;
 import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.jsf.support.JsfCrudAdapter;
 import org.springframework.beans.factory.InitializingBean;

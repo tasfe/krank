@@ -73,8 +73,10 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	public List<CrudManagedObject> managedObjects() {
 		if (managedObjects == null) {
 			managedObjects = new ArrayList<CrudManagedObject>();
-			managedObjects.add(new CrudManagedObject(Employee.class,
-					EmployeeDAO.class));
+			CrudManagedObject crudManagedObject = new CrudManagedObject(Employee.class,
+					EmployeeDAO.class);
+			crudManagedObject.setTransactionalController(true);
+			managedObjects.add(crudManagedObject);
 			managedObjects.add(new CrudManagedObject(Department.class,
 					DepartmentDAO.class));
 			managedObjects.add(new CrudManagedObject(Specialty.class,
@@ -90,7 +92,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 			managedObjects.add(new CrudManagedObject(PetClinicLead.class));			
 			managedObjects.add(new CrudManagedObject(Task.class));
 			
-			CrudManagedObject crudManagedObject = new CrudManagedObject(Role.class, RoleDAO.class);
+			crudManagedObject = new CrudManagedObject(Role.class, RoleDAO.class);
 			crudManagedObject.setNewSelect("new Role(o.id, o.name)");
 			managedObjects
 					.add(crudManagedObject);

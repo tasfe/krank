@@ -43,6 +43,10 @@
 	    <c:set var="formFieldStyleClasses" value="fieldField" />
 	</c:if>
 
+	<c:if test="${empty rendered}">
+	    <c:set var="rendered" value="true" />
+	</c:if>
+
 	<c:set var="suggest" value=""/>
 	<c:set var="forceInputText" value="${false}"/>
 	
@@ -88,10 +92,9 @@
 	
 	<crank:ifdef test="property.#{fieldName}.showLabel" notdef="true" tovar="showLabel"/>
    	<c:if test="${showLabel eq true}">
-   		<a4j:outputPanel ajaxRendered="true">
+   		<a4j:outputPanel ajaxRendered="true" rendered="${rendered}">
 		   	<h:outputLabel 
 		   		id="${fieldId}Label"
-		   		rendered="${true}" 
 		   		value="${label}"
 		   		for="${fieldId}" 
 		   		styleClass="${formLabelStyleClasses}"/>
@@ -114,7 +117,7 @@
 		    <c:if test="${crud:isText(type,fieldName) or forceInputText}">
 				<c:choose>
 					<c:when test="${crud:isLargeText(type,fieldName)}">
-						<a4j:outputPanel ajaxRendered="true">
+						<a4j:outputPanel ajaxRendered="true" rendered="${rendered}">
 						<c:if test="${(crud:textSize(type,fieldName)/50) > 20}">
 							<c:set var="numRows" value="20"/>
 						</c:if>
@@ -139,14 +142,14 @@
 		
 						<c:choose>
 							<c:when test="${not empty suggest}">
-							<h:panelGroup>
+							<h:panelGroup rendered="${rendered}" >
 							   	<crank:autoComplete
 									suggestionboxProperty="name" />
 							</h:panelGroup>
 		
 							</c:when>
 							<c:otherwise>
-								<a4j:outputPanel ajaxRendered="true">
+								<a4j:outputPanel ajaxRendered="true" rendered="${rendered}">
 							   	<h:inputText id="${fieldId}" 
 							    			 disabled="${disabled}"
 							                 value="#{entity[fieldName]}" 
@@ -170,7 +173,7 @@
 			<!--  If the value binding is a boolean, display a
 		           selectBooleanCheckbox field. -->
 		    <c:if test="${crud:isBoolean(type,fieldName)}">
-		       <a4j:outputPanel ajaxRendered="true">
+		       <a4j:outputPanel ajaxRendered="true" rendered="${rendered}" >
 			   <h:selectBooleanCheckbox  id="${fieldId}" 
 					    				 disabled="${disabled}"
 								 value="#{entity[fieldName]}"
@@ -187,7 +190,7 @@
 		    <!--  If the value binding is a date, 
 		          display a t:inputDate field. -->
 		    <c:if test="${crud:isDate(type,fieldName)}">
-		    	<a4j:outputPanel ajaxRendered="true">
+		    	<a4j:outputPanel ajaxRendered="true" rendered="${rendered}" >
 				<t:calendar id="${fieldId}" renderPopupButtonAsImage="true" 
 			   				 disabled="${disabled}"
 			                   renderAsPopup="true" value="#{entity[fieldName]}" 
@@ -202,7 +205,7 @@
 			<c:if test="${simpleType}">
 		    <c:if test="${crud:isManyToOne(type,fieldName) and not forceInputText}">
 		        <c:set var="propEntityName" value="${crud:getPropertyEntityName(type,fieldName)}" />
-		        <a4j:outputPanel ajaxRendered="true">
+		        <a4j:outputPanel ajaxRendered="true" rendered="${rendered}" > 
 		        <h:selectOneMenu id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}"
 		        				 required="${not crud:isManyToOneOptional(type,fieldName)}">
 		        		
@@ -240,7 +243,7 @@
 			<c:if test="${simpleType}">
 		    <c:if test="${crud:isEnum(type,fieldName)}">
 		        <c:set var="propEntityName" value="${crud:getPropertyEntityName(type,fieldName)}" />
-		        <a4j:outputPanel ajaxRendered="true">
+		        <a4j:outputPanel ajaxRendered="true" rendered="${rendered}" >
 		        <h:selectOneMenu id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}">
 					<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
 					<ui:insert />
@@ -269,7 +272,7 @@
 	
 	<crank:ifdef test="property.#{fieldName}.showMessages" notdef="true" tovar="showMessages"/>
 	<c:if test="${showMessages eq true}">
-		<a4j:outputPanel ajaxRendered="true">
+		<a4j:outputPanel ajaxRendered="true" rendered="${rendered}">
 	    <!--  Display any error messages that are found -->
 	    <h:message id="${fieldId}Msg"
 	    		   styleClass="fieldMessage"

@@ -50,8 +50,10 @@ public abstract class CrudJSFConfig implements InitializingBean {
         	/* Create a new controller. */
             CrudController crudControllerTarget = new CrudController();
             
-            //CrudOperations ops = (CrudOperations) addJSFMessageHandling(crudControllerTarget);
-            
+            if (mo.isTransactionalController()) {
+            	crudControllerTarget = addTransactionSupport(crudControllerTarget);
+            	crudControllerTarget.setTransactional(true);
+            }
             
             /* Associate controller with file upload subcontroller. */
             crudControllerTarget.setFileUploadHandler( new TomahawkFileUploadHandler() );
@@ -67,9 +69,6 @@ public abstract class CrudJSFConfig implements InitializingBean {
             JsfCrudAdapter jsfCrudAdapter = new JsfCrudAdapter(
             		pagers().get(StringUtils.unCapitalize(mo.getName())), crudControllerTarget);
             
-            if (mo.isTransactionalController()) {
-            	jsfCrudAdapter = addTransactionSupport(jsfCrudAdapter);  
-            }
             
             /* Put the controller into the map. */
             cruds.put(StringUtils.unCapitalize(mo.getName()), jsfCrudAdapter);

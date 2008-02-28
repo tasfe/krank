@@ -118,10 +118,10 @@
 	<c:if test="${empty valueBased}">
 		<c:set var="valueBased" value="false" />
 	</c:if>
-	<c:if test="${valueBased}">
+	<c:if test="${(empty boundValue) and valueBased}">
 		<c:set var="boundValue" value="${jsfSelectOneController.controller.entity[jsfSelectOneController.propertyName]}"/>
 	</c:if>
-	<c:if test="${not valueBased}">
+	<c:if test="${(empty boundValue) and not valueBased}">
 		<c:set var="boundValue" value="${jsfSelectOneController.controller.entity[jsfSelectOneController.propertyName][jsfSelectOneController.labelProperty]}"/>
 	</c:if>
 

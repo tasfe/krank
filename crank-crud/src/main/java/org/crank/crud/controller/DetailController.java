@@ -34,7 +34,17 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
      */
     private Collection<T> changedEntities = new HashSet<T>();
     
-    public boolean isShowDetails() {
+    private boolean forcePersist;
+    
+    public boolean isForcePersist() {
+		return forcePersist;
+	}
+
+	public void setForcePersist(boolean forcePersist) {
+		this.forcePersist = forcePersist;
+	}
+
+	public boolean isShowDetails() {
 		return showDetails;
 	}
 
@@ -110,7 +120,9 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
         		crudController.state = CrudState.EDIT;
         	}
         } else {
-        	changedEntities.add((T)this.getEntity());        	
+        	if (forcePersist) {
+        		changedEntities.add((T)this.getEntity());
+        	}
         }
         parent = (Object) this.parent.getEntity();
         return null;
@@ -149,7 +161,9 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
         		findCrudController().update();
         	}
         } else {
-        	changedEntities.add(entity);
+        	if (forcePersist) {
+        		changedEntities.add(entity);
+        	}
         }
 	}
 
@@ -214,7 +228,7 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
 	public void setParent(CrudOperations<?> parent) {	
 		super.setParent(parent);
         final CrudController<?, ?> controller = findCrudController();
-        if (controller != null) {
+        if (controller != null && forcePersist) {
         	/*
         	 * this crud listener makes sure that entities changed
         	 * by this detail controller are part of the persistent

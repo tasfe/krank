@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.crank.crud.QueryHint;
 
+@SuppressWarnings("serial")
 public class CrudManagedObject implements Serializable {
     private Class idType = Long.class;
     private Class entityType;

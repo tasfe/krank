@@ -14,6 +14,8 @@ import org.crank.controller.SayHelloController;
 import org.crank.controller.SelectEmployeeListingController;
 import org.crank.controller.TagController;
 import org.crank.crud.controller.AutoCompleteController;
+import org.crank.crud.controller.CrudControllerAdapter;
+import org.crank.crud.controller.CrudEvent;
 import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.controller.CrudOperations;
 import org.crank.crud.controller.FilterablePageable;
@@ -168,6 +170,14 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		
 		JsfCrudAdapter adapter = cruds().get("Employee");
 
+		adapter.getController().addCrudControllerListener(new CrudControllerAdapter(){
+
+			@Override
+			public void afterUpdate(CrudEvent event) {
+				//throw new RuntimeException("Don't commit controller"); un comment this to test tran support
+			}
+			
+		});
 		/*
 		 * Filter out employees who do not have a manager. This will create a
 		 * "where employee.manager is null" to the query.

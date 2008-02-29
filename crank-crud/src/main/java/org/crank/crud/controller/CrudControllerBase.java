@@ -18,7 +18,7 @@ import org.crank.crud.GenericDao;
 import org.crank.message.MessageManagerUtils;
 import org.crank.message.MessageUtils;
 import org.crank.web.RequestParameterMapFinderImpl;
-import org.springframework.transaction.annotation.Transactional;
+//import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 
@@ -264,7 +264,7 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 	}
 
 	/** Create an object. */
-	@Transactional
+	//@Transactional
 	public CrudOutcome create() {
 
 		if (fileUploadHandler != null) {
@@ -303,7 +303,7 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 	}
 
 	/** Update an object. */
-	@Transactional
+	//@Transactional
 	public CrudOutcome update() {
 		if (fileUploadHandler != null) {
 			fileUploadHandler.upload(this);
@@ -327,7 +327,7 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 	}
 
 	/** Update an object. */
-	@Transactional
+	//@Transactional
 	public CrudOutcome delete() {
 		logger.debug("delete");
 		fireBeforeDelete(this.entity);
@@ -339,7 +339,7 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 	}
 
 	/** Update an object. */
-	@Transactional
+	//@Transactional
 	public CrudOutcome read() {
 		fireBeforeRead();
 		CrudOutcome outcome = doRead();

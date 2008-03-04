@@ -13,7 +13,7 @@ You can decorate idividual objects with `JsfMessageInterceptor`. Or, you can dec
 
 Both ways classes have a common base class that puts the current exceptions information (message, stack) as a string in the request scope under `crankErrorException`.
 
-To configure JsfMessageActionListener do the following:
+To configure JsfMessageActionListener do the following in the faces-config.xml:
 
 {{{
   <application>

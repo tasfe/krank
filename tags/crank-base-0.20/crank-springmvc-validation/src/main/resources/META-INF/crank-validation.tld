@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+                        "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>1.2</jsp-version>
+	<short-name>av</short-name>
+	<uri>http://arc-mind.com/crank/validation</uri>
+	<description>
+	</description>
+
+
+	<tag>
+		<name>clientValidator</name>
+		<tag-class>org.crank.web.validation.spring.support.ValidationScriptGeneratorTag</tag-class>
+		<tei-class></tei-class>
+		<body-content>NONE</body-content>
+		<description></description>
+		<attribute>
+			<name>beanName</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description></description>
+		</attribute>
+		<attribute>
+			<name>propertyNames</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description></description>
+		</attribute>
+		<attribute>
+			<name>formName</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description></description>
+		</attribute>
+	</tag>
+
+</taglib>

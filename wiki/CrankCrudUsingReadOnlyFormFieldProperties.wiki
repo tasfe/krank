@@ -31,6 +31,15 @@ This feature can also be applied to form fields rendered via `detailListing` tag
 
 }}}
 
+And crank 'compositePanel' tag:
+
+{{{
+ <crank:compositePanel entity="${crud.entity.address}" name="address"
+      readOnlyProperties="address_1,address_2,city,postalCode" 
+      propertyNames="address_1,address_2,city,postalCode"/>
+
+}}}
+
 However, you must be sure to override the `readOnlyProperties` attribute when nesting `detailListing` tags in a `form` tag which contain common property names.  Otherwise, the default behavior of Facelets will propogate the `readOnlyProperties` to all child tags and would subsequently propogate the read-only behavior for those fields.  While this is desirable in some cases, here is how you can override the `readOnlyProperties` attributes for `detailListing` forms nested inside a `form` tag:
 
 {{{

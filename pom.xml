@@ -183,7 +183,7 @@
         <module>crank-jsf-validation</module>
         <module>crank-springmvc-validation</module>
         <module>integration</module>
-        <!-- <module>examples</module> -->
+        <module>examples</module>
     </modules>
 
     <repositories>

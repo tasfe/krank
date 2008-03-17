@@ -18,9 +18,12 @@ import org.crank.core.StringUtils;
 import org.crank.crud.controller.CrudUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.apache.log4j.Logger;
 
 
 public class RelationshipManager implements Serializable {
+
+    protected Logger logger = Logger.getLogger(RelationshipManager.class);
 
     /**
      * @CONFIG
@@ -387,7 +390,7 @@ public class RelationshipManager implements Serializable {
     
     @SuppressWarnings("unchecked")
     public void removeFromParent(Object parent, Object child) {
-
+        logger.debug(String.format("RelationshipManager.removeFromParent(%s, %s)", parent, child));
         try {
             /* The following does the equivalent of owner.addPet(pet); */
             Class parentClass = parent.getClass();
@@ -402,13 +405,20 @@ public class RelationshipManager implements Serializable {
              */
             if (removeFromParentMethod==null) {
                 try {
+                    logger.debug(String.format("About to look up remove method %s",removeFromParentMethodName));
                     removeFromParentMethod = parentClass.getMethod(removeFromParentMethodName, new Class[]{this.entityClass});
+                    logger.debug(String.format("Found remove method %s",removeFromParentMethod));
                 } catch (Exception methodNotFoundException ) {
+                    logger.debug("Since we were unable to locate the remove method, we will try to remove the collection another way");
                     Object childCollection = retrieveChildCollectionFromParentObject( parent );
+                    logger.debug(String.format("Found this child collection = %s",childCollection));
                     if (childCollection instanceof Collection) {
                         Collection col = (Collection) childCollection;
                         col.remove( child );
+                        logger.debug(String.format("After child removed from collection = %s",col));
+
                     } else {
+                        logger.debug("The object retrieved was not a Collection so we will throw the original exception's stack");
                         throw new CrankException(methodNotFoundException, "Unable to remove child %s from parent %s because %s",
                                 child, parent, methodNotFoundException.getMessage());
                     }

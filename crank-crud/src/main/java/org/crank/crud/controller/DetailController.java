@@ -3,7 +3,7 @@ package org.crank.crud.controller;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import org.crank.crud.relationships.RelationshipManager;
 
@@ -33,6 +33,8 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
      * @author Tom Cellucci
      */
     private Collection<T> changedEntities = new HashSet<T>();
+
+    protected Logger logger = Logger.getLogger(DetailController.class);
     
     private boolean forcePersist;
     
@@ -152,17 +154,20 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
     
 	@Override
 	protected void doDelete(T entity) {
-       	Logger.getAnonymousLogger().info("doDelete() - deleting " + entity);
+        logger.debug(String.format("About to remove entity (%s) from parent (%s)", entity, parent.getEntity()));
         relationshipManager.removeFromParent(parent.getEntity(), entity);
         if (forceUpdate) {
         	if (dao!=null) {
-        		dao.merge(entity);
+                logger.debug("Calling DAO merge(entity) in doDelete");
+                dao.merge(entity);
         	} else {
-        		findCrudController().update();
+                logger.debug("Calling parent controller update() in doDelete");
+                findCrudController().update();
         	}
         } else {
         	if (forcePersist) {
-        		changedEntities.add(entity);
+                logger.debug("Adding delete object to list that needs to be updated on update in doDelete");
+                changedEntities.add(entity);
         	}
         }
 	}

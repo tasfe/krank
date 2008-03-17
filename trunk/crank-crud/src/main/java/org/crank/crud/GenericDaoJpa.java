@@ -86,7 +86,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	@Transactional
 	public T store(T entity) {
-		T persistedEntity = entity;
+        logger.debug(String.format("store(entity) called, %s", entity));
+        T persistedEntity = entity;
 		try {
 			try {
 				/*
@@ -97,18 +98,22 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 				if (!hasId(entity)) {
 					// TODO: the error reporting could be deferred (the entity has an ID
 					// that is in the db but not in the entity manager)
-					getJpaTemplate().persist(entity);
+                    logger.debug("Calling perist on JPA");
+                    getJpaTemplate().persist(entity);
 				} else {
-					persistedEntity = (T) getJpaTemplate().merge(entity);
+                    logger.debug("Calling merge since an id was found");
+                    persistedEntity = (T) getJpaTemplate().merge(entity);
 				}
 			} catch (EntityExistsException e) {
 				// if the entity exists then we call merge
-				persistedEntity = (T) getJpaTemplate().merge(entity);
+                logger.debug("Calling merge since persist failed");
+                persistedEntity = (T) getJpaTemplate().merge(entity);
 			}
 		} catch (Exception ex) { //We want to try to merge no matter what was thrown.
 			try {
 				// Force merge
-				persistedEntity = (T) getJpaTemplate().merge(entity);
+                logger.debug("Calling force merge to see if we can");
+                persistedEntity = (T) getJpaTemplate().merge(entity);
 			} catch (Exception ex2) {
 				logger.warn(String.format("Unable to store object %s exception %s original exception %s", entity, ex2.getMessage(), ex.getMessage()), ex2);
 				throw new RuntimeException(ex);
@@ -122,15 +127,18 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		BeanWrapper bw = new BeanWrapperImpl(entity);
 		Object propertyValue = bw.getPropertyValue(this.idPropertyName);
 		if (propertyValue==null) {
-			return false;
+            logger.debug("hasId: no id was found returning false");
+            return false;
 		}
 		
 		if (propertyValue instanceof Number) {
 			Number number = (Number) propertyValue;
 			if (number.longValue() <= 0) {
-				return false;
+                logger.debug("hasId: an id was found and it was a number, but it was less than zero returning false");
+                return false;
 			} else {
-				return true;
+                logger.debug("hasId: an id was found and it was a number returning true");
+                return true;
 			}
 		}
 		

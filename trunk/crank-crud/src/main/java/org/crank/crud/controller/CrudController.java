@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import org.crank.message.MessageManagerUtils;
+import org.apache.log4j.Logger;
 
 /**
  * Controls CRUD operations from an application.
@@ -15,6 +16,8 @@ import org.crank.message.MessageManagerUtils;
  * @see Toggleable
  */
 public class CrudController<T extends Serializable, PK extends Serializable> extends CrudControllerBase<T, PK>  {
+    protected Logger logger = Logger.getLogger(CrudController.class);
+    
     /**
 	 * 
 	 */
@@ -32,7 +35,9 @@ public class CrudController<T extends Serializable, PK extends Serializable> ext
      */
     @SuppressWarnings("unchecked")
     public CrudOutcome doUpdate() {
+        logger.debug(String.format("doUpdate() called. About to call dao.store(entity) %s ", entity));
         entity = dao.store(entity);
+        logger.debug(String.format("dao.store(entity) was called from doUpdate()", entity));
         state = CrudState.UNKNOWN; 
         fireToggle();
         return CrudOutcome.LISTING;

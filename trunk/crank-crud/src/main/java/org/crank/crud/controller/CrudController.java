@@ -37,7 +37,7 @@ public class CrudController<T extends Serializable, PK extends Serializable> ext
     public CrudOutcome doUpdate() {
         logger.debug(String.format("doUpdate() called. About to call dao.store(entity) %s ", entity));
         entity = dao.store(entity);
-        logger.debug(String.format("dao.store(entity) was called from doUpdate()", entity));
+        logger.debug(String.format("dao.store(entity) was called from doUpdate() %s", entity));
         state = CrudState.UNKNOWN; 
         fireToggle();
         return CrudOutcome.LISTING;

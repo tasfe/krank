@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import static java.util.Properties.*;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -22,15 +23,30 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
+import org.apache.log4j.Logger;
 
 public abstract class CrudDAOConfig implements InitializingBean {
 
-	private DataSource dataSource;
+    protected Logger logger = Logger.getLogger(CrudDAOConfig.class);
+
+    private DataSource dataSource;
 
 	private Properties jpaProperties;
 
 	public void afterPropertiesSet() throws Exception {
-	}
+
+        if (jpaProperties == null) {
+            logger.debug("jpaProperties was null so trying to load it from the classpath");
+            try {
+                jpaProperties = new Properties();
+                jpaProperties.load(CrudDAOConfig.class.getResourceAsStream("jpa.properties"));
+                logger.debug("jpaProperties was loaded " + jpaProperties);
+            }catch (Exception ex) {
+                jpaProperties = null;
+                logger.debug("jpaProperties was NOT loaded ");
+            }
+        }
+    }
 
 	@SuppressWarnings("unchecked")
 	@ExternalBean
@@ -72,12 +88,18 @@ public abstract class CrudDAOConfig implements InitializingBean {
 	 */
 	public LocalContainerEntityManagerFactoryBean entityManagerFactoryFactory()
 			throws Exception {
-		LocalContainerEntityManagerFactoryBean entityManagerFactoryFactory = new LocalContainerEntityManagerFactoryBean();
+
+        logger.debug("Creating entity manager factory factory ");
+        LocalContainerEntityManagerFactoryBean entityManagerFactoryFactory = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactoryFactory
 				.setPersistenceUnitName(persistenceUnitName());
-		entityManagerFactoryFactory.setJpaVendorAdapter(jpaVendorAdapter());
-		if (jpaProperties != null) {
-			entityManagerFactoryFactory.setJpaProperties(jpaProperties);
+		logger.debug(String.format("Creating entity manager factory factory with PERSISTENT UNIT NAME %s", persistenceUnitName()));
+        
+        entityManagerFactoryFactory.setJpaVendorAdapter(jpaVendorAdapter());
+
+        if (jpaProperties != null) {
+            logger.debug("Setting JPA properties into entity manager factory factory");
+            entityManagerFactoryFactory.setJpaProperties(jpaProperties);
 		} else {
 			entityManagerFactoryFactory.setJpaProperties(new Properties());
 		}

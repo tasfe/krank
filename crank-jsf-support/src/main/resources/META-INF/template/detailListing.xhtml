@@ -84,6 +84,9 @@
 		<c:if test="${empty manyToMany}">
 			<c:set var="manyToMany" value="false" />
 		</c:if>
+		<c:if test="${empty headerActions}">
+			<c:set var="headerActions" value="false" />
+		</c:if>
 		<c:set var="entityName" value="${detailController.relationshipManager.childCollectionProperty}" />
 		<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
 		<c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
@@ -148,7 +151,10 @@
 							styleClass="${toggleLinkClass}"
 							ajax="${ajax}">
 								<h:outputText value="Add new..."/>
-						</crank:commandLink>							
+						</crank:commandLink>	
+						<c:if test="${headerActions}">
+							<ui:insert />
+						</c:if>
 						<c:if test="${detailController.showForm and not manyToMany}">
 							<crank:form   
 								crud="${detailController}" 
@@ -198,6 +204,7 @@
 											                   toolTipText="Click to delete selected rows">
 												<h:graphicImage id="disableSelected${id}Img" value="${delAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
 											</crank:commandLink>
+											
 										</h:column>
 									</c:if>
 								

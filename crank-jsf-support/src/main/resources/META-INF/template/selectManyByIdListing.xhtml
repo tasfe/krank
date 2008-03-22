@@ -125,8 +125,8 @@
 	
 		<h:panelGroup rendered="${jsfSelectManyController.rendered}">
 
-		<span class="${selectManyClass}">${entityNameLabel}</span>
-		<a4j:commandLink rendered="${not jsfSelectManyController.show}" 
+		<span class="${selectManyClass}">${entityNameLabel}: ${jsfSelectManyController.selectedString}</span>
+        <a4j:commandLink rendered="${not jsfSelectManyController.show}"
 		                 action="${jsfSelectManyController.showSelection}" 
 		                 value="..."
 		                 immediate="true"

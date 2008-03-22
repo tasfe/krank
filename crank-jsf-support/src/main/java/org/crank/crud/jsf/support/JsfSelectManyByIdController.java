@@ -17,7 +17,10 @@ public class JsfSelectManyByIdController<PT extends Serializable, T extends Seri
 
 	private DataModel modelChoices = new ListDataModel();
 
-	public JsfSelectManyByIdController(){
+
+    private String selectedProperty = "name";
+
+    public JsfSelectManyByIdController(){
 		
 	}
 
@@ -31,11 +34,44 @@ public class JsfSelectManyByIdController<PT extends Serializable, T extends Seri
 		}
 		return modelChoices;
 	}
-	
-	@SuppressWarnings("unchecked")
+
+    public String getSelectedString() {
+        DataModel model = getAvailableChoices();
+        StringBuilder builder = new StringBuilder();
+        List<Row> availableTags = (List<Row>) model.getWrappedData();
+        int hits = 0;
+        for (Row row : availableTags) {
+            if (!row.isSelected()){
+                 continue;
+            }
+            hits++;
+            String label;
+            label = (String) row.get(selectedProperty);
+            if (label == null) {
+               label = (String) row.get("id");
+            }
+
+            if (label == null) {
+                label = "UNABLE TO RETRIEVE PROPERTY....";
+            }
+
+            builder.append(label + ", ");
+        }
+        if (hits > 0) {
+            return builder.toString().substring(0,builder.length()-2);
+        } else {
+            return "<<empty>>";
+        }
+    }
+
+    @SuppressWarnings("unchecked")
 	protected List<Row> getRows() {
 		List<Row> availableTags = (List<Row>) modelChoices.getWrappedData();
 		return availableTags;
 	}
-	
+
+    public void setSelectedProperty(String selectedProperty) {
+        this.selectedProperty = selectedProperty;
+    }
+    
 }

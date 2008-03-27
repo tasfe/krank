@@ -145,8 +145,7 @@ public class AutoCompleteController <S extends Serializable, T extends Serializa
         }
         entity.setPropertyValue(fieldName, newValue);
 	}
-	
-	private boolean found = true;
+	private boolean found = true; 
 	
 	public boolean isFound() {
 		return found;
@@ -157,6 +156,11 @@ public class AutoCompleteController <S extends Serializable, T extends Serializa
 	}
 
 	protected void textChanged(String value) {
+		if (value == null || "".equals(value.trim())) {
+			// If the text was changed to blank or null
+			// There's no need to look for it.
+			return;
+		}
 		List<?> list = getListExact(value);
 		long time = System.currentTimeMillis();
 		if (list.size() == 1) {

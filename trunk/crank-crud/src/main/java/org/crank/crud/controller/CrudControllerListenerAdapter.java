@@ -1,6 +1,8 @@
 package org.crank.crud.controller;
 
-public class CrudControllerListenerAdapter implements CrudControllerListener {
+import java.io.Serializable;
+
+public class CrudControllerListenerAdapter implements CrudControllerListener, Serializable {
 
 	public void afterCancel(CrudEvent event) {
 	}

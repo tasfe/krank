@@ -97,7 +97,8 @@
 		   		id="${fieldId}Label"
 		   		value="${label}"
 		   		for="${fieldId}" 
-		   		styleClass="${formLabelStyleClasses}"/>
+		   		styleClass="${formLabelStyleClasses}"
+		   		title="${labelTitle}" />
 		</a4j:outputPanel>
 	</c:if>
 	
@@ -129,7 +130,8 @@
 					                     value="#{entity[fieldName]}" 
 					                     required="${required}" 
 					                     styleClass="${formFieldStyleClasses}"
-					                     cols="50" rows="${numRows}">
+					                     cols="50" rows="${numRows}"
+					                     title="${title}" >
 					        <validation:validateBasedOnMetaData formClass="${type}" fieldName="${fieldName}" parentObject="${entity}"/>
 							<c:if test="${crud:textSize(type,fieldName)>0}">
 								<f:validateLength maximum="${crud:textSize(type,fieldName)}" />
@@ -154,7 +156,8 @@
 							    			 disabled="${disabled}"
 							                 value="#{entity[fieldName]}" 
 							                 required="${required}" 
-							                 styleClass="${formFieldStyleClasses}">
+							                 styleClass="${formFieldStyleClasses}"
+							                 title="${title}" >
 					        		<validation:validateBasedOnMetaData  formClass="${type}" fieldName="${fieldName}" parentObject="${entity}"/>							
 									<c:if test="${crud:textSize(type,fieldName)>0}">
 										<f:validateLength maximum="${crud:textSize(type,fieldName)}" />
@@ -179,7 +182,8 @@
 								 value="#{entity[fieldName]}"
 								 onclick="${onclick}" 
 								 required="${required}" 
-								 styleClass="fieldSelectBooleanCheckbox">
+								 styleClass="fieldSelectBooleanCheckbox"
+								 title="${title}" >
 			    <ui:insert />								 
 				</h:selectBooleanCheckbox>
 				</a4j:outputPanel>
@@ -194,7 +198,8 @@
 				<t:calendar id="${fieldId}" renderPopupButtonAsImage="true" 
 			   				 disabled="${disabled}"
 			                   renderAsPopup="true" value="#{entity[fieldName]}" 
-			                   required="${required}">
+			                   required="${required}"
+			                   >
 					        <validation:validateBasedOnMetaData  formClass="${type}" fieldName="${fieldName}" parentObject="${entity}"/>	                   
 			        <ui:insert />
 				</t:calendar>
@@ -206,8 +211,9 @@
 		    <c:if test="${crud:isManyToOne(type,fieldName) and not forceInputText}">
 		        <c:set var="propEntityName" value="${crud:getPropertyEntityName(type,fieldName)}" />
 		        <a4j:outputPanel ajaxRendered="true" rendered="${rendered}" > 
-		        <h:selectOneMenu id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}"
-		        				 required="${not crud:isManyToOneOptional(type,fieldName)}">
+		        <h:selectOneMenu id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}" 
+		        				 required="${not crud:isManyToOneOptional(type,fieldName)}"
+		        				 title="${title}" >
 		        		
 					<f:selectItems value="${selectItemGenerators[propEntityName].listOptional}" />        				 
 		        	<!--

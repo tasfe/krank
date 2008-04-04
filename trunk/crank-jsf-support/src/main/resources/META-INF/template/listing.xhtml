@@ -144,8 +144,11 @@
 						paginator.filterableProperties = ${paginator.filterableProperties} <br />
 						
 				</c:forEach>
- -->			
-			<rich:dataTable width="${dataTableWidth}" id="dataTable${id}"
+ -->
+            <span style="color: red; font: bold" jsfc="h:panelGroup" rendered="${paginator.pageCount==0}">
+                   There were no results!
+            </span>
+            <rich:dataTable width="${dataTableWidth}" id="dataTable${id}"
 				rows="#{paginator.itemsPerPage}" columnClasses="${listingDataTableColumnClasses}"
 				rowClasses="${listingDataTableRowClasses}"
 				value="#{jsfCrudAdapter.model}" var="row">

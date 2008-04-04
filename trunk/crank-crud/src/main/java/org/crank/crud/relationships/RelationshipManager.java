@@ -228,7 +228,11 @@ public class RelationshipManager implements Serializable {
 
 
     protected Object getChildCollection( Object parent ) {
-    	if (parent != null) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("getChildCollection(parent=%s)",parent));
+        }
+        
+        if (parent != null) {
 	        /*
 	         * Invoke the method and return the list type thing (it can be an
 	         * Array, List, Set or Map)
@@ -236,14 +240,23 @@ public class RelationshipManager implements Serializable {
 	        BeanWrapper wrapper = new BeanWrapperImpl (parent);
 	
 	        Object listTypeThing = wrapper.getPropertyValue( childCollectionProperty() );
-	        return listTypeThing;
+
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("returning %s from getChildCollection(parent=%s)",listTypeThing, parent));
+            }
+            return listTypeThing;
     	} else {
-    		return null;
+            logger.info("Parent was null");
+            return null;
     	}
     }
 
     
     private String childCollectionProperty() {
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("childCollectionProperty()  this.entityName=%s", this.entityName));
+        }
+
         if (childCollectionProperty == null) {
             String unCapitalizeEntityname = StringUtils.unCapitalize( this.entityName);
             if (unCapitalizeEntityname.endsWith( "s" )) {
@@ -252,6 +265,9 @@ public class RelationshipManager implements Serializable {
                 unCapitalizeEntityname = unCapitalizeEntityname + "s";
             }
             childCollectionProperty = unCapitalizeEntityname;
+        }
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("returning %s from childCollectionProperty()  this.entityName=%s", this.childCollectionProperty, this.entityName));
         }
         return childCollectionProperty;
     }

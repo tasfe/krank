@@ -4,10 +4,14 @@ import java.io.Serializable;
 import java.util.Set;
 
 import org.crank.crud.relationships.SelectManyRelationshipManager;
+import org.apache.log4j.Logger;
 
 public abstract class SelectManyController<T extends Serializable, PK extends Serializable> {
-	
-	private SelectManyRelationshipManager manager;
+
+
+	protected Logger logger = Logger.getLogger(SelectManyController.class);
+    
+    private SelectManyRelationshipManager manager;
     private FilterablePageable paginator;
     private CrudControllerBase<T, PK> controller;
     private boolean show;
@@ -95,7 +99,10 @@ public abstract class SelectManyController<T extends Serializable, PK extends Se
     }
 
     public void initEntity() {
-    	manager.setParentObject(controller.getEntity());
+        if (logger.isDebugEnabled()){
+            logger.debug(String.format("Manager manager=%s controller=%s entity=%s",manager, controller, controller.getEntity()));
+        }
+        manager.setParentObject(controller.getEntity());
     }
 	public SelectManyRelationshipManager getManager() {
 		return manager;
@@ -114,7 +121,8 @@ public abstract class SelectManyController<T extends Serializable, PK extends Se
 	}
 
 	public void process () {
-		this.manager.setParentObject(controller.getEntity());
+        logger.debug("Process called");
+        this.manager.setParentObject(controller.getEntity());
 		this.manager.process(getSelectedEntities(), getEntitiesInView());
 		this.show = false;
 	}

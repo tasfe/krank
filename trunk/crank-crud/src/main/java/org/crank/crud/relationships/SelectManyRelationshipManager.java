@@ -31,9 +31,13 @@ public class SelectManyRelationshipManager extends RelationshipManager {
 		/* Grab the child collection from the parent object, i.e., roles from Employee */
 		Object childCollection = getChildCollection(parentObject);
 		if (childCollection == null) {
-            logger.error("childCollection was null which means you are not using Crank correctly. You must initialize the collection before the form loads.");
-            return;
-		}
+            logger.debug("childCollection was null");
+            try {
+                childCollection = initChildCollection( parentObject );
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        }
 		
 		/* Create an iterator based on the childCollection. */
 		Iterator<Object> childCollectioniterator = iterator(childCollection);

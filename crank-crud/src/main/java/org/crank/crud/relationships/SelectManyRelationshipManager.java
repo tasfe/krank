@@ -9,19 +9,30 @@ import java.util.Set;
 
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.apache.log4j.Logger;
 
 @SuppressWarnings("serial")
 public class SelectManyRelationshipManager extends RelationshipManager {
-	private Object parentObject;
+
+    protected Logger logger = Logger.getLogger(SelectManyRelationshipManager.class);
+    
+    private Object parentObject;
 	private String idProperty="id";
 	private String labelProperty="name";
 
-	@SuppressWarnings("unchecked")
+
+    @Override
+    public String toString() {
+       return String.format("SelectManyRelationshipManager(parentObject=%s, idProperty=%s,  labelProperty=%s)", parentObject, idProperty, labelProperty);
+    }
+    
+    @SuppressWarnings("unchecked")
 	public void process(Set<Object> selectedRelatedEntities, Set<Object> entitiesInView) {
 		/* Grab the child collection from the parent object, i.e., roles from Employee */
 		Object childCollection = getChildCollection(parentObject);
 		if (childCollection == null) {
-			return;
+            logger.warn("childCollection was null returning");
+            return;
 		}
 		
 		/* Create an iterator based on the childCollection. */
@@ -37,12 +48,19 @@ public class SelectManyRelationshipManager extends RelationshipManager {
 		 */
 		while (childCollectioniterator.hasNext()) {
 			Object currentChildObject = childCollectioniterator.next();
-			
-			/* If the current object is in the view, operate on it. Don't mess with objects
+
+            if (logger.isDebugEnabled()){
+                logger.debug(String.format("process found this child %s",currentChildObject));
+            }
+
+            /* If the current object is in the view, operate on it. Don't mess with objects
 			 * that are not on the current page. */
 			if (entitiesInView.contains(currentChildObject)) {
 				/* If the current object was in the view but not selected then remove it. */
 				if (! selectedRelatedEntities.contains(currentChildObject)) {
+                    if (logger.isDebugEnabled()){
+                        logger.debug(String.format("process removing child=%s from parent=%s", currentChildObject, parentObject));
+                    }
 					removeFromParent(parentObject, currentChildObject);
 				}
 			}			
@@ -86,11 +104,14 @@ public class SelectManyRelationshipManager extends RelationshipManager {
 
 	@SuppressWarnings("unchecked")
 	private Iterator iterator(Object collection) {
-		Iterator iterator = null;
+        logger.debug("iterator");
+        Iterator iterator = null;
 		if (collection instanceof Map) {
-			iterator = new ArrayList(((Map)collection).values()).iterator();
+            logger.debug("Collection was a map");
+            iterator = new ArrayList(((Map)collection).values()).iterator();
 		} else {
-			iterator = new ArrayList(((Collection)collection)).iterator();
+            logger.debug("Collection was a List or Set");
+            iterator = new ArrayList(((Collection)collection)).iterator();
 		}
 		return iterator;
 	}

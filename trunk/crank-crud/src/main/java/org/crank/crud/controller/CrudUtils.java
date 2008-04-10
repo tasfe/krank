@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.crank.core.AnnotationData;
 import org.crank.core.AnnotationUtils;
@@ -20,7 +21,10 @@ public class CrudUtils {
     private static Set<String> allowedPackages = new HashSet<String>();
     static {
         allowedPackages.add( "javax.persistence" );
+        allowedPackages.add( "org.crank.crud.annotations" );
+        allowedPackages.add( "org.crank.jsf.annotations" );
     }
+    
     public static boolean isFilterPropertyText(boolean autoCreatePrependParentAlias, Class<?> parentType, String property) {
     	if (autoCreatePrependParentAlias) {
     		return TypeUtils.isText(parentType, property);
@@ -55,7 +59,7 @@ public class CrudUtils {
     }
     
     public static boolean isRequired(Class<?> clazz, String propertyName) {
-    	
+  	
     	if (clazz == null || propertyName == null) {
     		throw new CrankException("CrankUtils.isRequired: Null arguments are not allowed " +
     				" clazz = %s, propertyName = %s ", clazz, propertyName);
@@ -70,7 +74,7 @@ public class CrudUtils {
 	        }
 	        
 	        Map map = getAnnotationDataAsMap( clazz, propertyName );
-	        
+
 	        boolean found = map.get( "required" ) != null;
 	        /* If you found an annotation called required, return true. */
 	        if (found) {
@@ -83,6 +87,87 @@ public class CrudUtils {
 	        }
         } catch (Exception ex) {
     		throw new CrankException(ex, "CrankUtils.isRequired: Problem %s" +
+    				" clazz = %s, propertyName = %s ", ex.getMessage(), clazz, propertyName);
+        	
+        }
+    }
+    
+    public static String getToolTip(Class<?> clazz, String propertyName) {
+    	if (clazz == null || propertyName == null) {
+    		throw new CrankException("CrankUtils.getToolTip: Null arguments are not allowed " +
+    				" clazz = %s, propertyName = %s ", clazz, propertyName);
+    	}
+        try {
+	        PropertyDescriptor descriptor = 
+	        	getPropertyDescriptor( clazz, propertyName);
+	        if (descriptor==null) {
+	        	throw new CrankException("CrankUtils.getToolTip: Unable to find property descriptor");
+	        }
+	        
+	        Map<String, AnnotationData> map = getAnnotationDataAsMap( clazz, propertyName );
+	        for (AnnotationData element : map.values()) {
+	        	Map<String, Object> values = element.getValues();
+			}
+	        if (map.containsKey( "toolTip" ) ) {
+	            return (String) ((AnnotationData) map.get( "toolTip" )).getValues().get("value");
+	        }
+	        return null;
+        } catch (Exception ex) {
+    		throw new CrankException(ex, "CrankUtils.getToolTip: Problem %s" +
+    				" clazz = %s, propertyName = %s ", ex.getMessage(), clazz, propertyName);
+        	
+        }
+    }
+    
+    public static boolean isNameSpaceToolTip(Class<?> clazz, String propertyName) {
+    	if (clazz == null || propertyName == null) {
+    		throw new CrankException("CrankUtils.isNameSpaceToolTip: Null arguments are not allowed " +
+    				" clazz = %s, propertyName = %s ", clazz, propertyName);
+    	}
+        try {
+	        PropertyDescriptor descriptor = 
+	        	getPropertyDescriptor( clazz, propertyName);
+	        if (descriptor==null) {
+	        	throw new CrankException("CrankUtils.isNameSpaceToolTip: Unable to find property descriptor");
+	        }
+	        
+	        Map<String, AnnotationData> map = getAnnotationDataAsMap( clazz, propertyName );
+	        for (AnnotationData element : map.values()) {
+	        	Map<String, Object> values = element.getValues();
+			}
+	        if (map.containsKey( "toolTipFromNameSpace" ) ) {
+	            return true;
+	        }
+	        return false;
+        } catch (Exception ex) {
+    		throw new CrankException(ex, "CrankUtils.getToolTip: Problem %s" +
+    				" clazz = %s, propertyName = %s ", ex.getMessage(), clazz, propertyName);
+        	
+        }
+    }
+    
+    public static String getLabelToolTip(Class<?> clazz, String propertyName) {
+    	if (clazz == null || propertyName == null) {
+    		throw new CrankException("CrankUtils.getLabelToolTip: Null arguments are not allowed " +
+    				" clazz = %s, propertyName = %s ", clazz, propertyName);
+    	}
+        try {
+	        PropertyDescriptor descriptor = 
+	        	getPropertyDescriptor( clazz, propertyName);
+	        if (descriptor==null) {
+	        	throw new CrankException("CrankUtils.getLabelToolTip: Unable to find property descriptor");
+	        }
+	        
+	        Map<String, AnnotationData> map = getAnnotationDataAsMap( clazz, propertyName );
+	        for (AnnotationData element : map.values()) {
+	        	Map<String, Object> values = element.getValues();
+			}
+	        if (map.containsKey( "toolTip" ) ) {
+	            return (String) ((AnnotationData) map.get( "toolTip" )).getValues().get("labelValue");
+	        }
+	        return null;
+        } catch (Exception ex) {
+    		throw new CrankException(ex, "CrankUtils.getToolTip: Problem %s" +
     				" clazz = %s, propertyName = %s ", ex.getMessage(), clazz, propertyName);
         	
         }

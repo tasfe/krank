@@ -8,6 +8,9 @@ import org.crank.core.CrankContext;
  * Functions to aid developing JSF applications.
  */
 public final class MessageUtils {
+	public static final String TOOL_TIP = "toolTip";
+	public static final String LABEL_TOOL_TIP = "labelToolTip";
+
 	/**
 	 * Stops creation of a new MessageUtils object.
 	 */
@@ -83,7 +86,7 @@ public final class MessageUtils {
 
 		return label;
 	}
-	
+
 	public static String createLabelWithNameSpace(final String namespace, final String fieldName) {
 
 		return createLabelWithNameSpace(namespace, fieldName, CrankContext.getResourceBundleLocator().getBundle());
@@ -92,6 +95,38 @@ public final class MessageUtils {
 	public static String createLabel(final String fieldName) {
 		return createLabelWithNameSpace(null, fieldName, CrankContext.getResourceBundleLocator().getBundle());
 	}	
+	
+	
+	/**
+	 * Get the tool tip.
+	 *
+	 * @param namespace
+	 *            Namespace is a qualifier usually the name of a Form or Entity.
+	 * @param fieldName
+	 *            fieldName is the name of the tool tip we want to look up.
+	 * @param messageSource
+	 *            messageSource
+	 *
+	 * @return Tool Tip from the Message Source.
+	 */
+	public static String createToolTipWithNameSpace(final String namespace, final String fieldName,
+			final ResourceBundle bundle, final String toolTipType) {
+
+		String toolTip = null;
+		try {
+			try {
+				/** Look for name-space + . + fieldName, e.g., Employee.firstName.toolTip. */
+				toolTip = bundle.getString(namespace + '.' + fieldName + '.'
+						+ toolTipType);
+			} catch (MissingResourceException mre) {
+				/** Look for fieldName only, e.g., firstName.toolTip. */
+				toolTip = bundle.getString(fieldName + '.' + toolTipType);
+			}
+		} catch (MissingResourceException mre) {
+		}
+
+		return toolTip;
+	}
 	
 
 	/**

@@ -156,6 +156,20 @@
 		</function-signature>
 	</function>
 	<function>
+		<function-name>getToolTip</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			java.lang.String getToolTip(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>getLabelToolTip</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			java.lang.String getLabelToolTip(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
 		<function-name>getPropertyEntityName</function-name>
 		<function-class>org.crank.crud.controller.CrudUtils</function-class>
 		<function-signature>
@@ -235,6 +249,20 @@
 		<function-class>org.crank.web.jsf.support.JSFMessageUtils</function-class>
 		<function-signature>
 			java.lang.String createLabelWithNameSpace(java.lang.String, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>createToolTipWithNameSpace</function-name>
+		<function-class>org.crank.web.jsf.support.JSFMessageUtils</function-class>
+		<function-signature>
+			java.lang.String createToolTipWithNameSpace(java.lang.String, java.lang.String, java.lang.Class)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>createLabelToolTipWithNameSpace</function-name>
+		<function-class>org.crank.web.jsf.support.JSFMessageUtils</function-class>
+		<function-signature>
+			java.lang.String createLabelToolTipWithNameSpace(java.lang.String, java.lang.String, java.lang.Class)
 		</function-signature>
 	</function>
 

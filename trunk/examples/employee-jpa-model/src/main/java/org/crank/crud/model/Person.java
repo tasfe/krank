@@ -8,10 +8,12 @@ import javax.persistence.MappedSuperclass;
 import org.crank.annotations.validation.Length;
 import org.crank.annotations.validation.ProperNoun;
 import org.crank.annotations.validation.Required;
+import org.crank.jsf.annotations.ToolTipFromNameSpace;
 
 @SuppressWarnings("serial")
 @MappedSuperclass
 public class Person implements Serializable {
+	@ToolTipFromNameSpace
     @Column( nullable = false, length = 32 )
     private String firstName;
     private String lastName;

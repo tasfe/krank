@@ -21,11 +21,13 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.crank.annotations.validation.Currency;
 import org.crank.annotations.validation.Email;
 import org.crank.annotations.validation.LongRange;
 import org.crank.annotations.validation.Phone;
 import org.crank.annotations.validation.Required;
 import org.crank.crud.model.PersistedFile;
+import org.crank.crud.annotations.ToolTip;
 
 @Entity
 @NamedQueries( {
@@ -59,6 +61,8 @@ public class Employee extends Person {
     private Long id;
     private boolean active;
     private int age;
+    @ToolTip(value = "Do not use an AOL or Lotus Notes internal format.",
+   	         labelValue = "Employee's company e-mail address.")
     private String email;
     private String phone;
     @Column (nullable=false)
@@ -227,6 +231,8 @@ public class Employee extends Person {
     
     @Required
     @LongRange( min = 18L, max = 135L )
+    @ToolTip(value = "Age must be entered even though birthdate is supplied.",
+    	     labelValue = "Employee's age at time of hire.")
     public void setAge( int age ) {
         this.age = age;
     }

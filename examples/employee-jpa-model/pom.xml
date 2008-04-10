@@ -24,6 +24,10 @@
             <artifactId>crank-validation</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.crank</groupId>
+            <artifactId>crank-jsf-support</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-jpa_3.0_spec</artifactId>
         </dependency>

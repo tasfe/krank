@@ -1,4 +1,4 @@
-#summary A few tips on using ToolTips in your tools.
+#summary A few tips on using ToolTips in your tools (or other applications.)
 
 = Introduction =
 

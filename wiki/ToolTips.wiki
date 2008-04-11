@@ -49,7 +49,7 @@ public class Employee extends Person {
 
 If your application is JSF based you may have the tooltips derive from a resource bundle using the @ToolTipFromNameSpace annotation.  
 
-1. Add your tooltip text to the appropriate properties file.  The property for the tooltip that is displayed over the input portion of the field is should be named “fieldName.toolTip”.  The fields label can also have a tooltip defined by the property name “fieldname.labelToolTip”. You can also use the more specific version of the field name “entity.fieldName” (see [http://krank.googlecode.com/svn/wiki/CrankMessaging CrankMessaging] for details on defining the name space.)
+1. Add your tooltip text to the appropriate properties file.  The property for the tooltip that is displayed over the input portion of the field is should be named “fieldName.toolTip”.  The fields label can also have a tooltip defined by the property name “fieldname.labelToolTip”. You can also use the more specific version of the field name “entity.fieldName” (see [http://code.google.com/p/krank/wiki/CrankMessaging CrankMessaging] for details on defining the name space.)
 
 messages.properties
 {{{

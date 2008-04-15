@@ -9,11 +9,17 @@
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 	xmlns:crud="http://www.googlecode.com/crank/crud"
-	xmlns:crank="http://www.googlecode.com/crank">
+	xmlns:crank="http://www.googlecode.com/crank"
+        xmlns:t="http://myfaces.apache.org/tomahawk">
 
 <ui:composition>
 <c:if test="${not empty detailController}">
 <a4j:outputPanel ajaxRendered="true">
+
+        <c:if test="${empty useJavaScriptReset}">
+            <c:set var="useJavaScriptReset" value="${false}" />
+        </c:if>
+
 		<c:if test="${empty id}">
 			<c:set var="id" value="DetailListing" />
 		</c:if>
@@ -121,7 +127,32 @@
 			</table>
 		</c:if>
 
-		<!-- detail controller starts here. -->
+        <c:if test="${not empty propertyNames}">
+           <c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
+
+       </c:if>
+        
+
+        <c:if test="${useJavaScriptReset}">
+            <ui:repeat value="${pNames}" var="property">
+                <script type="text/javascript">
+                    var ${parentForm}_${entityName}_${property} = "";//test
+
+                </script>
+            </ui:repeat>
+
+            <script type="text/javascript">
+             function reset_${parentForm}_${entityName}() {
+                <ui:repeat value="${pNames}" var="property">
+                       <f:attribute name="alias.element"  value="${null}"/>
+                    $("${parentForm}:__${entityName}_${property}").value = employeeForm_tasks_${property};
+                </ui:repeat>
+              }
+            </script>
+        </c:if>
+        
+
+        <!-- detail controller starts here. -->
 		<h:panelGroup binding="${detailController.subForm}">
 			<crank:node
 				entity="#{detailController}"
@@ -137,6 +168,7 @@
 				expandToolTip="Click to show Add / Edit ${entityNameLabel}"
 				closeToolTip="Click to hide ${entityNameLabel}">
 				
+
 				<!-- CRUD controls Add new and form. -->
 				<h:panelGrid columns="2" rendered="${detailController.showDetails}" >
 					<rich:spacer width="10" height="10"/>
@@ -156,7 +188,8 @@
 							<ui:insert />
 						</c:if>
 						<c:if test="${detailController.showForm and not manyToMany}">
-							<crank:form   
+
+                            <crank:form
 								crud="${detailController}" 
 								propertyNames="${formPropertyNames}"
 								immediate="true"
@@ -175,7 +208,15 @@
 									<c:set var="isSelectableColumn" value="${isSelectableColumnCopy}"/>
 								
 							</crank:form>
-						</c:if>
+
+                            <c:if test="${useJavaScriptReset}">
+                                <button type="button" onclick="reset_${parentForm}_${entityName}()" >reset</button>
+                            </c:if>
+                            <c:if test="${not useJavaScriptReset}">
+                                <button type="button">reset</button>
+                            </c:if>
+
+                        </c:if>
 						
 						<!-- The actual listing. -->
 						<rich:dataTable value="#{detailControllerModel}" var="row">
@@ -350,6 +391,15 @@
 			</crank:node>
 			
 		</h:panelGroup>
+
+        <c:if test="${useJavaScriptReset}">        
+            <ui:repeat value="${pNames}" var="property">
+                <script type="text/javascript">
+                      ${parentForm}_${entityName}_${property} = $("${parentForm}:__${entityName}_${property}").value;
+                 </script>
+            </ui:repeat>
+        </c:if>
+
 </a4j:outputPanel>
 </c:if>
 

@@ -196,7 +196,7 @@
 								reRender="${reRender}"
 								parentForm="${parentForm}"
 								entityName="${entityName}"
-								resetMode="${false}"
+								resetMode="${true}"
 								ajax="${ajax}">
 								
 									<c:set var="formPropertyNames" value=""/>
@@ -213,7 +213,7 @@
                                 <button type="button" onclick="reset_${parentForm}_${entityName}()" >reset</button>
                             </c:if>
                             <c:if test="${not useJavaScriptReset}">
-                                <button type="button">reset</button>
+                                
                             </c:if>
 
                         </c:if>

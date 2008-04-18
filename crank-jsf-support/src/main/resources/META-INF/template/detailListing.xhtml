@@ -145,9 +145,18 @@
              function reset_${parentForm}_${entityName}() {
                 <ui:repeat value="${pNames}" var="property">
                        <f:attribute name="alias.element"  value="${null}"/>
-                    $("${parentForm}:__${entityName}_${property}").value = employeeForm_tasks_${property};
+                    $("${parentForm}:__${entityName}_${property}").value = ${parentForm}_${entityName}_${property};
                 </ui:repeat>
               }
+
+
+             function remember_${parentForm}_${entityName}() {
+                <ui:repeat value="${pNames}" var="property">
+                       <f:attribute name="alias.element"  value="${null}"/>
+                     ${parentForm}_${entityName}_${property} = $("${parentForm}:__${entityName}_${property}").value;
+                </ui:repeat>
+              }
+
             </script>
         </c:if>
         
@@ -319,13 +328,25 @@
 									</c:if>
 									
 									<c:if test="${not crud:isInCollection(property,editableProperties)}">
-										<h:outputLink 
-											rendered="${renderAsText and autoLink and crud:isUrl(outputText)}"
-											value="${crud:formatAsUrl(outputText)}" 
-											title="Go to ${outputText}">
-											<h:outputText value="${outputText}" />
-										</h:outputLink>
-										<h:outputText
+                                        <c:if test="${useJavaScriptReset}">
+                                            <h:outputLink
+                                                rendered="${renderAsText and autoLink and crud:isUrl(outputText)}"
+                                                value="${crud:formatAsUrl(outputText)}"
+                                                title="Go to ${outputText}"
+                                                onclick="remember_${parentForm}_${entityName}();">
+                                                <h:outputText value="${outputText}" />
+                                            </h:outputLink>
+                                        </c:if>
+                                        <c:if test="${not useJavaScriptReset}">    
+                                            <h:outputLink
+                                                rendered="${renderAsText and autoLink and crud:isUrl(outputText)}"
+                                                value="${crud:formatAsUrl(outputText)}"
+                                                title="Go to ${outputText}">
+                                                <h:outputText value="${outputText}" />
+                                            </h:outputLink>
+                                        </c:if>
+
+                                        <h:outputText
 											rendered="${renderAsText and not (autoLink and crud:isUrl(outputText))}" 
 											value="${outputText}" />
 									</c:if>
@@ -395,7 +416,7 @@
         <c:if test="${useJavaScriptReset}">        
             <ui:repeat value="${pNames}" var="property">
                 <script type="text/javascript">
-                      ${parentForm}_${entityName}_${property} = $("${parentForm}:__${entityName}_${property}").value;
+                     remember_${parentForm}_${entityName}(); 
                  </script>
             </ui:repeat>
         </c:if>

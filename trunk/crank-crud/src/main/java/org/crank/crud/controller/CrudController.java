@@ -49,7 +49,7 @@ public class CrudController<T extends Serializable, PK extends Serializable> ext
      */
     @SuppressWarnings("unchecked")
     public CrudOutcome doLoadCreate() {
-        logger.debug(String.format("doLoadCreate() called."));
+        logger.debug(String.format("doLoadCreate() called from class %s", this));
 
         init();
         createEntity();

@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:crank="http://www.googlecode.com/crank"
+	>
+<ui:composition template="/templates/layout.xhtml">
+	<ui:define name="content">
+
+		<c:set var="daoName" value="Role" />
+
+		<h:form>
+			<h:panelGroup>
+				<h:commandLink action="HOME" value="Home" styleClass="paginationPageNumberLink"/>
+				<h:outputText value="|" styleClass="paginationPageNumberLink"/>
+				<h:outputText value="Roles" styleClass="paginationPageNumberLink"/>
+			</h:panelGroup>
+		</h:form>
+	
+		<h:outputText value="Roles" styleClass="pageTitle"/>
+
+		<a4j:region renderRegionOnly="false"> 
+			<a4j:form id="${daoName}ListForm">
+				<crank:listing 
+					paginator="${paginators['Role']}" 
+					jsfCrudAdapter="${cruds['Role']}" 
+					propertyNames="name"
+					pageTitle="${daoName}"
+					parentForm="${daoName}ListForm"
+					reRender="${daoName}ListForm"
+					crud="${cruds['Role'].controller}"/>
+			</a4j:form>
+		</a4j:region>
+				
+		
+	</ui:define>
+</ui:composition>
+</html>

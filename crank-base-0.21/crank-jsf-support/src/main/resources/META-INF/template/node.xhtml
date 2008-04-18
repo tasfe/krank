@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:crank="http://www.googlecode.com/crank"
+	>
+<ui:composition>
+
+	<c:if test="${empty toggleLinkClass}">
+		<c:set var="toggleLinkClass" value="paginationPageNumberLink" />
+	</c:if>
+
+	<c:if test="${empty fixedBranch}">
+		<c:set var="fixedBranch" value="${false}" />
+	</c:if>
+
+	<c:if test="${empty layout}">
+		<c:set var="layout" value="horizontal" />
+	</c:if>
+
+	<c:if test="${empty columnClasses}">
+		<c:set var="columnClasses" value="nodeBranch, nodeLeaf" />
+	</c:if>
+
+	<c:if test="${empty layout}">
+		<c:set var="layout" value="horizontal" />
+	</c:if>
+	
+	<c:choose>
+		<c:when test="${layout=='horizontal'}">
+			<c:set var="gridCols" value="2" />
+		</c:when>
+		<c:otherwise>
+			<c:set var="gridCols" value="1" />
+			<c:set var="columnClasses" value="" />
+		</c:otherwise>
+	</c:choose>
+
+	<c:if test="${empty expandText}">
+		<c:set var="expandText" value="+" />
+	</c:if>
+
+	<c:if test="${empty collapseText}">
+		<c:set var="collapseText" value="-" />
+	</c:if>
+
+	<c:choose>
+		<c:when test="${not empty reRender}">
+			<c:set var="reRenderers" value="${reRender},nodePanel${id},node${id},close${id},expand${id},fixed${id},fixedC${id}" />
+		</c:when>
+		<c:otherwise>
+			<c:set var="reRenderers" value="nodePanel${id},node${id},close${id},expand${id},fixed${id},fixedC${id}" />
+		</c:otherwise>
+	</c:choose>
+	<h:panelGrid columns="${gridCols}" columnClasses="${columnClasses}">
+		<crank:commandLink 
+			immediate="true"
+			entity="${entity}"
+			action="${expandAction}"
+			onclick="${expandOnClick}"
+			toolTipText="${expandToolTip}"
+			reRender="${reRenderers}"
+			rendered="${expandRendered and (not fixedBranch)}" 
+			styleClass="${toggleLinkClass}"
+			ajax="true">
+			<h:outputText  value="${expandText}" />
+			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
+		</crank:commandLink>
+		<crank:commandLink 
+			immediate="true"
+			entity="${entity}"
+			action="${closeAction}"
+			onclick="${closeOnClick}"
+			toolTipText="${closeToolTip}"
+			reRender="${reRenderers}"
+			rendered="#{closeRendered and (not fixedBranch)}" 
+			styleClass="${toggleLinkClass}"
+			ajax="true">
+			<h:outputText  value="${collapseText}" />
+			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
+		</crank:commandLink>
+		<crank:commandLink 
+			immediate="true"
+			entity="${entity}"
+			action="${expandAction}"
+			onclick="${expandOnClick}"
+			toolTipText="${expandToolTip}"
+			reRender="${reRenderers}"
+			rendered="${expandRendered and fixedBranch}" 
+			styleClass="${toggleLinkClass}"
+			ajax="true">
+			<h:outputText  value="${expandText}" />
+			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
+		</crank:commandLink>
+		<crank:commandLink 
+			immediate="true"
+			entity="${entity}"
+			action="${closeAction}"
+			onclick="${closeOnClick}"
+			toolTipText="${closeToolTip}"
+			reRender="${reRenderers}"
+			rendered="#{closeRendered and fixedBranch}" 
+			styleClass="${toggleLinkClass}"
+			ajax="true">
+			<h:outputText value="${collapseText}" />
+			<a4j:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
+		</crank:commandLink>
+		<a4j:outputPanel layout="block">
+			<c:set var="expandText" value=""/>
+			<c:set var="collapseText" value=""/>
+			<ui:insert/>
+		</a4j:outputPanel>
+	</h:panelGrid>
+
+</ui:composition>
+</html>

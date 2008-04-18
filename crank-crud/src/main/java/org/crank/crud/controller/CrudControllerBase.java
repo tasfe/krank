@@ -165,7 +165,7 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 	}
 
 	public void init() {
-		logger.debug("init");
+		logger.debug("init called setting CrudState to UNKNOWN");
 		this.state = CrudState.UNKNOWN;
 		initDetailChildren();
 		parentChildren();
@@ -175,7 +175,8 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 		if (children != null) {
 			for (CrudControllerBase<? extends Serializable, ? extends Serializable> detailController : children
 					.values()) {
-				detailController.init();
+                logger.debug(String.format("initializing child %s %s", detailController.getName(), detailController));
+                detailController.init();
 			}
 		}
 	}
@@ -223,10 +224,13 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 	 * 
 	 */
 	protected void createEntity() {
-		try {
+        logger.debug("Calling createEntity");
+        try {
 			this.entity = entityClass.newInstance();
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
+            logger.debug(String.format("Entity created", this.entity));
+        } catch (Exception ex) {
+            logger.error("Unable to create entity",ex);
+            throw new RuntimeException(ex);
 		}
 	}
 
@@ -291,7 +295,7 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 	/** Load create an object. */
 	public CrudOutcome loadCreate() {
 		try {
-			logger.debug("load create");
+			logger.debug("loadCreate called");
 			fireBeforeLoadCreate();
 			CrudOutcome outcome = doLoadCreate();
 			fireAfterLoadCreate();

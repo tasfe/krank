@@ -84,46 +84,27 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	public GenericDaoJpa() {
 	}
 
-	@Transactional
-	public T store(T entity) {
+    @Transactional
+    public T store(T entity) {
         logger.debug(String.format("store(entity) called, %s", entity));
         T persistedEntity = entity;
-		try {
-			try {
-				/*
-				 * If the entity manager does not contain this entity or
-				 * the entity has a null id, then use the persist method,
-				 * otherwise use the merge method.
-				 */
-				if (!hasId(entity)) {
-					// TODO: the error reporting could be deferred (the entity has an ID
-					// that is in the db but not in the entity manager)
-                    logger.debug("Calling perist on JPA");
-                    getJpaTemplate().persist(entity);
-				} else {
-                    logger.debug("Calling merge since an id was found");
-                    persistedEntity = (T) getJpaTemplate().merge(entity);
-				}
-			} catch (EntityExistsException e) {
-				// if the entity exists then we call merge
-                logger.debug("Calling merge since persist failed");
-                persistedEntity = (T) getJpaTemplate().merge(entity);
-			}
-		} catch (Exception ex) { //We want to try to merge no matter what was thrown.
-			try {
-				// Force merge
-                logger.debug("Calling force merge to see if we can");
-                persistedEntity = (T) getJpaTemplate().merge(entity);
-			} catch (Exception ex2) {
-				logger.warn(String.format("Unable to store object %s exception %s original exception %s", entity, ex2.getMessage(), ex.getMessage()), ex2);
-				throw new RuntimeException(ex);
-			}
-			
-		}
-		return persistedEntity;
-	}
+        /*
+         * If the entity has a null id, then use the persist method,
+         * otherwise use the merge method.
+         */
+        if (!hasId(entity)) {
+            // TODO: the error reporting could be deferred (the entity has an ID
+            // that is in the db but not in the entity manager)
+            logger.debug("Calling perist on JPA");
+            getJpaTemplate().persist(entity);
+        } else {
+            logger.debug("Calling merge since an id was found");
+            persistedEntity = (T) getJpaTemplate().merge(entity);
+        }
+        return persistedEntity;
+    }
 
-	protected boolean hasId(T entity) {
+    protected boolean hasId(T entity) {
 		BeanWrapper bw = new BeanWrapperImpl(entity);
 		Object propertyValue = bw.getPropertyValue(this.idPropertyName);
 		if (propertyValue==null) {

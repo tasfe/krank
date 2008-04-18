@@ -49,9 +49,12 @@ public class CrudController<T extends Serializable, PK extends Serializable> ext
      */
     @SuppressWarnings("unchecked")
     public CrudOutcome doLoadCreate() {
+        logger.debug(String.format("doLoadCreate() called."));
+
         init();
         createEntity();
         this.state = CrudState.ADD;
+        logger.debug("Set state to CrudState.ADD");
         return CrudOutcome.FORM;
     }
 

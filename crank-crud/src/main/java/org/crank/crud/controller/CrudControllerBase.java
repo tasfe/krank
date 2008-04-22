@@ -55,8 +55,17 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 	protected String deleteStrategy = CrudOperations.DELETE_BY_ENTITY;
 	protected String addStrategy = CrudOperations.ADD_BY_CREATE;
 	protected boolean transactional = false;
+    protected boolean  suppressStatusMessages = false;
 
-	public boolean isTransactional() {
+    public boolean isSuppressStatusMessages() {
+        return suppressStatusMessages;
+    }
+
+    public void setSuppressStatusMessages(boolean suppressStatusMessages) {
+        this.suppressStatusMessages = suppressStatusMessages;
+    }
+
+    public boolean isTransactional() {
 		return transactional;
 	}
 
@@ -278,9 +287,11 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 			logger.debug("before create");
 			fireBeforeCreate();
 			CrudOutcome outcome = doCreate();
-			MessageManagerUtils.getCurrentInstance().addStatusMessage(
+            if (!suppressStatusMessages) {
+                MessageManagerUtils.getCurrentInstance().addStatusMessage(
 					"Created %s", MessageUtils.createLabel(this.getName()));
-			logger.debug("create");
+            }
+            logger.debug("create");
 			fireAfterCreate();
 			logger.debug("create after event handling");
 			return outcome;
@@ -316,9 +327,11 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 			logger.debug("before update");
 			fireBeforeUpdate();
 			CrudOutcome outcome = doUpdate();
-			MessageManagerUtils.getCurrentInstance().addStatusMessage(
+            if (!suppressStatusMessages) {
+                MessageManagerUtils.getCurrentInstance().addStatusMessage(
 					"Updated %s", MessageUtils.createLabel(this.getName()));
-			logger.debug("update");
+            }
+            logger.debug("update");
 			fireAfterUpdate();
 			logger.debug("after event handling");
 			return outcome;
@@ -336,9 +349,11 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 		logger.debug("delete");
 		fireBeforeDelete(this.entity);
 		CrudOutcome outcome = doDelete();
-		MessageManagerUtils.getCurrentInstance().addStatusMessage("Deleted %s",
+        if (!suppressStatusMessages) {
+            MessageManagerUtils.getCurrentInstance().addStatusMessage("Deleted %s",
 				MessageUtils.createLabel(this.getName()));
-		fireAfterDelete(this.entity);
+        }
+        fireAfterDelete(this.entity);
 		return outcome;
 	}
 

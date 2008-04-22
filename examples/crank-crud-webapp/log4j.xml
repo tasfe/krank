@@ -29,7 +29,7 @@
     </category>
 
     <category name="org.hibernate.SQL">
-        <priority value="DEBUG" />
+        <priority value="ERROR" />
     </category>
 
     <category name="org.apache.commons">
@@ -82,6 +82,10 @@
 	
     <category name="org.crank.crud.GenericDaoJpa">
         <priority value="ERROR" />
+    </category>
+
+    <category name="org.crank.crud.jsf.support.EntityConverter">
+        <priority value="DEBUG" />
     </category>
 
 </log4j:configuration>

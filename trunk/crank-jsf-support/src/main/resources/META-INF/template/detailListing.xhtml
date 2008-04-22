@@ -17,7 +17,7 @@
 <a4j:outputPanel ajaxRendered="true">
 
         <c:if test="${empty useJavaScriptReset}">
-            <c:set var="useJavaScriptReset" value="${false}" />
+            <c:set var="useJavaScriptReset" value="${true}" />
         </c:if>
 
 		<c:if test="${empty id}">
@@ -231,8 +231,10 @@
 								reRender="${reRender}"
 								parentForm="${parentForm}"
 								entityName="${entityName}"
-								resetMode="${true}"
-								ajax="${ajax}">
+                                methodStub="${entityName}"
+                                resetMode="${true}"
+								ajax="${ajax}"
+                                useJavaScriptReset="${useJavaScriptReset}">
 								
 									<c:set var="formPropertyNames" value=""/>
 									<c:set var="isSelectableColumnCopy" value="${isSelectableColumn}"/>
@@ -249,7 +251,7 @@
                                 <script type="text/javascript">
                                     remember_${parentForm}_${entityName}();
                                 </script>
-                                <button type="button" onclick="reset_${parentForm}_${entityName}();" >reset</button>
+                                
                             </c:if>
                             <c:if test="${not useJavaScriptReset}">
                                 

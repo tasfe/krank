@@ -131,29 +131,55 @@
            <c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
 
        </c:if>
-        
+        <c:if test="${not empty formPropertyNames}">
+           <c:set var="formPropertyNamesArray" value="${fn:split(formPropertyNames, '[, ]')}" />
+
+       </c:if>
+
+
+
 
         <c:if test="${useJavaScriptReset}">
-            <ui:repeat value="${pNames}" var="property">
-                <script type="text/javascript">
-                    var ${parentForm}_${entityName}_${property} = "";//test
-
-                </script>
+            <script type="text/javascript">
+            <ui:repeat value="${formPropertyNamesArray}" var="property">
+                    /* Declare variables for saving form values. */
+                    var ${parentForm}_${entityName}_${property} = "";
             </ui:repeat>
-
+            </script>
             <script type="text/javascript">
              function reset_${parentForm}_${entityName}() {
-                <ui:repeat value="${pNames}" var="property">
+                //    alert("reset_${parentForm}_${entityName}() called!");
+                <ui:repeat value="${formPropertyNamesArray}" var="property">
+
                        <f:attribute name="alias.element"  value="${null}"/>
-                    $("${parentForm}:__${entityName}_${property}").value = ${parentForm}_${entityName}_${property};
+                                                                
+                     /* If the control is a checkbox, it has a checked property, save the checked property.
+                     *  If the control is *not* a checkbox, then store the value in the variable.
+                     */
+                     if ($("${parentForm}:__${entityName}_${property}").type=='checkbox') {
+                         //alert("${parentForm}:__${entityName}_${property} checkbox restored to " + ${parentForm}_${entityName}_${property});
+                         $("${parentForm}:__${entityName}_${property}").checked = ${parentForm}_${entityName}_${property};
+                     } else {
+                         //alert("${parentForm}:__${entityName}_${property} value restored to " + ${parentForm}_${entityName}_${property});
+                         $("${parentForm}:__${entityName}_${property}").value = ${parentForm}_${entityName}_${property};
+                     }
+
                 </ui:repeat>
               }
 
 
              function remember_${parentForm}_${entityName}() {
-                <ui:repeat value="${pNames}" var="property">
+                // alert("remember_${parentForm}_${entityName}() called!!");
+                <ui:repeat value="${formPropertyNamesArray}" var="property">
                        <f:attribute name="alias.element"  value="${null}"/>
-                     ${parentForm}_${entityName}_${property} = $("${parentForm}:__${entityName}_${property}").value;
+                        /* If the control is a checkbox restore the checked value, otherwise restore the value. */
+                        if ($("${parentForm}:__${entityName}_${property}").type=='checkbox') {
+                            //alert ("${parentForm}:__${entityName}_${property} checkbox remembered as " + $("${parentForm}:__${entityName}_${property}").checked);
+                            ${parentForm}_${entityName}_${property} = $("${parentForm}:__${entityName}_${property}").checked;
+                        } else {
+                            //alert ("${parentForm}:__${entityName}_${property} control remembered as " + $("${parentForm}:__${entityName}_${property}").value);
+                            ${parentForm}_${entityName}_${property} = $("${parentForm}:__${entityName}_${property}").value;
+                        }
                 </ui:repeat>
               }
 
@@ -218,8 +244,12 @@
 								
 							</crank:form>
 
+
                             <c:if test="${useJavaScriptReset}">
-                                <button type="button" onclick="reset_${parentForm}_${entityName}()" >reset</button>
+                                <script type="text/javascript">
+                                    remember_${parentForm}_${entityName}();
+                                </script>
+                                <button type="button" onclick="reset_${parentForm}_${entityName}();" >reset</button>
                             </c:if>
                             <c:if test="${not useJavaScriptReset}">
                                 
@@ -328,24 +358,13 @@
 									</c:if>
 									
 									<c:if test="${not crud:isInCollection(property,editableProperties)}">
-                                        <c:if test="${useJavaScriptReset}">
-                                            <h:outputLink
-                                                rendered="${renderAsText and autoLink and crud:isUrl(outputText)}"
-                                                value="${crud:formatAsUrl(outputText)}"
-                                                title="Go to ${outputText}"
-                                                onclick="remember_${parentForm}_${entityName}();">
-                                                <h:outputText value="${outputText}" />
-                                            </h:outputLink>
-                                        </c:if>
-                                        <c:if test="${not useJavaScriptReset}">    
+
                                             <h:outputLink
                                                 rendered="${renderAsText and autoLink and crud:isUrl(outputText)}"
                                                 value="${crud:formatAsUrl(outputText)}"
                                                 title="Go to ${outputText}">
                                                 <h:outputText value="${outputText}" />
                                             </h:outputLink>
-                                        </c:if>
-
                                         <h:outputText
 											rendered="${renderAsText and not (autoLink and crud:isUrl(outputText))}" 
 											value="${outputText}" />
@@ -361,7 +380,8 @@
 									<a4j:commandLink 
 										action="${detailController.read}" 
 										title="Edit this record"
-										reRender="${reRender},detail${entityName}">
+										reRender="${reRender},detail${entityName}"
+                                        >
 											<h:graphicImage value="${editImg}" border="0" styleClass="${listingImageButtonClass}" />
 										<f:param name="id" value="${crud:getObjectId(detailController,row)}"/>
 									</a4j:commandLink>
@@ -413,13 +433,13 @@
 			
 		</h:panelGroup>
 
-        <c:if test="${useJavaScriptReset}">        
-            <ui:repeat value="${pNames}" var="property">
+        <!--
+        <c:if test="${detailController.showForm and not manyToMany and useJavaScriptReset}">        
                 <script type="text/javascript">
                      remember_${parentForm}_${entityName}(); 
                  </script>
-            </ui:repeat>
         </c:if>
+        -->
 
 </a4j:outputPanel>
 </c:if>

@@ -225,10 +225,16 @@
 				<h:commandButton rendered="${editMode}"
 					styleClass="${formButtonClass}" immediate="${immediate}"
 					value="${updateButtonText}" action="${crud.update}" />
-				<h:commandButton rendered="${resetMode}"
+
+                <c:if test="${not useJavaScriptReset}">
+                <h:commandButton rendered="${resetMode}"
 					value="${resetButtonText}" reRender="${reRender}"
 					styleClass="${formButtonClass}" type="reset" />
-				<h:commandButton value="${cancelButtonText}"
+                </c:if>
+                <c:if test="${useJavaScriptReset}">
+                <button type="button" onclick="reset_${parentForm}_${methodStub}();" >${resetButtonText}</button>
+                </c:if>
+                <h:commandButton value="${cancelButtonText}"
 					rendered="${cancelMode}" styleClass="${formButtonClass}"
 					action="${crud.cancel}" immediate="true" />
 			</h:panelGrid>
@@ -241,10 +247,16 @@
 				<a4j:commandButton rendered="${editMode}" reRender="${reRender}"
 					styleClass="${formButtonClass}" value="${updateButtonText}"
 					action="${crud.update}" />
-				<a4j:commandButton rendered="${resetMode}"
+
+                <c:if test="${not useJavaScriptReset}">
+                <a4j:commandButton rendered="${resetMode}"
 					value="${resetButtonText}" reRender="${reRender}"
 					styleClass="${formButtonClass}" type="reset" />
-				<a4j:commandButton value="${cancelButtonText}" immediate="true"
+                </c:if>
+                <c:if test="${useJavaScriptReset}">
+                <button type="button" onclick="reset_${parentForm}_${methodStub}();" >${resetButtonText}</button>
+                </c:if>
+                <a4j:commandButton value="${cancelButtonText}" immediate="true"
 					rendered="${cancelMode}" reRender="${reRender}"
 					styleClass="${formButtonClass}" type="button"
 					action="${crud.cancel}" />

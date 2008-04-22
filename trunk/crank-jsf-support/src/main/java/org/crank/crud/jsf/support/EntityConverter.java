@@ -9,6 +9,7 @@ import org.crank.crud.GenericDao;
 import org.crank.crud.controller.CrudManagedObject;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.apache.log4j.Logger;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -23,7 +24,13 @@ import javax.faces.convert.ConverterException;
  * @author Rick Hightower
  */
 public class EntityConverter implements Converter, Serializable {
-	/**
+
+    /**
+     * Logger.
+     */
+    protected Logger logger = Logger.getLogger(EntityConverter.class);
+
+    /**
 	 * DAO crud to look up Entity based on id.
 	 */
 	private GenericDao dao;
@@ -62,39 +69,44 @@ public class EntityConverter implements Converter, Serializable {
 	@SuppressWarnings("unchecked")
 	public Object getAsObject(final FacesContext facesContext,
 			final UIComponent component, final String value) {
+        logger.debug(String.format("getAsObject() called value=%s, component=%s", value, component.getClientId(facesContext)));
 		UIInput input = (UIInput) component;
 		if (value.equals("-1")
 				&& (input.isRequired() || component.getAttributes().get(
 						"required_bean") != null)) {
-			throw new ConverterException(new FacesMessage("Required",
+            logger.debug("Required field and the value was -1");
+            throw new ConverterException(new FacesMessage("Required",
 					"Required"));
 		}
 
 		try {
 			Serializable entityId = CrudUtils.getIdObject(value, this.idType);
-			if (dao == null) {
+            logger.debug(String.format("entityId %s", entityId));
+            if (dao == null) {
 				ObjectRegistry objectRegistry = CrankContext
 						.getObjectRegistry();
 				Map<String, GenericDao> repos = (Map<String, GenericDao>) objectRegistry
 						.getObject("repos");
 
 				if (managedObject != null) {
-					dao = repos.get(managedObject.getName());
+                    logger.debug("Looking up DAO by managedObject");
+                    dao = repos.get(managedObject.getName());
 				} else {
 					Object key = component.getAttributes().get("beanType");
-					dao = repos.get((String) key);
+					logger.debug("Looking up DAO by beanType");
+                    dao = repos.get((String) key);
 				}
 
 			}
 			Object object = dao.read(entityId);
-			if (object == null) {
+            logger.debug(String.format("Read object %s", object));
+            if (object == null) {
 				throw new ConverterException(new FacesMessage("Can't find object with id " + value,
 						"Can't find object with id " + value));				
 			}
 			return object;
 		} catch (Exception ex) {
-			System.err.println("FATAL ERROR " + ex.getMessage());
-			ex.printStackTrace(System.err);
+            logger.error("Unable to convert object", ex);
 			String message = String.format(
 					"Unable to convert, fatal issue, %s ", ex.getMessage());
 			throw new ConverterException(new FacesMessage(message, message));
@@ -114,20 +126,27 @@ public class EntityConverter implements Converter, Serializable {
 	 */
 	public String getAsString(final FacesContext facesContext,
 			final UIComponent component, final Object value) {
-		if (value == null) {
-			return "";
+
+        logger.debug(String.format("getAsString called value=%s, component=%s", value, component.getClientId(facesContext)));
+        if (value == null) {
+            logger.debug("Value was null, can't convert");
+            return "";
 		}
+
+        if (value instanceof String) {
+            return value.toString();
+        }
 
 		BeanWrapper bwValue = new BeanWrapperImpl(value);
 
-		if (value instanceof String) {
-			return value.toString();
-		}
 
 		try {
-			return bwValue.getPropertyValue(idPropertyName).toString();
-		} catch (Exception ex) {
-			return "-1";
+            String sValue = bwValue.getPropertyValue(idPropertyName).toString();
+            logger.debug(String.format("string value %s", sValue));
+            return sValue;
+        } catch (Exception ex) {
+            logger.debug("Unable to find value returning -1");
+            return "-1";
 		}
 	}
 

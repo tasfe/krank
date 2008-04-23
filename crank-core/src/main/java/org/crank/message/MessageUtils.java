@@ -3,6 +3,7 @@ package org.crank.message;
 import java.util.*;
 
 import org.crank.core.CrankContext;
+import org.apache.log4j.Logger;
 
 /**
  * Functions to aid developing JSF applications.
@@ -10,8 +11,9 @@ import org.crank.core.CrankContext;
 public final class MessageUtils {
 	public static final String TOOL_TIP = "toolTip";
 	public static final String LABEL_TOOL_TIP = "labelToolTip";
+    protected static Logger logger = Logger.getLogger(MessageUtils.class);
 
-	/**
+    /**
 	 * Stops creation of a new MessageUtils object.
 	 */
 	private MessageUtils() {
@@ -69,8 +71,9 @@ public final class MessageUtils {
 	 */
 	public static String createLabelWithNameSpace(final String namespace, final String fieldName,
 			final ResourceBundle bundle) {
+        logger.debug(String.format("called createLabelWithNameSpace(namespace=%s, fieldName=%s)",namespace, fieldName));
 
-		String label;
+        String label;
 		try {
 			try {
 				/** Look for name-space + . + fieldName, e.g., Employee.firstName. */

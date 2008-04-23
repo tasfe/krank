@@ -85,7 +85,11 @@
     </category>
 
     <category name="org.crank.crud.jsf.support.EntityConverter">
-        <priority value="DEBUG" />
+        <priority value="ERROR" />
+    </category>
+
+    <category name="org.crank.message.MessageUtils">
+        <priority value="DEBUG"/>
     </category>
 
 </log4j:configuration>

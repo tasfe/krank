@@ -78,14 +78,17 @@ public final class MessageUtils {
 			try {
 				/** Look for name-space + . + fieldName, e.g., Employee.firstName. */
 				label = bundle.getString(namespace + '.' + fieldName);
-			} catch (MissingResourceException mre) {
+                logger.debug(String.format("found with namespace and fieldname: namespace=%s, fieldName=%s, retrieved label=%s", namespace, fieldName, label));
+            } catch (MissingResourceException mre) {
 				/** Look for fieldName only, e.g., firstName. */
 				label = bundle.getString(fieldName);
-			}
+                logger.debug(String.format("found with fieldName ONLY: namespace=%s, fieldName=%s, retrieved label=%s", namespace, fieldName, label));
+            }
 		} catch (MissingResourceException mre) {
 			/** If you can't find the label, generate it thus, "firstName" becomes "First Name".*/
 			label = generateLabelValue(fieldName);
-		}
+            logger.debug(String.format("generateLabelValue generated label: namespace=%s, fieldName=%s, retrieved label=%s", namespace, fieldName, label));
+        }
 
 		return label;
 	}

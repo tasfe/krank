@@ -28,7 +28,8 @@
 		
 			<!-- description, -->
 			<crank:form crud="${crud}" parentForm="employeeForm"
-				propertyNames="firstName,lastName,active,dob,age,phone,email,department,status,file,numberOfPromotions,type:Type">
+				propertyNames="firstName,lastName,active,dob,age,phone,email,department,status,file,numberOfPromotions,type:Type"
+                    requiredMarker=" --required-- ">
 			
 				
 				<crank:compositePanel entity="${crud.entity.address}" name="address"

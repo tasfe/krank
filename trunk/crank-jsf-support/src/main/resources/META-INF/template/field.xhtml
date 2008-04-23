@@ -89,12 +89,17 @@
 		<c:set var="fieldId" value="${prefix}_${entityName}_${crud:replace(fieldName,'.','_')}"/>
 	</c:if>
 
+    <c:if test="${empty requiredMarker}">
+        <c:set var="requiredMarker" value="*"/>
+    </c:if>
+
     <!--  The label is optional. Generate it if it is missing.  Decorate it if required -->
 	<c:choose>
 		<c:when test="${required=='true' and not crud:isBoolean(type,fieldName)}">
 			<c:choose>
 				<c:when test="${empty label}">
-				    <c:set var="label" disabled="${disabled}" value="${crud:createLabelWithNameSpace(entityName,fieldName)}*" />
+                    <!-- Add asterick (requiredMarker) for required. -->
+                    <c:set var="label" disabled="${disabled}" value="${crud:createLabelWithNameSpace(entityName,fieldName)}${requiredMarker}" />
 				</c:when>
 				<c:otherwise>
 				    <c:set var="label" disabled="${disabled}" value="${label}*" />
@@ -104,7 +109,7 @@
 		</c:when>
 		<c:otherwise>
 			<c:if test="${empty label}">
-			    <c:set var="label" value="${crud:createLabel(fieldName)}" />
+			    <c:set var="label" value="${crud:createLabelWithNameSpace(entityName,fieldName)}" />
 			</c:if>
 		</c:otherwise>
 	</c:choose>

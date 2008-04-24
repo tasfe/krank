@@ -366,12 +366,25 @@ public class RelationshipManager implements Serializable {
                 try {
                     addToParentMethod = parentClass.getMethod(addToParentMethodName , new Class[]{this.entityClass});
                 } catch (Exception methodNotFoundException ) {
-                    if (childCollection instanceof Collection) {
-                        Collection col = (Collection) childCollection;
-                        col.add( child );
-                    } else {
-                        throw new CrankException(methodNotFoundException, "Unable to add child %s to parent %s because %s",
-                                child, parent, methodNotFoundException.getMessage());
+                    if (this.entityClass != null) {
+                        for (Method m : parentClass.getMethods()) {
+                            if (m.getName().equals(addToParentMethodName)) {
+                                Class[] paramTypes = m.getParameterTypes();
+                                if (paramTypes != null && paramTypes.length == 1 && paramTypes[0].isAssignableFrom( this.entityClass )) {
+                                    addToParentMethod = m;
+                                    break;
+                                }
+                            }
+                        }
+                        }
+                    if (addToParentMethod == null) { 
+                        if (childCollection instanceof Collection) {
+                            Collection col = (Collection) childCollection;
+                            col.add( child );
+                        } else {
+                            throw new CrankException(methodNotFoundException, "Unable to add child %s to parent %s because %s",
+                                    child, parent, methodNotFoundException.getMessage());
+                        }
                     }
                     return;
                 }
@@ -425,20 +438,34 @@ public class RelationshipManager implements Serializable {
                     removeFromParentMethod = parentClass.getMethod(removeFromParentMethodName, new Class[]{this.entityClass});
                     logger.debug(String.format("Found remove method %s",removeFromParentMethod));
                 } catch (Exception methodNotFoundException ) {
-                    logger.debug("Since we were unable to locate the remove method, we will try to remove the collection another way");
-                    Object childCollection = retrieveChildCollectionFromParentObject( parent );
-                    logger.debug(String.format("Found this child collection = %s",childCollection));
-                    if (childCollection instanceof Collection) {
-                        Collection col = (Collection) childCollection;
-                        col.remove( child );
-                        logger.debug(String.format("After child removed from collection = %s",col));
-
-                    } else {
-                        logger.debug("The object retrieved was not a Collection so we will throw the original exception's stack");
-                        throw new CrankException(methodNotFoundException, "Unable to remove child %s from parent %s because %s",
-                                child, parent, methodNotFoundException.getMessage());
+                    if (this.entityClass != null) {
+                        for (Method m : parentClass.getMethods()) {
+                            if (m.getName().equals(removeFromParentMethodName)) {
+                                Class[] paramTypes = m.getParameterTypes();
+                                if (paramTypes != null && paramTypes.length == 1 && paramTypes[0].isAssignableFrom( this.entityClass )) {
+                                    removeFromParentMethod = m;
+                                    logger.debug(String.format("Found remove method %s",removeFromParentMethod));
+                                    break;
+                                }
+                            }
+                        }
                     }
-                    return;
+                    if (removeFromParentMethod == null) { 
+                        logger.debug("Since we were unable to locate the remove method, we will try to remove the collection another way");
+                        Object childCollection = retrieveChildCollectionFromParentObject( parent );
+                        logger.debug(String.format("Found this child collection = %s",childCollection));
+                        if (childCollection instanceof Collection) {
+                            Collection col = (Collection) childCollection;
+                            col.remove( child );
+                            logger.debug(String.format("After child removed from collection = %s",col));
+    
+                        } else {
+                            logger.debug("The object retrieved was not a Collection so we will throw the original exception's stack");
+                            throw new CrankException(methodNotFoundException, "Unable to remove child %s from parent %s because %s",
+                                    child, parent, methodNotFoundException.getMessage());
+                        }
+                        return;
+                    }
                 }
             }
             /*

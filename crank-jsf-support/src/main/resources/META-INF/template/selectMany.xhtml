@@ -18,17 +18,19 @@
 	<c:set var="entityClass" value="${jsfSelectManyController.manager.entityClass}" />
 	<c:if test="${empty immediate}">
 	    <c:set var="immediate" value="${false}" />
-	</c:if>
-
+	</c:if>	
 	
-	<div id="editTip${entityName}" class="toolTip">Edit this record</div>
-	<div id="disableTip${entityName}" class="toolTip">Disable this record</div>
-	
-	
-	
-	<!-- DEFINE VARIABLES -->	
+	<!-- DEFINE VARIABLES -->
 	<c:if test="${empty selectManyClass}">
 		<c:set var="selectManyClass" value="paginationPageNumberLink" />
+	</c:if>
+	
+	<c:if test="${empty useLabel}">
+		<c:set var="useLabel" value="true" />
+	</c:if>
+	
+	<c:if test="${empty expandText}">
+		<c:set var="expandText" value="..." />
 	</c:if>
 	
 	<c:if test="${empty id}">
@@ -95,12 +97,20 @@
 	
 
 	<a4j:outputPanel ajaxRendered="true">
+		<div id="editTip${entityName}" class="toolTip">Edit this record</div>
+		<div id="disableTip${entityName}" class="toolTip">Disable this record</div>
 
-		<span class="${selectManyClass}">${entityNameLabel}: ${jsfSelectManyController.manager.collectionLabelString}</span>
+		<span class="${selectManyClass}">
+		<h:panelGroup rendered="${!jsfSelectManyController.show}">
+			<h:outputText rendered="${useLabel}" value="${entityNameLabel}:"/>
+			<textarea readonly="true" class="fieldField" cols="50" rows="3">${jsfSelectManyController.manager.collectionLabelString}</textarea>
+		</h:panelGroup>
+		</span>
 		<a4j:commandLink rendered="${not jsfSelectManyController.show}" 
 		                 action="${jsfSelectManyController.showSelection}" 
-		                 value="..."
+		                 value="${expandText}"
 		                 title="Show the selection window for ${entityNameLabel}"
+		                 styleClass="${selectManyClass}"
 		                 immediate="${immediate}"/>
 
 

@@ -1,20 +1,5 @@
 package org.crank.crud.controller;
-import static org.easymock.EasyMock.*;
-import static org.testng.AssertJUnit.*;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import org.crank.crud.controller.datasource.FilteringDataSource;
-import org.crank.crud.criteria.Group;
-import org.crank.crud.criteria.OrderBy;
-import org.crank.crud.criteria.OrderDirection;
-import org.easymock.IArgumentMatcher;
-import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
 public class AutoCompleteControllerTest {
@@ -54,7 +39,7 @@ public class AutoCompleteControllerTest {
 //		Field sourcePropertyNameField = autoCompleteController.getClass().getDeclaredField("propertyName");
 //		Field targetPropertyNameField = autoCompleteController.getClass().getDeclaredField("fieldName");
 //		Field dataSourceField = autoCompleteController.getClass().getDeclaredField("dataSource");
-//		Field controllerField = autoCompleteController.getClass().getDeclaredField("controller");
+//		Field controllerField = autoCompleteController.getClass().getDeclaredField("crudController");
 //		checkFieldEquality(sourcePropertyNameField, autoCompleteController, "prop1");
 //		checkFieldEquality(targetPropertyNameField, autoCompleteController, "prop2");
 //		checkFieldEquality(dataSourceField, autoCompleteController, dataSource);

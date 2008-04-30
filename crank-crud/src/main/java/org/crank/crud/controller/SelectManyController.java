@@ -100,7 +100,7 @@ public abstract class SelectManyController<T extends Serializable, PK extends Se
 
     public void initEntity() {
         if (logger.isDebugEnabled()){
-            logger.debug(String.format("Manager manager=%s controller=%s entity=%s",manager, controller, controller.getEntity()));
+            logger.debug(String.format("Manager manager=%s crudController=%s entity=%s",manager, controller, controller.getEntity()));
         }
         manager.setParentObject(controller.getEntity());
     }

@@ -77,7 +77,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 			managedObjects = new ArrayList<CrudManagedObject>();
 			CrudManagedObject crudManagedObject = new CrudManagedObject(Employee.class,
 					EmployeeDAO.class);
-			crudManagedObject.setTransactionalController(true);
+			//crudManagedObject.setTransactionalController(true);
 			managedObjects.add(crudManagedObject);
 			managedObjects.add(new CrudManagedObject(Department.class,
 					DepartmentDAO.class));
@@ -174,7 +174,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 
 			@Override
 			public void afterUpdate(CrudEvent event) {
-				//throw new RuntimeException("Don't commit controller"); un comment this to test tran support
+				//throw new RuntimeException("Don't commit crudController"); un comment this to test tran support
 			}
 			
 		});
@@ -198,7 +198,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		adapter.getPaginator().filter();
 
 		/*
-		 * Setup directReports detail controller. Make sure framework calls
+		 * Setup directReports detail crudController. Make sure framework calls
 		 * add/remove methods.
 		 */
 		JsfDetailController directReports = new JsfDetailController(
@@ -299,16 +299,16 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
     public Map<String, AutoCompleteController> autocomplete () throws Exception {
         Map<String, AutoCompleteController> autocomplete = new HashMap<String, AutoCompleteController>();
         
-        // Create a data source to be used by the auto-complete controller
+        // Create a data source to be used by the auto-complete crudController
         // and add DAO for the entity containing the auto-complete data.
         DaoFilteringDataSource dataSource = new DaoFilteringDataSource();
         dataSource.setDao( repos().get( "Specialty" ));
       
-        // Resolve the CRUD controller for the entity to be affected by the 
+        // Resolve the CRUD crudController for the entity to be affected by the
         // auto-complete selected value.
         CrudOperations controller = cruds().get("Employee").getController();
 
-        // Create the auto-complete controller.
+        // Create the auto-complete crudController.
         // Arguments are:
         //     sourceClass -         
         //	      the class of the entity containing the source value property.
@@ -317,7 +317,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
         //     dataSource - 
         //	      the data source for sourceClass        	
         //     targetCrudController -   
-        //	      the CRUD controller for the entity to be affected.
+        //	      the CRUD crudController for the entity to be affected.
         //     targetProperty -
         //        the property of the target entity to be completed by the 
         //        auto-complete value.	
@@ -326,7 +326,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
         
         // Add to the auto-complete map...
         //     This will be accessed via the field.xhtml as the AutoComplete 
-        //     controller for the associated target property.
+        //     crudController for the associated target property.
         autocomplete.put("Type", autoController);
         return autocomplete;
     }

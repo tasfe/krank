@@ -161,7 +161,7 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
                 logger.debug("Calling DAO merge(entity) in doDelete");
                 dao.merge(entity);
         	} else {
-                logger.debug("Calling parent controller update() in doDelete");
+                logger.debug("Calling parent crudController update() in doDelete");
                 findCrudController().update();
         	}
         } else {
@@ -236,7 +236,7 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
         if (controller != null && forcePersist) {
         	/*
         	 * this crud listener makes sure that entities changed
-        	 * by this detail controller are part of the persistent
+        	 * by this detail crudController are part of the persistent
         	 * context when the top-level operation is persisted.
         	 */
         	controller.addCrudControllerListener(new CrudControllerListenerAdapter() {

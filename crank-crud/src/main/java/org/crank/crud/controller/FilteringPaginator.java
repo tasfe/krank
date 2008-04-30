@@ -2,12 +2,7 @@ package org.crank.crud.controller;
 
 import org.crank.core.MapUtils;
 import org.crank.crud.controller.datasource.FilteringPagingDataSource;
-import org.crank.crud.controller.datasource.PagingDataSource;
-import org.crank.crud.criteria.Comparison;
-import org.crank.crud.criteria.Criterion;
-import org.crank.crud.criteria.Group;
-import org.crank.crud.criteria.OrderBy;
-import org.crank.crud.criteria.Select;
+import org.crank.crud.criteria.*;
 import org.crank.crud.join.Join;
 
 import java.beans.BeanInfo;
@@ -16,6 +11,9 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.util.*;
+import static org.crank.core.LogUtils.debug;
+import static org.crank.core.LogUtils.info;
+import org.apache.log4j.Logger;
 
 /**
  * This class is the main "backing bean" for paginated, filterable, sortable
@@ -46,7 +44,9 @@ import java.util.*;
 public class FilteringPaginator extends Paginator implements
 		FilterablePageable, Serializable {
 
-	/** User filters. A filter is a combination of a Comparison and an OrderBy. */
+    protected Logger log = Logger.getLogger(FilteringPaginator.class);
+
+    /** User filters. A filter is a combination of a Comparison and an OrderBy. */
 	private Map<String, FilterableProperty> filterableProperties = new HashMap<String, FilterableProperty>();
 	/**
 	 * Programmaticly setup Criteria. This allows developer to pre-filter a
@@ -91,13 +91,15 @@ public class FilteringPaginator extends Paginator implements
 
 	/** Create a FilteringPaginator. */
 	public FilteringPaginator() {
-	}
+        debug(log, "FilteringPaginator() no arg constructor");
+    }
 
 	/** Create a FilteringPaginator. */
 	@SuppressWarnings("unchecked")
 	public FilteringPaginator(FilteringPagingDataSource dataSource, Class type) {
-		super((PagingDataSource) dataSource);
-		this.type = type;
+		super(dataSource);
+		debug(log, "FilteringPaginator(dataSource=%s, type=%s)", dataSource, type);
+        this.type = type;
 		createFilterProperties();
 	}
 
@@ -207,13 +209,14 @@ public class FilteringPaginator extends Paginator implements
 	 * @author Rick Hightower
 	 * @param theType
 	 * @param propertyName
-	 * @param ps
+	 * @param propertyScanner
 	 */
 	@SuppressWarnings("unchecked")
 	private void createFilterProperties(final Class parentType,
-			final Class theType, final String propertyName, PropertyScanner ps) {
+			final Class theType, final String propertyName, PropertyScanner propertyScanner) {
 
-		/* Get the beaninfo from the type object. */
+        debug(log, "createFilters(parentType=%s, theType=%s, propertyName=%s, propertyScanner=%s)", parentType, theType, propertyName, propertyScanner);
+        /* Get the beaninfo from the type object. */
 		BeanInfo beanInfo = null;
 		try {
 			beanInfo = Introspector.getBeanInfo(theType);
@@ -229,13 +232,17 @@ public class FilteringPaginator extends Paginator implements
 		/* Iterate through the properties in this type. */
 		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 
-			/*
+            debug(log, "createFilters(...): propertyDescriptor=%s, name=%s, type=%s",
+                    propertyDescriptor, propertyDescriptor.getName(), propertyDescriptor.getPropertyType());
+
+            /*
 			 * If autoJoin is enabled, then left fetch join the property.
 			 * 
 			 */
 			if (autoJoin
 					&& CrudUtils.isEntity(propertyDescriptor.getPropertyType())) {
-				joins.add(Join.leftJoinFetch(propertyDescriptor.getName()));
+                debug(log, "autojoin was enabled left join fetching");
+                joins.add(Join.leftJoinFetch(propertyDescriptor.getName()));
 			}
 
 			if (theType == propertyDescriptor.getPropertyType()) {
@@ -244,23 +251,26 @@ public class FilteringPaginator extends Paginator implements
 				pds.add(propertyDescriptor);
 			}
 		}
-		setupFilters(parentType, theType, propertyName, ps, pds);
-		setupFilters(parentType, theType, propertyName, ps, spds);
+		setupFilters(parentType, theType, propertyName, propertyScanner, pds);
+		setupFilters(parentType, theType, propertyName, propertyScanner, spds);
 	}
 
 	/**
 	 * 
 	 * @param theType
 	 * @param propertyName
-	 * @param ps
+	 * @param propertyScanner
 	 * @param pds
 	 */
 	@SuppressWarnings("unchecked")
 	private void setupFilters(final Class parentType, final Class theType,
-			final String propertyName, PropertyScanner ps,
+			final String propertyName, PropertyScanner propertyScanner,
 			List<PropertyDescriptor> pds) {
 
-		String key;
+        debug(log, "setupFilters(parentType=%s, theType=%s, propertyName=%s, propertyScanner=%s, pds=%s)",
+                parentType, theType, propertyName, propertyScanner, pds);
+        
+        String key;
 
 		/* Iterate through the properties. */
 		for (PropertyDescriptor propertyDescriptor : pds) {
@@ -274,11 +284,15 @@ public class FilteringPaginator extends Paginator implements
 				property = propertyDescriptor.getName();
 			}
 
-			/* Create the new filterableProperty. */
+            debug(log, "setupFilters(): property=%s", property);
+
+            /* Create the new filterableProperty. */
 			FilterableProperty filterableProperty = new FilterableProperty(
 					property, propertyDescriptor.getPropertyType(), parentType);
 
-			/* Add it to our list of filterableProperties. */
+            debug(log, "setupFilters(): created new filterableProperty=%s", filterableProperty);
+
+            /* Add it to our list of filterableProperties. */
 			filterableProperties.put(property, filterableProperty);
 
 			/*
@@ -300,7 +314,10 @@ public class FilteringPaginator extends Paginator implements
 			key = parentClassName + "." + childClassName + "."
 					+ propertyDescriptor.getName();
 
-			/*
+
+            debug(log, "setupFilters(): constructed key=%s", key);
+
+            /*
 			 * See if this property is an entity or a embeddable object.
 			 */
 			if (CrudUtils.isEntity(propertyDescriptor.getPropertyType())
@@ -309,13 +326,13 @@ public class FilteringPaginator extends Paginator implements
 				/*
 				 * Ask the property scanner if we can recurse on this property
 				 * or if we have recursed on it too many time already. This is
-				 * to help us get rid of recursive loops which are as fun a
+				 * to help us get rid of infinite recursive loops which are as fun a
 				 * barrel of monkey's infected with ebola virus.
 				 */
-				if (ps.canIAddThisToTheFilterableProperties(key)) {
+				if (propertyScanner.canIAddThisToTheFilterableProperties(key)) {
 
 					createFilterProperties(parentType, propertyDescriptor
-							.getPropertyType(), property, ps);
+							.getPropertyType(), property, propertyScanner);
 
 				}
 			}
@@ -385,11 +402,14 @@ public class FilteringPaginator extends Paginator implements
 	 * filter event.
 	 */
 	public void filter() {
-		fireBeforeFilter(filterablePaginatableDataSource().group());
+
+        debug(log, "filter()");
+
+        fireBeforeFilter(filterablePaginatableDataSource().group());
 
 		List<OrderBy> orderBys = prepareUserFiltersAndExtractOrderBysForFilter();
 
-		prepareOrderByClauseProgramaticOrUserForFilter(orderBys);
+        prepareOrderByClauseProgramaticOrUserForFilter(orderBys);
 
 		prepareProgramaticCriteriaForFilter();
 
@@ -457,7 +477,10 @@ public class FilteringPaginator extends Paginator implements
 	/** Prepare UserFilters and extract OrderBys for filtering. */
 	@SuppressWarnings("unchecked")
 	private List<OrderBy> prepareUserFiltersAndExtractOrderBysForFilter() {
-		/* Clear the comparison group b/c we are about to recreate it */
+
+        debug(log, "prepareUserFiltersAndExtractOrderBysForFilter()");
+        
+        /* Clear the comparison group b/c we are about to recreate it */
 		filterablePaginatableDataSource().group().clear();
 
 		/* OrderBy collection list. */
@@ -465,36 +488,46 @@ public class FilteringPaginator extends Paginator implements
 
 		/* Iterator through the filters. */
 		Collection<FilterableProperty> values = filterableProperties.values();
-		for (FilterableProperty fp : values) {
-			/* Add the comparison to the group. */
-			if (fp.getComparison().isEnabled()
-					&& fp.getComparison().getValue() != null) {
 
-				/*
+        for (FilterableProperty filterableProperty : values) {
+            debug(log, "prepareUserFiltersAndExtractOrderBysForFilter() : filterableProperty=%s", filterableProperty);
+            
+            /* Add the comparison to the group. */
+			if (filterableProperty.getComparison().isEnabled()
+					&& filterableProperty.getComparison().getValue() != null) {
+
+                debug(log, "prepareUserFiltersAndExtractOrderBysForFilter() : filterableProperty is enabled and value is set");
+
+                /*
 				 * If it is an Enumerator, let's convert it here. We let JSF
 				 * manage the other types, but since there is no easy way to
 				 * tell JSF about the Enumerator, we just convert it here since
 				 * comparison.getValue() is an Object.
 				 */
-				if (fp.isEnum()) {
-					Enum theEnumValue = Enum.valueOf(fp.getType(), (String) fp
+				if (filterableProperty.isEnum()) {
+					Enum theEnumValue = Enum.valueOf(filterableProperty.getType(), (String) filterableProperty
 							.getComparison().getValue());
 					Comparison eqc = Comparison.eq(
-							fp.getComparison().getName(), theEnumValue);
+							filterableProperty.getComparison().getName(), theEnumValue);
 					filterablePaginatableDataSource().group().add(eqc);
 				} else {
 					filterablePaginatableDataSource().group().add(
-							fp.getComparison());
+							filterableProperty.getComparison());
 				}
-			}
+			} else if (filterableProperty.getComparison().isEnabled()
+					&& filterableProperty.getComparison().getValue() == null) {
+                info(log, "prepareUserFiltersAndExtractOrderBysForFilter() : PROPERTY WAS ENABLED, but value is not set fp=%s", filterableProperty);
+
+            }
 
 			/* Add the order by clause to the list. */
-			if (fp.getOrderBy().isEnabled()) {
-				orderBys.add(fp.getOrderBy());
+			if (filterableProperty.getOrderBy().isEnabled()) {
+				orderBys.add(filterableProperty.getOrderBy());
 			}
 
 		}
-		return orderBys;
+        debug(log, "prepareUserFiltersAndExtractOrderBysForFilter() : orderBys=%s", orderBys);
+        return orderBys;
 	}
 
 	/** Clear all of the filterable properties. */
@@ -603,7 +636,8 @@ public class FilteringPaginator extends Paginator implements
 	 * 
 	 */
 	protected void fireBeforeFilter(Group group) {
-		FilteringEvent fe = new FilteringEvent(this, group);
+        debug (log, "fireBeforeFilter(group=%s)", group);
+        FilteringEvent fe = new FilteringEvent(this, group);
 		for (FilteringListener fl : listeners) {
 			fl.beforeFilter(fe);
 		}
@@ -614,7 +648,8 @@ public class FilteringPaginator extends Paginator implements
 	 * 
 	 */
 	protected void fireAfterFilter(Group group) {
-		FilteringEvent fe = new FilteringEvent(this, group);
+        debug (log, "fireAfterFilter(group=%s)", group);
+        FilteringEvent fe = new FilteringEvent(this, group);
 		for (FilteringListener fl : listeners) {
 			fl.afterFilter(fe);
 		}

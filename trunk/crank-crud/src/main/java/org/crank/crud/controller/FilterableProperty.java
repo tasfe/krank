@@ -185,4 +185,9 @@ public class FilterableProperty implements Serializable, Toggleable {
 	public void setParentType(Class parentType) {
 		this.parentType = parentType;
 	}
+
+    public String toString() {
+        return String.format("FilterableProperty(comparison=%s, orderBy=%s, type=%s, parentType=%s, autoCreatePrependParentAlias=%s)", 
+                this.getComparison(), this.orderBy, this.getType(), this.getParentType(), this.isAutoCreatePrependParentAlias());
+    }
 }

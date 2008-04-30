@@ -259,7 +259,8 @@
 							</h:column>
 						</c:forEach>				
 					</rich:dataTable>
-				</h:panelGrid>
+                    <a4j:commandLink action="#{jsfSelectOneController.unselect}" value="unselect" styleClass="imageCenter" immediate="true"/>                    
+                </h:panelGrid>
 			</crank:node>				
 			<ui:insert/>
 		</h:panelGrid>

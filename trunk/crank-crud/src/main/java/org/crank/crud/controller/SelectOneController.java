@@ -2,6 +2,9 @@ package org.crank.crud.controller;
 
 import org.apache.log4j.Logger;
 import static org.crank.core.LogUtils.debug;
+import org.crank.core.CrankValidationException;
+import org.crank.message.MessageManagerUtils;
+import org.crank.message.MessageUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -26,7 +29,7 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
     protected String labelProperty = "name";
     protected String sourcePropertyName = null;
     protected SelectSupport selectSupport = new SelectSupport(this);
-    protected CrudControllerBase<T, PK> controller;
+    protected CrudControllerBase<T, PK> crudController;
     protected Logger logger = Logger.getLogger(SelectOneController.class);
     protected Object parentEntity = null;
 
@@ -35,9 +38,10 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
     public SelectOneController(Class entityClass, String propertyName, FilterablePageable pageable, CrudOperations crudController) {
         debug(logger, "JsfSelectOneListingController(entityClass=%s, propertyName=%s, pageable=%s, crudController=%s)", entityClass, propertyName, pageable, crudController);
         this.paginator = pageable;
-        controller = (CrudControllerBase<T, PK>) crudController;
+        this.crudController = (CrudControllerBase<T, PK>) crudController;
         this.targetPropertyName = propertyName;
         this.entityClass = entityClass;
+        init();
     }
 
     public SelectOneController(Class entityClass, String propertyName, FilterablePageable pageable, CrudOperations crudController, String sourceProperty) {
@@ -57,6 +61,28 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
         this.paginator = pageable;
         this.parentEntity = parentEntity;
         this.targetPropertyName = controllerProperty;
+        init();
+    }
+
+
+    protected void init() {
+        debug(logger, "init() called");
+        if (crudController!=null) {
+            debug(logger, "Register event handler.");
+            crudController.addCrudControllerListener(new CrudControllerAdapter(){
+                @Override
+                public void beforeCreate(CrudEvent event) {
+                    prepareUpdate();
+                }
+
+                @Override
+                public void beforeUpdate(CrudEvent event) {
+                    prepareUpdate();
+                }
+            });
+        } else {
+
+        }
     }
 
 
@@ -86,51 +112,51 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
             valueProperty = valueWrapper.getPropertyValue(this.sourcePropertyName);
             debug(logger, "select(): this value was selected from sourcePropertyName : valueProperty = %s", valueProperty);
         }
-        BeanWrapper wrappedParentEntity = extractWrappedParent();
 
-        /* If we found a target object, then use the target property to set the new value. */
-        if (wrappedParentEntity != null) {
-            logger.debug("Setting the property value in the 'parent' object.");
-            wrappedParentEntity.setPropertyValue(this.targetPropertyName, valueProperty);
-        } else {
-            logger.error("Unable to find wrapped parent object. This controller is misconfigured");
-        }
+        logger.debug("Setting the property value in the 'parent' object.");
+
+        extractWrappedParent().setPropertyValue(this.targetPropertyName, valueProperty);
 
         selectSupport.fireSelect(valueProperty);
         this.show = false;
         prepareUI();
     }
 
-    private BeanWrapper extractWrappedParent() {
-        /* Try to find the target property. */
-        BeanWrapper wrappedParentEntity = null;
-        /* If the parentEnity is not equal to null then it is the object that owns the target property. */
+    private Object parentObject() {
+        Object object = null;
         if (this.parentEntity != null) {
-            logger.debug("Setting property based on parentEntity");
-            wrappedParentEntity = new BeanWrapperImpl(this.parentEntity);
-        } else if (controller != null) {
-            /* If the parentEntity was null then try to the controller as the target object. */
-            logger.debug("Setting property based on controller");
-            wrappedParentEntity = new BeanWrapperImpl(controller.getEntity());
+            object = this.parentEntity;
+        } else if (crudController != null) {
+            object = crudController.getEntity();
         } else {
-            logger.error("Either the parentEntity or controller must be set. This bean is misconfigured.");
+            logger.error("Either the parentEntity or crudController must be set. This bean is misconfigured.");
         }
-        return wrappedParentEntity;
+        return object;
+    }
+    private BeanWrapper extractWrappedParent() {
+        return new BeanWrapperImpl(parentObject());
     }
 
     public void unselect() {
-        BeanWrapper wrappedParentEntity = extractWrappedParent();
-
-        /* If we found a target object, then use the target property to set the new value. */
-        if (wrappedParentEntity != null) {
-            logger.debug("Setting the property value in the 'parent' object.");
-            wrappedParentEntity.setPropertyValue(this.targetPropertyName, null);
-        } else {
-            logger.error("Unable to find wrapped parent object. This controller is misconfigured");
-        }
+        extractWrappedParent().setPropertyValue(this.targetPropertyName, null);
         this.show = false;
         prepareUI();
 
+    }
+
+    public void prepareUpdate() {
+        debug(logger, "prepareUpdate()");
+        Class parentClass = parentObject().getClass();
+        if (CrudUtils.isRequired(parentClass, targetPropertyName)) {
+            debug(logger, "prepareUpdate() the field was required --- parentObject class = %s, entityClass=%s, targetPropertyName=%s", parentClass, entityClass, targetPropertyName);
+            if (extractWrappedParent().getPropertyValue(this.targetPropertyName) == null) {
+                debug(logger, "The field was required and it is NULL!");
+                MessageManagerUtils.getCurrentInstance().addErrorMessage("You must set %s",
+                        MessageUtils.createLabelWithNameSpace(
+                                CrudUtils.getClassEntityName(parentClass), targetPropertyName));
+                throw new CrankValidationException("");
+            }
+        }
     }
 
     public abstract void prepareUI();
@@ -153,11 +179,11 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
     }
 
     public CrudControllerBase<T, PK> getController() {
-        return controller;
+        return crudController;
     }
 
     public void setController(CrudControllerBase<T, PK> controller) {
-        this.controller = controller;
+        this.crudController = controller;
     }
 
 

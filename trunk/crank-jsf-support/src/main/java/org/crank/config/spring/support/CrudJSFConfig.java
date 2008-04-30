@@ -46,7 +46,7 @@ public abstract class CrudJSFConfig implements InitializingBean {
         
         
         for (CrudManagedObject mo : managedObjects()) {
-        	/* Create a new controller. */
+        	/* Create a new crudController. */
             CrudController crudControllerTarget = new CrudController();
             
             if (mo.isTransactionalController()) {
@@ -54,12 +54,12 @@ public abstract class CrudJSFConfig implements InitializingBean {
             	crudControllerTarget.setTransactional(true);
             }
             
-            /* Associate controller with file upload subcontroller. */
+            /* Associate crudController with file upload subcontroller. */
             crudControllerTarget.setFileUploadHandler( new TomahawkFileUploadHandler() );
             /* Register property utils. */
             crudControllerTarget.setPropertyUtil( new SpringBeanWrapperPropertiesUtil() );
             
-            /* Set the entity class into the controller. */
+            /* Set the entity class into the crudController. */
             crudControllerTarget.setEntityClass( mo.getEntityType() );
             
             
@@ -69,7 +69,7 @@ public abstract class CrudJSFConfig implements InitializingBean {
             		pagers().get(StringUtils.unCapitalize(mo.getName())), crudControllerTarget);
             
             
-            /* Put the controller into the map. */
+            /* Put the crudController into the map. */
             cruds.put(StringUtils.unCapitalize(mo.getName()), jsfCrudAdapter);
             cruds.put(mo.getName(), jsfCrudAdapter);
             crudAdded(mo.getName(), jsfCrudAdapter);

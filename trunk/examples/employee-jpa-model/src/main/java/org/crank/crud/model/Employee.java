@@ -91,6 +91,7 @@ public class Employee extends Person {
     private Set<Employee> directReports = new HashSet<Employee>();
     @ManyToOne()
     private Specialty type;
+    //@ManyToOne(optional = false)
     @ManyToOne()
     private Skill primarySkill;
     private PersistedFile file;

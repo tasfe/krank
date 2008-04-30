@@ -89,7 +89,13 @@
     </category>
 
     <category name="org.crank.message.MessageUtils">
+        <priority value="ERROR"/>
+    </category>
+
+    <category name="org.crank.crud.controller.SelectOneController">
         <priority value="DEBUG"/>
     </category>
+
+
 
 </log4j:configuration>

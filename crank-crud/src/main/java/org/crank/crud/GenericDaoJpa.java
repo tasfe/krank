@@ -113,8 +113,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		}
 		
 		if (propertyValue instanceof Number) {
+	        boolean isPrimitive = bw.getPropertyType( this.idPropertyName ).isPrimitive();
+	        
 			Number number = (Number) propertyValue;
-			if (number.longValue() <= 0) {
+			if (isPrimitive && number.longValue() <= 0) {
                 logger.debug("hasId: an id was found and it was a number, but it was less than zero returning false");
                 return false;
 			} else {

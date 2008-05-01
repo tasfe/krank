@@ -23,6 +23,7 @@ public class CrudUtils {
         allowedPackages.add( "javax.persistence" );
         allowedPackages.add( "org.crank.crud.annotations" );
         allowedPackages.add( "org.crank.jsf.annotations" );
+        allowedPackages.add( "org.crank.annotations.validation" );
     }
     
     public static boolean isFilterPropertyText(boolean autoCreatePrependParentAlias, Class<?> parentType, String property) {
@@ -75,8 +76,10 @@ public class CrudUtils {
 	        
 	        Map map = getAnnotationDataAsMap( clazz, propertyName );
 
-	        boolean found = map.get( "required" ) != null;
-	        /* If you found an annotation called required, return true. */
+
+            boolean found = map.get( "required" ) != null;
+
+            /* If you found an annotation called required, return true. */
 	        if (found) {
 	            return true;
 	        } else {

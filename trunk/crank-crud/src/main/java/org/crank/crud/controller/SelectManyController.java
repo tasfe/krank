@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.Set;
 
 import org.crank.crud.relationships.SelectManyRelationshipManager;
+import static org.crank.core.LogUtils.debug;
+import org.crank.core.CrankValidationException;
+import org.crank.message.MessageManagerUtils;
+import org.crank.message.MessageUtils;
 import org.apache.log4j.Logger;
 
 public abstract class SelectManyController<T extends Serializable, PK extends Serializable> {
@@ -24,16 +28,8 @@ public abstract class SelectManyController<T extends Serializable, PK extends Se
 		manager.setEntityClass(clazz);
 		manager.setChildCollectionProperty(propertyName);
 		
-		controller.addCrudControllerListener(new CrudControllerListener() {
+		controller.addCrudControllerListener(new CrudControllerAdapter() {
 
-			public void afterCancel(CrudEvent event) {
-			}
-
-			public void afterCreate(CrudEvent event) {
-			}
-
-			public void afterDelete(CrudEvent event) {
-			}
 
 			public void afterLoadCreate(CrudEvent event) {
                 initEntity();
@@ -47,31 +43,17 @@ public abstract class SelectManyController<T extends Serializable, PK extends Se
 				initEntity();
 			}
 
-			public void afterUpdate(CrudEvent event) {
-			}
-
-			public void beforeCancel(CrudEvent event) {
-			}
 
 			public void beforeCreate(CrudEvent event) {
 				initEntity();
-			}
+                prepareUpdate();
 
-			public void beforeDelete(CrudEvent event) {
-			}
-
-			public void beforeLoadCreate(CrudEvent event) {
-			}
-
-			public void beforeLoadListing(CrudEvent event) {
-			}
-
-			public void beforeRead(CrudEvent event) {
-			}
+            }
 
 			public void beforeUpdate(CrudEvent event) {
 				initEntity();
-			}}
+                prepareUpdate();
+            }}
 		);
 
         paginator.addPaginationListener(new PaginationListener(){
@@ -93,6 +75,27 @@ public abstract class SelectManyController<T extends Serializable, PK extends Se
     	
     }
 
+    public void prepareUpdate() {
+        debug(logger, "prepareUpdate()");
+
+        Class parentClass = controller.getEntityClass();
+
+        debug(logger, "prepareUpdate() is the field required --- parentObject class = %s, childCollectionProperty=%s",
+                    parentClass, manager.getChildCollectionProperty());
+
+        if (CrudUtils.isRequired(parentClass, manager.getChildCollectionProperty())) {
+            debug(logger, "prepareUpdate() the field was required --- parentObject class = %s, childCollectionProperty=%s",
+                    parentClass, manager.getChildCollectionProperty());
+
+            if (manager.getChildCollectionAsCollection()==null || manager.getChildCollectionAsCollection().size() == 0) {
+                debug(logger, "The field was required and it is NULL!");
+                MessageManagerUtils.getCurrentInstance().addErrorMessage("You must set %s",
+                        MessageUtils.createLabelWithNameSpace(
+                                CrudUtils.getClassEntityName(parentClass), manager.getChildCollectionProperty()));
+                throw new CrankValidationException("");
+            }
+        }
+    }
     public void processPaginationEvent() {
         this.manager.setParentObject(controller.getEntity());
         this.manager.process(getSelectedEntities(), getEntitiesInView());
@@ -100,7 +103,7 @@ public abstract class SelectManyController<T extends Serializable, PK extends Se
 
     public void initEntity() {
         if (logger.isDebugEnabled()){
-            logger.debug(String.format("Manager manager=%s crudController=%s entity=%s",manager, controller, controller.getEntity()));
+            logger.debug(String.format("Manager manager=%s crudController=%s entity=%s", manager, controller, controller.getEntity()));
         }
         manager.setParentObject(controller.getEntity());
     }

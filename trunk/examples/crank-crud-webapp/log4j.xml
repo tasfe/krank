@@ -92,7 +92,7 @@
         <priority value="ERROR"/>
     </category>
 
-    <category name="org.crank.crud.controller.SelectOneController">
+    <category name="org.crank.crud.controller.SelectManyController">
         <priority value="DEBUG"/>
     </category>
 

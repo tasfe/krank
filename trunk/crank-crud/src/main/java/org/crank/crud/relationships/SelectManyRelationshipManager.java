@@ -25,6 +25,10 @@ public class SelectManyRelationshipManager extends RelationshipManager {
     public String toString() {
        return String.format("SelectManyRelationshipManager(parentObject=%s, idProperty=%s,  labelProperty=%s)", parentObject, idProperty, labelProperty);
     }
+
+    public Collection getChildCollectionAsCollection() {
+          return (Collection) getChildCollection(this.parentObject);
+    }
     
     @SuppressWarnings("unchecked")
 	public void process(Set<Object> selectedRelatedEntities, Set<Object> entitiesInView) {

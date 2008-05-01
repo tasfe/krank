@@ -39,10 +39,8 @@ public class CrudUtilsTest extends TestCase{
     @Test()
     public void testIsManyToOne() {
         assertFalse(CrudUtils.isManyToOne( Employee.class, "age"));
-        assertTrue(CrudUtils.isManyToOne( Employee.class, "department"));
-        
-        //assertFalse(CrudUtils.isManyToOneOptional(Employee.class, "department"));
         assertTrue(CrudUtils.isManyToOneOptional(Employee.class, "clientDepartment"));
+        assertTrue(CrudUtils.isManyToOne( Employee.class, "department"));
 
     }
     
@@ -54,9 +52,10 @@ public class CrudUtilsTest extends TestCase{
 
     @Test
     public void testIsRequired() {
-        assertTrue(CrudUtils.isRequired( Employee.class, "numberOfPromotions"));
-        assertTrue(CrudUtils.isRequired( Employee.class, "age"));
-        assertFalse(CrudUtils.isRequired( Employee.class, "department"));
+//        assertTrue(CrudUtils.isRequired( Employee.class, "numberOfPromotions"));
+//        assertTrue(CrudUtils.isRequired( Employee.class, "age"));
+        assertTrue(CrudUtils.isRequired( Employee.class, "department"));
+        
     }
     
 }

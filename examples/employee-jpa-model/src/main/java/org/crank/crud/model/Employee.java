@@ -114,6 +114,7 @@ public class Employee extends Person {
 		return roles;
 	}
 
+    @Required
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}

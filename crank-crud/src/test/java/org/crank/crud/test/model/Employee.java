@@ -1,5 +1,8 @@
 package org.crank.crud.test.model;
 
+
+
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +14,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
+import org.crank.annotations.validation.Required;
 
 
 @SuppressWarnings("serial")
@@ -105,8 +109,8 @@ public class Employee extends Person {
 	@Column (name="department_id", insertable=false, updatable=false)
 	private Long departmentId;
 	
-	@ManyToOne(fetch=FetchType.LAZY, optional=true)
-	private Department department;
+	@ManyToOne(fetch=FetchType.LAZY, optional=true) @Required
+    private Department department;
 	
 	@ManyToOne(fetch=FetchType.LAZY, optional=true)
 	private Department clientDepartment;
@@ -118,7 +122,8 @@ public class Employee extends Person {
 		return department;
 	}
 
-	public void setDepartment(Department department) {
+
+    public void setDepartment(Department department) {
 		this.department = department;
 	}
 
@@ -183,7 +188,8 @@ public class Employee extends Person {
 		return departmentId;
 	}
 
-	public void setDepartmentId(Long departmentId) {
+
+    public void setDepartmentId(Long departmentId) {
 		this.departmentId = departmentId;
 	}
 

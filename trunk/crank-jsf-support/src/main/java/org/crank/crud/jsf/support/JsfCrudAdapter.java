@@ -115,7 +115,12 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
     	   selectedEntity = null;
     	   return (T) tmp;
        }
-       return (T) ((Row)model.getRowData()).getObject();
+       else if (model.isRowAvailable()) {
+           return (T) ((Row)model.getRowData()).getObject();
+       }
+       else {
+           return null;
+       }
     }
     
     private Object selectedEntity;

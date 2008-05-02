@@ -40,37 +40,74 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
 
 	public void validate(final Object object, final Errors errors) {
 		SpringValidatorContext.create();
-		
 		validateObject(object, errors);
 		SpringValidatorContext.destroy();
 		
 	}
 
 	private void validateObject(final Object object, final Errors errors) {
-		List<PropertyDescriptor> fieldsToValidate = getFieldsToValidate(object);
-		Map<String, Object> objectPropertiesAsMap = validatorPropertiesUtil.getObjectPropertiesAsMap(object);
-		CrankWebContext crankWebContext = CrankWebContext.getInstance();
-		Set paramSet = crankWebContext.getRequestParameters().keySet();
-		for (PropertyDescriptor field : fieldsToValidate){
-			SpringValidatorContext.get().pushProperty(field.getName());
-            SpringValidatorContext.get().setParentObject(object);
-			if (shouldFieldBeValidated(paramSet)) {
-				Object propertyObject = objectPropertiesAsMap.get(field.getName());
-				validateProperty(object, propertyObject, field.getName(), errors);
-				if (propertyObject!=null) {
-					validateObject(propertyObject, errors);
-				}
-			}
-			SpringValidatorContext.get().pop();
+
+        List <MessageHolder> validationMessages = doValidateObject(object);
+        for (MessageHolder message  : validationMessages) {
+             extractMessages(message.propertyPath, errors, message.holder);
+        }
+
+	}
+
+    @SuppressWarnings("unchecked")
+	private void extractMessages(final String property, final Errors errors, ValidatorMessageHolder holder) {
+		ValidatorMessages messages = (ValidatorMessages) holder;
+		for (ValidatorMessage message : messages){
+			errors.rejectValue(property, null, null, message.getDetail());
 		}
 	}
 
 
-	
-	@SuppressWarnings("unchecked")
-	private boolean shouldFieldBeValidated(final Set paramSet) {
-		String bindingPath = SpringValidatorContext.getBindingPath();
-		return paramSet.contains(bindingPath) ? true : shouldNestedFieldBeValidated(bindingPath, paramSet); 
+    class MessageHolder {
+        private String propertyPath;
+        private ValidatorMessageHolder holder;
+
+        MessageHolder(String propertyPath, ValidatorMessageHolder holder) {
+            this.propertyPath = propertyPath;
+            this.holder = holder;
+        }
+    }
+
+    private List <MessageHolder> doValidateObject(final Object object) {
+        return doValidateObject(object, null);
+    }
+    private List <MessageHolder> doValidateObject(final Object object, List <MessageHolder> validationMessages) {
+		List<PropertyDescriptor> fieldsToValidate = getFieldsToValidate(object);
+		Map<String, Object> objectPropertiesAsMap = validatorPropertiesUtil.getObjectPropertiesAsMap(object);
+        if (validationMessages==null) {
+            validationMessages = new ArrayList<MessageHolder>();
+        }
+        
+        for (PropertyDescriptor field : fieldsToValidate){
+
+            /* Keep track of the field name and parentObject so the field validators can access them. */
+            SpringValidatorContext.get().pushProperty(field.getName());
+            SpringValidatorContext.get().setParentObject(object);
+			if (shouldFieldBeValidated()) {
+				Object propertyObject = objectPropertiesAsMap.get(field.getName());
+				validateProperty(object, propertyObject, field.getName(), validationMessages);
+				if (propertyObject!=null) {
+					doValidateObject(propertyObject, validationMessages);
+				}
+			}
+			SpringValidatorContext.get().pop();
+		}
+
+        return validationMessages;
+
+    }
+
+    @SuppressWarnings("unchecked")
+	private boolean shouldFieldBeValidated() {
+		CrankWebContext crankWebContext = CrankWebContext.getInstance();
+        Set paramSet = crankWebContext.getRequestParameters().keySet();
+        String bindingPath = SpringValidatorContext.getBindingPath();
+		return paramSet.contains(bindingPath) || shouldNestedFieldBeValidated(bindingPath, paramSet); 
 	}
 
 	private boolean shouldNestedFieldBeValidated(String bindingPath, Set<String> paramSet) {
@@ -87,24 +124,18 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
 		return false;
 	}
 
-	private void validateProperty(final Object object, final Object objectProperty, final String property,
-			final Errors errors) {
-		
-		List<ValidatorMetaData> metaDataList = readMetaData(object.getClass(), 
-				property);
-		CompositeValidator cv = createValidator(metaDataList);
-		ValidatorMessageHolder holder = cv.validate(objectProperty, property);
-		extractMessages(SpringValidatorContext.getBindingPath(), errors, holder);
-	}
+    private void validateProperty(final Object object, final Object objectProperty, final String property,
+            List <MessageHolder> vMessageHolders) {
 
-	@SuppressWarnings("unchecked")
-	private void extractMessages(final String property, final Errors errors, ValidatorMessageHolder holder) {
-		ValidatorMessages messages = (ValidatorMessages) holder;
-		for (ValidatorMessage message : messages){
-			errors.rejectValue(property, null, null, message.getDetail());
-		}
-	}
-	
+        List<ValidatorMetaData> metaDataList = readMetaData(object.getClass(),
+                property);
+        CompositeValidator cv = createValidator(metaDataList);
+        ValidatorMessageHolder holder = cv.validate(objectProperty, property);
+        vMessageHolders.add(new MessageHolder(SpringValidatorContext.getBindingPath(), holder));
+    }
+    
+
+
 	private List<PropertyDescriptor> getFieldsToValidate(Object object) {
 		/** TODO read validate field list from request param. 
 		 * TODO create a request context simliar to JSF facesContext to easily
@@ -112,7 +143,7 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
 		 */
 		List<PropertyDescriptor> properties;
 		//IF PARAM NOT FOUND... GET ALL PROPERTIES 
-		BeanInfo beanInfo = null;
+		BeanInfo beanInfo;
 		try {
 			beanInfo = Introspector.getBeanInfo(object.getClass());
 		} catch (IntrospectionException e) {
@@ -141,7 +172,7 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
 	 * 
 	 * @param validationMetaDataList
 	 *            Holds metadataInformation about validation.
-	 * @return
+     * @return composite validator with all of the validators for this property present.
 	 */
 	protected CompositeValidator createValidator(
 			List<ValidatorMetaData> validationMetaDataList) {
@@ -177,6 +208,8 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
 	/**
 	 * Lookup the list of validators for the current field and initialize them
 	 * with validation meta-data properties.
+     * @param validationMetaDataList list of validation meta-data
+     * @return list of field validators.
 	 */
 	private List<FieldValidator> 
 	   lookupTheListOfValidatorsAndInitializeThemWithMetaDataProperties(
@@ -211,29 +244,26 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
 	 * @param validationMetaDataName
 	 *            The name of the validator that we are looking up.
 	 * 
-	 * @return
+	 * @return field validator
 	 */
 	private FieldValidator lookupValidatorInRegistry(
 			String validationMetaDataName) {
 		ObjectRegistry applicationContext = CrankContext.getObjectRegistry();
 
-		FieldValidator validator = (FieldValidator) applicationContext
+		return (FieldValidator) applicationContext
 				.getObject(CrankConstants.FRAMEWORK_PREFIX
 						+ CrankConstants.FRAMEWORK_DELIM + "validator"
 						+ CrankConstants.FRAMEWORK_DELIM
 						+ validationMetaDataName, FieldValidator.class);
-		return validator;
 	}
 
 	/**
 	 * This method applies the properties from the validationMetaData to the
 	 * validator uses Spring's BeanWrapperImpl.
 	 * 
+	 * @param metaData validation meta data
+     * @param validator field validator
 	 * 
-	 * @param validationMetaDataName
-	 *            The name of the validator that we are looking up.
-	 * 
-	 * @return
 	 */
 	private void applyValidationMetaDataPropertiesToValidator(
 			ValidatorMetaData metaData, FieldValidator validator) {
@@ -249,7 +279,8 @@ public class SpringMVCBridgeMetaDataDrivenValidator implements Validator {
      *  This allows the property to have a null or emtpy string in the
      *  meta-data but we don't copy it to the validator if the property
      *  is not set.
-     *  @author Rick Hightower 
+     * @param properties  properties
+     * @param property    property
      * */
 	private void ifPropertyBlankRemove(Map<String, Object> properties, String property) {
 	    Object object = properties.get(property);

@@ -46,6 +46,7 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
     public JsfCrudAdapter(FilterablePageable filterablePageable, CrudOperations<T> crudController) {
         this.paginator = filterablePageable;
         this.controller = crudController;
+        crudController.addCrudControllerListener( new CancelListener() );
         if (crudController instanceof CrudController) {
         	((CrudController<T, PK>)crudController).setEntityLocator( this );
         }
@@ -191,4 +192,11 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
         return selectedList;
     }
 
+    class CancelListener extends CrudControllerListenerAdapter {
+       @Override
+        public void afterCancel( CrudEvent event ) {
+            clear(); // ensure that entity edit that was canceled is resync'd with DB
+        }
+        
+    }
 }

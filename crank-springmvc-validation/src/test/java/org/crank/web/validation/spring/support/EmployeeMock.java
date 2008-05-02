@@ -24,7 +24,7 @@ public class EmployeeMock {
 	}
 	
 	@Required (summaryMessage="First name is required", detailMessage="required")
-    @Regex (match="Rick", summaryMessage="Hello", detailMessage="world")
+    @Regex (match="Rick", summaryMessage="Hello", detailMessage="regex message")
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}

@@ -17,9 +17,17 @@
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.5</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                        <version>1.2.13</version>
+                        <type>jar</type>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
-
     </build>
 
     <dependencies>

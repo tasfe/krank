@@ -7,32 +7,39 @@
 <beans default-autowire="byType">
 
 	<bean class="org.crank.validation.validators.TestResourceBundleLocator"/>
-	<bean id="jsfBridgeValidatorMetaDataReader" class="org.crank.validation.readers.PropertiesFileValidatorMetaDataReader" />	
-	 <bean id="jsfBridgeValidatorPropertiesUtil" 
+	<bean id="jsfBridgeValidatorMetaDataReader" class="org.crank.validation.readers.PropertiesFileValidatorMetaDataReader" />
+	 <bean id="jsfBridgeValidatorPropertiesUtil"
 	       class="org.crank.core.spring.support.SpringBeanWrapperPropertiesUtil"/>
 
-	
-	<bean name="crank/validator/domainValidator" 
-	      class="org.crank.validation.validators.DomainValidator"  
+
+	<bean name="crank/validator/domainValidator"
+	      class="org.crank.validation.validators.DomainValidator"
 	      singleton="false"/>
 
-	<bean name="crank/validator/required" 
-	      class="org.crank.validation.validators.RequiredValidator"  
+	<bean name="crank/validator/required"
+	      class="org.crank.validation.validators.RequiredValidator"
 	      singleton="false"/>
 
-	<bean name="crank/validator/range" 
-	      class="org.crank.validation.validators.LongRangeValidator"  
+	<bean name="crank/validator/range"
+	      class="org.crank.validation.validators.LongRangeValidator"
 	      singleton="false">
 	      <property name="min" value="10"/>
 	      <property name="max" value="100"/>
 	</bean>
-	
-	<bean id="dontMatchValidator" class="org.crank.validation.validators.RegexValidator">
+
+    <bean name="crank/validator/regex"
+         class="org.crank.validation.validators.RegexValidator"
+         singleton="false">
+         <property name="match" value="this gets set by the annotations you could set a default here, but why?"/>
+    </bean>
+    
+
+    <bean id="dontMatchValidator" class="org.crank.validation.validators.RegexValidator">
 		<property name="negate"><value>true</value></property>
 	</bean>
 
 	<bean id="matchValidator" class="org.crank.validation.validators.RegexValidator"/>
-	
+
 	<bean id="noIdenticalThreeDigitsValidator" parent="dontMatchValidator">
 		<property name="match">
 			<value>222|333|444|555|666|777|888|999</value>
@@ -74,11 +81,11 @@
 			<value>^(\d+ \w+)|(\w+ \d+)$</value>
 		</property>
 	</bean>
-	
+
 	<bean id="required" class="org.crank.validation.validators.RequiredValidator" />
 	<bean name="lre2FormPage:firstMortgageRateType" parent="required" />
 	<bean name="firstMortgageRateType" parent="required" />
-	
+
 
 	<bean name="firstName" parent="alphaLettersHyphenSpaces">
 	    <property name="parent">
@@ -93,7 +100,7 @@
             <list>
                 <value>validator.lastName.label.detail</value>
             </list>
-        </property>             
+        </property>
 	</bean>
 
 	<bean name="lastName" parent="alphaLettersHyphenSpaces" >
@@ -109,7 +116,7 @@
             <list>
                 <value>validator.lastName.label.detail</value>
             </list>
-        </property>             
+        </property>
 	</bean>
 
 	<bean name="address" parent="oneLetterOneNumber">
@@ -125,9 +132,9 @@
             <list>
                 <value>validator.address.label.detail</value>
             </list>
-        </property>             
+        </property>
 	</bean>
-	
+
     <bean name="areaCode" class="org.crank.validation.validators.CompositeValidator">
         <property name="summaryArgs">
             <list>
@@ -138,7 +145,7 @@
             <list>
                 <value>validator.areaCode.label</value>
             </list>
-        </property>             
+        </property>
     	<property name="validatorList">
     		<list>
 	    		<ref local="mustBeThreeDigitNumericValidator" />
@@ -147,7 +154,7 @@
     		</list>
     	</property>
     </bean>
-    
+
     <bean name="preferredAreaCode" parent="areaCode" />
     <bean name="alternateAreaCode" parent="areaCode" />
     <bean name="preferredPrefix" parent="prefix" />
@@ -160,7 +167,7 @@
 	<bean id="city" parent="alphaLettersHyphenSpaces"/>
 	<bean id="state" parent="alphaLettersHyphenSpaces"/>
     <bean name="street" parent="oneLetterOneNumber" /> <!--  TODO test -->
-    
+
 	<bean id="propertyCity" parent="city"/>
 	<bean id="propertyState" parent="state"/>
     <bean name="propertyStreet" parent="street"/>
@@ -170,7 +177,7 @@
 			<value>^[0-9]{5}$</value>
 		</property>
 	</bean>
-	
+
 	<bean name="propertyZipCode" parent="zipCode"/>
 
     <bean name="prefix" class="org.crank.validation.validators.CompositeValidator">
@@ -183,7 +190,7 @@
             <list>
                 <value>validator.prefix.label</value>
             </list>
-        </property>             
+        </property>
     	<property name="validatorList">
     		<list>
 	    		<ref local="mustBeThreeDigitNumericValidator"/>
@@ -202,14 +209,14 @@
             <list>
                 <value>validator.station.label</value>
             </list>
-        </property>             
+        </property>
     	<property name="validatorList">
     		<list>
 	    		<ref local="mustBeFourDigitNumericValidator"/>
     		</list>
     	</property>
     </bean>
-    
+
     <bean name="daytimeAreaCode" parent="areaCode">
 		<property name="summaryArgs">
 			<list>
@@ -288,13 +295,13 @@
 		</property>
 	</bean>
 
-    
+
     <bean name="email" class="org.crank.validation.validators.CommonBridgeValidator">
     	<property name="validatorClass">
     		<value>org.apache.commons.validator.EmailValidator</value>
     	</property>
     </bean>
-    
+
     <bean id="beanNameInjector" class="org.crank.core.spring.support.NameAwareNameInjectorBeanPostProcessor"/>
 
 

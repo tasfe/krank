@@ -1,12 +1,12 @@
-package org.crank.web.validation.spring.support;
+package org.crank.validation;
 
 import junit.framework.TestCase;
 
-public class SpringValidatorContextTest extends TestCase {
+public class ValidationContextTest extends TestCase {
 
 	public void testGetBindingPath() {
-		SpringValidatorContext.create();
-		SpringValidatorContext context = SpringValidatorContext.get();
+		ValidationContext.create();
+		ValidationContext context = ValidationContext.get();
 		EmployeeMock employee = new EmployeeMock();
 		
 		context.pushObject(employee);
@@ -15,17 +15,17 @@ public class SpringValidatorContextTest extends TestCase {
 		context.pushProperty("line1");
 		
 		assertEquals("employeeMock.department.address.line1", 
-				SpringValidatorContext.getBindingPath());
+				ValidationContext.getBindingPath());
 		
 		context.pop();
 
 		assertEquals("employeeMock.department.address", 
-				SpringValidatorContext.getBindingPath());
+				ValidationContext.getBindingPath());
 		
-		SpringValidatorContext.destroy();
+		ValidationContext.destroy();
 
 		assertEquals("", 
-				SpringValidatorContext.getBindingPath());
+				ValidationContext.getBindingPath());
 		
 	}
 

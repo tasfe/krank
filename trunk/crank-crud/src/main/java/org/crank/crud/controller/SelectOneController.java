@@ -115,7 +115,9 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
 
         logger.debug("Setting the property value in the 'parent' object.");
 
-        extractWrappedParent().setPropertyValue(this.targetPropertyName, valueProperty);
+        if (parentObject()!=null) {
+            extractWrappedParent().setPropertyValue(this.targetPropertyName, valueProperty);
+        }
 
         selectSupport.fireSelect(valueProperty);
         this.show = false;

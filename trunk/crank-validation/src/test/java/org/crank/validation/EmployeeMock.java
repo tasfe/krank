@@ -1,7 +1,9 @@
-package org.crank.web.validation.spring.support;
+package org.crank.validation;
 
 import org.crank.annotations.validation.Regex;
 import org.crank.annotations.validation.Required;
+import org.crank.validation.AddressMock;
+import org.crank.validation.DepartmentMock;
 
 public class EmployeeMock {
 	

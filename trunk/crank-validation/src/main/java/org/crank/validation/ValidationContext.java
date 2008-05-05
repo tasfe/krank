@@ -1,6 +1,7 @@
 package org.crank.validation;
 
 import java.util.Map;
+import java.util.Stack;
 
 /** This is the validator context. 
  *  It holds thread local state that is important to validation.
@@ -8,7 +9,11 @@ import java.util.Map;
  *  to abstract and simplify access to the context of things we need to perform validation.
  *  @author Rick Hightower
  * */
-public abstract class ValidationContext {
+public class ValidationContext {
+
+
+    private Stack<String> bindingPath = new Stack<String>();
+    
     
     /** Holds the parent object of the field. A parent object is an
      * object that contains fields.*/
@@ -18,26 +23,28 @@ public abstract class ValidationContext {
     private Map<String, Object> params;
     
     /** Holds the data(context) for the current thread. */
-    private static ThreadLocal holder = new ThreadLocal();
+    private static ThreadLocal<ValidationContext> holder = new ThreadLocal<ValidationContext>();
     
-    /** Provides access to the ValidationContext. */
+    /** Provides access to the ValidationContext.
+     * @return xx
+     * */
     public static ValidationContext getCurrentInstance() {
-        return (ValidationContext) holder.get();
+        return holder.get();
     }
     
     /**Allows the subclass to register an instance of itself 
      * as the context. The subclass will either be JSF, Struts 2 (WebWork) or
      * Spring MVC aware.
      * 
-     * @param context
+     * @param context xx
      */
     protected void register(ValidationContext context) {
-        holder.set((ValidationContext)context);
+        holder.set(context);
     }
 
     /** Get the parent object. Allows the FieldValidators to access
      * the parent object. 
-     * @return
+     * @return xx
      */
     public Object getParentObject() {
         return parentObject;
@@ -45,7 +52,7 @@ public abstract class ValidationContext {
     
     /** Allows our integration piece for JSF or Spring MVC to set the 
      * parent object. The parent object is the form bean in Spring MVC speak.
-     * @param parentObject
+     * @param parentObject  xx
      */
     public void setParentObject(Object parentObject) {
         this.parentObject = parentObject;
@@ -53,7 +60,7 @@ public abstract class ValidationContext {
 
     /**
      * Proivde a list of parameters that we can access from field validators.
-     * @return
+     * @return xx
      */
     public Map<String, Object> getParams() {
         return params;
@@ -66,8 +73,59 @@ public abstract class ValidationContext {
     /**
      * Gets the proposed property value.
      * This is the value before it gets applied to the actual bean.
-     * @param propertyName
-     * @return
+     * @param propertyName  xx
+     * @return   xx
      */
-    public abstract Object getProposedPropertyValue(String propertyName);
+    public Object getProposedPropertyValue(String propertyName) {
+        return null;
+    }
+
+    private String calculateBindingPath() {
+        StringBuilder builder = new StringBuilder(255);
+        int index = 0;
+        for (String component : bindingPath) {
+            index++;
+            builder.append(component);
+            if (index!=bindingPath.size()) {
+                builder.append('.');
+            }
+        }
+        return builder.toString();
+    }
+
+    public void pop () {
+        bindingPath.pop();
+    }
+
+    public void pushProperty (final String component) {
+        bindingPath.push(component);
+    }
+    public void pushObject (final Object object) {
+        String simpleName = object.getClass().getSimpleName();
+        simpleName = simpleName.substring(0,1).toLowerCase() + simpleName.substring(1,simpleName.length());
+        bindingPath.push(simpleName);
+    }
+
+    public static String getBindingPath() {
+        if (getCurrentInstance() != null) {
+            return getCurrentInstance().calculateBindingPath();
+        }
+        return "";
+    }
+
+    public static ValidationContext create() {
+        holder.set(new ValidationContext());
+        return get();
+    }
+
+    public static ValidationContext get () {
+        return holder.get();
+    }
+
+    public static void destroy() {
+        holder.set(null);
+    }
+
+
+    
 }

@@ -10,6 +10,14 @@ import org.springframework.beans.BeanWrapperImpl;
 
 import java.io.Serializable;
 
+/**
+ * This class can be used three ways.
+ * 1) Has a parentEntity
+ * 2) Works with a Crank CrudController
+ * 3) No parent object
+ *
+ *
+ */
 public abstract class SelectOneController<T extends Serializable, PK extends Serializable> implements Selectable {
 
     /**
@@ -24,13 +32,30 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
      * Target property.
      */
     protected String targetPropertyName;
+
+    /** Entity class of the class instance that are being selected. */
     protected Class entityClass;
+
+    /** Name of the id property. */
     protected String idProperty = "id";
+
+    /** Name of the label property in the entity class. */
     protected String labelProperty = "name";
+
+    /** Name of the property we are looking up from the selected entity. */
     protected String sourcePropertyName = null;
+
+    /** Selection support class. Fires events and such. */ 
     protected SelectSupport selectSupport = new SelectSupport(this);
+
+    /** CrudControllerBase class. Holds the parent entity instance. */
     protected CrudControllerBase<T, PK> crudController;
+
+
+    /** Used for logging. */
     protected Logger logger = Logger.getLogger(SelectOneController.class);
+
+    /* Optional parentEntity. */
     protected Object parentEntity = null;
 
 
@@ -96,22 +121,13 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
 
     public abstract Row getSelectedRow();
 
+    /** This method get called when the users selects a row from the table. */
     public void select() {
         Row selectedRow = getSelectedRow();
         Object valueBean = selectedRow.getObject();
         debug(logger, "select(): selectedRow=%s, valueBean=%s", selectedRow, valueBean);
+        Object valueProperty = getValueProperty(valueBean);
 
-        /* If no source property is found than the value property is set to the selected object. */
-        Object valueProperty = valueBean;
-
-        /* If the sourceProperty is found,
-           * then get the current value of the source property from the selected row. */
-        if ((sourcePropertyName != null) && !"".equals(sourcePropertyName)) {
-            debug(logger, "select() found source property: sourcePropertyName=%s", sourcePropertyName);
-            BeanWrapper valueWrapper = new BeanWrapperImpl(valueBean);
-            valueProperty = valueWrapper.getPropertyValue(this.sourcePropertyName);
-            debug(logger, "select(): this value was selected from sourcePropertyName : valueProperty = %s", valueProperty);
-        }
 
         logger.debug("Setting the property value in the 'parent' object.");
 
@@ -124,6 +140,25 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
         prepareUI();
     }
 
+    private Object getValueProperty(Object valueBean) {
+        /* If no source property is found than the value property is set to the selected object. */
+        Object valueProperty = valueBean;
+
+        /* If the sourceProperty is found,
+           * then get the current value of the source property from the selected row. */
+        if ((sourcePropertyName != null) && !"".equals(sourcePropertyName)) {
+            debug(logger, "select() found source property: sourcePropertyName=%s", sourcePropertyName);
+            BeanWrapper valueWrapper = new BeanWrapperImpl(valueBean);
+            valueProperty = valueWrapper.getPropertyValue(this.sourcePropertyName);
+            debug(logger, "select(): this value was selected from sourcePropertyName : valueProperty = %s", valueProperty);
+        }
+        return valueProperty;
+    }
+
+    /** Get the parent object which is either the entity contained by the crudController or the parentEntity or none.
+     * This method could return null.
+     * @return the parent object.
+     * */
     private Object parentObject() {
         Object object = null;
         if (this.parentEntity != null) {
@@ -131,7 +166,7 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
         } else if (crudController != null) {
             object = crudController.getEntity();
         } else {
-            logger.error("Either the parentEntity or crudController must be set. This bean is misconfigured.");
+            logger.debug("Neither the parentEntity or crudController are set.");
         }
         return object;
     }
@@ -140,8 +175,11 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
     }
 
     public void unselect() {
-        extractWrappedParent().setPropertyValue(this.targetPropertyName, null);
+        if (parentObject()!=null) {
+            extractWrappedParent().setPropertyValue(this.targetPropertyName, null);
+        }
         this.show = false;
+        selectSupport.fireUnselect(null);
         prepareUI();
 
     }

@@ -62,34 +62,34 @@ public class SelectOneControllerTest extends TestCase {
 		super.tearDown();
 	}
 
-//	public void testSelectNoParent() {
-//
-//        controller = new SelectOneController(TestClass.class, null) {
-//            public Row getSelectedRow() {
-//                return new Row(testObject);
-//            }
-//
-//            public void prepareUI() {
-//            }
-//        };
-//
-//
-//        controller.addSelectListener(new SelectListener(){
-//            public void select(SelectEvent event) {
-//                TestClass tc = (TestClass)event.getValue();
-//                assertEquals("oops", tc.getName());
-//                tc.setName("scoop");
-//            }
-//
-//            public void unselect(SelectEvent event) {
-//
-//            }
-//        });
-//
-//        controller.select();
-//        assertEquals("scoop", testObject.getName());
-//
-//    }
+	public void testSelectNoParent() {
+
+        controller = new SelectOneController(TestClass.class, null) {
+            public Row getSelectedRow() {
+                return new Row(testObject);
+            }
+
+            public void prepareUI() {
+            }
+        };
+
+
+        controller.addSelectListener(new SelectListener(){
+            public void select(SelectEvent event) {
+                TestClass tc = (TestClass)event.getValue();
+                assertEquals("oops", tc.getName());
+                tc.setName("scoop");
+            }
+
+            public void unselect(SelectEvent event) {
+
+            }
+        });
+
+        controller.select();
+        assertEquals("scoop", testObject.getName());
+
+    }
 
     public void testSelectWithParent() {
 

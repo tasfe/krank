@@ -1,4 +1,4 @@
-package org.crank.web.validation.spring.support;
+package org.crank.validation;
 
 import org.crank.annotations.validation.Required;
 

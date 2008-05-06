@@ -8,6 +8,7 @@ import org.springframework.aop.IntroductionInterceptor;
 *  @version $Revision:$
 *  @author Rick Hightower
 */
+@Deprecated
 public class FinderIntroductionInterceptor implements IntroductionInterceptor {
 
     public Object invoke( MethodInvocation methodInvocation ) throws Throwable {

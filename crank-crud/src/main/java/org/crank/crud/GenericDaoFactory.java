@@ -67,7 +67,7 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
 
         this.setInterfaces( new Class[] { intf } );
 
-        GenericDaoJpa dao = null;
+        GenericDaoJpa dao;
 
         if (isCachingEnabled()) {
             dao = loadCachingDao();
@@ -76,10 +76,11 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
         }
 
         this.setTarget( dao );
-        this.addAdvisor( new FinderIntroductionAdvisor() );
+        this.addAdvisor( new DaoMethodsIntroductionAdvisor() );
 
     }
     
+    @SuppressWarnings("unchecked")
     private GenericDaoJpa loadNonCachingDao() {
         GenericDaoJpa dao = new GenericDaoJpa( bo );
         dao.setNewSelectStatement(newSelect);

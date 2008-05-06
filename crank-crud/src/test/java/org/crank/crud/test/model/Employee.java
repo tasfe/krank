@@ -22,7 +22,11 @@ import org.crank.annotations.validation.Required;
 @NamedQueries( {
 	@NamedQuery(name="Employee.findEmployeesByDepartment",
 			query="SELECT employee FROM Employee employee WHERE employee.department.name=?1"),
-	@NamedQuery(name="Employee.readPopulated",
+    @NamedQuery(name="Employee.deleteEmployeesByLastName",
+        query="DELETE Employee WHERE lastName=?1"),
+    @NamedQuery(name="Employee.updateEmployeeActiveStatusByLastName",
+        query="UPDATE Employee set active=?2 WHERE lastName=?1"),        
+    @NamedQuery(name="Employee.readPopulated",
 			query="SELECT employee FROM  Employee employee JOIN FETCH employee.department WHERE employee.id=?1"),
 	@NamedQuery(name="Employee.findInEmployeeIds",
 			query="SELECT o FROM Employee o  WHERE  o.id in  ( ?1 )"),

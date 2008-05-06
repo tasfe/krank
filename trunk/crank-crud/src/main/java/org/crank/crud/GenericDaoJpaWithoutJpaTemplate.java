@@ -50,7 +50,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 
 public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
-		implements GenericDao<T, PK>, Finder<T> {
+		implements GenericDao<T, PK>, Finder {
 
 	protected Class<T> type = null;
 	protected boolean distinct = false;

@@ -7,12 +7,9 @@ import org.springframework.aop.support.DefaultIntroductionAdvisor;
  *  @version $Revision:$
  *  @author Rick Hightower
  */
-@Deprecated
-public class FinderIntroductionAdvisor extends DefaultIntroductionAdvisor {
+public class DaoMethodsIntroductionAdvisor extends DefaultIntroductionAdvisor {
 
-    public FinderIntroductionAdvisor() {
-        super(new FinderIntroductionInterceptor());
+    public DaoMethodsIntroductionAdvisor() {
+        super(new DaoMethodsIntroductionInterceptor());
     }
-
-
 }

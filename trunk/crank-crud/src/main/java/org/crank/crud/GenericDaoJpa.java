@@ -1,42 +1,10 @@
 package org.crank.crud;
 
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.Id;
-import javax.persistence.LockModeType;
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-
 import org.apache.log4j.Logger;
 import org.crank.crud.controller.CrudUtils;
-import org.crank.crud.criteria.Between;
-import org.crank.crud.criteria.Comparison;
-import org.crank.crud.criteria.Criterion;
-import org.crank.crud.criteria.Group;
-import org.crank.crud.criteria.Operator;
+import org.crank.crud.criteria.*;
 import org.crank.crud.criteria.OrderBy;
-import org.crank.crud.criteria.OrderDirection;
-import org.crank.crud.criteria.Select;
-import org.crank.crud.criteria.VerifiedBetween;
-import org.crank.crud.join.EntityJoin;
-import org.crank.crud.join.Join;
-import org.crank.crud.join.JoinType;
-import org.crank.crud.join.RelationshipFetch;
-import org.crank.crud.join.RelationshipJoin;
-import org.crank.crud.join.SimpleRelationshipJoin;
+import org.crank.crud.join.*;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.orm.jpa.EntityManagerHolder;
@@ -45,6 +13,13 @@ import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.orm.jpa.support.JpaDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * This is our GenericDAO interface that supports its own Criteria API and
@@ -58,7 +33,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * @author Rick Hightower
  */
 public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
-		implements GenericDao<T, PK>, Finder<T> {
+		implements GenericDao<T, PK>, Finder, DaoMethods {
 	
 	protected Class<T> type = null;
 
@@ -73,7 +48,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	protected String idPropertyName = "id";
 
 
-	public void setQueryHints(List<QueryHint<?>> queryHints) {
+
+    public void setQueryHints(List<QueryHint<?>> queryHints) {
 		this.queryHints = queryHints;
 	}
 
@@ -1070,7 +1046,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	public Object executeFinder(final Method method, final Object[] queryArgs) {
-		final String queryName = queryNameFromMethod(method);
+		final String queryName = queryNameFromMethodName(method.getName());
 		return getJpaTemplate().execute(new JpaCallback() {
 
 			public Object doInJpa(EntityManager em) throws PersistenceException {
@@ -1089,7 +1065,65 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		});
 	}
 
-	public T readPopulated(Class<?> clazz, final PK id) {
+    public Object executeDelete(final Method method, final Object[] queryArgs) {
+        final String queryName = queryNameFromMethodName(method.getName());
+        return getJpaTemplate().execute(new JpaCallback() {
+
+            public Object doInJpa(EntityManager em) throws PersistenceException {
+                Query query = em.createNamedQuery(queryName);
+                int index = 1;
+                for (Object arg : queryArgs) {
+                    query.setParameter(index, arg);
+                    index++;
+                }
+                return query.executeUpdate();
+            }
+        });
+    }
+
+//    /** This could be more effeciently written. */
+//    private static String[] getArgumentsForUpdateString(final String methodPostFix) {
+//        StringBuilder builder = new StringBuilder();
+//        char[] chars = methodPostFix.toCharArray();
+//        List<String> list = new ArrayList<String>();
+//        for (char ch : chars) {
+//            if (Character.isUpperCase(ch)){
+//                builder.append("_" + ch);
+//            } else {
+//                builder.append(ch);
+//            }
+//        }
+//        return builder.toString().substring(1,builder.length()).split("_");
+//    }
+//
+//    public static void main (String [] args) {
+//        String queryName = "updateArg1Arg2Arg3";
+//        String [] comps = getArgumentsForUpdateString(queryName.substring(6,queryName.length()));
+//        for (String comp : comps) {
+//            System.out.println("# " + comp);
+//        }
+//    }
+
+    public Object executeUpdate(final Method method, final Object[] queryArgs) {
+        final String methodName = method.getName();
+        final String queryName = queryNameFromMethodName(methodName);
+        //String[] updateArguments = getArgumentsForUpdateString(methodName.substring(6,methodName.length()));
+
+        return getJpaTemplate().execute(new JpaCallback() {
+            public Object doInJpa(EntityManager em) throws PersistenceException {
+                Query query = em.createNamedQuery(queryName);
+                int index = 0;
+                
+                for (Object arg : queryArgs) {
+                    query.setParameter(index+1, arg);
+                    index++;
+                }
+                return query.executeUpdate();
+            }
+        });
+    }
+
+    public T readPopulated(Class<?> clazz, final PK id) {
 		try {
 			return doReadPopulated(id);
 		} catch (JpaSystemException jpaSystemException) {
@@ -1114,8 +1148,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return readPopulated(type, id);
 	}
 
-	public String queryNameFromMethod(Method finderMethod) {
-		return type.getSimpleName() + "." + finderMethod.getName();
+	public String queryNameFromMethodName(String finderMethod) {
+		return type.getSimpleName() + "." + finderMethod;
 	}
 
 	@Transactional

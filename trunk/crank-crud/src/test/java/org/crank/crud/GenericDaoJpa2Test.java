@@ -4,6 +4,7 @@ import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Select;
 import org.crank.crud.join.Join;
 import org.crank.crud.test.DbUnitTestBase;
+import org.crank.crud.test.dao.EmployeeDAO;
 import org.crank.crud.test.model.Department;
 import org.crank.crud.test.model.Employee;
 import org.crank.crud.test.model.PetClinicInquiry;
@@ -14,6 +15,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 import static org.testng.AssertJUnit.fail;
 import static org.testng.AssertJUnit.assertEquals;
+import org.testng.AssertJUnit;
 
 /**
  * 
@@ -144,6 +146,51 @@ public class GenericDaoJpa2Test extends DbUnitTestBase {
 		assert employee.getFirstName().equals("monkey");
 		assert employee.getLastName().equals("boy");
 	}
+
+
+
+//    @Test (groups="updates")
+//	public void testUpdateSupport() {
+//        System.out.println("WE GOT THIS FAR ----------------------------------- 1");
+//        EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
+//		List<Employee> employees = employeeDAO
+//				.findEmployeesByDepartment("Engineering");
+//		AssertJUnit.assertTrue(employees.size() > 0);
+//
+//        System.out.println("WE GOT THIS FAR ----------------------------------- 2");
+//
+//        try {
+//            long size = employees.size();
+//
+//            long recordsEffected = employeeDAO
+//                .updateEmployeeActiveStatusByDepartment("Engineering", true);
+//            assertEquals(size, recordsEffected);
+//
+//        }catch (Exception ex) {
+//            ex.printStackTrace();
+//            System.out.println("WE GOT THIS FAR ----------------------------------- 3.5");
+//        }
+//
+//        System.out.println("WE GOT THIS FAR ----------------------------------- 3");
+//
+//
+//    }
+
+//    @Test (groups="updates")
+//	public void testDeleteSupport() {
+//		EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
+//		List<Employee> employees = employeeDAO
+//				.findEmployeesByDepartment("Engineering");
+//		AssertJUnit.assertTrue(employees.size() > 0);
+//
+//        employeeDAO
+//                .deleteEmployeesByDepartment("Engineering");
+//        employees = employeeDAO
+//				.findEmployeesByDepartment("Engineering");
+//        AssertJUnit.assertTrue(employees.size() == 0);
+//
+//    }
+
 	
     public void setEmployeeDao(final GenericDao<Employee, Long> baseJpaDao) {
 		this.employeeDao = baseJpaDao;

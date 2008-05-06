@@ -7,7 +7,8 @@ import java.lang.reflect.Method;
  *  @version $Revision:$
  *  @author Rick Hightower
  */
-@Deprecated
-public interface Finder {
+public interface DaoMethods {
     public Object executeFinder( Method method, final Object[] queryArgs );
+    public Object executeDelete( Method method, final Object[] queryArgs );
+    public Object executeUpdate( Method method, final Object[] queryArgs );
 }

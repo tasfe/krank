@@ -101,10 +101,18 @@ public class EntityConverter implements Converter, Serializable {
 			Object object = dao.read(entityId);
             logger.debug(String.format("Read object %s", object));
             if (object == null) {
+            	if ("-1".equals(value)) {
+                    logger.debug("No object found and the value was -1");
+                    throw new ConverterException(new FacesMessage("Required",
+        					"Required"));
+            	} else {
 				throw new ConverterException(new FacesMessage("Can't find object with id " + value,
-						"Can't find object with id " + value));				
+						"Can't find object with id " + value));
+            	}
 			}
 			return object;
+		} catch (ConverterException ex){
+			throw ex;
 		} catch (Exception ex) {
             logger.error("Unable to convert object", ex);
 			String message = String.format(

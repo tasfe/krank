@@ -174,7 +174,7 @@ class ValidatorData {
     			}
     			//System.out.println("JSF 1.2 method B result = " + (parentObject==null?"failed":"passed"));
     			
-    			assert parentObject !=null;
+    			//assert parentObject !=null;
     			
     		} catch (Exception ex) {
     			//System.out.println("All attempted methods failed!");

@@ -1,13 +1,8 @@
 package org.crank.crud.controller;
 
 import java.beans.PropertyDescriptor;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.Map.Entry;
+import java.util.*;
+
 
 import org.crank.core.AnnotationData;
 import org.crank.core.AnnotationUtils;
@@ -288,10 +283,7 @@ public class CrudUtils {
     }
 
     private static Map<String, AnnotationData> getAnnotationDataAsMap( Class clazz, String propertyName ) {
-        List<AnnotationData> annotationDataForProperty = AnnotationUtils.getAnnotationDataForProperty( clazz, propertyName, false, allowedPackages );
-        if (annotationDataForProperty.size()==0) {
-            annotationDataForProperty = AnnotationUtils.getAnnotationDataForField( clazz, propertyName, allowedPackages );
-        }
+        Collection<AnnotationData> annotationDataForProperty = AnnotationUtils.getAnnotationDataForFieldAndProperty( clazz, propertyName, allowedPackages );
         Map<String, AnnotationData> map = MapUtils.convertListToMap( "name", annotationDataForProperty);
         return map;
     }

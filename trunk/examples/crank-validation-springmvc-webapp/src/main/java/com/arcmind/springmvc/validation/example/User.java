@@ -19,6 +19,8 @@ import org.crank.annotations.validation.Required;
 public class User implements Serializable {
     
     private String email;
+
+    @Required    
     private String firstName;
     private String lastName;
     private String userName;
@@ -99,7 +101,8 @@ public class User implements Serializable {
         return firstName;
     }
     
-    @Required
+
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

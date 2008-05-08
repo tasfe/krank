@@ -1,13 +1,7 @@
 package org.crank.validation.readers;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.crank.annotations.design.AllowsConfigurationInjection;
 import org.crank.annotations.design.Implements;
@@ -103,36 +97,46 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
 
         /* If the meta-data was not found, then generate it. */
         if (validatorMetaDataList == null) { // if not found
-            /* Read the annotations from the class based on the property name. */
-            /* Extract the AnnotationData from the Java annotations. */ 
-            List<AnnotationData> annotationDataList =
-                AnnotationUtils.getAnnotationDataForProperty( clazz, propertyName, false, this.validationAnnotationPackages );
-
-            /* Extract the POJO based meta-data from the annotations. */
-            validatorMetaDataList = 
-                extractMetaDataFromAnnotations(annotationDataList);
-
+            validatorMetaDataList = extractValidatorMetaData(clazz, propertyName, validatorMetaDataList);
             /* Put it in the cache to avoid the processing in the future.
              * Design notes: The processing does a lot of reflection, there
              * is no need to do this each time.
              */
-            metaDataCache.put(propertyKey, validatorMetaDataList);
+            metaDataCache.put(propertyKey, validatorMetaDataList);            
         }
+
         return validatorMetaDataList;
 
     }
 
+    /**
+     * Extract Validator Meta Data.
+     * @param clazz class
+     * @param propertyName property name
+     * @param validatorMetaDataList validatorMetaDataList
+     * @return validator meta data
+     */
+    private List<ValidatorMetaData> extractValidatorMetaData(Class clazz, String propertyName, List<ValidatorMetaData> validatorMetaDataList) {
+        /* If the meta-data was not found, then generate it. */
+        if (validatorMetaDataList == null) { // if not found
+            /* Read the annotations from the class based on the property name. */
+            Collection<AnnotationData> annotations = AnnotationUtils.getAnnotationDataForFieldAndProperty(clazz, propertyName, this.validationAnnotationPackages);
 
+            /* Extract the POJO based meta-data from the annotations. */
+            validatorMetaDataList =
+                extractMetaDataFromAnnotations(annotations);
 
-
+        }
+        return validatorMetaDataList;
+    }
 
     /**
      * Extract meta-data from the annotationData we collected thus far.
      * @param annotations The annotationData (preprocessed annotations).
-     * @return
+     * @return list of validation meta data.
      */
     private List<ValidatorMetaData> extractMetaDataFromAnnotations(
-            List<AnnotationData> annotations) {
+            Collection<AnnotationData> annotations) {
         List<ValidatorMetaData> list = new ArrayList<ValidatorMetaData>();
 
         for (AnnotationData annotationData : annotations) {
@@ -145,8 +149,8 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
 
     /**
      * Converts an AnnotationData into a ValidatorMetaData POJO.
-     * @param annotationData
-     * @return
+     * @param annotationData    annotationData
+     * @return validator meta data
      */
     @NeedsRefactoring("This method shows we are calling annotationData.getValues a lot. " +
             "Therefore, we must cache the results of getValues as the annoationData is static " +
@@ -164,7 +168,9 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
         return metaData;
     }
 
-    /** We allow a set of validation annotation packages to be configured. */
+    /** We allow a set of validation annotation packages to be configured.
+     *  @param validationAnnotationPackages validationAnnotationPackages
+     */
     @AllowsConfigurationInjection
     public void setValidationAnnotationPackages(Set<String> validationAnnotationPackages) {
         this.validationAnnotationPackages = validationAnnotationPackages;

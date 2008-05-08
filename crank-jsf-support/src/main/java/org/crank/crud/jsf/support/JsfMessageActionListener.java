@@ -1,5 +1,6 @@
 package org.crank.crud.jsf.support;
 
+import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
@@ -25,7 +26,20 @@ public class JsfMessageActionListener extends MessageProcessor implements
 			MessageManagerUtils.setCurrentInstance(new SimpleMessageManager());
 			defaultActionListener.processAction(event);
 			
-			generateFacesMessages(facesContext);
+        } catch (FacesException ex) {
+            Throwable rootCause = ex;
+            while (rootCause.getCause() != null && rootCause.getCause() != rootCause) {
+                rootCause = rootCause.getCause();
+            }
+            
+            String message = rootCause.getMessage();
+            if (message != null) {
+                facesContext.addMessage(null, 
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null));
+            }
+            /* Populate stack trace for display. */
+            extractErrorMessage(facesContext, ex);
+            logError(ex);           
 		} catch (Exception ex) {
 			/* If there was an exception, stay on the current view and add
 			 * an error message.
@@ -41,6 +55,7 @@ public class JsfMessageActionListener extends MessageProcessor implements
 			extractErrorMessage(facesContext, ex);
 			logError(ex);			
 		}
+        generateFacesMessages(facesContext);
 
 	}
 

@@ -3,6 +3,7 @@ package org.crank.core;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Collection;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -26,6 +27,13 @@ public class AnnotationUtilsTest {
             AnnotationUtils.getAnnotationDataForProperty( Employee.class, "age", false, packageNames);
         assertNotNull( annotationDataForProperty );
         assertTrue( annotationDataForProperty.size() > 0);
+
+
+        annotationDataForProperty =
+            AnnotationUtils.getAnnotationDataForProperty( Employee.class, "weight", false, packageNames);
+        assertNotNull( annotationDataForProperty );
+        assertTrue( annotationDataForProperty.size() > 0);
+
     }
 
     @Test()
@@ -40,6 +48,20 @@ public class AnnotationUtilsTest {
         assertNotNull( annotationDataForProperty );
         assertTrue( annotationDataForProperty.size() > 0);
         
+    }
+
+    @Test()
+    public void testGetAnnotationDataForFieldorProperty() {
+        Collection<AnnotationData> annotationDataForProperty =
+            AnnotationUtils.getAnnotationDataForFieldAndProperty( Employee.class, "iq", packageNames);
+        assertNotNull( annotationDataForProperty );
+        assertTrue( annotationDataForProperty.size() > 0);
+
+        annotationDataForProperty =
+            AnnotationUtils.getAnnotationDataForFieldAndProperty( Employee.class, "weight", packageNames);
+        assertNotNull( annotationDataForProperty );
+        assertTrue( annotationDataForProperty.size() > 0);
+
     }
 
 }

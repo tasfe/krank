@@ -97,4 +97,8 @@ public class AnnotationData {
     public Map<String, Object> getValues() {
         return values;
     }
+
+    public String toString() {
+        return name;
+    }
 }

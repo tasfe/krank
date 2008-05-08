@@ -5,9 +5,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.crank.annotations.design.NeedsRefactoring;
 
@@ -28,6 +26,31 @@ public class AnnotationUtils {
     private static Annotation[] findClassAnnotations( Class<?> clazz ) {
         return clazz.getAnnotations();
     }
+
+    public static Collection<AnnotationData> getAnnotationDataForFieldAndProperty(Class clazz, String propertyName, Set<String> allowedPackages) {
+        /* Extract the AnnotationData from the Java annotations. */
+        List<AnnotationData> propertyAnnotationDataList =
+            AnnotationUtils.getAnnotationDataForProperty( clazz, propertyName, false, allowedPackages);
+
+        /* Read the field annotations.  */
+        List<AnnotationData> fieldAnnotationDataList =
+            AnnotationUtils.getAnnotationDataForField( clazz, propertyName, allowedPackages );
+
+        /* Combine the annotations from field and properties. Field validations take precedence over property validations. */
+        Map<String, AnnotationData> map = new HashMap<String, AnnotationData>(propertyAnnotationDataList.size() + fieldAnnotationDataList.size());
+
+        /* Add the property annotations to the map. */
+        for(AnnotationData annotationData : propertyAnnotationDataList) {
+              map.put(annotationData.getName(), annotationData);
+        }
+
+        /* Add the field annotations to the map allowing them to overide the property annotations. */
+        for(AnnotationData annotationData : fieldAnnotationDataList) {
+              map.put(annotationData.getName(), annotationData);
+        }
+        return map.values();
+    }
+
 
     /**
      * Create an annotation data list.

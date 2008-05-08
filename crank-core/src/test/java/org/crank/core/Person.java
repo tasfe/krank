@@ -6,7 +6,9 @@ public class Person {
     @ErrorHandler
     long height;
 
-	public long getHeight() {
+    long weight;
+
+    public long getHeight() {
 		return height;
 	}
 
@@ -14,4 +16,12 @@ public class Person {
 		this.height = height;
 	}
 
+    public long getWeight() {
+        return weight;
+    }
+
+    @ErrorHandler
+    public void setWeight(long weight) {
+        this.weight = weight;
+    }
 }

@@ -210,7 +210,7 @@
 						</f:facet>
 						
 						<h:column>
-			   				<a4j:commandLink action="#{jsfSelectOneController.select}" value="select" styleClass="imageCenter" immediate="true"/>
+			   				<a4j:commandLink action="#{jsfSelectOneController.select}" value="select" styleClass="imageCenter" immediate="true" reRender="${selectReRender}"/>
 						</h:column>
 						
 						<c:forEach items="${pNames}" var="property">
@@ -259,7 +259,7 @@
 							</h:column>
 						</c:forEach>				
 					</rich:dataTable>
-                    <a4j:commandLink action="#{jsfSelectOneController.unselect}" value="unselect" styleClass="imageCenter" immediate="true"/>                    
+                    <a4j:commandLink action="#{jsfSelectOneController.unselect}" value="unselect" styleClass="imageCenter" immediate="true" reRender="${selectReRender}"/>                    
                 </h:panelGrid>
 			</crank:node>				
 			<ui:insert/>

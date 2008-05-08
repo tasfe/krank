@@ -69,6 +69,7 @@ public class Employee extends Person {
     private Integer numberOfPromotions;
     private EmployeeStatus status = EmployeeStatus.SALARY;
     private Integer rank;
+    @Required
     private Date dob;
     @Embedded
     private Address address;

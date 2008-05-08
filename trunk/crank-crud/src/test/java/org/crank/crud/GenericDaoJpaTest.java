@@ -120,7 +120,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 				new String[] { "firstName" });
 		AssertJUnit.assertEquals("Bob",((Employee) employees.get(0)).getFirstName());
 		AssertJUnit.assertEquals(((Employee) employees.get(1)).getFirstName(),
-				"Carlos");
+				"Bob");
 		employeeDao.flushAndClear();
 	}
 
@@ -391,7 +391,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		Map<String, Object> attributes = new HashMap<String, Object>();
 		attributes.put("lastName", null);
 		List<Employee> result = employeeDao.find(attributes);
-		AssertJUnit.assertEquals(11, result.size());
+		AssertJUnit.assertEquals(21, result.size());
 	}
 
 	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
@@ -410,7 +410,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		List<Employee> result = employeeDao.find(join(joinFetch("department",
 				"dpt")), orderBy("firstName"), and(eq("dpt.name", true,
 				"Engineering")));
-		AssertJUnit.assertEquals(3, result.size());
+		AssertJUnit.assertEquals(5, result.size());
 	}
 
 	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
@@ -503,7 +503,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
                    eq("firstName", "Vanilla")
                 )
         );
-        AssertJUnit.assertEquals(3, find.size());        
+        AssertJUnit.assertEquals(4, find.size());        
     }
     
 	@Test (groups="reads", dependsOnGroups="createsObjectInDB")

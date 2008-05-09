@@ -1,0 +1,5 @@
+#summary One-sentence summary of this page.
+
+= Release notes for the upcoming release 23 =
+
+  * Fixed pagination issue whereby on a lisitng if you selected show all rows and were not on the first page, the rows would be blank

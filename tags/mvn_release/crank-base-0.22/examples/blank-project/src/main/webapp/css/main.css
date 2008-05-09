@@ -1,0 +1,464 @@
+html, body {
+	background : #ffffff url(../images/bg.jpg) repeat-y top right;
+	height: 100%;
+}
+a:link, a:visited {
+	text-decoration : none;
+	color : #003366;
+}
+a:hover, a:active {
+	color : #a9e0ff;
+	border-bottom : 1px dotted #fff;
+}
+.title {
+	font-size: small;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	text-transform: uppercase;
+	padding: 10px 0px 10px 0px;
+}
+.pageTitle {
+	font-size: large;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	text-transform: uppercase;
+	padding: 10px 10px 10px 10px;
+}
+#header {
+	width: 100%;
+}
+.columnHeaderSimple {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: small;
+    text-align: center;
+	background-color: #DDDDDD;
+}
+.nodeBranch {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: small;
+	width: 20px;
+	vertical-align: top;
+    text-align: center;
+	background-color: #DDDDDD;
+}
+.nodeLeaf {
+    vertical-align: top;
+    text-align: left;
+	margin-left: auto;
+    margin-right: auto
+}
+.columnGroup {
+	width: 20px;
+	vertical-align: top;
+    text-align: center;
+	background-color: #DDDDDD;
+}
+.columnHeaderLeft {
+    text-align: left;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: x-small;
+    color: #666666;
+}
+.panelColumnLeft {
+    text-align: left;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: x-small;
+}
+.columnHeaderRight {
+    text-align: right;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: x-small;
+    color: #666666;
+}
+
+.columnHeaderCenter {
+    text-align: center;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: x-small;
+    color: #666666;
+}
+
+.columnCellLeft {
+    text-align: left;
+}
+
+.columnCellRight {
+    text-align: right;
+}
+
+.columnCellCenter {
+    text-align: center;
+}
+
+.oddRow {background-color: White;}
+.evenRow {background-color: #EFEFEF;}
+.radioGroup {background-color: #DFDFDF;}
+.tableHeader {
+    background-repeat: repeat-x;
+    vertical-align: baseline;
+    white-space: nowrap;
+    border-bottom: 1px solid #999999;
+	padding: 4px 0px 4px 0px;
+}
+.tableHeaderLocked {
+    background-repeat: repeat-x;
+    vertical-align: baseline;
+    white-space: nowrap;
+	padding: 4px 0px 4px 0px;
+}
+.tableHeaderInline {
+    background-repeat: repeat-x;
+    vertical-align: baseline;
+    white-space: nowrap;
+    border-bottom: 1px solid #999999;
+	padding: 4px 5px 4px 0px;
+}
+.tableHeaderInlineLocked {
+    background-repeat: repeat-x;
+    vertical-align: baseline;
+    white-space: nowrap;
+    padding: 4px 5px 4px 0px;
+}
+.tableFooter {
+    vertical-align: top;
+    border-top: 1px solid #999999;
+    white-space: nowrap;
+	padding: 4px 3px 4px 2px;
+}
+.tableFooterLocked {
+    vertical-align: top;
+    white-space: nowrap;
+	padding: 4px 3px 4px 2px;
+}
+.columnHeaderLink, .columnHeaderLink:active, .columnHeaderLink:visited {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #666666;
+	text-decoration: none;
+}
+.columnHeaderLink:hover {
+	color: White;
+	text-decoration: underline;
+}
+.columnHeader {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #666666;
+}
+.columnValue {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+}
+.listToolbar {
+	padding: 8px 60px 0px 0px;
+}
+.listToolbarButton {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	border: solid 1px #999999;
+	background-color: #efefef;
+	margin: 10px 6px 4px 0px;
+	height: 22px;
+	cursor: pointer;
+}
+.addUpdate {
+	padding: 8px 60px 0px 0px;
+}
+.addUpdateButton {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	border: solid 1px #999999;
+	background-color: #efefef;
+	margin: 10px 6px 4px 0px;
+	height: 22px;
+	cursor: pointer;
+}
+.listingTable {
+    margin: 10px 0px 10px 0px;
+	padding: 10px;
+	border: 1px solid #CCCCCC;
+	background-color: #EFEFEF;
+}
+.listingFooter {
+	border: 1px solid #CCCCCC;
+    text-align: right;
+}
+.listingOutputText {
+    text-align: right;
+}
+.scrollableListingBody {
+	height:300px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.formDiv {
+	padding: 10px;
+	border: 1px solid #CCCCCC;
+	background-color: #EFEFEF;
+	width: 50%;
+}
+.formPanelGrid {
+	padding: 10px;
+	border: 1px solid #999999;
+	background-color: White;
+	width: 100%
+}
+.detailPanelGrid {
+	padding: 10px;
+	border: 1px dotted #999999;
+	width: 100%
+}
+.columnCommandLink, .columnCommandLink:active, .columnCommandLink:visited {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: #7694D1;
+}
+.columnCommandLink:hover {
+	text-decoration: none;
+	color: #666666;
+}
+.paginationGroup {
+	position: absolute;
+	top: 85px;
+	right: 75px;
+}
+.paginationGroupText {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	margin: 0px 4px 0px 4px;
+	color: #7694D1;
+}
+.paginationRecordStatusText {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	margin: 0px 4px 0px 4px;
+}
+.paginationGroupButton {
+	cursor: pointer;
+	font-size: small;
+	padding: 0px 1px 0px 1px;
+	vertical-align: middle;
+}
+.paginationGroupButtonDisabled {
+    cursor: default;
+	font-size: small;
+    padding: 0px 1px 0px 1px;
+   	vertical-align: middle;
+}
+.paginationPageNumberPage {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: small;
+    font-weight: bold;
+	margin: 0px 4px 0px 4px;
+	color : #003366;
+}
+.paginationPageNumberLink {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	margin: 0px 4px 0px 4px;
+	color : #003366;
+}
+.paginationPageNumberPlain {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: small;
+	margin: 0px 4px 0px 4px;
+	color : #000000;
+}
+.paginationItemsPerPageDropdown {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: xx-small;
+	color: Black;
+}
+.paginationImageButton {
+	vertical-align: middle;
+	padding: 0px 1px 0px 1px;
+}
+.imageTopCenter {
+	vertical-align: top;
+	display: block;
+    margin-left: auto;
+    margin-right: auto
+}
+
+.imageCenter {
+	display: block;
+    margin-left: auto;
+    margin-right: auto
+}
+
+#center {
+	top: 0;
+	margin-left: 150px;
+}
+
+#left {
+	position: absolute;
+	left: 20px;
+	top: 98px;
+	background-color: White;
+	border: 1px none #666666;
+	text-align: left;
+
+
+}
+.fieldInputTextArea {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: Black;
+}
+.fieldErrorMessage {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: Red;
+	text-decoration: underline overline;
+}
+.fieldLabel {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: Black;
+}
+.fieldInput {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: Black;
+	margin: 0px 1px 0px 1px;
+}
+.inlineFieldErrorIndicator {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: Red;
+}
+.inlineFieldErrorMessage {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: small;
+	color: Red;
+}
+.checkBoxLabel {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: Black;
+}
+.checkBoxErrorMessage {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: Red;
+	text-decoration: underline overline;
+}
+.radioButtonLabel {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: Black;
+}
+.radioButtonErrorMessage {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: Red;
+	text-decoration: underline overline;
+}
+.dropdownSmall {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: xx-small;
+	color: Black;
+}
+.dropdown {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: Black;
+}
+.dropdownLabel {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: Black;
+}
+.dropdownErrorMessage {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: Red;
+	text-decoration: underline overline;
+}
+.list {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: Black;
+}
+.listLabel {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: Black;
+}
+.listErrorMessage {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	color: Red;
+	text-decoration: underline overline;
+}
+.lt_navigation {
+	vertical-align:middle;
+	text-transform:capitalize;
+	font-size:0.7em;
+	font-weight:bold;
+	background-color: #FFFFFF;
+}
+
+.lt_navigation ul {
+	margin-left: 0;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+
+.lt_navigation ul li { padding: 0px 0px 2px; }
+
+.lt_navigation a:link, .lt_navigation a:visited {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+	font-weight: normal;
+	color:#456BB8;
+	text-decoration:underline;
+}
+
+.lt_navigation a:hover { color:Black; text-decoration:none; }
+
+#content {
+	margin: 20px 0px 0px 25px;
+}
+
+.groupBySectionHeader {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+.groupBySectionFooter {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: small;
+    font-style: italic;
+}
+
+.oddCustomRow {
+    background-color: White;
+    border: 1px solid #999999;
+}
+
+.evenCustomRow {
+    background-color: #EFEFEF;
+    border: 1px solid #999999;
+}
+.toolTip {
+	font:14px/16px Arial,Helvetica,sans-serif; 
+	border:solid 1px #666666; 
+	padding:1px;
+	position:absolute; 
+	z-index:100;
+	visibility:hidden; 
+	color:#333333; 
+	top:20px;
+	left:90px; 
+	background-color:#ffffcc;
+	layer-background-color:#ffffcc;
+}
+.titleCommandLink, .titleCommandLink:active, .titleCommandLink:visited {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: large;
+	color: #7694D1;
+}

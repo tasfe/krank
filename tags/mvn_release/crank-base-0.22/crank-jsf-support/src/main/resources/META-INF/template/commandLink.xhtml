@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich">
+
+<ui:composition>
+
+	<!-- DEFINE VARIABLES -->
+	<c:if test="${empty toolTipClass}">
+		<c:set var="toolTipClass" value="toolTip" />
+	</c:if>
+
+	<c:if test="${empty rendered}">
+		<c:set var="rendered" value="true" />
+	</c:if>
+	
+	<c:if test="${empty ajax}">
+		<c:set var="ajax" value="true" />
+	</c:if>
+
+	<c:if test="${empty ajaxSingle}">
+		<c:set var="ajaxSingle" value="false" />
+	</c:if>
+
+	<c:if test="${empty immediate}">
+		<c:set var="immediate" value="false" />
+	</c:if>
+	
+	<c:if test="${empty value}">
+		<c:set var="value" value="#" />
+	</c:if>
+	
+	<c:if test="${empty onclick}">
+		<c:set var="onclick" value="" />
+	</c:if>
+	
+	<c:if test="${empty method}">
+		<c:set var="method" value="deleteSelected" />
+	</c:if>
+	
+	<c:choose>
+		<c:when test="${(empty onmouseout) and (not empty toolTipText)}">
+			<c:set var="onmouseout" value="popUp(event,'${id}tip')" />
+		</c:when>
+		<c:otherwise>
+			<c:set var="onmouseout" value="" />
+		</c:otherwise>
+	</c:choose>
+	
+	<c:choose>
+		<c:when test="${(empty onmouseover) and (not empty toolTipText)}">
+			<c:set var="onmouseover" value="popUp(event,'${id}tip')" />
+		</c:when>
+		<c:otherwise>
+			<c:set var="onmouseover" value="" />
+		</c:otherwise>
+	</c:choose>
+	
+	<c:choose>
+		<c:when test="${not empty reRender}">
+			<c:set var="reRenderers" value="${reRender},cmdLink${id},${id}tip,${id}tipText" />
+		</c:when>
+		<c:otherwise>
+			<c:set var="reRenderers" value="cmdLink${id},${id}tip,${id}tipText" />
+		</c:otherwise>
+	</c:choose>
+	
+	<!-- END DEFINE VARIABLES -->
+	
+	<c:choose>
+		<c:when test="${empty action}">
+			<h:outputLink
+			    styleClass="${styleClass}"
+				onclick="${onclick}"
+				value="${value}"
+				title="${toolTipText}"
+				rendered="#{rendered}">
+					<ui:insert/>
+			</h:outputLink>
+		</c:when>
+		<c:when test="${empty action and ajax}">
+			<a4j:commandLink
+			    styleClass="${styleClass}"
+				onclick="${onclick}"
+				value="${value}"
+				title="${toolTipText}"
+				ajaxSingle="${ajaxSingle}"
+				rendered="#{rendered}">
+					<ui:insert/>
+			</a4j:commandLink>
+		</c:when>
+		<c:otherwise>
+		    <c:if test="${ajax}">
+				<a4j:commandLink
+				    styleClass="${styleClass}"
+					action="#{entity[action]}"
+					title="${toolTipText}"
+					ajaxSingle="${ajaxSingle}"
+					onclick="${onclick}"
+					immediate="${immediate}"
+					rendered="#{rendered}"
+					reRender="${reRenderers}">
+						<ui:insert/>
+				</a4j:commandLink>
+			</c:if>
+		    <c:if test="${not ajax}">
+				<h:commandLink
+				    styleClass="${styleClass}"
+					action="#{entity[action]}"
+					title="${toolTipText}"
+					onclick="${onclick}"
+					immediate="${immediate}"
+					rendered="#{rendered}"
+					reRender="${reRenderers}">
+						<ui:insert/>
+				</h:commandLink>
+			</c:if>
+
+		</c:otherwise>
+	</c:choose>
+
+</ui:composition>
+</html>

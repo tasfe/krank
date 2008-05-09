@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:c="http://java.sun.com/jstl/core"
+	  xmlns:fn="http://java.sun.com/jsp/jstl/functions"   
+	  xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"	  
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+	  xmlns:crud="http://www.googlecode.com/crank/crud"
+	  xmlns:crank="http://www.googlecode.com/crank"	
+      >
+
+  <ui:composition>
+	<a4j:outputPanel ajaxRendered="true">
+		<h:panelGroup rendered="${crud.showForm}">
+			<div style="border-color: black; border: solid 1px; margin-left: 10px; padding-left: 10px">
+			<h4>${crud:createLabel(crud.name)} Form</h4>
+			<crank:form crud="${crud}" parentForm="${parentForm}"
+				propertyNames="${propertyNames}" ajax="${true}" >
+				<ui:insert />
+			</crank:form>	
+			</div>
+		</h:panelGroup>
+	</a4j:outputPanel>
+ </ui:composition>
+
+</html>
+

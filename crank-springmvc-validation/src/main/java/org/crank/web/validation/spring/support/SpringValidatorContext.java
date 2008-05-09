@@ -10,9 +10,16 @@ public class SpringValidatorContext {
 	private SpringValidatorContext () {
 		
 	}
-	
 
-	public static SpringValidatorContext get () {
+    public static void create() {
+        ValidationContext.create();
+    }
+
+    public static void destroy() {
+        ValidationContext.destroy();
+    }
+
+    public static SpringValidatorContext get () {
         SpringValidatorContext context = new SpringValidatorContext();
         context.validationContext = ValidationContext.get();
         return context;
@@ -26,6 +33,18 @@ public class SpringValidatorContext {
 
     public Object getParentObject() {
         return get().getParentObject();
+    }
+
+    public void pushProperty(String property) {
+        validationContext.pushProperty(property);        
+    }
+
+    public void setParentObject(Object object) {
+        validationContext.setParentObject(object);
+    }
+
+    public void pop() {
+        validationContext.pop();
     }
 
 }

@@ -23,7 +23,10 @@ public abstract class SelectByIdController<PT extends Serializable, T extends Se
 	protected CrudOperations<PT> parentCrudController;
 	protected String targetProperty;
 	protected String sourceProperty = "id";
-	protected boolean show;
+
+
+    protected String childSourceProperty = "id";
+    protected boolean show;
 
 	public SelectByIdController() {
 		super();
@@ -89,18 +92,22 @@ public abstract class SelectByIdController<PT extends Serializable, T extends Se
 
 	@SuppressWarnings("unchecked")
 	protected void prepareModelChoices() {
-		Set<T> selectedTags = (Set<T>) new TreeSet<T>(this.getSelectedChildren());
-		List<T> allTags = (List<T>) paginator.getPage();
-		List<Row> availableTags = new ArrayList<Row>(allTags.size());
-		for (T availableTag : allTags) {
+		Set<T> selectedObjects = this.getSelectedChildren();
+
+        List<T> allObjects = (List<T>) paginator.getPage();
+		List<Row> availableObjects = new ArrayList<Row>(allObjects.size());
+		for (T availableObject : allObjects) {
 			Row row = new Row();
-			row.setObject(availableTag);
-			if (selectedTags.contains(availableTag)) {
-				row.setSelected(true);
-			}
-			availableTags.add(row);
+			row.setObject(availableObject);
+            for (T selectedObject : selectedObjects) {
+                BeanWrapper selectedObjectWrapper = new BeanWrapperImpl(selectedObject);
+                if (row.get(childSourceProperty).equals(selectedObjectWrapper.getPropertyValue(childSourceProperty))) {
+                    row.setSelected(true);
+                }
+            }            
+			availableObjects.add(row);
 		}
-		prepareModelChoices(availableTags);
+		prepareModelChoices(availableObjects);
 	}
 	abstract protected void prepareModelChoices(List<Row> availableTags);
 
@@ -113,7 +120,7 @@ public abstract class SelectByIdController<PT extends Serializable, T extends Se
 		BeanWrapper parent = getParent();
 		PK parentId = getParentId(parent);
 		if (parentId != null) {
-			List<T> children = (List<T>) repo.find(Comparison.eq(targetProperty, parentId ));
+			List<T> children = repo.find(Comparison.eq(targetProperty, parentId ));
 			return new TreeSet<T>(children);
 		} else {
 			return Collections.emptySet();
@@ -212,4 +219,8 @@ public abstract class SelectByIdController<PT extends Serializable, T extends Se
 		return getParentId()!=null;
 	}
 
+    public void setChildSourceProperty(String childSourceProperty) {
+        this.childSourceProperty = childSourceProperty;
+    }
+    
 }

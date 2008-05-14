@@ -62,6 +62,10 @@
 	</c:if>
 <!--	${fieldName}_${suggest}_${forceInputText}-->
     
+    <c:if test="${requiredProperty}">
+        <c:set var="required" value="${true}" />
+    </c:if>
+    
     <c:if test="${empty required}">
         <c:set var="required" value="${crud:isRequired(type,fieldName)}" />
     </c:if>

@@ -16,12 +16,22 @@
 	<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
 	<c:set var="paginator" value="${jsfSelectOneController.paginator}"/>
 	<c:set var="entityClass" value="${jsfSelectOneController.entityClass}" />
+	<c:set var="parentClass" value="${jsfSelectOneController.controller.entityClass}" />
+	
 	
 	<!-- DEFINE VARIABLES -->
 	
-	<c:if test="${empty required}">
-		<c:set var="required" value="true" />
-	</c:if>
+    <c:if test="${crud:isInCollection(property, requiredProperties)}">
+        <c:set var="required" value="${true}" />
+    </c:if>
+    
+    <c:if test="${empty required and not empty parentClass}">
+        <c:set var="required" value="${crud:isRequired(parentClass, entityName)}" />
+    </c:if>
+    
+    <c:if test="${empty requiredMarker}">
+        <c:set var="requiredMarker" value="*"/>
+    </c:if>
 	
 	<c:if test="${empty debug}">
 			<c:if test="#{empty initParam['crank.debug']}">
@@ -146,9 +156,19 @@
 	<c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
 	
 	<a4j:outputPanel ajaxRendered="true">
+	
+		<c:choose>
+			<c:when test="${required}">
+               <c:set var="fieldLabel" disabled="${disabled}" value="${entityNameLabel}${requiredMarker}" />
+			</c:when>
+			<c:otherwise>
+			    <c:set var="fieldLabel" value="${entityNameLabel}" />
+			</c:otherwise>
+		</c:choose>
 
 		<h:panelGrid columns="3" columnClasses="nodeLeaf">
-			<h:outputLabel rendered="${useLabel}" for="${fieldId}" value="${entityNameLabel}:&nbsp;&nbsp;" styleClass="fieldLabel"/>
+
+			<h:outputLabel rendered="${useLabel}" for="${fieldId}" value="${fieldLabel}&nbsp;&nbsp;" styleClass="fieldLabel"/>
 
 			<!-- readonly="true" prevents submitting of this value which is OK since the action from the listing selects the value --> 
 			<h:inputText

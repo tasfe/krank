@@ -102,14 +102,18 @@
 							type="${crud.entityClass}" fieldName="${property}"
 							entityName="${entityName}"
 							label="${fieldLabels[labelIndex]}"
-							disabled="${crud:isInCollection(property, readOnlyProperties)}" />
+							disabled="${crud:isInCollection(property, readOnlyProperties)}" 
+							requiredProperty="${crud:isInCollection(property, requiredProperties)}"
+						/>
 							<c:set var="labelIndex" value="${labelIndex + 1}"/>			
 					</c:if>
 					<c:if test="${empty fieldLabels}">
 						<crank:field entity="#{crud.entity}" crud="${crud}"
 							type="${crud.entityClass}" fieldName="${property}"
 							entityName="${entityName}"
-							disabled="${crud:isInCollection(property, readOnlyProperties)}" />
+							disabled="${crud:isInCollection(property, readOnlyProperties)}"
+							requiredProperty="${crud:isInCollection(property, requiredProperties)}" 
+						/>
 					</c:if>
 				</c:forEach>
 			</c:if>
@@ -136,7 +140,9 @@
 										onclick="setEnableGroup('${parentForm}','${enableItem}','${groupId}');"
 										crud="${crud}" entity="${crud.entity}"
 										type="${crud.entityClass}" fieldName="${enableItem}"
-										entityName="${entityName}" />
+										entityName="${entityName}"
+										requiredProperty="${crud:isInCollection(property, requiredProperties)}" 
+									/>
 									<c:set var="disabledDefault"
 										value="${not crud.entity[enableItem]}" />
 								</c:when>
@@ -145,7 +151,9 @@
 									<crank:field fieldId="${groupId}${enableItem}"
 										disabled="${disabledDefault}" crud="${crud}"
 										entity="${crud.entity}" type="${crud.entityClass}"
-										fieldName="${enableItem}" entityName="${entityName}" />
+										fieldName="${enableItem}" entityName="${entityName}"
+										requiredProperty="${crud:isInCollection(property, requiredProperties)}" 
+									/>
 
 								</c:otherwise>
 							</c:choose>
@@ -175,7 +183,9 @@
 									onclick="setExclusiveGroup('${parentForm}','${exclusiveField}','${groupId}',false);"
 									entity="#{crud.entity}" type="${crud.entityClass}"
 									crud="${crud}" fieldName="${exclusiveField}"
-									entityName="${entityName}" />
+									entityName="${entityName}"
+									requiredProperty="${crud:isInCollection(property, requiredProperties)}" 
+								/>
 							</c:if>
 						</c:forEach>
 					</h:panelGrid>

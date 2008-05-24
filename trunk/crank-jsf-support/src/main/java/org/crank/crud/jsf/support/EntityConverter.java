@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.crank.core.CrankContext;
 import org.crank.core.ObjectRegistry;
+import org.crank.core.LogUtils;
 import org.crank.crud.GenericDao;
 import org.crank.crud.controller.CrudManagedObject;
 import org.springframework.beans.BeanWrapper;
@@ -69,7 +70,7 @@ public class EntityConverter implements Converter, Serializable {
 	@SuppressWarnings("unchecked")
 	public Object getAsObject(final FacesContext facesContext,
 			final UIComponent component, final String value) {
-        logger.debug(String.format("getAsObject() called value=%s, component=%s", value, component.getClientId(facesContext)));
+        logger.debug(String.format("getAsObject() called value=%s, component=%s, value class=%s", value, component.getClientId(facesContext), value.getClass().getName()));
 		UIInput input = (UIInput) component;
 		if (value.equals("-1")
 				&& (input.isRequired() || component.getAttributes().get(
@@ -110,7 +111,8 @@ public class EntityConverter implements Converter, Serializable {
 						"Can't find object with id " + value));
             	}
 			}
-			return object;
+            LogUtils.debug(logger, "Returning converted object %s", object);
+            return object;
 		} catch (ConverterException ex){
 			throw ex;
 		} catch (Exception ex) {
@@ -135,13 +137,14 @@ public class EntityConverter implements Converter, Serializable {
 	public String getAsString(final FacesContext facesContext,
 			final UIComponent component, final Object value) {
 
-        logger.debug(String.format("getAsString called value=%s, component=%s", value, component.getClientId(facesContext)));
+        logger.debug(String.format("getAsString called value=%s, component=%s, value class=%s", value, component.getClientId(facesContext), value.getClass().getName()));
         if (value == null) {
             logger.debug("Value was null, can't convert");
             return "";
 		}
 
         if (value instanceof String) {
+            logger.debug("Value was a string");
             return value.toString();
         }
 

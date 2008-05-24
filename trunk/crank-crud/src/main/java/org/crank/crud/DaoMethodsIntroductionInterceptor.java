@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 /**
-*  Finder method introduction interceptor is used to mixin finder methods to our DAO objects.
+*  DAO method introduction interceptor is used to mixin dao methods to our DAO objects.
 *  @version $Revision:$
 *  @author Rick Hightower
 */

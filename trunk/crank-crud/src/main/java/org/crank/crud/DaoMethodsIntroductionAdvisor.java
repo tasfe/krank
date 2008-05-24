@@ -13,3 +13,4 @@ public class DaoMethodsIntroductionAdvisor extends DefaultIntroductionAdvisor {
         super(new DaoMethodsIntroductionInterceptor());
     }
 }
+

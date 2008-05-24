@@ -45,32 +45,30 @@ public class GenericDaoJpa3Test extends DbUnitTestBase {
 	}
 
 
-    @Test (groups="modifies")
-	public void testUpdateSupport() {
+    @Test(groups = "modifies")
+    public void testUpdateSupport() {
         EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
-		List<Employee> employees = employeeDAO
-				.findEmployeesByDepartment("Engineering");
-		AssertJUnit.assertTrue(employees.size() > 0);
+        List<Employee> employees = employeeDAO
+                .findEmployeesByDepartment("Engineering");
+        AssertJUnit.assertTrue(employees.size() > 0);
 
 
-
-            long recordsEffected = employeeDAO
+        long recordsEffected = employeeDAO
                 .updateEmployeeActiveStatusByLastName("Hightower", true);
-            assertEquals(1, recordsEffected);
-
+        assertEquals(1, recordsEffected);
 
 
     }
 
-    @Test (groups="updates", dependsOnGroups = "modifies")
-	public void testDeleteSupport() {
+    @Test(groups = "updates", dependsOnGroups = "modifies")
+    public void testDeleteSupport() {
         EmployeeDAO employeeDAO = (EmployeeDAO) this.employeeDao;
 
-		List<Employee> employees = employeeDAO
-				.findEmployeesByDepartment("Engineering");
-		AssertJUnit.assertTrue(employees.size() > 0);
+        List<Employee> employees = employeeDAO
+                .findEmployeesByDepartment("Engineering");
+        AssertJUnit.assertTrue(employees.size() > 0);
 
-        int deletedEmps =employeeDAO
+        int deletedEmps = employeeDAO
                 .deleteEmployeesByLastName("Hightower");
 
         AssertJUnit.assertEquals(1, deletedEmps);

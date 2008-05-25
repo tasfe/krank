@@ -16,6 +16,11 @@
 <!-- 	xmlns:crankcc="http://www.googlecode.com/crank/comp/components"
   -->
 <ui:composition>
+
+    <c:if test="${empty showFormButtons}">
+        <c:set var="showFormButtons" value="${true}" />
+    </c:if>
+
 	<c:if test="${empty reportingMode}">
 		<c:set var="reportingMode" value="false" />
 	</c:if>
@@ -224,7 +229,7 @@
 		<c:set var="ajax" value="${ajaxOrg}" />
 
 
-
+        <c:if test="${showFormButtons}">
 		<a4j:outputPanel ajaxRendered="true">
 
 			
@@ -273,15 +278,17 @@
 
 			</h:panelGrid>
 		</a4j:outputPanel>
-	</h:panelGrid>
+        </c:if>
+    </h:panelGrid>
 
 	<c:set var="ajax" value="" />
 	<c:set var="addCreateMode" value="" />
 	<c:set var="editMode" value="" />
 	<c:set var="resetMode" value="" />
 	<c:set var="cancelMode" value="" />
+    <c:set var="showFormButtons" value="" />
 
-	<!--  </crankcc:form>  -->
+    <!--  </crankcc:form>  -->
 </ui:composition>
 
 </html>

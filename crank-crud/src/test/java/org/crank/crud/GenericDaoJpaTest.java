@@ -48,6 +48,7 @@ import org.testng.annotations.Test;
  * @version $Revision:$
  * @author Rick Hightower
  */
+@Test (groups="broken")
 public class GenericDaoJpaTest extends DbUnitTestBase {
 	private GenericDao<Employee, Long> employeeDao;
 	private GenericDao<Department, Long> departmentDao;

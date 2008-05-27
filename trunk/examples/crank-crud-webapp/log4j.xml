@@ -93,9 +93,13 @@
     </category>
 
     <category name="org.crank.crud.controller.SelectManyController">
+        <priority value="ERROR"/>
+    </category>
+	
+	
+    <category name="org.crank.crud.controller.Paginator">
         <priority value="DEBUG"/>
     </category>
-
 
 
 </log4j:configuration>

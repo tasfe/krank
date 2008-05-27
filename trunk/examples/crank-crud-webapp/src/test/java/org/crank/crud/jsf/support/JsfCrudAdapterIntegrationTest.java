@@ -69,7 +69,7 @@ public class JsfCrudAdapterIntegrationTest extends SpringTestNGBase {
 	@Test 
 	public void testPagination() {
 		FilterablePageable paginator = petClinicLeadCrud.getPaginator();
-		List page = paginator.getPage();
+        List page = paginator.getPage();
 		assert page.size() > 0 : "There is some data in here";
 		
 		System.out.println("paginator 1"  + paginator);

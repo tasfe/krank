@@ -26,13 +26,13 @@ public class SpringValidatorContext {
 	}
 
 
-	public static String getBindingPath() {
-        return get().getBindingPath();
+	public String getBindingPath() {
+        return validationContext.getBindingPath();
     }
 
 
     public Object getParentObject() {
-        return get().getParentObject();
+        return validationContext.getParentObject();
     }
 
     public void pushProperty(String property) {

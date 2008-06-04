@@ -20,4 +20,30 @@ public class CollectionUtils {
 		return false;
 	}
 
+    public static int countTrue(String propertyName, Collection<?> collection) {
+
+        int count=0;
+        for (Object o : collection) {
+            BeanWrapper bw = new BeanWrapperImpl(o);
+            Boolean propertyValue = (Boolean)bw.getPropertyValue(propertyName);
+            if (Boolean.TRUE.equals(propertyValue)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static int countFalse(String propertyName, Collection<?> collection) {
+
+        int count=0;
+        for (Object o : collection) {
+            BeanWrapper bw = new BeanWrapperImpl(o);
+            Boolean propertyValue = (Boolean)bw.getPropertyValue(propertyName);
+            if (Boolean.FALSE.equals(propertyValue)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
 }

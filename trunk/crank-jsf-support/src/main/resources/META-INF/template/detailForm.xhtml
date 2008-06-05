@@ -128,7 +128,7 @@
 							ajax="${ajax}">
 								<h:outputText value="Add new..."/>
 						</crank:commandLink>							
-						<c:if test="${detailController.showForm and not manyToMany}">
+						<h:panelGroup rendered="${detailController.showForm and not manyToMany}">
 							<crank:form   
 								crud="${detailController}" 
 								propertyNames="${formPropertyNames}"
@@ -146,7 +146,7 @@
 									<c:set var="isSelectableColumn" value="${isSelectableColumnCopy}"/>
 								
 							</crank:form>
-						</c:if>
+						</h:panelGroup>
 				</h:panelGrid>			
 		</h:panelGroup>
 </a4j:outputPanel>

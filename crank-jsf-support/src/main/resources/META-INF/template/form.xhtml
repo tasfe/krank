@@ -91,7 +91,8 @@
 		<c:set var="cancelButtonText" value="Cancel" />
 	</c:if>
 
-	<h:panelGrid columns="1" rendered="${renderExpression}">
+    <a4j:outputPanel ajaxRendered="true">
+    <h:panelGrid columns="1" rendered="${renderExpression}">
 		<!-- Main for fields -->
 		
 		<ui:insert name="headerForm"/>
@@ -230,7 +231,7 @@
 
 
         <c:if test="${showFormButtons}">
-		<a4j:outputPanel ajaxRendered="true">
+
 
 			
 			<h:panelGrid columns="4" rendered="${not ajax}">
@@ -243,11 +244,11 @@
 
                 <c:if test="${not useJavaScriptReset}">
                 <h:commandButton rendered="${resetMode}"
-					value="${resetButtonText}" reRender="${reRender}"
+					value="${resetButtonText}"
 					styleClass="${formButtonClass}" type="reset" />
                 </c:if>
                 <c:if test="${useJavaScriptReset}">
-                <button type="button" onclick="reset_${parentForm}_${methodStub}();" >${resetButtonText}</button>
+                    <input type="button" onclick="reset_${parentForm}_${methodStub}();"  value="${resetButtonText}"></input>
                 </c:if>
                 <h:commandButton value="${cancelButtonText}"
 					rendered="${cancelMode}" styleClass="${formButtonClass}"
@@ -256,32 +257,33 @@
 
 			
 			<h:panelGrid columns="4" rendered="${ajax}">
-				<a4j:commandButton rendered="${addCreateMode}"
+				<a4j:commandLink rendered="${addCreateMode}"
 					reRender="${reRender}" styleClass="${formButtonClass}"
 					value="${createButtonText}" action="${crud.create}" />
-				<a4j:commandButton rendered="${editMode}" reRender="${reRender}"
+				<a4j:commandLink rendered="${editMode}" reRender="${reRender}"
 					styleClass="${formButtonClass}" value="${updateButtonText}"
 					action="${crud.update}" />
 
                 <c:if test="${not useJavaScriptReset}">
-                <a4j:commandButton rendered="${resetMode}"
+                <a4j:commandLink rendered="${resetMode}"
 					value="${resetButtonText}" reRender="${reRender}"
 					styleClass="${formButtonClass}" type="reset" />
                 </c:if>
                 <c:if test="${useJavaScriptReset}">
-                <button type="button" onclick="reset_${parentForm}_${methodStub}();" >${resetButtonText}</button>
+                    <a onclick="reset_${parentForm}_${methodStub}();" style="color: #003366" class="${formButtonClass}">${resetButtonText}</a>
                 </c:if>
-                <a4j:commandButton value="${cancelButtonText}" immediate="true"
+                <a4j:commandLink value="${cancelButtonText}" immediate="true"
 					rendered="${cancelMode}" reRender="${reRender}"
-					styleClass="${formButtonClass}" type="button"
+					styleClass="${formButtonClass}"
 					action="${crud.cancel}" />
 
 			</h:panelGrid>
-		</a4j:outputPanel>
+
         </c:if>
     </h:panelGrid>
+    </a4j:outputPanel>    
 
-	<c:set var="ajax" value="" />
+    <c:set var="ajax" value="" />
 	<c:set var="addCreateMode" value="" />
 	<c:set var="editMode" value="" />
 	<c:set var="resetMode" value="" />

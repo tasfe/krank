@@ -4,11 +4,9 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd"
     version="1.2">
 
-<!-- 
   <lifecycle>
 		<phase-listener>org.crank.jsf.support.DebugPhaseListener</phase-listener>
   </lifecycle>
- -->
     
   <application>
     <action-listener>org.crank.crud.jsf.support.JsfMessageActionListener</action-listener>

@@ -101,7 +101,8 @@
 			columnClasses="topLeft">
 			<c:if test="${not empty propertyNames}">
 				<c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
-				<c:set var="labelIndex" value="0"/>
+                <c:set var="firstProperty" value="${pNames[0]}"/>
+                <c:set var="labelIndex" value="0"/>
 				<c:forEach items="${pNames}" var="property">
 					<c:if test="${not empty fieldLabels}">
 						<crank:field entity="#{crud.entity}" crud="${crud}"
@@ -173,7 +174,8 @@
 			</h:panelGrid>
 		</c:if>
 
-		<!-- Radio Groups -->
+
+        <!-- Radio Groups -->
 		<c:if test="${not empty exclusiveGroups}">
 			<c:set var="eGroups" value="${fn:split(exclusiveGroups, ',')}" />
 			<h:panelGrid columns="1" rowClasses="radioGroup" cellspacing="5"
@@ -281,7 +283,17 @@
 
         </c:if>
     </h:panelGrid>
-    </a4j:outputPanel>    
+
+    <!--
+    <c:if test="${not empty firstProperty}">
+    <script type="text/javascript">
+        var firstField = $("${parentForm}:__${crud.name}_${firstProperty}");
+        firstField.focus();      
+    </script>
+    </c:if>
+    -->
+
+    </a4j:outputPanel>
 
     <c:set var="ajax" value="" />
 	<c:set var="addCreateMode" value="" />
@@ -289,6 +301,8 @@
 	<c:set var="resetMode" value="" />
 	<c:set var="cancelMode" value="" />
     <c:set var="showFormButtons" value="" />
+
+
 
     <!--  </crankcc:form>  -->
 </ui:composition>

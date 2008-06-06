@@ -270,12 +270,12 @@
 															   onclick="toggleAllCheckBoxes('${parentForm}',true);"
 											                   toolTipText="Click to select all rows">
 											                   
-												<h:graphicImage id="selectAll${id}Img" value="${selectAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
+												<h:graphicImage id="selectAll${id}Img" value="${selectAllImg}" styleClass="${listingImageButtonClass}" border="0"/>
 											</crank:commandLink>
 											<crank:commandLink id="selectNone${id}"
 											                   onclick="toggleAllCheckBoxes('${parentForm}',false);"
 											                   toolTipText="Click to un-select all rows">
-												<h:graphicImage id="selectNone${id}Img" value="${selectNoneImg}" border="0" styleClass="${listingImageButtonClass}"/>
+												<h:graphicImage id="selectNone${id}Img" value="${selectNoneImg}" styleClass="${listingImageButtonClass}" border="0"/>
 											</crank:commandLink>
 											
 											<crank:commandLink id="disableSelected${id}"
@@ -284,7 +284,7 @@
 															   action="deleteSelected"
 															   onclick="if (!confirm('Are you sure you want to delete all selected items?')) return false"
 											                   toolTipText="Click to delete selected rows">
-												<h:graphicImage id="disableSelected${id}Img" value="${delAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
+												<h:graphicImage id="disableSelected${id}Img" value="${delAllImg}" styleClass="${listingImageButtonClass}" border="0"/>
 											</crank:commandLink>
 											
 										</h:column>
@@ -320,7 +320,7 @@
 											<c:choose>
 												<!--  If the property is a boolean, render a check box graphic. -->
 												<c:when test="${crud:isBoolean(detailController.entityClass,property)}">
-													<h:graphicImage value="${booleanImg}" rendered="${(row[property] == 'true') and not crud:isInCollection(property,editableProperties)}" styleClass="imageCenter"/>
+													<h:graphicImage value="${booleanImg}" rendered="${(row[property] == 'true') and not crud:isInCollection(property,editableProperties)}" styleClass="imageCenter" border="0"/>
 													<c:set var="renderAsText" value="${false}"/>
 													<c:set var="renderAsBoolean" value="${true}"/>
 												</c:when>
@@ -336,7 +336,7 @@
 										<c:otherwise>
 											<c:choose>
 												<c:when test="${crud:isBoolean(detailController.entityClass,property)}">
-													<h:graphicImage value="${booleanImg}" rendered="${(row[property] == 'true') and not crud:isInCollection(property,editableProperties)}" styleClass="imageCenter"/>
+													<h:graphicImage value="${booleanImg}" rendered="${(row[property] == 'true') and not crud:isInCollection(property,editableProperties)}" styleClass="imageCenter" border="0"/>
 													<c:set var="renderAsText" value="${false}"/>
 													<c:set var="renderAsBoolean" value="${true}"/>
 												</c:when>

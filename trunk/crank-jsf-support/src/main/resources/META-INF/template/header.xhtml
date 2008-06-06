@@ -56,8 +56,9 @@
 	<c:if test="${empty columnHeaderClass}">
 	    <c:set var="columnHeaderClass" value="dataTableColumnHeader" />
 	</c:if>
-	
-	<c:set var="fieldId" value="${crud:replace(fieldName,'.','_')}"/>
+
+
+    <c:set var="fieldId" value="${crud:replace(fieldName,'.','_')}"/>
 
 	<!-- END DEFINE VARIABLES -->
 
@@ -70,7 +71,7 @@
 				    value="${label}" reRender="${reRender}"
 				    title="${sortTip}"
 					action="#{orderBy.toggle}"
-					immediate="${immediate}"/>
+					immediate="true"/>
 
 				
 				<h:outputText value="&#160; ${(orderBy.sequence+1)}" rendered="${orderBy.enabled}" styleClass="${headerLinkClass}"/>
@@ -88,10 +89,10 @@
 					rendered="#{orderBy.asc and orderBy.enabled}"
 					title="${sortAscTip}"
 					action="#{orderBy.toggle}"
-					immediate="${immediate}"
+					immediate="true"
 					>
 					
-					<h:graphicImage value="${sortDescImg}" border="0" />
+					<h:graphicImage value="${sortDescImg}" border="0"/>
 				</a4j:commandLink>
 
 				<!-- Sort Ascending  -->
@@ -101,9 +102,9 @@
 					rendered="#{orderBy.desc and orderBy.enabled}"
 					title="${sortDescTip}"
 					action="#{orderBy.toggle}"
-					immediate="${immediate}"
+					immediate="true"
 					>
-					<h:graphicImage value="${sortAscImg}" border="0"/>
+					<h:graphicImage value="${sortAscImg}"  border="0"/>
 				</a4j:commandLink>
 				
 				<a4j:commandLink  
@@ -112,7 +113,7 @@
 					rendered="#{not comparison.enabled}"
 					title="${filterTip}"
 					styleClass="${headerLinkClass}"
-					immediate="${immediate}"
+					immediate="true"
 					>
 					<h:graphicImage value="${filterOnImg}" border="0"/>
 				</a4j:commandLink>
@@ -122,7 +123,7 @@
 							rendered="#{paginator.filtering and comparison.enabled}"
 							title="Click to apply column filters"
 							styleClass="${headerLinkClass}" value="filter"
-							immediate="${immediate}"
+							immediate="false"
 							>
 				</a4j:commandLink>
                 </c:if>
@@ -132,7 +133,7 @@
                             rendered="#{paginator.filtering and comparison.enabled}"
                             title="Click to apply column filters"
                             styleClass="${headerLinkClass}" value="Filter"
-                            immediate="${immediate}"
+                            immediate="false"
                             >
                 </h:commandLink>
                 </c:if>
@@ -141,12 +142,15 @@
                 </div>
 				
 				<a4j:outputPanel axajRendered="true" rendered="#{comparison.enabled and not crud:isFilterPropertyDate(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
-					<h:inputText        styleClass="${headerFilterInputTextClass}" 
+					<h:inputText        id="${fieldId}"
+                                        styleClass="${headerFilterInputTextClass}"
 										value="#{comparison.value}"
 										size="5"
 										rendered="${crud:isFilterPropertyText(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}"
-										>
-								<c:choose>											
+                                        immediate="true"
+                                        >
+                                <f:attribute name="filterName" value="${fieldId}"/>
+                                <c:choose>
 									<c:when test="${filter.long}">
 										<f:converter converterId="javax.faces.Long"/>
 									</c:when>
@@ -174,14 +178,14 @@
 
 					<h:panelGroup rendered="${crud:isFilterPropertyEnum(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
 				        <c:set var="propEntityName" value="${crud:getPropertyEntityName(filter.parentType,fieldName)}" />
-				        <h:selectOneMenu value="#{comparison.value}">
+				        <h:selectOneMenu value="#{comparison.value}" immediate="true">
 							<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
 						</h:selectOneMenu>
 					</h:panelGroup>
 
 					<h:panelGroup rendered="${crud:isFilterPropertyBoolean(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
 						<h:selectBooleanCheckbox styleClass="${headerFilterInputTextClass}" 
-											value="#{comparison.value}"/>
+											value="#{comparison.value}" immediate="true"/>
 					</h:panelGroup>
 
 					<a4j:commandLink  
@@ -190,7 +194,7 @@
 						action="#{comparison.disable}"
 						title="${filterRemTip}"
 						styleClass="${headerLinkClass}"
-						immediate="${immediate}"
+						immediate="true"
 						>
 						<h:graphicImage value="${filterOffImg}" border="0"/>
 					</a4j:commandLink>
@@ -201,19 +205,22 @@
 						<h:outputText value=""/>
 				        <t:calendar renderAsPopup="true" renderPopupButtonAsImage="true" 
 				        			size="8"
-				                    value="#{comparison.value}">
+				                    value="#{comparison.value}"
+                                    immediate="true"
+                                >
 				        </t:calendar>
 						<h:outputText value=""/>
 						<h:outputText value="thru" styleClass="headerTextClass"/>
 					    <t:calendar renderAsPopup="true" renderPopupButtonAsImage="true" 
 				        			size="8"
-					                    value="${comparison.value2}">
+					                    value="${comparison.value2}"
+                                immediate="true">
 					    </t:calendar>
 						<a4j:commandLink  reRender="${reRender}"
 										  action="#{comparison.disable}"
 										  title="${filterRemTip}"
 										  styleClass="${headerLinkClass}"
-										  immediate="${immediate}"								  
+										  immediate="true"								  
 										  >
 							<h:graphicImage value="${filterOffImg}" border="0"/>
 						</a4j:commandLink>

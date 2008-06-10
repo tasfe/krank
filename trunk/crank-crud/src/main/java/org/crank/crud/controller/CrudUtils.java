@@ -218,12 +218,12 @@ public class CrudUtils {
 
     public static boolean isLargeText(Class clazz, String propertyName) {
     	
-        try {   
+        try {
             if (!(getPropertyDescriptor(clazz, propertyName).getPropertyType() == String.class)) {
                 return false;
             }
             Map map = getAnnotationDataAsMap( clazz, propertyName );
-            
+
             boolean found = map.get( "column" ) != null;
             /* If you found an annotation called required, return true. */
             if (found) {
@@ -234,10 +234,10 @@ public class CrudUtils {
                     if (object != null) {
                         Integer length = (Integer) object;
                         return length.intValue() > 80;
-                    } else {
+            } else {
                         /* Otherwise, if the nullable value was not set, then return false. */
-                        return false;
-                    }
+                return false;
+            }
             }
             return false;
         } catch (Exception ex) {

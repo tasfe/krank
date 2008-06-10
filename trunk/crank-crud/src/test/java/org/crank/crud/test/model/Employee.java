@@ -6,14 +6,8 @@ package org.crank.crud.test.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.*;
+
 import org.crank.annotations.validation.Required;
 
 
@@ -39,6 +33,10 @@ import org.crank.annotations.validation.Required;
 	
 })
 @PrimaryKeyJoinColumn(name="PERSON_ID")
+@AttributeOverrides({
+	@AttributeOverride(name="ssn", column=@Column(unique=true, length=255))
+})
+
 public class Employee extends Person {
 
 	private String firstName;

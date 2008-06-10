@@ -24,6 +24,7 @@ public class CrudUtilsTest extends TestCase{
     public void testTextSize() {
         assertEquals(0, CrudUtils.textSize( Employee.class, "firstName"));
         assertEquals(81, CrudUtils.textSize( Employee.class, "description"));
+        assertEquals(255, CrudUtils.textSize( Employee.class, "ssn"));
 
     }
 

@@ -2,6 +2,7 @@ package org.crank.crud.controller;
 
 import java.beans.PropertyDescriptor;
 import java.util.*;
+import java.lang.annotation.Annotation;
 
 
 import org.crank.core.AnnotationData;
@@ -258,25 +259,46 @@ public class CrudUtils {
     }
 
     public static int columnSize(Class clazz, String propertyName) {
+
+        boolean found = false;
+        List<AnnotationData> list = AnnotationUtils.getAnnotationDataForClass(clazz, allowedPackages);
+        Map<String, AnnotationData> map = MapUtils.convertListToMap("name", list);
+        if (map.get("attributeOverrides") != null) {
+            Object[] values = (Object[]) map.get("attributeOverrides").getValues().get("value");
+
+            List<AnnotationData> extractValidationAnnotationData = AnnotationUtils.extractValidationAnnotationData((Annotation[]) values, allowedPackages);
+
+            for (AnnotationData ad : extractValidationAnnotationData) {
+                if (propertyName.equals(ad.getValues().get("name"))) {
+                    if (ad.getValues().get("column") != null) {
+                        ad = new AnnotationData((Annotation) ad.getValues().get("column"), allowedPackages);
+                        Object object = ad.getValues().get("length");
+                        if (object != null) {
+                            found = true;
+                            Integer length = (Integer) object;
+                            return length.intValue();
+                        }
+                    }
+                }
+            }
+        }
+
+        map = getAnnotationDataAsMap( clazz, propertyName );
         
-        Map map = getAnnotationDataAsMap( clazz, propertyName );
-        
-        boolean found = map.get( "column" ) != null;
+        found = map.get( "column" ) != null;
         /* If you found an annotation called required, return true. */
         if (found) {
-                /* If the column annotation data was found, see if the length flag was set. */
+                /*
+				 * If the column annotation data was found, see if the length
+				 * flag was set.
+				 */
                 AnnotationData ad = (AnnotationData) map.get( "column" );
                 Object object = ad.getValues().get("length");
                 /* If the nullable flag was set, return its value. */
                 if (object != null) {
                     Integer length = (Integer) object;
                     return length.intValue();
-                } else {
-                    /* Otherwise, if the nullable value was not set, then return false. */
-                    return 0;
-                
                 }
-                
         }
         return 0;
         

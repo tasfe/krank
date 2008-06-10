@@ -58,7 +58,7 @@ public class AnnotationUtils {
      * @param annotations list of annotations.
      * @return
      */
-    private static List<AnnotationData> extractValidationAnnotationData(
+    public static List<AnnotationData> extractValidationAnnotationData(
             Annotation[] annotations, Set<String> allowedPackages) {
         List<AnnotationData> annotationsList = new ArrayList<AnnotationData>();
         for (Annotation annotation : annotations) {

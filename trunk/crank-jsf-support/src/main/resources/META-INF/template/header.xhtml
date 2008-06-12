@@ -175,8 +175,12 @@
 								</c:choose>
 								
 					</h:inputText>
+                    <h:message for="${fieldId}" 
+                               styleClass="fieldMessage"
+                               style="color: red; text-decoration: underline"
+                            />
 
-					<h:panelGroup rendered="${crud:isFilterPropertyEnum(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
+                    <h:panelGroup rendered="${crud:isFilterPropertyEnum(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
 				        <c:set var="propEntityName" value="${crud:getPropertyEntityName(filter.parentType,fieldName)}" />
 				        <h:selectOneMenu value="#{comparison.value}" immediate="true">
 							<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
@@ -200,23 +204,35 @@
 					</a4j:commandLink>
 				</a4j:outputPanel>
 					<br />
-					<h:panelGrid columns="3" rendered="${comparison.enabled and crud:isFilterPropertyDate(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
+					<h:panelGrid columns="4" rendered="${comparison.enabled and crud:isFilterPropertyDate(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
 					
 						<h:outputText value=""/>
-				        <t:calendar renderAsPopup="true" renderPopupButtonAsImage="true" 
+				        <t:calendar id="${fieldId}Date1"
+                                renderAsPopup="true" renderPopupButtonAsImage="true"
 				        			size="8"
 				                    value="#{comparison.value}"
                                     immediate="true"
                                 >
 				        </t:calendar>
-						<h:outputText value=""/>
+                        <h:message for="${fieldId}Date1"
+                                   styleClass="fieldMessage"
+                                   style="color: red; text-decoration: underline"
+                                />
+
+                        <h:outputText value=""/>
 						<h:outputText value="thru" styleClass="headerTextClass"/>
-					    <t:calendar renderAsPopup="true" renderPopupButtonAsImage="true" 
+					    <t:calendar id="${fieldId}Date2"
+                                renderAsPopup="true" renderPopupButtonAsImage="true"
 				        			size="8"
 					                    value="${comparison.value2}"
                                 immediate="true">
 					    </t:calendar>
-						<a4j:commandLink  reRender="${reRender}"
+                        <h:message for="${fieldId}Date2" 
+                                   styleClass="fieldMessage"
+                                   style="color: red; text-decoration: underline"
+                                />
+
+                        <a4j:commandLink  reRender="${reRender}"
 										  action="#{comparison.disable}"
 										  title="${filterRemTip}"
 										  styleClass="${headerLinkClass}"

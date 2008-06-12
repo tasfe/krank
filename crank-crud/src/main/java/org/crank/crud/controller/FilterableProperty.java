@@ -79,6 +79,13 @@ public class FilterableProperty implements Serializable, Toggleable {
     public boolean isBigDecimal() {
     	return java.math.BigDecimal.class.isAssignableFrom(type);
     }
+
+    /** Is the property a Date? */
+    public boolean isDate() {
+    	return Date.class.isAssignableFrom(type);
+    }
+
+
     /** Is the property a Float or float? */
     public boolean isFloat() {
     	if (Float.class.isAssignableFrom(type)){

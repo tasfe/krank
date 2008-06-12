@@ -13,6 +13,8 @@ import java.io.Serializable;
 import java.util.*;
 import static org.crank.core.LogUtils.debug;
 import static org.crank.core.LogUtils.info;
+import org.crank.message.MessageUtils;
+import org.crank.message.MessageManagerUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -510,7 +512,16 @@ public class FilteringPaginator extends Paginator implements
 					Comparison eqc = Comparison.eq(
 							filterableProperty.getComparison().getName(), theEnumValue);
 					filterablePaginatableDataSource().group().add(eqc);
-				} else {
+				} else if (filterableProperty.isDate()){
+                    Between between = (Between)filterableProperty.getComparison();
+                    Date date1 = (Date)between.getValue();
+                    Date date2 = (Date)between.getValue2();
+                    if (!date1.before(date2)){
+                        MessageManagerUtils.getCurrentInstance().addErrorMessage("Start date must be before end date for %s",
+                                MessageUtils.createLabel(between.getName()));
+                    }
+
+                } else {
 					filterablePaginatableDataSource().group().add(
 							filterableProperty.getComparison());
 				}

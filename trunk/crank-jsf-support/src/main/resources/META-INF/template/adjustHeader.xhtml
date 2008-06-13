@@ -58,7 +58,7 @@
 	</c:if>
 
 
-    <c:set var="fieldId" value="${crud:replace(fieldName,'.','_')}"/>
+    <c:set var="fieldId" value="${crud:replace(fieldName,'.','_')}_${crud:sysTime()}"/>
 
 	<!-- END DEFINE VARIABLES -->
 

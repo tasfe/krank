@@ -76,7 +76,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		if (managedObjects == null) {
 			managedObjects = new ArrayList<CrudManagedObject>();
 			CrudManagedObject crudManagedObject = new CrudManagedObject(Employee.class,
-					EmployeeDAO.class);
+					EmployeeDAO.class, "firstName","lastName","status","active","dob","age","phone","department.name","address.zipCode","type.name");
 			//crudManagedObject.setTransactionalController(true);
 			managedObjects.add(crudManagedObject);
 			managedObjects.add(new CrudManagedObject(Department.class,

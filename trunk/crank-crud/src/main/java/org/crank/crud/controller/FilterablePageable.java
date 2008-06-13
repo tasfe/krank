@@ -175,4 +175,6 @@ public interface FilterablePageable extends Pageable {
 
 	@Deprecated
 	void setFetches(List<Join> fetches);
+
+    List<String> getPropertyNames();
 }

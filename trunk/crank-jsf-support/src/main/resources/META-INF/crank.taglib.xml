@@ -4,6 +4,15 @@
   "facelet-taglib_1_0.dtd">
 <facelet-taglib>
 	<namespace>http://www.googlecode.com/crank</namespace>
+    <tag>
+        <tag-name>adjustableListing</tag-name>
+        <source>template/adjustableListing.xhtml</source>
+    </tag>
+    <tag>
+        <tag-name>adjustHeader</tag-name>
+        <source>template/adjustHeader.xhtml</source>
+    </tag>
+
 	<tag>
 		<tag-name>detailForm</tag-name>
 		<source>template/detailForm.xhtml</source>

@@ -1,6 +1,7 @@
 package org.crank.crud.controller;
 
 import org.crank.core.MapUtils;
+import org.crank.core.TypeUtils;
 import org.crank.crud.controller.datasource.FilteringPagingDataSource;
 import org.crank.crud.criteria.*;
 import org.crank.crud.join.Join;
@@ -76,8 +77,10 @@ public class FilteringPaginator extends Paginator implements
 	
 	private List<Select> selects = new ArrayList<Select>();
 
+    private List<String> propertyNames = new ArrayList<String>();
 
-	/** The user friendly name of the object we are creating this listing for. */
+
+    /** The user friendly name of the object we are creating this listing for. */
 	private String name;
 
 	/** The orderBy sequence number. Used to order orderBy clauses. */
@@ -105,7 +108,69 @@ public class FilteringPaginator extends Paginator implements
 		createFilterProperties();
 	}
 
-	/** Gets the name of the listing. */
+    public FilteringPaginator(FilteringPagingDataSource dataSource, Class type, String... pNames) {
+        super(dataSource);
+        debug(log, "FilteringPaginator(dataSource=%s, type=%s)", dataSource, type);
+        this.type = type;
+        if (pNames == null || pNames.length==0) {
+            createFilterProperties();
+        } else {
+            this.setPropertyNames(pNames);
+            initFilterProperties();
+        }
+    }
+
+    private void initFilterProperties() {
+
+        for (String propertyName : propertyNames) {
+
+            /* Create the new filterableProperty. */
+            FilterableProperty filterableProperty = new FilterableProperty(
+                    propertyName, TypeUtils.getPropertyType(this.type, propertyName), this.type);
+
+
+            debug(log, "setupFilters(): created new filterableProperty=%s", filterableProperty);
+
+            /* Add it to our list of filterableProperties. */
+            filterableProperties.put(propertyName, filterableProperty);
+
+            /*
+             * Register our toggle listener to be notified if the end user
+             * activates this property.
+             */
+            filterableProperty
+                    .addToggleListener(new FPToggleListener(propertyName));
+
+        }
+
+    }
+
+
+    public List<String> getPropertyNames() {
+        return propertyNames;
+    }
+
+    public void setPropertyNames(List<String> propertyNames) {
+        this.propertyNames = propertyNames;
+    }
+
+    public void setPropertyNames(String propertyNamesStr) {
+        String[] pNames = propertyNamesStr.split("[.]");
+
+        for (String property : pNames) {
+            this.propertyNames.add(property.trim());
+        }
+    }
+
+    public void setPropertyNames(String[] propertyNamesArray) {
+        for (String property : propertyNamesArray) {
+            this.propertyNames.add(property.trim());
+        }
+    }
+
+
+
+    /** Gets the name of the listing. */
 	public String getName() {
 		return (name != null ? name : CrudUtils.getClassEntityName(type))
 				+ "Paginator";
@@ -545,8 +610,12 @@ public class FilteringPaginator extends Paginator implements
 	public void clearAll() {
 		filterableProperties.clear();
 		sequence = 0;
-		createFilterProperties();
-		filter();
+        if (getPropertyNames()==null || getPropertyNames().size()==0) {
+            createFilterProperties();
+        } else {
+            initFilterProperties();
+        }
+        filter();
 	}
 
 	/** See if anyone is sorting any column. */

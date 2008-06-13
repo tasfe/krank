@@ -19,7 +19,15 @@
 			java.lang.String generateEnumLabelValue(java.lang.String)
 		</function-signature>
 	</function>
-	
+
+    <function>
+        <function-name>sysTime</function-name>
+        <function-class>org.crank.crud.controller.CrudUtils</function-class>
+        <function-signature>
+            long sysTime()
+        </function-signature>
+    </function>
+
 	
 	<function>
 		<function-name>isEnum</function-name>

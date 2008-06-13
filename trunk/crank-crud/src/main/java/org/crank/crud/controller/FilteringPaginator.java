@@ -585,7 +585,8 @@ public class FilteringPaginator extends Paginator implements
                         MessageManagerUtils.getCurrentInstance().addErrorMessage("Start date must be before end date for %s",
                                 MessageUtils.createLabel(between.getName()));
                     }
-
+                    filterablePaginatableDataSource().group().add(
+                            filterableProperty.getComparison());
                 } else {
 					filterablePaginatableDataSource().group().add(
 							filterableProperty.getComparison());

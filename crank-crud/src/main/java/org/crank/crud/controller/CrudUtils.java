@@ -21,7 +21,10 @@ public class CrudUtils {
         allowedPackages.add( "org.crank.jsf.annotations" );
         allowedPackages.add( "org.crank.annotations.validation" );
     }
-    
+
+    public static long sysTime() {
+        return System.currentTimeMillis();
+    }
     public static boolean isFilterPropertyText(boolean autoCreatePrependParentAlias, Class<?> parentType, String property) {
     	if (autoCreatePrependParentAlias) {
     		return TypeUtils.isText(parentType, property);

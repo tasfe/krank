@@ -125,7 +125,12 @@ public abstract class CrudJSFConfig implements InitializingBean {
         for (CrudManagedObject mo : managedObjects()) {
             DaoFilteringPagingDataSource dataSource = new DaoFilteringPagingDataSource();
             dataSource.setDao( repos().get( mo.getName() ));
-            FilteringPaginator dataPaginator = new FilteringPaginator(dataSource, mo.getEntityType());
+            FilteringPaginator dataPaginator = null;
+            if (mo.getPropertyNames() == null) {
+                 dataPaginator = new FilteringPaginator(dataSource, mo.getEntityType());
+            } else {
+                dataPaginator = new FilteringPaginator(dataSource, mo.getEntityType(), mo.getPropertyNames());
+            }
             dataPaginator.setRequestParameterMapFinder(new RequestParameterMapFinderImpl());
             paginators.put(StringUtils.unCapitalize(mo.getName()), dataPaginator);
             paginators.put(mo.getName(), dataPaginator);

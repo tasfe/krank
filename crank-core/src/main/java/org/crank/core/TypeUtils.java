@@ -138,6 +138,11 @@ public class TypeUtils {
          }
     }
 
+    public static Class getPropertyType( final Class<?> type, final String propertyName ) {
+        return getPropertyDescriptor(type, propertyName).getPropertyType();
+    }
+
+
     public static Field getField( final Class<?> type, final String fieldName ) {
         if (!fieldName.contains( "." )) {
             return doFindFieldInHeirarchy( type, fieldName );

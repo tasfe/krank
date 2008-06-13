@@ -7,6 +7,7 @@ import java.util.List;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import javax.faces.model.SelectItem;
 
 import org.crank.crud.controller.CrudController;
 import org.crank.crud.controller.CrudControllerListenerAdapter;
@@ -23,6 +24,7 @@ import org.crank.crud.controller.ToggleEvent;
 import org.crank.crud.controller.ToggleListener;
 import org.crank.crud.controller.Toggleable;
 import org.crank.crud.criteria.Select;
+import org.crank.message.MessageUtils;
 
 /**
  * This class adapts a CrudController to the JSF world.
@@ -38,10 +40,16 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
     private DataModel model = new ListDataModel();
     private CrudOperations<T> controller;
 	private List<T> page;
+    private String[] availableProperties;
+    private String[] properties;
+    private List<SelectItem> availablePropertyList;
+    private boolean propertyEditorOpen;
+
 
     public JsfCrudAdapter() {
         
     }
+
 
     public JsfCrudAdapter(FilterablePageable filterablePageable, CrudOperations<T> crudController) {
         this.paginator = filterablePageable;
@@ -55,10 +63,63 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
         }
         if (this.paginator!=null) {
         	setupPaginatorEventWiring();
+            if (this.paginator.getPropertyNames()!=null) {
+                this.setAvailableProperties(this.paginator.getPropertyNames().toArray(new String[this.paginator.getPropertyNames().size()]));
+            }
         }
     }
 
-	private void setupCrudControllerWiring() {
+    public boolean isPropertyEditorOpen() {
+        return propertyEditorOpen;
+    }
+
+    public void setPropertyEditorOpen(boolean propertyEditorOpen) {
+        this.propertyEditorOpen = propertyEditorOpen;
+    }
+
+    public boolean isPropertiesEditable() {
+        return availableProperties!=null && availableProperties.length>0;
+    }
+
+    public List<SelectItem> getAvailablePropertyItems() {
+        if (availablePropertyList==null) {
+            String[] props = this.getAvailableProperties();
+
+            availablePropertyList = new ArrayList<SelectItem>(props.length);
+            for (String propertyName : props) {
+                availablePropertyList.add(new SelectItem(propertyName, MessageUtils.createLabel(propertyName)));
+            }
+        }
+        return availablePropertyList;
+    }
+
+    public void openPropertiesEditor() {
+            propertyEditorOpen = true;
+    }
+
+    public void closePropertiesEditor() {
+            propertyEditorOpen = false;
+            this.paginator.clearAll();
+    }
+
+
+    public String[] getAvailableProperties() {
+        return availableProperties;
+    }
+
+    public void setAvailableProperties(String[] availableProperties) {
+        this.availableProperties = availableProperties;
+    }
+
+    public String[] getProperties() {
+        return properties;
+    }
+
+    public void setProperties(String[] properties) {
+        this.properties = properties;
+    }
+    
+    private void setupCrudControllerWiring() {
 		((Toggleable)this.controller).addToggleListener( new ToggleListener(){
             public void toggle( ToggleEvent event ) {
                 JsfCrudAdapter.this.crudChanged();

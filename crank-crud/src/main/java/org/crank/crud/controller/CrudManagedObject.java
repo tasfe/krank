@@ -16,7 +16,15 @@ public class CrudManagedObject implements Serializable {
     private boolean transactionalController;
     private String newSelect = null;
 	private List<QueryHint<?>> queryHints;
-    
+    private String [] propertyNames;
+
+    public String[] getPropertyNames() {
+        return propertyNames;
+    }
+
+    public void setPropertyNames(String... propertyNames) {
+        this.propertyNames = propertyNames;
+    }
 
     public List<QueryHint<?>> getQueryHints() {
 		return queryHints;
@@ -33,18 +41,21 @@ public class CrudManagedObject implements Serializable {
 	public CrudManagedObject () {
         
     }
-    public CrudManagedObject (final Class entityType) {
-    	this(entityType, null);
+    public CrudManagedObject (final Class entityType, String... propertyNames) {
+        this.entityType = entityType;
+        this.propertyNames = propertyNames;
     }
 	
-    public CrudManagedObject (final Class entityType, final Class daoInterface) {
+    public CrudManagedObject (final Class entityType, final Class daoInterface, String... propertyNames) {
         this.entityType = entityType;
         this.daoInterface = daoInterface;
+        this.propertyNames = propertyNames;
     }
-    public CrudManagedObject (final Class entityType, final String name, final Class daoInterface) {
+    public CrudManagedObject (final Class entityType, final String name, final Class daoInterface, String... propertyNames) {
         this.entityType = entityType;
         this.name = name;
         this.daoInterface = daoInterface;
+        this.propertyNames = propertyNames;
     }
     public CrudManagedObject (final Class entityType, final Class idType, final String name, final Class daoInterface) {
         this.entityType = entityType;
@@ -52,6 +63,15 @@ public class CrudManagedObject implements Serializable {
         this.name = name;
         this.daoInterface = daoInterface;
     }
+
+    public CrudManagedObject (final Class entityType, final Class idType, final String name, final Class daoInterface, String... propertyNames) {
+        this.entityType = entityType;
+        this.idType = idType;
+        this.name = name;
+        this.daoInterface = daoInterface;
+        this.propertyNames = propertyNames;
+    }
+
     public String getName() {
         return name == null ? CrudUtils.getClassEntityName(entityType) : name; 
     }

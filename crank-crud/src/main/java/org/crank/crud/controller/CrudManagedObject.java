@@ -46,12 +46,8 @@ public class CrudManagedObject implements Serializable {
         this.entityType = entityType;
     }
 
-    public CrudManagedObject (final Class entityType, String name) {
-        this.entityType = entityType;
-        this.name = name;
-    }
 
-    public static CrudManagedObject createWithProperties(String name, final Class entityType, String... propertyNames) {
+    public static CrudManagedObject createWithEntityNameAndProperties(String name, final Class entityType, final String... propertyNames) {
         CrudManagedObject crudManagedObject = new CrudManagedObject();
         crudManagedObject.name = name;
         crudManagedObject.entityType = entityType;
@@ -59,37 +55,46 @@ public class CrudManagedObject implements Serializable {
         return crudManagedObject;
     }
 
-    public static CrudManagedObject createWithProperties(final Class entityType, String... propertyNames) {
+    public static CrudManagedObject createWithProperties(final Class entityType, final String... propertyNames) {
         CrudManagedObject crudManagedObject = new CrudManagedObject();
         crudManagedObject.entityType = entityType;
-        crudManagedObject.propertyNames = propertyNames;
+        crudManagedObject.propertyNames = propertyNames;        
         return crudManagedObject;
     }
 
-    public CrudManagedObject (final Class entityType, final Class daoInterface, String... propertyNames) {
+    public static CrudManagedObject createWithPropertiesAndDAO(final Class entityType, final Class daoInterface, final String... propertyNames) {
+        CrudManagedObject crudManagedObject = new CrudManagedObject();
+        crudManagedObject.entityType = entityType;
+        crudManagedObject.propertyNames = propertyNames;
+        crudManagedObject.daoInterface = daoInterface;
+        return crudManagedObject;
+    }
+
+    public static CrudManagedObject createWithNameAndDAOAndProperties(final String name, final Class entityType, final Class daoInterface, final String... propertyNames) {
+        CrudManagedObject crudManagedObject = new CrudManagedObject();
+        crudManagedObject.entityType = entityType;
+        crudManagedObject.propertyNames = propertyNames;
+        crudManagedObject.daoInterface = daoInterface;
+        crudManagedObject.name = name;
+        return crudManagedObject;
+    }
+
+
+
+    public CrudManagedObject (final Class entityType, final Class daoInterface) {
         this.entityType = entityType;
         this.daoInterface = daoInterface;
-        this.propertyNames = propertyNames;
     }
-    public CrudManagedObject (final Class entityType, final String name, final Class daoInterface, String... propertyNames) {
+    public CrudManagedObject (final Class entityType, final String name, final Class daoInterface) {
         this.entityType = entityType;
         this.name = name;
         this.daoInterface = daoInterface;
-        this.propertyNames = propertyNames;
     }
     public CrudManagedObject (final Class entityType, final Class idType, final String name, final Class daoInterface) {
         this.entityType = entityType;
         this.idType = idType;
         this.name = name;
         this.daoInterface = daoInterface;
-    }
-
-    public CrudManagedObject (final Class entityType, final Class idType, final String name, final Class daoInterface, String... propertyNames) {
-        this.entityType = entityType;
-        this.idType = idType;
-        this.name = name;
-        this.daoInterface = daoInterface;
-        this.propertyNames = propertyNames;
     }
 
     public String getName() {

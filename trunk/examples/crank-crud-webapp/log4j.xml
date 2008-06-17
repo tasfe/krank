@@ -98,7 +98,7 @@
 	
 	
     <category name="org.crank.crud.controller.Paginator">
-        <priority value="DEBUG"/>
+        <priority value="ERROR"/>
     </category>
 
 

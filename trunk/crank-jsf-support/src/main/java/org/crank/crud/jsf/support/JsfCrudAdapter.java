@@ -1,8 +1,7 @@
 package org.crank.crud.jsf.support;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
@@ -69,6 +68,53 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
         }
     }
 
+    private String propertyToMove;
+
+    public void setPropertyToMove(String propertyToMove) {
+        this.propertyToMove = propertyToMove;
+    }
+
+    public void movePropertyRight() {
+
+        System.out.printf("movePropertyRight %s %s \n", propertyToMove, Arrays.asList(properties));
+        int index = Arrays.asList(properties).indexOf(propertyToMove);
+        System.out.printf("right index %s \n", index);
+
+        if (index == -1) {
+            System.out.println("not found " + propertyToMove);
+            return;
+        }
+        if (index + 1 >= properties.length) {
+            System.out.println("Out of bounds " + propertyToMove);
+            return;
+        }
+        String replaceString = properties[index+1];
+        properties[index+1]=propertyToMove;
+        properties[index] = replaceString;
+
+        System.out.printf("after movePropertyRight %s %s \n", propertyToMove, Arrays.asList(properties));
+        availablePropertyList = null;
+    }
+
+    public void movePropertyLeft() {
+        System.out.printf("movePropertyLeft %s %s \n", propertyToMove, Arrays.asList(properties));
+        int index = Arrays.asList(properties).indexOf(propertyToMove);
+        System.out.printf("left index %s \n", index);
+        if (index == -1) {
+            System.out.println("not found " + propertyToMove);
+            return;
+        }
+        if (index - 1 < 0) {
+            System.out.println("out of bounds " + propertyToMove);
+            return;
+        }
+        String replaceString = properties[index-1];
+        properties[index-1]=propertyToMove;
+        properties[index] = replaceString;
+        System.out.printf("after movePropertyLeft %s %s \n", propertyToMove, Arrays.asList(properties));
+        availablePropertyList = null;
+    }
+
     public boolean isPropertyEditorOpen() {
         return propertyEditorOpen;
     }
@@ -82,11 +128,21 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
     }
 
     public List<SelectItem> getAvailablePropertyItems() {
-        if (availablePropertyList==null) {
+        if (availablePropertyList == null) {
+            availablePropertyList = new ArrayList<SelectItem>();
+            Set<String> existingProps = null;
+            if (properties !=null) {
+                existingProps = new HashSet(Arrays.asList(this.properties));
+                for (String propertyName : properties) {
+                    availablePropertyList.add(new SelectItem(propertyName, MessageUtils.createLabel(propertyName)));
+                }
+            }
             String[] props = this.getAvailableProperties();
 
-            availablePropertyList = new ArrayList<SelectItem>(props.length);
             for (String propertyName : props) {
+                if (existingProps!=null && existingProps.contains(propertyName)) {
+                    continue;
+                }
                 availablePropertyList.add(new SelectItem(propertyName, MessageUtils.createLabel(propertyName)));
             }
         }
@@ -98,6 +154,7 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
     }
 
     public void closePropertiesEditor() {
+            availablePropertyList = null;
             propertyEditorOpen = false;
             this.paginator.clearAll();
     }
@@ -111,8 +168,16 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
         this.availableProperties = availableProperties;
     }
 
+    public boolean isPropertiesPresent() {
+        return properties != null && properties.length > 0;
+    }
+    
     public String[] getProperties() {
-        return properties;
+        if (properties == null || properties.length==0) {
+            return availableProperties;
+        } else {
+            return properties;
+        }
     }
 
     public void setProperties(String[] properties) {

@@ -126,17 +126,13 @@
 	<c:if test="${empty listingImageButtonClass}">
 		<c:set var="listingImageButtonClass" value="paginationImageButton" />
 	</c:if>
-    <c:if test="${not empty jsfCrudAdapter.properties}">
-        <c:set var="pNames" value="${jsfCrudAdapter.properties}" />
 
-    </c:if>
-    <c:if test="${empty jsfCrudAdapter.properties}">
-        <c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
-    </c:if>
-    
+
+
     <a4j:outputPanel ajaxRendered="true">
 
-		<h:panelGrid id="listPanel${id}" columns="1" width="${dataTableWidth}">
+
+        <h:panelGrid id="listPanel${id}" columns="1" width="${dataTableWidth}">
 			<crank:paginator paginator="${paginator}" reRender="${reRender}" ajaxSingle="${ajaxSingle}" readOnly="${readOnly}"/>
 
  
@@ -203,8 +199,8 @@
 							</crank:commandLink>
 						</h:column>
 					    </c:if>
-						<c:forEach items="${pNames}" var="property">
-							<crank:adjustHeader fieldName="${property}" paginator="${paginator}"
+						<c:forEach items="${jsfCrudAdapter.properties}" var="property">
+							<crank:adjustHeader fieldName="${property}" paginator="${paginator}"  jsfCrudAdapter="${jsfCrudAdapter}"
 								reRender="${reRender}" />
 						</c:forEach>
 						<h:column>
@@ -225,7 +221,7 @@
 	   				<h:selectBooleanCheckbox value="#{row.selected}" styleClass="imageCenter"/>
 				</h:column>
 				</c:if>
-				<c:forEach items="${pNames}" var="property">
+				<c:forEach items="${jsfCrudAdapter.properties}" var="property">
 					<c:set var="renderAsText" value="${true}"/>
 					<c:set var="outputText" value=""/>
 					<h:column>
@@ -247,14 +243,14 @@
                             <c:otherwise>
                                 <c:choose>								
                                     <c:when test="${crud:isFilterPropertyBoolean(paginator.filterableProperties[property].autoCreatePrependParentAlias, paginator.filterableProperties[property].parentType, property)}">
-                                        <h:graphicImage value="${booleanImg}" rendered="${(row.object[property] == 'true')}" styleClass="imageCenter"/>
+                                        <h:graphicImage value="${booleanImg}" rendered="${(row.map[property] == 'true')}" styleClass="imageCenter"/>
                                         <c:set var="renderAsText" value="${false}"/>
                                     </c:when>
                                     <c:when test="${crud:isFilterPropertyEnum(paginator.filterableProperties[property].autoCreatePrependParentAlias, paginator.filterableProperties[property].parentType, property)}">
-                                        <c:set var="outputText" value="#{crud:createEnumLabel(row.object[property])}"/>
+                                        <c:set var="outputText" value="#{crud:createEnumLabel(row.map[property])}"/>
                                     </c:when>
                                     <c:otherwise>
-                                        <c:set var="outputText" value="#{row.object[property]}"/>
+                                        <c:set var="outputText" value="#{row.map[property]}"/>
                                     </c:otherwise>
                                 </c:choose>
                             </c:otherwise>

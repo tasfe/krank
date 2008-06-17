@@ -41,11 +41,31 @@ public class CrudManagedObject implements Serializable {
 	public CrudManagedObject () {
         
     }
-    public CrudManagedObject (final Class entityType, String... propertyNames) {
+    
+    public CrudManagedObject (final Class entityType) {
         this.entityType = entityType;
-        this.propertyNames = propertyNames;
     }
-	
+
+    public CrudManagedObject (final Class entityType, String name) {
+        this.entityType = entityType;
+        this.name = name;
+    }
+
+    public static CrudManagedObject createWithProperties(String name, final Class entityType, String... propertyNames) {
+        CrudManagedObject crudManagedObject = new CrudManagedObject();
+        crudManagedObject.name = name;
+        crudManagedObject.entityType = entityType;
+        crudManagedObject.propertyNames = propertyNames;
+        return crudManagedObject;
+    }
+
+    public static CrudManagedObject createWithProperties(final Class entityType, String... propertyNames) {
+        CrudManagedObject crudManagedObject = new CrudManagedObject();
+        crudManagedObject.entityType = entityType;
+        crudManagedObject.propertyNames = propertyNames;
+        return crudManagedObject;
+    }
+
     public CrudManagedObject (final Class entityType, final Class daoInterface, String... propertyNames) {
         this.entityType = entityType;
         this.daoInterface = daoInterface;

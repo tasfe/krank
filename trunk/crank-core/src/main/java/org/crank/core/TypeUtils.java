@@ -139,7 +139,11 @@ public class TypeUtils {
     }
 
     public static Class getPropertyType( final Class<?> type, final String propertyName ) {
-        return getPropertyDescriptor(type, propertyName).getPropertyType();
+        try {
+            return getPropertyDescriptor(type, propertyName).getPropertyType();
+        } catch (Exception ex) {
+            throw new CrankException(ex, "Unable to retrieve property descriptor for %s of class %s", propertyName, type.getName());
+        }
     }
 
 

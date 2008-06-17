@@ -76,7 +76,30 @@
 				
 				<h:outputText value="&#160; ${(orderBy.sequence+1)}" rendered="${orderBy.enabled}" styleClass="${headerLinkClass}"/>
 
-				<br />
+
+                <a4j:commandLink
+                    styleClass="${headerLinkClass}"
+                    rendered="${jsfCrudAdapter.propertiesPresent}"    
+                    action="#{jsfCrudAdapter.movePropertyLeft}"
+                    immediate="true"
+                    >
+                    <f:setPropertyActionListener value="${orderBy.name}" target="${jsfCrudAdapter.propertyToMove}" />
+                    &lt;
+                </a4j:commandLink>
+
+                <a4j:commandLink
+                    styleClass="${headerLinkClass}"
+                    rendered="${jsfCrudAdapter.propertiesPresent}"
+                    action="#{jsfCrudAdapter.movePropertyRight}"
+                    immediate="true"
+                    >
+                    <f:setPropertyActionListener value="${orderBy.name}" target="${jsfCrudAdapter.propertyToMove}"/>
+                    &gt;
+                </a4j:commandLink>
+
+
+
+                <br />
 				
 				<div style="text-align: right">
 				

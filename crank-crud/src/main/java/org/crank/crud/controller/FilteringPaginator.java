@@ -86,7 +86,8 @@ public class FilteringPaginator extends Paginator implements
 	/** The orderBy sequence number. Used to order orderBy clauses. */
 	private int sequence;
 
-	/**
+        
+    /**
 	 * Allows automatic joining to avoid n+1, this is a powerful feature that is
 	 * under utilized. It probably needs to be revisited with our improved
 	 * understanding of JPA.

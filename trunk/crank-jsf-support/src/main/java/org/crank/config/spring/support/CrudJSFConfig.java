@@ -65,8 +65,10 @@ public abstract class CrudJSFConfig implements InitializingBean {
             
             /* Inject the repositories. */
             crudControllerTarget.setDao( repos().get( mo.getName() ) );
-            JsfCrudAdapter jsfCrudAdapter = new JsfCrudAdapter(
+            JsfCrudAdapter jsfCrudAdapter = new JsfCrudAdapter(StringUtils.unCapitalize(mo.getName()),
             		pagers().get(StringUtils.unCapitalize(mo.getName())), crudControllerTarget);
+
+            jsfCrudAdapter.setEntityName(StringUtils.unCapitalize(mo.getName()));
             
             
             /* Put the crudController into the map. */

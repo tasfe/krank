@@ -7,23 +7,14 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Cookie;
 
-import org.crank.crud.controller.CrudController;
-import org.crank.crud.controller.CrudControllerListenerAdapter;
-import org.crank.crud.controller.CrudEvent;
-import org.crank.crud.controller.CrudOperations;
-import org.crank.crud.controller.EntityLocator;
-import org.crank.crud.controller.FilterablePageable;
-import org.crank.crud.controller.FilteringEvent;
-import org.crank.crud.controller.FilteringListener;
-import org.crank.crud.controller.PaginationEvent;
-import org.crank.crud.controller.PaginationListener;
-import org.crank.crud.controller.Row;
-import org.crank.crud.controller.ToggleEvent;
-import org.crank.crud.controller.ToggleListener;
-import org.crank.crud.controller.Toggleable;
+import org.crank.crud.controller.*;
 import org.crank.crud.criteria.Select;
 import org.crank.message.MessageUtils;
+import org.crank.core.LogUtils;
+import org.apache.log4j.Logger;
 
 /**
  * This class adapts a CrudController to the JSF world.
@@ -43,14 +34,18 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
     private String[] properties;
     private List<SelectItem> availablePropertyList;
     private boolean propertyEditorOpen;
+    private String entityName;
+
+    protected Logger log = Logger.getLogger(JsfCrudAdapter.class);
 
 
     public JsfCrudAdapter() {
-        
+        readCookie();
     }
 
 
-    public JsfCrudAdapter(FilterablePageable filterablePageable, CrudOperations<T> crudController) {
+    public JsfCrudAdapter(String eName, FilterablePageable filterablePageable, CrudOperations<T> crudController) {
+        this.entityName = eName;
         this.paginator = filterablePageable;
         this.controller = crudController;
         crudController.addCrudControllerListener( new CancelListener() );
@@ -66,6 +61,7 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
                 this.setAvailableProperties(this.paginator.getPropertyNames().toArray(new String[this.paginator.getPropertyNames().size()]));
             }
         }
+        readCookie();
     }
 
     private String propertyToMove;
@@ -74,45 +70,121 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
         this.propertyToMove = propertyToMove;
     }
 
+
+    /**
+     * This method should not fail if the cookie cannot be written (just warn).
+     */
+    private void sendCookie() {
+        log.debug("sendCookie");
+        /* Write the cookie */
+        try {
+            /* If the entityName was present, try to write out the cookie. */
+            if (entityName !=null) {
+                HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+                Cookie cookie = new Cookie("JsfCrudAdapter::" + entityName, Arrays.asList(properties).toString().replace(',','_').replace(' ', '_'));
+                LogUtils.debug(log, "Writing cookie %s %s", entityName, Arrays.asList(properties).toString().replace(',','_').replace(' ', '_'));
+                cookie.setMaxAge(365*24*60*60);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+            } else {
+                log.warn("entity name missing so we could not write the cookie");
+            }
+        } catch (Exception ex) {
+            log.warn("Unable to write cookie", ex);
+        }
+    }
+
+    /**
+     * This method should not fail if the cookie cannot be read (just warn).
+     */
+    private void readCookie() {
+        log.debug("1 readCookie");
+        try {
+
+            /* Read the cookies. */
+            Cookie cookie = (Cookie) FacesContext.getCurrentInstance().getExternalContext()
+                    .getRequestCookieMap().get("JsfCrudAdapter::" + entityName);
+
+            LogUtils.debug(log, "2 Just read cookie %s for %s", cookie, entityName);
+
+            if (log.isDebugEnabled()) {
+                Set<Map.Entry<String, Object>> entries = FacesContext.getCurrentInstance().getExternalContext()
+                        .getRequestCookieMap().entrySet();
+                for (Map.Entry<String, Object> entry : entries) {
+                    LogUtils.debug(log, "key %s value %s", entry.getKey(), ((Cookie)entry.getValue()).getValue());
+                }
+            }
+
+            if (cookie == null) {
+                LogUtils.debug(log, "3 Cookie was null for %s", entityName);
+                return;
+            }
+            
+            String cookieValue = cookie.getValue();
+            if (cookieValue == null || cookieValue.length()==0) {
+                LogUtils.debug(log, "4 Cookie was not set for %s", entityName);
+                return;
+            }
+
+            LogUtils.debug(log, "5 Cookie value %s for %s", cookieValue, entityName);
+
+            /* Parse the cookie. */
+            String[] comps = cookieValue.split("[_\\[\\]]");
+            List<String> props = new ArrayList<String>();
+
+            for (String prop : comps) {
+               if (prop.trim().length()==0) {
+                 continue;
+               } else {
+                  LogUtils.debug(log, "6 Read header from cookie %s", prop);
+                  props.add(prop.trim());
+               }
+            }
+
+            /* If there were headers in the cookie, set them into properties. */
+            if (props.size()>0) {
+                this.setProperties(props.toArray(new String[props.size()]));
+            }
+        } catch (Exception ex) {
+            log.warn("UNABLE TO READ COOKIE", ex);
+        }        
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
+    }
+
+
     public void movePropertyRight() {
 
-        System.out.printf("movePropertyRight %s %s \n", propertyToMove, Arrays.asList(properties));
         int index = Arrays.asList(properties).indexOf(propertyToMove);
-        System.out.printf("right index %s \n", index);
 
         if (index == -1) {
-            System.out.println("not found " + propertyToMove);
             return;
         }
         if (index + 1 >= properties.length) {
-            System.out.println("Out of bounds " + propertyToMove);
             return;
         }
         String replaceString = properties[index+1];
         properties[index+1]=propertyToMove;
         properties[index] = replaceString;
-
-        System.out.printf("after movePropertyRight %s %s \n", propertyToMove, Arrays.asList(properties));
         availablePropertyList = null;
+        sendCookie();
     }
 
     public void movePropertyLeft() {
-        System.out.printf("movePropertyLeft %s %s \n", propertyToMove, Arrays.asList(properties));
         int index = Arrays.asList(properties).indexOf(propertyToMove);
-        System.out.printf("left index %s \n", index);
         if (index == -1) {
-            System.out.println("not found " + propertyToMove);
             return;
         }
         if (index - 1 < 0) {
-            System.out.println("out of bounds " + propertyToMove);
             return;
         }
         String replaceString = properties[index-1];
         properties[index-1]=propertyToMove;
         properties[index] = replaceString;
-        System.out.printf("after movePropertyLeft %s %s \n", propertyToMove, Arrays.asList(properties));
         availablePropertyList = null;
+        sendCookie();
     }
 
     public boolean isPropertyEditorOpen() {
@@ -157,6 +229,7 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
             availablePropertyList = null;
             propertyEditorOpen = false;
             this.paginator.clearAll();
+            sendCookie();
     }
 
 

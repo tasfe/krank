@@ -547,6 +547,9 @@ public class FilteringPaginator extends Paginator implements
 	private List<OrderBy> prepareUserFiltersAndExtractOrderBysForFilter() {
 
         debug(log, "prepareUserFiltersAndExtractOrderBysForFilter()");
+
+        System.out.println("###################################### &&&&&&&&&&&&&&&&&&&&&&&&&&");
+        
         
         /* Clear the comparison group b/c we are about to recreate it */
 		filterablePaginatableDataSource().group().clear();
@@ -588,7 +591,23 @@ public class FilteringPaginator extends Paginator implements
                     }
                     filterablePaginatableDataSource().group().add(
                             filterableProperty.getComparison());
-                } else {
+                }  else if (!filterableProperty.isString() && filterableProperty.getComparison().getValue() instanceof String) {
+                    if (filterableProperty.isInteger()){
+                        Integer value = Integer.valueOf((String) filterableProperty.getComparison().getValue());
+                        filterableProperty.getComparison().setValue(value);
+                    } else if (filterableProperty.isLong()){
+                        Long value = Long.valueOf((String) filterableProperty.getComparison().getValue());
+                        filterableProperty.getComparison().setValue(value);
+                    }  else if (filterableProperty.isShort()){
+                        Short value = Short.valueOf((String) filterableProperty.getComparison().getValue());
+                        filterableProperty.getComparison().setValue(value);
+                    }
+                    filterableProperty.getComparison().setOperator(Operator.EQ);
+                    filterablePaginatableDataSource().group().add(
+							filterableProperty.getComparison());
+                }
+
+                else {
 					filterablePaginatableDataSource().group().add(
 							filterableProperty.getComparison());
 				}

@@ -101,5 +101,9 @@
         <priority value="ERROR"/>
     </category>
 
+    <category name="org.crank.crud.jsf.support.JsfCrudAdapter">
+        <priority value="DEBUG"/>
+    </category>
+
 
 </log4j:configuration>

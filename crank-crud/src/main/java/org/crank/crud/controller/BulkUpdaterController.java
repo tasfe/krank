@@ -5,6 +5,7 @@ import org.crank.core.LogUtils;
 import org.crank.core.TypeUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -44,6 +45,8 @@ public class BulkUpdaterController <T> {
 	public void setShow(boolean show) {
 		this.show = show;
 	}
+	
+	@Transactional
 	public void process() {
         List list = entityLocator.getSelectedEntities();
         debug(log, "Process list=%s", list);

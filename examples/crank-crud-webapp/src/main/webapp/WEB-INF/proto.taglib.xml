@@ -3,6 +3,14 @@
 <facelet-taglib>
     <namespace>http://crankcrud.org/proto</namespace>
 	<tag>
+		<tag-name>bulkListing</tag-name>
+		<source>template/bulkListing.xhtml</source>
+	</tag>
+	<tag>
+		<tag-name>bulkHeader</tag-name>
+		<source>template/bulkHeader.xhtml</source>
+	</tag>
+	<tag>
 		<tag-name>selectManyByIdListing</tag-name>
 		<source>template/selectManyByIdListing.xhtml</source>
 	</tag>

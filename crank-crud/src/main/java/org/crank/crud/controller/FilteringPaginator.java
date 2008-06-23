@@ -548,7 +548,7 @@ public class FilteringPaginator extends Paginator implements
 
         debug(log, "prepareUserFiltersAndExtractOrderBysForFilter()");
 
-        System.out.println("###################################### &&&&&&&&&&&&&&&&&&&&&&&&&&");
+        
         
         
         /* Clear the comparison group b/c we are about to recreate it */

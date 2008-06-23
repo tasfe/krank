@@ -101,7 +101,7 @@
         <priority value="ERROR"/>
     </category>
 
-    <category name="org.crank.crud.jsf.support.JsfCrudAdapter">
+    <category name="org.crank.crud.controller.BulkUpdaterController">
         <priority value="DEBUG"/>
     </category>
 

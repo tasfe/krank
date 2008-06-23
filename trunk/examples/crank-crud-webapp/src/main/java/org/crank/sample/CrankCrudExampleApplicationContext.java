@@ -14,6 +14,7 @@ import org.crank.controller.SayHelloController;
 import org.crank.controller.SelectEmployeeListingController;
 import org.crank.controller.TagController;
 import org.crank.crud.controller.AutoCompleteController;
+import org.crank.crud.controller.BulkUpdaterController;
 import org.crank.crud.controller.CrudControllerAdapter;
 import org.crank.crud.controller.CrudEvent;
 import org.crank.crud.controller.CrudManagedObject;
@@ -107,6 +108,16 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		}
 		return managedObjects;
 
+	}
+	
+	@ScopedProxy
+	@Bean(scope = DefaultScopes.SESSION)
+	public BulkUpdaterController<Employee> employeeBulkUpdater() {
+		BulkUpdaterController<Employee> bulkUpdater = new BulkUpdaterController<Employee>();
+		bulkUpdater.setType(Employee.class);
+		bulkUpdater.setRepo(repos().get("Employee"));
+		bulkUpdater.setEntityLocator(cruds().get("Employee"));
+		return bulkUpdater;
 	}
 
 	@ScopedProxy

@@ -116,6 +116,95 @@ public class TypeUtils {
         return false;
     }
 
+    public static boolean isFloat( final Class<?> type, final String propertyName ) {
+    	if (type==null || propertyName==null) {
+    		throw new CrankException("Class type and propertyName must not be null, type=%s, propertyName=%s", type, propertyName );
+    	}
+        PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
+        if (pd==null) {
+        	//throw new CrankException("The Property was not found!, type=%s, propertyName=%s", type, propertyName );
+        	return false;
+        }
+        Class<?> propertyType = pd.getPropertyType();
+        if (propertyType == Float.class) {
+            return true;
+        } else if (propertyType.isPrimitive() && "float".equals( propertyType.getName() )) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isInteger( final Class<?> type, final String propertyName ) {
+    	if (type==null || propertyName==null) {
+    		throw new CrankException("Class type and propertyName must not be null, type=%s, propertyName=%s", type, propertyName );
+    	}
+        PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
+        if (pd==null) {
+        	//throw new CrankException("The Property was not found!, type=%s, propertyName=%s", type, propertyName );
+        	return false;
+        }
+        Class<?> propertyType = pd.getPropertyType();
+        if (propertyType == Integer.class) {
+            return true;
+        } else if (propertyType.isPrimitive() && "int".equals( propertyType.getName() )) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isShort( final Class<?> type, final String propertyName ) {
+    	if (type==null || propertyName==null) {
+    		throw new CrankException("Class type and propertyName must not be null, type=%s, propertyName=%s", type, propertyName );
+    	}
+        PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
+        if (pd==null) {
+        	//throw new CrankException("The Property was not found!, type=%s, propertyName=%s", type, propertyName );
+        	return false;
+        }
+        Class<?> propertyType = pd.getPropertyType();
+        if (propertyType == Short.class) {
+            return true;
+        } else if (propertyType.isPrimitive() && "short".equals( propertyType.getName() )) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isLong( final Class<?> type, final String propertyName ) {
+    	if (type==null || propertyName==null) {
+    		throw new CrankException("Class type and propertyName must not be null, type=%s, propertyName=%s", type, propertyName );
+    	}
+        PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
+        if (pd==null) {
+        	//throw new CrankException("The Property was not found!, type=%s, propertyName=%s", type, propertyName );
+        	return false;
+        }
+        Class<?> propertyType = pd.getPropertyType();
+        if (propertyType == Long.class) {
+            return true;
+        } else if (propertyType.isPrimitive() && "long".equals( propertyType.getName() )) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isString( final Class<?> type, final String propertyName ) {
+    	if (type==null || propertyName==null) {
+    		throw new CrankException("Class type and propertyName must not be null, type=%s, propertyName=%s", type, propertyName );
+    	}
+        PropertyDescriptor pd = getPropertyDescriptor( type, propertyName );
+        if (pd==null) {
+        	//throw new CrankException("The Property was not found!, type=%s, propertyName=%s", type, propertyName );
+        	return false;
+        }
+        Class<?> propertyType = pd.getPropertyType();
+        if (propertyType == String.class) {
+            return true;
+        }
+        
+        return false;
+    }
+
     public static PropertyDescriptor getPropertyDescriptor( final Class<?> type, final String propertyName ) {
     	if (type==null || propertyName==null) {
     		throw new CrankException("Class type and propertyName must not be null, type=%s, propertyName=%s", type, propertyName );

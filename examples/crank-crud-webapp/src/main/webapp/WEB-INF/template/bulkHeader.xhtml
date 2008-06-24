@@ -166,21 +166,48 @@
                 
 				<a4j:outputPanel axajRendered="true" rendered="${bulkUpdater.show}">
 						<div style="border: thin">
+                            <c:set var="fieldIndex" value="${fieldName}"/>
+
+                            <c:if test="${crud:isParentManyToOne(bulkUpdater.type,fieldName)}">
+                                  <c:set var="fieldIndex" value="${crud:getParentProperty(fieldName)}"/>
+                            </c:if>
+
                             <h:selectBooleanCheckbox  value="${bulkUpdater.useProperties[fieldName]}"  label="use"/>
-                            <c:if test="${crud:isText(bulkUpdater.type,fieldName)}">
-									<h:inputText value="${bulkUpdater.properties[fieldName]}" size="10"/>
-							</c:if>
-							<c:if test="${crud:isBoolean(bulkUpdater.type,fieldName)}">
- 									<h:selectBooleanCheckbox  value="${bulkUpdater.properties[fieldName]}" />
+
+                            <c:if test="${crud:isText(bulkUpdater.type,fieldIndex)}">
+
+                                <c:if test="${not crud:hasParentProperty(fieldName)}">
+                                    <h:inputText value="${bulkUpdater.prototype[fieldName]}" size="10"/>
+                                </c:if>
+
+                                <c:if test="${crud:hasParentProperty(fieldName)}">
+                                    <h:inputText value="${bulkUpdater.map[fieldName]}" size="10"/>
+                                </c:if>
+
+                            </c:if>
+							<c:if test="${crud:isBoolean(bulkUpdater.type,fieldIndex)}">
+                                <c:if test="${not crud:hasParentProperty(fieldName)}">
+                                    <h:selectBooleanCheckbox  value="${bulkUpdater.prototype[fieldName]}" />
+                                </c:if>
+                                <c:if test="${crud:hasParentProperty(fieldName)}">
+                                    <h:selectBooleanCheckbox  value="${bulkUpdater.map[fieldName]}" />
+                                </c:if>
  							</c:if>
- 							<c:if test="${crud:isEnum(bulkUpdater.type,fieldName)}">
+ 							<c:if test="${crud:isEnum(bulkUpdater.type,fieldIndex)}">
  									<c:set var="propEntityName" value="${crud:getPropertyEntityName(bulkUpdater.type,fieldName)}" />
-				        			<h:selectOneMenu value="${bulkUpdater.properties[fieldName]}">
+				        			<h:selectOneMenu value="${bulkUpdater.prototype[fieldName]}">
 										<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
 									</h:selectOneMenu>
  							</c:if>
- 							<c:if test="${crud:isDate(bulkUpdater.type,fieldName)}">
-	 							<t:calendar  renderPopupButtonAsImage="true" renderAsPopup="true" value="${bulkUpdater.properties[fieldName]}" />
+                            <c:if test="${crud:isManyToOne(bulkUpdater.type,fieldIndex)}">
+                                <c:set var="propEntityName" value="${crud:getPropertyEntityName(bulkUpdater.type,fieldIndex)}" />
+                                <h:selectOneMenu  value="${bulkUpdater.prototype[fieldIndex]}">
+                                    <f:selectItems value="${selectItemGenerators[propEntityName].list}" />
+                                    <f:attribute name="beanType" value="${propEntityName}"/>
+                                </h:selectOneMenu>
+                             </c:if>
+                             <c:if test="${crud:isDate(bulkUpdater.type,fieldName)}">
+	 							<t:calendar  renderPopupButtonAsImage="true" renderAsPopup="true" value="${bulkUpdater.prototype[fieldName]}" />
 			                </c:if>
 						</div>						
 				</a4j:outputPanel> 				

@@ -57,7 +57,28 @@
 			boolean isFile(java.lang.Class, java.lang.String)
 		</function-signature>
 	</function>
-	<function>
+    <function>
+        <function-name>hasParentProperty</function-name>
+        <function-class>org.crank.crud.controller.CrudUtils</function-class>
+        <function-signature>
+            boolean hasParentProperty(java.lang.String)
+        </function-signature>
+    </function>
+    <function>
+        <function-name>getParentProperty</function-name>
+        <function-class>org.crank.crud.controller.CrudUtils</function-class>
+        <function-signature>
+            java.lang.String getParentProperty(java.lang.String)
+        </function-signature>
+    </function>
+    <function>
+        <function-name>isParentManyToOne</function-name>
+        <function-class>org.crank.crud.controller.CrudUtils</function-class>
+        <function-signature>
+            boolean  isParentManyToOne(java.lang.Class, java.lang.String)
+        </function-signature>
+    </function>
+    <function>
 		<function-name>textSize</function-name>
 		<function-class>org.crank.crud.controller.CrudUtils</function-class>
 		<function-signature>

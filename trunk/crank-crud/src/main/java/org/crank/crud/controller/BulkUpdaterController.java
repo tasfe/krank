@@ -79,6 +79,32 @@ public class BulkUpdaterController <T> {
 	@Transactional
 	public void process() {
         List list = entityLocator.getSelectedEntities();
+        boolean error=false;
+
+        if (list.size()==0) {
+            MessageManagerUtils.getCurrentInstance().addErrorMessage("At least one row must be selected.");
+            MessageManagerUtils.getCurrentInstance().addErrorMessage("Try filtering the results to the ones you want to change.");
+            MessageManagerUtils.getCurrentInstance().addErrorMessage("Then hit the select all button in the left corner of the table.");
+            error = true;
+        }
+
+
+        int size = 0;
+        for (Map.Entry<String,Boolean> entry : useProperties.entrySet()) {
+                if (entry.getValue()) {
+            		size++;
+                }
+        }
+        if (size==0) {
+            MessageManagerUtils.getCurrentInstance().addErrorMessage("At least one field must be selected to edit.");
+            MessageManagerUtils.getCurrentInstance().addErrorMessage("The column headers have check boxes that signify which fields you want to edit");
+            MessageManagerUtils.getCurrentInstance().addErrorMessage("Select the check box and then change the field value that you would like to bulk edit.");
+            error = true;
+        }
+
+        if (error) {
+            return;
+        }
         debug(log, "Process list=%s", list);
         for (Object object : list) {
             BeanWrapper bw = new BeanWrapperImpl(object);
@@ -114,13 +140,6 @@ public class BulkUpdaterController <T> {
         this.repo = repo;
     }
 
-//    public Map<String, Object> getProperties() {
-//        return properties;
-//    }
-//
-//    public void setProperties(Map<String, Object> properties) {
-//        this.properties = properties;
-//    }
     public void setType(Class<T> type) {
         this.type = type;
     }

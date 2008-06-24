@@ -86,12 +86,18 @@ public class BulkUpdaterController <T> {
             Map map = getMap();
             Set<Map.Entry<String,Boolean>> entries = useProperties.entrySet();
             for (Map.Entry<String,Boolean> entry : entries) {
-            	if (!useProperties.get(entry.getKey())) {
+                String propertyName = entry.getKey();
+                if (!useProperties.get(propertyName)) {
             		continue;
             	}
-                Object value = map.get(entry.getKey());
-                debug(log, "Process property key=%s value=%s", entry.getKey(), value);
-                bw.setPropertyValue(entry.getKey(), value);
+                Object value = null;
+                if (CrudUtils.isParentManyToOne(this.type, propertyName)) {
+                	debug(log, "isParentManyToOne true");
+                	propertyName = CrudUtils.getParentProperty(propertyName);
+                }
+                value = map.get(propertyName);
+                debug(log, "Process property key=%s value=%s", propertyName, value);
+                bw.setPropertyValue(propertyName, value);
             }
             repo.merge((T)object);
         }

@@ -7,7 +7,6 @@
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:crank="http://www.googlecode.com/crank"
-	xmlns:proto="http://crankcrud.org/proto"
 	>
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
@@ -23,7 +22,7 @@
 	    <span class="pageTitle">Employee Listing</span>
 
 		<a4j:form id="employeeListingForm">
-                <proto:bulkListing  jsfCrudAdapter="${employeeCrud}" bulkUpdater="${employeeBulkUpdater}"
+                <crank:bulkListing  jsfCrudAdapter="${employeeCrud}" bulkUpdater="${employeeBulkUpdater}"
                     parentForm="employeeListingForm"
                     />
 		</a4j:form>

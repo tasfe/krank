@@ -12,6 +12,8 @@ import org.crank.core.MapUtils;
 import org.crank.core.TypeUtils;
 import org.crank.crud.model.PersistedFile;
 
+import javax.persistence.Entity;
+
 
 public class CrudUtils {
     private static Set<String> allowedPackages = new HashSet<String>();
@@ -373,6 +375,24 @@ public class CrudUtils {
         }
         return descriptor.getPropertyType().getSimpleName();
     }
+
+
+    public static String getEntityName(Class aType) {
+		Entity entity = (Entity) aType.getAnnotation(Entity.class);
+		if (entity == null) {
+			return aType.getSimpleName();
+		}
+		String entityName = entity.name();
+
+		if (entityName == null) {
+			return aType.getSimpleName();
+		} else if (!(entityName.length() > 0)) {
+			return aType.getSimpleName();
+		} else {
+			return entityName;
+		}
+
+	}
 
     public static boolean isEntity (Class clazz) {
         AnnotationData data = (AnnotationData)MapUtils.convertListToMap( "name",

@@ -43,7 +43,12 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
         readCookie();
     }
 
+    public JsfCrudAdapter(FilterablePageable filterablePageable, CrudOperations<T> crudController) {
+        this(org.crank.crud.controller.CrudUtils.getEntityName(filterablePageable.getType()),
+                filterablePageable, crudController);
 
+    }
+    
     public JsfCrudAdapter(String eName, FilterablePageable filterablePageable, CrudOperations<T> crudController) {
         this.entityName = eName;
         this.paginator = filterablePageable;

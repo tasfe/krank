@@ -48,6 +48,11 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
                 filterablePageable, crudController);
 
     }
+
+    public JsfCrudAdapter(CrudOperations<T> crudController) {
+        this(org.crank.crud.controller.CrudUtils.getEntityName(crudController.getEntityClass()),
+                null, crudController);
+    }
     
     public JsfCrudAdapter(String eName, FilterablePageable filterablePageable, CrudOperations<T> crudController) {
         this.entityName = eName;

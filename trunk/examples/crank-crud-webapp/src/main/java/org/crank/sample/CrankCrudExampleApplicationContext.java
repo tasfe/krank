@@ -77,7 +77,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		if (managedObjects == null) {
 			managedObjects = new ArrayList<CrudManagedObject>();
 			CrudManagedObject crudManagedObject =  CrudManagedObject.createWithPropertiesAndDAO(Employee.class,
-					EmployeeDAO.class, "firstName","lastName","status","active","dob","age","phone","department.name","address.zipCode","type.name");
+					EmployeeDAO.class, "firstName","lastName","status","active","dob","age","phone","department.name","address.zipCode");
 			//crudManagedObject.setTransactionalController(true);
 			managedObjects.add(crudManagedObject);
 			managedObjects.add(new CrudManagedObject(Department.class,
@@ -117,7 +117,8 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		bulkUpdater.setType(Employee.class);
 		bulkUpdater.setRepo(repos().get("Employee"));
 		bulkUpdater.setEntityLocator(cruds().get("Employee"));
-		return bulkUpdater;
+        
+        return bulkUpdater;
 	}
 
 	@ScopedProxy

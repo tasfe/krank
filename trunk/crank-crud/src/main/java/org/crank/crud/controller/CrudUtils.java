@@ -313,11 +313,28 @@ public class CrudUtils {
         return map;
     }
 
-    public static boolean isManyToOne(Class clazz, String propertyName) {
-        Map map = getAnnotationDataAsMap( clazz, propertyName );
-        return map.get( "manyToOne" ) != null; 
+    public static boolean hasParentProperty(String propertyName) {
+         return propertyName.contains(".");
     }
-    
+
+    public static String getParentProperty(String propertyName) {
+        int index = propertyName.lastIndexOf(".");
+        if (index != -1) {
+            return propertyName.substring(0, index);
+        } else {
+            return propertyName;
+        }
+    }
+
+    public static boolean isManyToOne(Class clazz, String propertyName) {
+        Map map = getAnnotationDataAsMap(clazz, propertyName);
+        return map.get("manyToOne") != null;
+    }
+
+    public static boolean isParentManyToOne(Class clazz, String propertyName) {
+        return isManyToOne(clazz, getParentProperty(propertyName));
+    }
+
     public static boolean isManyToOneOptional(Class clazz, String propertyName) {
         Map<String, AnnotationData> map = getAnnotationDataAsMap( clazz, propertyName );
         AnnotationData data = map.get( "manyToOne" );

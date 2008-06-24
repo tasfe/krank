@@ -5,72 +5,15 @@ import java.util.Date;
 import java.util.List;
 
 import org.crank.crud.GenericDao;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
 public class BulkUpdaterTest extends TestCase {
-	private BulkUpdaterController bulkUpdater;
+	private BulkUpdaterController<Employee> bulkUpdater;
 	private List<Employee> employees = null;
-	
-	enum EmployeeType  {
-		HOURLY, SALARY;
-	}
-	class Employee {
-		String firstName;
-		Date dob;
-		EmployeeType type;
-		short age;
-		int empId;
-		Float avg;
-		
-		Employee(String firstName, Date dob, EmployeeType type, short age, int empId, Float avg) {
-			this.firstName = firstName;
-			this.dob = dob;
-			this.type = type;
-			this.age = age;
-			this.empId = empId;
-			this.avg = avg;
-		}
-		public String getFirstName() {
-			return firstName;
-		}
-		public void setFirstName(String firstName) {
-			this.firstName = firstName;
-		}
-		public Date getDob() {
-			return dob;
-		}
-		public void setDob(Date dob) {
-			this.dob = dob;
-		}
-		public EmployeeType getType() {
-			return type;
-		}
-		public void setType(EmployeeType type) {
-			this.type = type;
-		}
-		public short getAge() {
-			return age;
-		}
-		public void setAge(short age) {
-			this.age = age;
-		}
-		public int getEmpId() {
-			return empId;
-		}
-		public void setEmpId(int empId) {
-			this.empId = empId;
-		}
-		public Float getAvg() {
-			return avg;
-		}
-		public void setAvg(Float avg) {
-			this.avg = avg;
-		}
-		
-		
-	}
 	
 	public void setUp() {
 		employees = new ArrayList<Employee>();
@@ -86,13 +29,12 @@ public class BulkUpdaterTest extends TestCase {
 		bulkUpdater.setRepo(repo);
 	}
 	public void testProcess() {
-		bulkUpdater.getProperties().put("firstName", "badBoy");
-		bulkUpdater.getProperties().put("type", EmployeeType.SALARY.toString());
-		bulkUpdater.getProperties().put("age", "10");
-		bulkUpdater.getProperties().put("empId", "11");
-		bulkUpdater.getProperties().put("avg", "1.7f");
-
-
+		bulkUpdater.getPrototype().setFirstName("badBoy");
+		bulkUpdater.getPrototype().setType(EmployeeType.SALARY);
+		bulkUpdater.getPrototype().setAge((short)10);
+		bulkUpdater.getPrototype().setEmpId(11);
+		bulkUpdater.getPrototype().setAvg(1.7f);
+        
         bulkUpdater.getUseProperties().put("firstName", true);
 		bulkUpdater.getUseProperties().put("type", true);
 		bulkUpdater.getUseProperties().put("age", true);
@@ -106,5 +48,6 @@ public class BulkUpdaterTest extends TestCase {
 		assertEquals(11, employees.get(0).getEmpId());
 		assertEquals(1.7f, employees.get(0).getAvg());
 	}
+	
 
 }

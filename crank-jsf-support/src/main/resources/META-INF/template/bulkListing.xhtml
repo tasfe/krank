@@ -10,7 +10,6 @@
 	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
 	xmlns:crud="http://www.googlecode.com/crank/crud"
 	xmlns:crank="http://www.googlecode.com/crank"
-	xmlns:proto="http://crankcrud.org/proto"
 	>
 
 <ui:composition>
@@ -209,7 +208,7 @@
 						</h:column>
 					    </c:if>
 						<c:forEach items="${jsfCrudAdapter.properties}" var="property">
-							<proto:bulkHeader fieldName="${property}" paginator="${paginator}"  jsfCrudAdapter="${jsfCrudAdapter}"
+							<crank:bulkHeader fieldName="${property}" paginator="${paginator}"  jsfCrudAdapter="${jsfCrudAdapter}"
 								reRender="${reRender}" />
 						</c:forEach>
 						<h:column>

@@ -24,7 +24,7 @@ public class BulkUpdaterController <T> {
     protected Logger log = Logger.getLogger(BulkUpdaterController.class);
     private T prototype;
     private Map map;
-    private Set<String> excludeProperties;
+    private Set<String> excludeProperties = new HashSet<String> (Arrays.asList(new String[]{"name", "id"}));
     private Map<String, Boolean> excludeProps = new Map<String, Boolean>() {
 
 		public void clear() {

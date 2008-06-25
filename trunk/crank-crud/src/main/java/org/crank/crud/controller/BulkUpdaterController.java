@@ -2,20 +2,13 @@ package org.crank.crud.controller;
 
 import org.crank.crud.GenericDao;
 import org.crank.core.CrankException;
-import org.crank.core.LogUtils;
-import org.crank.core.TypeUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.List;
+import java.util.*;
 import java.io.Serializable;
 import static org.crank.core.LogUtils.debug;
-import static org.crank.core.LogUtils.info;
-import org.crank.message.MessageUtils;
 import org.crank.message.MessageManagerUtils;
 import org.apache.log4j.Logger;
 
@@ -31,6 +24,64 @@ public class BulkUpdaterController <T> {
     protected Logger log = Logger.getLogger(BulkUpdaterController.class);
     private T prototype;
     private Map map;
+    private Set<String> excludeProperties;
+    private Map<String, Boolean> excludeProps = new Map<String, Boolean>() {
+
+		public void clear() {
+		}
+
+		public boolean containsKey(Object key) {
+			return false;
+		}
+
+		public boolean containsValue(Object value) {
+			return false;
+		}
+
+		public Set<java.util.Map.Entry<String, Boolean>> entrySet() {
+			return null;
+		}
+
+		public Boolean get(Object key) {
+			if (excludeProperties==null) {
+				return false;
+			} else {
+				return excludeProperties.contains(key);
+			}
+		}
+
+		public boolean isEmpty() {
+			return false;
+		}
+
+		public Set<String> keySet() {
+			return null;
+		}
+
+		public Boolean put(String key, Boolean value) {
+			return null;
+		}
+
+		public void putAll(Map<? extends String, ? extends Boolean> t) {
+		}
+
+		public Boolean remove(Object key) {
+			return null;
+		}
+
+		public int size() {
+			return excludeProperties==null?0:excludeProperties.size();
+		}
+
+		public Collection<Boolean> values() {
+			return null;
+		}        
+    };
+
+
+    public Map<String, Boolean> getExcludeProps() {
+        return excludeProps;
+    }
 
     public BulkUpdaterController() {
 
@@ -46,6 +97,10 @@ public class BulkUpdaterController <T> {
     	}
 		return prototype;
 	}
+
+    public void setExcludeProperties(String... excludePrps) {
+          excludeProperties = new HashSet<String>(Arrays.asList(excludePrps));
+    }
 
 
 
@@ -113,7 +168,7 @@ public class BulkUpdaterController <T> {
             Set<Map.Entry<String,Boolean>> entries = useProperties.entrySet();
             for (Map.Entry<String,Boolean> entry : entries) {
                 String propertyName = entry.getKey();
-                if (!useProperties.get(propertyName)) {
+                if (useProperties.get(propertyName)==null || !useProperties.get(propertyName)) {
             		continue;
             	}
                 Object value = null;

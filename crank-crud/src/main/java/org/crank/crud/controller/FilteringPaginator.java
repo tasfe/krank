@@ -126,8 +126,19 @@ public class FilteringPaginator extends Paginator implements
         for (String propertyName : propertyNames) {
 
             /* Create the new filterableProperty. */
-            FilterableProperty filterableProperty = new FilterableProperty(
+
+            FilterableProperty filterableProperty = null;
+
+            try {
+
+                filterableProperty = new FilterableProperty(
                     propertyName, TypeUtils.getPropertyType(this.type, propertyName), this.type);
+            } catch (Exception ex) {
+                filterableProperty = new FilterableProperty(
+                    propertyName, String.class, this.type);
+
+            }
+
 
 
             debug(log, "setupFilters(): created new filterableProperty=%s", filterableProperty);

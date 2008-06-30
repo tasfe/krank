@@ -199,7 +199,8 @@ public class BulkUpdaterController <T> {
 			prototype = type.newInstance();
 		} catch (Exception e) {
 			throw new CrankException(e, "Unable to instantiate class=%s", type);
-		}        
+		}
+        MessageManagerUtils.getCurrentInstance().addStatusMessage("Bulk update complete.");
     }
     public void setRepo(GenericDao repo) {
         this.repo = repo;

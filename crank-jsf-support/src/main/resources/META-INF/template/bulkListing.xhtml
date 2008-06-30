@@ -132,12 +132,15 @@
 
     <a4j:outputPanel ajaxRendered="true">
 
+
+        <h:messages globalOnly="false" showDetail="true" showSummary="false"/>
+
         <h:panelGrid columns="5">
 			<a4j:commandLink action="${bulkUpdater.show}" 		value="show bulk update" 	rendered="${not bulkUpdater.show}"/>
             <h:outputText value=""/>
             <a4j:commandLink action="${bulkUpdater.process}" 	value="perform bulk update" rendered="${bulkUpdater.show}"/>
 			<h:outputText value=""/>
-            <a4j:commandLink action="${bulkUpdater.hide}" 		value="cancel bulk update" 	rendered="${bulkUpdater.show}"/>
+            <a4j:commandLink action="${bulkUpdater.hide}" 		value="cancel bulk update" 	rendered="${bulkUpdater.show}" immediate="true"/>
 		</h:panelGrid>
 		 
         <h:panelGrid id="listPanel${id}" columns="1" width="${dataTableWidth}">

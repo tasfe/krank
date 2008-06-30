@@ -173,42 +173,51 @@
 				<a4j:outputPanel axajRendered="true" rendered="${bulkUpdater.show and not bulkUpdater.excludeProps[fieldIndex]}">
 						<div style="border: thin">
 
-                            <h:selectBooleanCheckbox  value="${bulkUpdater.useProperties[fieldName]}"  label="use"/>
+                            <h:selectBooleanCheckbox  value="${bulkUpdater.useProperties[fieldName]}"  label="${label}">
+                                     <a4j:support event="onchange" />
+                            </h:selectBooleanCheckbox>
 
                             <c:if test="${crud:isText(bulkUpdater.type,fieldIndex)}">
 
                                 <c:if test="${not crud:hasParentProperty(fieldName)}">
-                                    <h:inputText value="${bulkUpdater.prototype[fieldName]}" size="10"/>
+                                    <h:inputText value="${bulkUpdater.prototype[fieldName]}" size="10" label="${label}"
+                                            rendered="${bulkUpdater.useProperties[fieldName]}"/>
                                 </c:if>
 
                                 <c:if test="${crud:hasParentProperty(fieldName)}">
-                                    <h:inputText value="${bulkUpdater.map[fieldName]}" size="10"/>
+                                    <h:inputText value="${bulkUpdater.map[fieldName]}" size="10" label="${label}"
+                                            rendered="${bulkUpdater.useProperties[fieldName]}"
+                                            />
                                 </c:if>
 
                             </c:if>
 							<c:if test="${crud:isBoolean(bulkUpdater.type,fieldIndex)}">
                                 <c:if test="${not crud:hasParentProperty(fieldName)}">
-                                    <h:selectBooleanCheckbox  value="${bulkUpdater.prototype[fieldName]}" />
+                                    <h:selectBooleanCheckbox  value="${bulkUpdater.prototype[fieldName]}"
+                                            rendered="${bulkUpdater.useProperties[fieldName]}"
+                                            />
                                 </c:if>
                                 <c:if test="${crud:hasParentProperty(fieldName)}">
-                                    <h:selectBooleanCheckbox  value="${bulkUpdater.map[fieldName]}" />
+                                    <h:selectBooleanCheckbox  value="${bulkUpdater.map[fieldName]}"
+                                            rendered="${bulkUpdater.useProperties[fieldName]}"
+                                            />
                                 </c:if>
  							</c:if>
  							<c:if test="${crud:isEnum(bulkUpdater.type,fieldIndex)}">
  									<c:set var="propEntityName" value="${crud:getPropertyEntityName(bulkUpdater.type,fieldName)}" />
-				        			<h:selectOneMenu value="${bulkUpdater.prototype[fieldName]}">
+				        			<h:selectOneMenu value="${bulkUpdater.prototype[fieldName]}" rendered="${bulkUpdater.useProperties[fieldName]}">
 										<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
 									</h:selectOneMenu>
  							</c:if>
                             <c:if test="${crud:isManyToOne(bulkUpdater.type,fieldIndex)}">
                                 <c:set var="propEntityName" value="${crud:getPropertyEntityName(bulkUpdater.type,fieldIndex)}" />
-                                <h:selectOneMenu  value="${bulkUpdater.prototype[fieldIndex]}">
+                                <h:selectOneMenu  value="${bulkUpdater.prototype[fieldIndex]}" rendered="${bulkUpdater.useProperties[fieldName]}">
                                     <f:selectItems value="${selectItemGenerators[propEntityName].list}" />
                                     <f:attribute name="beanType" value="${propEntityName}"/>
                                 </h:selectOneMenu>
                              </c:if>
                              <c:if test="${crud:isDate(bulkUpdater.type,fieldName)}">
-	 							<t:calendar  renderPopupButtonAsImage="true" renderAsPopup="true" value="${bulkUpdater.prototype[fieldName]}" />
+	 							<t:calendar  renderPopupButtonAsImage="true" renderAsPopup="true" value="${bulkUpdater.prototype[fieldName]}" label="${label}" rendered="${bulkUpdater.useProperties[fieldName]}"/>
 			                </c:if>
 						</div>						
 				</a4j:outputPanel> 				
@@ -220,6 +229,7 @@
 										size="5"
 										rendered="${crud:isFilterPropertyText(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}"
                                         immediate="true"
+                                        label="${label}"
                                         >
                                 <f:attribute name="filterName" value="${fieldId}"/>
                                 <c:choose>

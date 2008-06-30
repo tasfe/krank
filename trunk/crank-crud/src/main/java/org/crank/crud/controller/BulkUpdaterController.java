@@ -43,12 +43,22 @@ public class BulkUpdaterController <T> {
 		}
 
 		public Boolean get(Object key) {
-			if (excludeProperties==null) {
+
+            if (excludeProperties==null) {
 				return false;
 			} else {
-				return excludeProperties.contains(key);
+			    if (excludeProperties.contains(key)) {
+                    return true;
+                }
 			}
-		}
+            for (String excludeProp : excludeProperties) {
+                String sKey = (String)key;
+                 if (sKey.startsWith(excludeProp)) {
+                     return true;
+                 }
+            }
+            return false;
+        }
 
 		public boolean isEmpty() {
 			return false;

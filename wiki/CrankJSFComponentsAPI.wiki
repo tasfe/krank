@@ -6,6 +6,7 @@ Crank is like layers of an onion. The top layer can be any number of rendering t
 
 
 == Listings ==
+Listing component is a top level component in Crank JSF. There are other subcomponents that make up the listing component, such as paginator. If there are components within the listing component you can control their attributes as well, as is the case with the paginator.
 
 *Listing componet*
 
@@ -28,6 +29,7 @@ _italic_
   </a4j:form>
 </a4j:region>
 }}}
+http://krank.googlecode.com/svn/wiki/img/paginated_filterable_listing.jpg
 
 ||Parameters||Description||Type||Required||Default||
 ||id||JSF component id which should be unique to this page||String||yes||${daoName}Listing||

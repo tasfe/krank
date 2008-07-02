@@ -10,7 +10,6 @@ Listing component is a top level component in Crank JSF. There are other subcomp
 
 *Listing componet*
 
-_italic_
 {{{
  <a4j:region renderRegionOnly="false">
    <a4j:form id="${daoName}ListForm">
@@ -45,3 +44,13 @@ http://krank.googlecode.com/svn/wiki/img/paginated_filterable_listing.jpg
 ||isSelectableColumn||Enables the display of the select row column||boolean||no||true||
 ||enableEdit||Flag to show and allow editing of a row item||boolean||no||true||
 ||debug||Flag to show crank debug information||boolean||no||false||
+
+== Paginator ==
+This a component within the listing component that handles filtering and pagination of the listings. The paginator being a child within the JSF component tree can be managed from the parent crank:listing. 
+
+*Paginator componet*
+
+||Parameters||Description||Type||Required||Default||
+||disableExport||Flag to disable export button||boolean||no||false||
+||readOnly||Flag to disable not allow any changes to fields||boolean||no||false||
+||enableAdd||Flag to enable the + add button||boolean||no||true||

@@ -82,7 +82,7 @@ http://krank.googlecode.com/svn/wiki/img/master_detail_pic_controlle_mapping.jpg
 ||readOnlyProperties||The property names, comma separated, which should only be displayed and not editable||String||no||none||
 ||daoName||Data access object name||String||yes||none||
 ||parentForm||Reference to the parent form object in this case an a4j form can also be jsf form||String||yes||${daoName}DetailFormB||
-||reRender||Re-rendering component reference||String||yes||${reRender}|
+||reRender||Re-rendering component reference||String||yes||${reRender}||
 ||crud||Controller for the component||Object||yes||none||
 ||cancelAlwaysOn||Flag to show cancel button||boolean||no||true||
 ||hideCancel||Flag to enable or hid cancel button||boolean||no||false||

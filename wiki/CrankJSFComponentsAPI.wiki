@@ -49,6 +49,7 @@ http://krank.googlecode.com/svn/wiki/img/paginated_filterable_listing.jpg
 This a component within the listing component that handles filtering and pagination of the listings. The paginator being a child within the JSF component tree can be managed from the parent crank:listing. 
 
 *Paginator componet*
+http://krank.googlecode.com/svn/wiki/img/paginated_filterable_listing_feature_map.jpg
 
 ||Parameters||Description||Type||Required||Default||
 ||disableExport||Flag to disable export button||boolean||no||false||

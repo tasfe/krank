@@ -55,3 +55,37 @@ http://krank.googlecode.com/svn/wiki/img/paginated_filterable_listing_feature_ma
 ||disableExport||Flag to disable export button||boolean||no||false||
 ||readOnly||Flag to disable not allow any changes to fields||boolean||no||false||
 ||enableAdd||Flag to enable the + add button||boolean||no||true||
+||debug||Flag to show crank debug information||boolean||no||false||
+
+== Form ==
+The crank form allows for adding or editing a selected row. This is a top level form component which can have other detail controllers within it, crank fields, selectManyListing,selectManyByIdListing,simpleField and others.
+
+*Form componet*
+{{{
+ <crank:form
+                        id="${daoName}DetailForm"
+                        crud="#{employeeCrud.controller}"
+                        propertyNames="id,createdBy,updatedBy,name,description,firstName,lastName"
+                        readOnlyProperties="id,createdBy"
+                        daoName="${daoName}"
+                        parentForm="${daoName}DetailFormB"
+                        reRender="${reRender}"
+                        cancelAlwaysOn="true"
+                        ajax="${true}">
+}}}
+http://krank.googlecode.com/svn/wiki/img/master_detail_pic_controlle_mapping.jpg
+
+||Parameters||Description||Type||Required||Default||
+||id||JSF component id which should be unique to this page||String||yes||${daoName}DetailForm||
+||crud||Reference to the crank JsfCrudAdapter controller||Object||Yes|| ||
+||propertyNames||The property names, comma separated, from the data object that are to be displayable and edited||String||yes||none||
+||readOnlyProperties||The property names, comma separated, which should only be displayed and not editable||String||no||none||
+||daoName||Data access object name||String||yes||none||
+||parentForm||Reference to the parent form object in this case an a4j form can also be jsf form||String||yes||${daoName}DetailFormB||
+||reRender||Re-rendering component reference||String||yes||${reRender}|
+||crud||Controller for the component||Object||yes||none||
+||cancelAlwaysOn||Flag to show cancel button||boolean||no||true||
+||hideCancel||Flag to enable or hid cancel button||boolean||no||false||
+||showFormButtons||Flag to enable the + add button||boolean||no||true||
+||reportingMode|| ||boolean||no||false||
+||debug||Flag to show crank debug information||boolean||no||false||

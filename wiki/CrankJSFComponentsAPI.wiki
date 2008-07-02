@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Crank is like layers of an onion. The top layer can be any number of rendering technology, such as JSF, Struts, Spring MVC, or Flex. The focus here is to discuss the crank-jsf-support package, and the various components within it.
+"Donkey, people are like onions, they have layers, ogres don't have layers". Crank like people has layers like an onion. The top layer can be any number of rendering technology, such as JSF, Struts, Spring MVC, or Flex. The focus here is to discuss the crank-jsf-support package, and the various components within it.
 
 
 == Listings ==

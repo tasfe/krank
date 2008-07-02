@@ -1,0 +1,45 @@
+#Various JSF type Crank components.
+
+= Introduction =
+
+Crank is like layers of an onion. The top layer can be any number of rendering technology, such as JSF, Struts, Spring MVC, or Flex. The focus here is to discuss the crank-jsf-support package, and the various components within it.
+
+
+== Listings ==
+
+*Listing componet*
+
+_italic_
+{{{
+ <a4j:region renderRegionOnly="false">
+   <a4j:form id="${daoName}ListForm">
+      <crank:listing
+                        id="${daoName}Listing"
+                        paginator="#{paginators[daoName]}"
+                        jsfCrudAdapter="#{cruds[daoName]}"
+                        propertyNames="${listPropertyNames}"
+                        pageTitle="${daoName}"
+                        autoLink="false"
+                        parentForm="${daoName}ListForm"
+                        reRender="${daoName}ListForm"
+                        crud="#{employeeCrud.controller}"
+                        enableDelete="${true}"
+                        isSelectableColumn="${false}"/>
+  </a4j:form>
+</a4j:region>
+}}}
+
+||Parameters||Description||Type||Required||Default||
+||id||JSF component id which should be unique to this page||String||yes||${daoName}Listing||
+||paginator||paginator object for the data object||object||yes||#{paginators[daoName]}||
+||jsfCrudAdapter||references the crud interfaces||object||yes||#{cruds[daoName]}||
+||propertyNames||comma separated list of the value object's properties(make sure there are no spaces)||String||only properties to display||none||
+||pageTitle||Used to display the page title on the paginator||String||NO||Listing||
+||autoLink||Crank can determine if a string might be a URL and will attempt to format it as a clickable link.Set to false to disable this feature.||boolean||NO||TRUE||
+||parentForm||Reference to the parent form object in this case an a4j form||String||yes||${daoName}ListForm||
+||reRender||Re-rendering component reference||String||yes||${daoName}ListForm||
+||crud||Reference to the crank JsfCrudAdapter controller||Object||Yes|| ||
+||enableDelete||Flag to show and allow deletion of records from the list||boolean||no||true||
+||isSelectableColumn||Enables the display of the select row column||boolean||no||true||
+||enableEdit||Flag to show and allow editing of a row item||boolean||no||true||
+||debug||Flag to show crank debug information||boolean||no||false||

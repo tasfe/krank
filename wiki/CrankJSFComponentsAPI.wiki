@@ -30,7 +30,7 @@ Listing component is a top level component in Crank JSF. There are other subcomp
 }}}
 http://krank.googlecode.com/svn/wiki/img/paginated_filterable_listing.jpg
 
-||*Parameters*||*Description*||*Type*||*Required*||*Default*||
+|| *Parameters* || *Description* || *Type* || *Required* || *Default* ||
 ||id||JSF component id which should be unique to this page||String||yes||${daoName}Listing||
 ||paginator||paginator object for the data object||object||yes||#{paginators[daoName]}||
 ||jsfCrudAdapter||references the crud interfaces||object||yes||#{cruds[daoName]}||
@@ -51,7 +51,7 @@ This a component within the listing component that handles filtering and paginat
 *Paginator componet*
 http://krank.googlecode.com/svn/wiki/img/paginated_filterable_listing_feature_map.jpg
 
-||*Parameters*||*Description*||*Type*||*Required*||*Default*||
+|| *Parameters* || *Description* || *Type* || *Required* || *Default* ||
 ||disableExport||Flag to disable export button||boolean||no||false||
 ||readOnly||Flag to disable not allow any changes to fields||boolean||no||false||
 ||enableAdd||Flag to enable the + add button||boolean||no||true||
@@ -76,7 +76,7 @@ The crank form allows for adding or editing a selected row. This is a top level 
 }}}
 http://krank.googlecode.com/svn/wiki/img/master_detail_pic_controlle_mapping.jpg
 
-||*Parameters*||*Description*||*Type*||*Required*||*Default*||
+|| *Parameters* || *Description* || *Type* || *Required* || *Default* ||
 ||id||JSF component id which should be unique to this page||String||yes||${daoName}DetailForm||
 ||crud||Reference to the crank JsfCrudAdapter controller||Object||Yes|| ||
 ||propertyNames||The property names, comma separated, from the data object that are to be displayable and edited||String||yes||none||

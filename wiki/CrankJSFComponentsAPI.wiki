@@ -72,6 +72,7 @@ The crank form allows for adding or editing a selected row. This is a top level 
                         reRender="${reRender}"
                         cancelAlwaysOn="true"
                         ajax="${true}">
+   </crank:form>
 }}}
 http://krank.googlecode.com/svn/wiki/img/master_detail_pic_controlle_mapping.jpg
 

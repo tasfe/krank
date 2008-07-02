@@ -40,9 +40,9 @@ http://krank.googlecode.com/svn/wiki/img/paginated_filterable_listing.jpg
 ||parentForm||Reference to the parent form object in this case an a4j form||String||yes||${daoName}ListForm||
 ||reRender||Re-rendering component reference||String||yes||${daoName}ListForm||
 ||crud||Reference to the crank JsfCrudAdapter controller||Object||Yes|| ||
-||enableDelete||Flag to show and allow deletion of records from the list||boolean||no||true||
+||enableDelete||Flag to show and allow deletion of records from the list in the Action coumn||boolean||no||true||
 ||isSelectableColumn||Enables the display of the select row column||boolean||no||true||
-||enableEdit||Flag to show and allow editing of a row item||boolean||no||true||
+||enableEdit||Flag to show and allow editing of a row item in the Action column||boolean||no||true||
 ||debug||Flag to show crank debug information||boolean||no||false||
 
 == Paginator ==

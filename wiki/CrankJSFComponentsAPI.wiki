@@ -189,8 +189,7 @@ This component renders a bread crumb trail for a user experience. The breadcrumb
 *crudBreadCrumb component*
 {{{
 <crank:crudBreadCrumb crud="${employeeCrud.controller}" />
-}}
-
+}}}
 http://krank.googlecode.com/svn/wiki/img/breadCrumb.jpg
 
 || *Parameters* || *Description* || *Type* || *Required* || *Default* ||

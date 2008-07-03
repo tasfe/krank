@@ -99,12 +99,20 @@ public class MessageSpecification implements Serializable {
 
     /** Create the summaryMessage message. */
     public String createSummaryMessage(Object... args){
-    	return createMessage(summaryMessage, summaryArgs, args);
+    	if (MessageSpecificationGlobalConfig.isUseSummary()) {
+    		return createMessage(summaryMessage, summaryArgs, args);
+    	} else {
+    		return "summary messages turned off";
+    	}
     }
 
     /** Create the detailMessage message. */
     public String createDetailMessage(Object... args){
-    	return createMessage(detailMessage, detailArgs, args);
+    	if (MessageSpecificationGlobalConfig.isUseDetail()) {
+    		return createMessage(detailMessage, detailArgs, args);
+    	} else {
+    		return "detail messages turned off";
+    	}
     }
 
     /** Creates a message. 
@@ -220,7 +228,11 @@ public class MessageSpecification implements Serializable {
 			String message) {
 		if (getSubject()!=null) {
 		    try {
-		        message = bundle.getString(key + "." + getSubject());
+		    	if (MessageSpecificationGlobalConfig.isUseSubject()) {
+		    		message = bundle.getString(key + "." + getSubject());
+		    	} else {
+		    		message = bundle.getString(key);
+		    	}
 		    } catch (MissingResourceException mre) {
 		        message = bundle.getString(key);                        
 		    }

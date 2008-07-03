@@ -43,4 +43,5 @@ public class Employee extends Person {
 }}}
 
 *Result:*
+
 http://krank.googlecode.com/svn/wiki/img/selectOneListing.jpg

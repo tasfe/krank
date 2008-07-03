@@ -90,3 +90,42 @@ http://krank.googlecode.com/svn/wiki/img/master_detail_pic_controlle_mapping.jpg
 ||showFormButtons||Flag to enable the + add button||boolean||no||true||
 ||reportingMode|| ||boolean||no||false||
 ||debug||Flag to show crank debug information||boolean||no||false||
+
+==SelectOneListing==
+This component is typically found wrapped inside a <crank:form> component. This is used to represents a many to one relationship in a crank form, and allows for searchable listings.
+{{{
+ <crank:form
+                        id="${daoName}DetailForm"
+                        crud="#{httpPostCrud.controller}"
+                        propertyNames="id,createdBy,updatedBy,name,description,..."
+                        readOnlyProperties="id,createdBy"
+                        daoName="${daoName}"
+                        parentForm="${daoName}DetailFormB"
+                        reRender="${reRender}"
+                        cancelAlwaysOn="true"
+                                                reportingMode="true"
+                        ajax="${true}">
+
+                    <crank:selectOneListing jsfSelectOneController="${httpNotificationController}"
+                                            propertyNames="emailAddress,assertionMessage,notifierType"
+                                            parentForm="${daoName}DetailFormB"
+                            />
+
+
+                </crank:form>
+}}}
+http://krank.googlecode.com/svn/wiki/img/selectOneListing.jpg
+
+|| *Parameters* || *Description* || *Type* || *Required* || *Default* ||
+||jsfSelectOneController||Used to reference the crank controller object||Object||yes||none||
+||propertyNames||The property names, comma separated, from the data object that are to be displayable and selectable||String||yes||none||
+||readOnlyProperties||The property names, comma separated, which should only be displayed and not editable||String||no||none||
+||parentForm||Reference to the parent form object in this case an a4j form can also be jsf form||String||yes||${daoName}DetailFormB||
+||useLabel|| to display the select one field name||boolean||no||true||
+||dataTableWidth||sizes the width of the listing to the form||percentage||no||75%||
+||debug||Flag to show crank debug information||boolean||no||false||
+||readOnly||NOT USED||boolean||no||false||
+||expandText||Text link to display next to field to show listing||String||no||"edit"||
+||collapseText||Text link to display next to field to collapse listing||String||no||"(cancel)"||
+||showField||Show the select on listing field||boolean||no||true||
+

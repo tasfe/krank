@@ -121,7 +121,6 @@ http://krank.googlecode.com/svn/wiki/img/selectOneListing.jpg
 || *Parameters* || *Description* || *Type* || *Required* || *Default* ||
 ||jsfSelectOneController||Used to reference the crank controller object||Object||yes||none||
 ||propertyNames||The property names, comma separated, from the data object that are to be displayable and selectable||String||yes||none||
-||readOnlyProperties||The property names, comma separated, which should only be displayed and not editable||String||no||none||
 ||parentForm||Reference to the parent form object in this case an a4j form can also be jsf form||String||yes||${daoName}DetailFormB||
 ||useLabel|| to display the select one field name||boolean||no||true||
 ||dataTableWidth||sizes the width of the listing to the form||percentage||no||75%||

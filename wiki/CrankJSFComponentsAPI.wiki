@@ -132,7 +132,7 @@ http://krank.googlecode.com/svn/wiki/img/selectOneListing.jpg
 ||showField||Show the select on listing field||boolean||no||true||
 
 ==selectOneByIdListing==
-
+{placeholder todo}
 
 ==selectMany==
 This component represents from a UI standpoint an object or form that has a many relationship. In this example, an employee has many roles.
@@ -162,6 +162,7 @@ http://krank.googlecode.com/svn/wiki/img/selectManyStep2.jpg
 
 
 ==selectManyByIdListing==
+{placeholder todo}
 
 ==compositPanel==
 Composit panel is used to represent an object that is annotated as @Embedded inside another object. For example, address object is referenced inside a Person object. From the person object you want to edit the address object from the current form. The composite panel is referenced within a <crank:form> See http://code.google.com/p/krank/wiki/CrankCrudTutorial. 
@@ -180,5 +181,20 @@ http://krank.googlecode.com/svn/wiki/img/compositePanel.jpg
 ||readOnly||To set the fields to no editable state||boolean||no||false||
 
 ==commandLink==
+{placeholder todo}
+
 ==crudBreadCrumb==
+This component renders a bread crumb trail for a user experience. The breadcrumb trail creates navigation links to forms, listings, and the home page of the crank JSF enabled application. This component does not sit inside a <crank:form>. It can create a trail based on the crank crud controller object. 
+
+*crudBreadCrumb component*
+{{{
+<crank:crudBreadCrumb crud="${employeeCrud.controller}" />
+}}
+
+http://krank.googlecode.com/svn/wiki/img/breadCrumb.jpg
+
+|| *Parameters* || *Description* || *Type* || *Required* || *Default* ||
+||crud||Used to reference the entity object's the controller||Object||yes||none||
+
 ==autoComplete==
+{placeholder todo}

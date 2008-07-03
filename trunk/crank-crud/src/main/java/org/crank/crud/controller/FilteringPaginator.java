@@ -2,6 +2,7 @@ package org.crank.crud.controller;
 
 import org.crank.core.MapUtils;
 import org.crank.core.TypeUtils;
+import org.crank.core.LogUtils;
 import org.crank.crud.controller.datasource.FilteringPagingDataSource;
 import org.crank.crud.criteria.*;
 import org.crank.crud.join.Join;
@@ -12,6 +13,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.util.*;
+
 import static org.crank.core.LogUtils.debug;
 import static org.crank.core.LogUtils.info;
 import org.crank.message.MessageUtils;
@@ -50,7 +52,69 @@ public class FilteringPaginator extends Paginator implements
     protected Logger log = Logger.getLogger(FilteringPaginator.class);
 
     /** User filters. A filter is a combination of a Comparison and an OrderBy. */
-	private Map<String, FilterableProperty> filterableProperties = new HashMap<String, FilterableProperty>();
+	private Map<String, FilterableProperty> filterableProperties = new FilterMap();
+	
+	class FilterMap implements Map<String, FilterableProperty> {
+		Map <String, FilterableProperty> map = new HashMap<String, FilterableProperty>();
+		public void clear() {
+			map.clear();			
+		}
+
+		public boolean containsKey(Object key) {
+			return map.containsKey(key);
+		}
+
+		public boolean containsValue(Object value) {
+			return map.containsValue(value);
+		}
+
+		public Set<java.util.Map.Entry<String, FilterableProperty>> entrySet() {
+			return map.entrySet();
+		}
+
+		public FilterableProperty get(Object key) {
+			FilterableProperty fp =  map.get(key);
+			if (fp == null) {
+				return null;
+			}
+		    if (fp.getType() == null) {
+		    	throw new RuntimeException("GET THE TYPE WAS NULL FOR KEY " + key);
+		    }
+			return fp;
+			
+		}
+
+		public boolean isEmpty() {
+			return map.isEmpty();
+		}
+
+		public Set<String> keySet() {
+			return map.keySet();
+		}
+
+		public FilterableProperty put(String key, FilterableProperty fp) {
+		    if (fp.getType() == null) {
+		    	throw new RuntimeException("PUT THE TYPE WAS NULL FOR KEY " + key);
+		    }
+			return map.put(key, fp);
+		}
+
+		public void putAll(Map<? extends String, ? extends FilterableProperty> t) {
+			map.putAll(t);
+		}
+
+		public FilterableProperty remove(Object key) {
+			return map.remove(key);
+		}
+
+		public int size() {
+			return map.size();
+		}
+
+		public Collection<FilterableProperty> values() {
+			return map.values();
+		}
+	}
 	/**
 	 * Programmaticly setup Criteria. This allows developer to pre-filter a
 	 * listing, for example only showing employees in a certain department. This
@@ -134,9 +198,9 @@ public class FilteringPaginator extends Paginator implements
                 filterableProperty = new FilterableProperty(
                     propertyName, TypeUtils.getPropertyType(this.type, propertyName), this.type);
             } catch (Exception ex) {
+                info(log, "setupFilters(): unable to determine type=%s", filterableProperty);
                 filterableProperty = new FilterableProperty(
-                    propertyName, String.class, this.type);
-
+                        propertyName, String.class, this.type, false);
             }
 
 
@@ -630,7 +694,10 @@ public class FilteringPaginator extends Paginator implements
 
 			/* Add the order by clause to the list. */
 			if (filterableProperty.getOrderBy().isEnabled()) {
-				orderBys.add(filterableProperty.getOrderBy());
+                OrderByWithEvents orderBy = filterableProperty.getOrderBy();
+                LogUtils.debug(log, "Adding an order by statement %s %s",
+                        orderBy.getName(), orderBy.getSequence());
+                orderBys.add(filterableProperty.getOrderBy());
 			}
 
 		}
@@ -839,7 +906,9 @@ public class FilteringPaginator extends Paginator implements
 
 		for (String property : properties) {
 
-			String propertyName = alias + "." + property;
+            LogUtils.debug(log, "#### Creating filterable property for entity join %s property %s", alias, property);
+
+            String propertyName = alias + "." + property;
 
 			/* Create the new filterableProperty. */
 			FilterableProperty filterableProperty = new FilterableProperty(

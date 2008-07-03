@@ -61,7 +61,20 @@ class MagicMap implements Map<String, Object>, Serializable {
             } else if (thisWrapper.isReadableProperty(key)){
             	return thisWrapper.getPropertyValue( key ) ;
             } else {
-            	return this.map.get(key);
+            	if (key.contains(".")) {
+            		int index = key.indexOf(".");
+            		String newKey = key.substring(0, index);
+            		String newProp = key.substring(index+1);
+            		Object object = this.map.get(newKey);
+            		if (object==null) {
+            			return null;
+            		} else {
+	            		BeanWrapper wrapper = new BeanWrapperImpl(object);
+	            		return wrapper.getPropertyValue(newProp);
+            		}
+            	} else {
+            		return null;
+            	}
             }
         } catch (org.springframework.beans.NullValueInNestedPathException nvinpe) {
             return null;

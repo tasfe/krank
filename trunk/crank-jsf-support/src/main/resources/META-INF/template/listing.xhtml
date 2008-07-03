@@ -211,9 +211,10 @@
 					<c:set var="renderAsText" value="${true}"/>
 					<c:set var="outputText" value=""/>
 					<h:column>
+
 						<c:choose>
-							<c:when test="${crud:contains(property, '.')}">
-								<c:choose>
+                            <c:when test="${crud:contains(property, '.')}">
+                                <c:choose>
 									<c:when test="${crud:isFilterPropertyBoolean(paginator.filterableProperties[property].autoCreatePrependParentAlias, paginator.filterableProperties[property].parentType, property)}">
 										<h:graphicImage value="${booleanImg}" rendered="${(row.map[property] == 'true')}" styleClass="imageCenter"/>
 										<c:set var="renderAsText" value="${false}"/>
@@ -228,7 +229,6 @@
 							</c:when>
 							<c:otherwise>
 								<c:choose>
-								
 									<c:when test="${crud:isFilterPropertyBoolean(paginator.filterableProperties[property].autoCreatePrependParentAlias, paginator.filterableProperties[property].parentType, property)}">
 										<h:graphicImage value="${booleanImg}" rendered="${(row.object[property] == 'true')}" styleClass="imageCenter"/>
 										<c:set var="renderAsText" value="${false}"/>

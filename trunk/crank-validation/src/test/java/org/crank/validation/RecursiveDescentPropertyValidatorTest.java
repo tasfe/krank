@@ -26,7 +26,7 @@ import org.springframework.validation.ObjectError;
 
 public class RecursiveDescentPropertyValidatorTest extends AbstractDependencyInjectionSpringContextTests {
 	private RecursiveDescentPropertyValidator validator;
-	private Errors errors;
+
 	private EmployeeMock employee;
 	
 	@BeforeMethod
@@ -53,16 +53,22 @@ public class RecursiveDescentPropertyValidatorTest extends AbstractDependencyInj
 		ObjectRegistry objectRegistry = CrankContext.getObjectRegistry();
 		SpringApplicationContextObjectRegistry sacObjectRegistry = (SpringApplicationContextObjectRegistry) objectRegistry;
 		sacObjectRegistry.setApplicationContext(this.applicationContext);
-		errors = new BindException(employee, "employee");
-		//CrankWebContext.clearCrankWebContext();
-		
 	}
 	@Test()
 	public void testValidate() {
-        employee.setFirstName("BOB");
-        validator.validateObject(employee);
-		
-        //assertEquals(3, errors.getFieldErrors().size());
+        employee.setFirstName("");
+        List<RecursiveDescentPropertyValidator.MessageHolder> list = validator.validateObject(employee);
+        for (RecursiveDescentPropertyValidator.MessageHolder holder : list) {
+            System.out.printf("holder %s \n", holder.propertyPath);
+            ValidatorMessageHolder holder2 = holder.holder;
+            if (holder2 instanceof ValidatorMessage) {
+            	ValidatorMessage message = (ValidatorMessage) holder2;
+            	System.out.printf("%s %s", message.getDetail(), message.getSummary());
+            }
+
+        }
+
+
 
     }
 	@Override

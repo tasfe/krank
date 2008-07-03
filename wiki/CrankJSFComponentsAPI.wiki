@@ -93,6 +93,8 @@ http://krank.googlecode.com/svn/wiki/img/master_detail_pic_controlle_mapping.jpg
 
 ==SelectOneListing==
 This component is typically found wrapped inside a <crank:form> component. This is used to represents a many to one relationship in a crank form, and allows for searchable listings.
+
+*selectOneListing component*
 {{{
  <crank:form
                         id="${daoName}DetailForm"
@@ -128,4 +130,3 @@ http://krank.googlecode.com/svn/wiki/img/selectOneListing.jpg
 ||expandText||Text link to display next to field to show listing||String||no||"edit"||
 ||collapseText||Text link to display next to field to collapse listing||String||no||"(cancel)"||
 ||showField||Show the select on listing field||boolean||no||true||
-

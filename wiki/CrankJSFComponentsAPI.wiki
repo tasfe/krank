@@ -17,7 +17,7 @@ Listing component is a top level component in Crank JSF. There are other subcomp
                         id="${daoName}Listing"
                         paginator="#{paginators[daoName]}"
                         jsfCrudAdapter="#{cruds[daoName]}"
-                        propertyNames="${listPropertyNames}"
+                      propertyNames="id,createdBy,updatedBy,name,description,firstName,lastName"
                         pageTitle="${daoName}"
                         autoLink="false"
                         parentForm="${daoName}ListForm"

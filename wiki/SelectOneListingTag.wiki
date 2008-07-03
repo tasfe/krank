@@ -41,3 +41,6 @@ public class Employee extends Person {
     private Skill primarySkill;
 
 }}}
+
+*Result:*
+http://krank.googlecode.com/svn/wiki/img/selectOneListing.jpg

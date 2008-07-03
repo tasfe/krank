@@ -147,6 +147,7 @@ _Selected relations shown in comma separated view_
 http://krank.googlecode.com/svn/wiki/img/selectManyStep1.jpg
 
 _After selecting ... view of listings with selection option_
+
 http://krank.googlecode.com/svn/wiki/img/selectManyStep2.jpg
 
 || *Parameters* || *Description* || *Type* || *Required* || *Default* ||

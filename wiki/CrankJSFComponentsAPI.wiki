@@ -87,9 +87,16 @@ http://krank.googlecode.com/svn/wiki/img/master_detail_pic_controlle_mapping.jpg
 ||crud||Controller for the component||Object||yes||none||
 ||cancelAlwaysOn||Flag to show cancel button||boolean||no||true||
 ||hideCancel||Flag to enable or hid cancel button||boolean||no||false||
-||showFormButtons||Flag to enable the + add button||boolean||no||true||
+||showFormButtons||Flag to enable or disable showing the form CREATE RESET and CANCEL buttons ||boolean||no||true||
 ||reportingMode|| ||boolean||no||false||
 ||debug||Flag to show crank debug information||boolean||no||false||
+||ajax||Enable or disable ajax rendering||boolean||no||false||
+||formFieldLabels||comma separated field that allows overriding the label display for the property named labels.||String||no||will use property names if not set||
+||overrideButtonLabels||If set to true then the button labels must be specified||boolean||no||false||
+||createButtonText||Text to display on create button||String||no only if overrideButtonLabels set to true||"CREATE "||
+||updateButtonText||Text to display on update button||String||no only if overrideButtonLabels set to true||"UPDATE "||
+||resetButtonText||Text to display on reset button||String||no only if overrideButtonLabels set to true||"Reset"||
+||cancelButtonText||Text to display on cancel button||String||no only if overrideButtonLabels set to true||"Cancle"||
 
 ==SelectOneListing==
 This component is typically found wrapped inside a <crank:form> component. This is used to represents a many to one relationship in a crank form, and allows for searchable listings.

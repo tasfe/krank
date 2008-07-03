@@ -46,7 +46,7 @@ http://krank.googlecode.com/svn/wiki/img/listingProperty.jpg
 ||debug||Flag to show crank debug information||boolean||no||false||
 
 == Paginator ==
-This a component within the listing component that handles filtering and pagination of the listings. The paginator being a child within the JSF component tree can be managed from the parent crank:listing. 
+This a component within the listing component that handles filtering and pagination of the listings. The paginator being a child within the JSF component tree can be managed from the parent crank:listing. In otherwords, the property/parameters set here can and should be set on the crank:listing component.
 
 *Paginator componet*
 http://krank.googlecode.com/svn/wiki/img/paginator_controlls.jpg

@@ -49,11 +49,11 @@ http://krank.googlecode.com/svn/wiki/img/listingProperty.jpg
 This a component within the listing component that handles filtering and pagination of the listings. The paginator being a child within the JSF component tree can be managed from the parent crank:listing. 
 
 *Paginator componet*
-http://krank.googlecode.com/svn/wiki/img/paginated_filterable_listing_feature_map.jpg
+http://krank.googlecode.com/svn/wiki/img/paginator_controlls.jpg
 
 || *Parameters* || *Description* || *Type* || *Required* || *Default* ||
 ||disableExport||Flag to disable export button||boolean||no||false||
-||readOnly||Flag to disable not allow any changes to fields||boolean||no||false||
+||readOnly||Flag to disable not allow any changes to fields this removes the green + and the edit and delete options in the Actions column||boolean||no||false||
 ||enableAdd||Flag to enable the + add button||boolean||no||true||
 ||debug||Flag to show crank debug information||boolean||no||false||
 

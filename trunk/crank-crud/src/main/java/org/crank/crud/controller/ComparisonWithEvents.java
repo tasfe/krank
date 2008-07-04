@@ -14,7 +14,8 @@ public class ComparisonWithEvents extends Comparison implements Serializable, To
         super();
     }
 
-    @Override
+
+	@Override
     public void setValue( Object value ) {
         if (value==null) {
             this.setOperator( Operator.EQ );
@@ -22,12 +23,12 @@ public class ComparisonWithEvents extends Comparison implements Serializable, To
             String sValue = (String) value;
             if (sValue.contains( "%" )) {
                 this.setOperator( Operator.LIKE );
-            } else {
-                this.setOperator( Operator.LIKE_START );
             }
         } else if (value instanceof Boolean || value.getClass().isPrimitive() 
                 || value.getClass().isInstance( Number.class )) {
-            this.setOperator( Operator.EQ );            
+        	if (this.getOperator()==null) {
+        		this.setOperator( Operator.EQ );
+        	}
         }
         super.setValue( value );
     }

@@ -165,12 +165,34 @@
                 </div>
 				
 				<a4j:outputPanel axajRendered="true" rendered="#{comparison.enabled and not crud:isFilterPropertyDate(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
+
+                    <c:choose>
+                         <c:when test="${filter.long or filter.integer or filter.bigDecimal or filter.double or filter.float or filter.short or filter.bigInteger}">
+                             <h:selectOneMenu value="${comparison.operator}">
+                                 <f:selectItem itemValue="EQ" itemLabel="=" escape="false"/>
+                                 <f:selectItem itemValue="GT" itemLabel="&gt;" escape="false"/>
+                                 <f:selectItem itemValue="LT" itemLabel="&lt;" escape="false"/>
+                                 <f:selectItem itemValue="GE" itemLabel="&gt;=" escape="false"/>
+                                 <f:selectItem itemValue="LE" itemLabel="&lt;=" escape="false"/>
+                             </h:selectOneMenu>
+                         </c:when>
+                         <c:when test="${filter.string}">
+                            <h:selectOneMenu value="${comparison.operator}">
+                                <f:selectItem itemValue="LIKE" itemLabel="like" escape="false"/>
+                                <f:selectItem itemValue="LIKE_START" itemLabel="starts with" escape="false"/>
+                                <f:selectItem itemValue="LIKE_END" itemLabel="ends with" escape="false"/>
+                                <f:selectItem itemValue="LIKE_CONTAINS" itemLabel="contains" escape="false"/>
+                            </h:selectOneMenu>
+                         </c:when>
+                     </c:choose>
+
 					<h:inputText        id="${fieldId}"
                                         styleClass="${headerFilterInputTextClass}"
 										value="#{comparison.value}"
 										size="5"
 										rendered="${crud:isFilterPropertyText(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}"
                                         immediate="true"
+                                        label="${label}"
                                         >
                                 <f:attribute name="filterName" value="${fieldId}"/>
                                 <c:choose>

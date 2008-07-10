@@ -35,7 +35,9 @@ import org.crank.web.RequestParameterMapFinderImpl;
 public abstract class CrudControllerBase<T extends Serializable, PK extends Serializable>
 		implements CrudOperations<T>, Serializable {
 	protected Logger logger = Logger.getLogger(CrudControllerBase.class);
-	protected GenericDao<T, PK> dao;
+
+    /* The DAO we use to persist T objects to the databasae. */
+    protected GenericDao<T, PK> dao;
 	protected EntityLocator<T> entityLocator;
 	protected PropertiesUtil propertyUtil = new SpringBeanWrapperPropertiesUtil();
 	protected String idPropertyName = "id";

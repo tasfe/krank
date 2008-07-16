@@ -41,42 +41,47 @@ public abstract class CrudJSFConfig implements InitializingBean {
     @SuppressWarnings("unchecked")
     @Bean (scope = DefaultScopes.SESSION, aliases="cruds") 
     public Map<String, JsfCrudAdapter<? extends Serializable, ? extends Serializable>> crudControllers() throws Exception {
-    	/* Cruds holds a map of Crud objects. */
-        Map <String, JsfCrudAdapter<? extends Serializable, ? extends Serializable>> cruds = new HashMap<String, JsfCrudAdapter<? extends Serializable, ? extends Serializable>>();
-        
-        
-        for (CrudManagedObject mo : managedObjects()) {
-        	/* Create a new crudController. */
-            CrudController crudControllerTarget = new CrudController();
-            
-            if (mo.isTransactionalController()) {
-            	crudControllerTarget = addTransactionSupport(crudControllerTarget);
-            	crudControllerTarget.setTransactional(true);
-            }
-            
-            /* Associate crudController with file upload subcontroller. */
-            crudControllerTarget.setFileUploadHandler( new TomahawkFileUploadHandler() );
-            /* Register property utils. */
-            crudControllerTarget.setPropertyUtil( new SpringBeanWrapperPropertiesUtil() );
-            
-            /* Set the entity class into the crudController. */
-            crudControllerTarget.setEntityClass( mo.getEntityType() );
-            
-            
-            /* Inject the repositories. */
-            crudControllerTarget.setDao( repos().get( mo.getName() ) );
-            JsfCrudAdapter jsfCrudAdapter = new JsfCrudAdapter(StringUtils.unCapitalize(mo.getName()),
-            		pagers().get(StringUtils.unCapitalize(mo.getName())), crudControllerTarget);
 
-            jsfCrudAdapter.setEntityName(StringUtils.unCapitalize(mo.getName()));
-            
-            
-            /* Put the crudController into the map. */
-            cruds.put(StringUtils.unCapitalize(mo.getName()), jsfCrudAdapter);
-            cruds.put(mo.getName(), jsfCrudAdapter);
-            crudAdded(mo.getName(), jsfCrudAdapter);
-        }
+        DeferredResourceCreator drc = new DeferredResourceCreator(){
+               public void createResource(Map map, CrudManagedObject mo) throws Exception{
+                       /* Create a new crudController. */
+                       CrudController crudControllerTarget = new CrudController();
+
+                       if (mo.isTransactionalController()) {
+                           crudControllerTarget = addTransactionSupport(crudControllerTarget);
+                           crudControllerTarget.setTransactional(true);
+                       }
+
+                       /* Associate crudController with file upload subcontroller. */
+                       crudControllerTarget.setFileUploadHandler( new TomahawkFileUploadHandler() );
+                       /* Register property utils. */
+                       crudControllerTarget.setPropertyUtil( new SpringBeanWrapperPropertiesUtil() );
+
+                       /* Set the entity class into the crudController. */
+                       crudControllerTarget.setEntityClass( mo.getEntityType() );
+
+
+                       /* Inject the repositories. */
+                       crudControllerTarget.setDao( repos().get( mo.getName() ) );
+                       JsfCrudAdapter jsfCrudAdapter = new JsfCrudAdapter(StringUtils.unCapitalize(mo.getName()),
+                               pagers().get(mo.getName()), crudControllerTarget);
+
+                       jsfCrudAdapter.setEntityName(StringUtils.unCapitalize(mo.getName()));
+
+
+                       /* Put the crudController into the map. */
+                       map.put(StringUtils.unCapitalize(mo.getName()), jsfCrudAdapter);
+                       map.put(mo.getName(), jsfCrudAdapter);
+                       crudAdded(mo.getName(), jsfCrudAdapter);
+
+               }
+        };
+
+        /* Cruds holds a map of Crud objects. */
+        Map <String, JsfCrudAdapter<? extends Serializable, ? extends Serializable>> cruds = new ManagedObjectsLazyInitMap<String, JsfCrudAdapter<? extends Serializable, ? extends Serializable>>(managedObjects(), drc);
         
+        
+
         return cruds;
     }
 
@@ -123,39 +128,45 @@ public abstract class CrudJSFConfig implements InitializingBean {
     @SuppressWarnings("unchecked")
     @Bean (scope = DefaultScopes.SESSION, aliases="pagers") 
     public Map<String, FilterablePageable> paginators () throws Exception {
-        Map<String, FilterablePageable> paginators = new HashMap<String, FilterablePageable>();
-        for (CrudManagedObject mo : managedObjects()) {
-            DaoFilteringPagingDataSource dataSource = new DaoFilteringPagingDataSource();
-            dataSource.setDao( repos().get( mo.getName() ));
-            FilteringPaginator dataPaginator = null;
-            if (mo.getPropertyNames() == null) {
-                 dataPaginator = new FilteringPaginator(dataSource, mo.getEntityType());
-            } else {
-                dataPaginator = new FilteringPaginator(dataSource, mo.getEntityType(), mo.getPropertyNames());
-            }
-            dataPaginator.setRequestParameterMapFinder(new RequestParameterMapFinderImpl());
-            paginators.put(StringUtils.unCapitalize(mo.getName()), dataPaginator);
-            paginators.put(mo.getName(), dataPaginator);
-            dataPaginator.filter();
-        }
+
+        DeferredResourceCreator drc = new DeferredResourceCreator(){
+               public void createResource(Map map, CrudManagedObject mo) throws Exception{
+                   DaoFilteringPagingDataSource dataSource = new DaoFilteringPagingDataSource();
+                   dataSource.setDao( repos().get( mo.getName() ));
+                   FilteringPaginator dataPaginator = null;
+                   if (mo.getPropertyNames() == null) {
+                        dataPaginator = new FilteringPaginator(dataSource, mo.getEntityType());
+                   } else {
+                       dataPaginator = new FilteringPaginator(dataSource, mo.getEntityType(), mo.getPropertyNames());
+                   }
+                   dataPaginator.setRequestParameterMapFinder(new RequestParameterMapFinderImpl());
+                   map.put(StringUtils.unCapitalize(mo.getName()), dataPaginator);
+                   map.put(mo.getName(), dataPaginator);
+                   //dataPaginator.filter();
+
+               }
+        };
+
+        Map<String, FilterablePageable> paginators = new ManagedObjectsLazyInitMap<String, FilterablePageable>(managedObjects(), drc);
         return paginators;
     }
     
     @SuppressWarnings("unchecked")
     @Bean (scope = DefaultScopes.SINGLETON)
     public Map<String, SelectItemGenerator> selectItemGenerators() throws Exception {
-        Map<String, SelectItemGenerator> selectItemGenerators = new HashMap<String, SelectItemGenerator>();
 
-        SelectItemGenerator selectItemGenerator = new SelectItemGenerator();
-        
-        for (CrudManagedObject mo : managedObjects()) {
-            selectItemGenerator = new SelectItemGenerator();
-            DaoFilteringPagingDataSource dataSource = new DaoFilteringPagingDataSource();
-            dataSource.setDao( repos().get( mo.getName() ));
-            selectItemGenerator.setDataSource( dataSource );
-            selectItemGenerators.put(mo.getName(), selectItemGenerator);
-            selectItemGenerators.put(StringUtils.unCapitalize(mo.getName()), selectItemGenerator);
-        }
+        DeferredResourceCreator drc = new DeferredResourceCreator(){
+               public void createResource(Map map, CrudManagedObject mo) throws Exception{
+                   SelectItemGenerator selectItemGenerator = new SelectItemGenerator();
+                   DaoFilteringPagingDataSource dataSource = new DaoFilteringPagingDataSource();
+                   dataSource.setDao( repos().get( mo.getName() ));
+                   selectItemGenerator.setDataSource( dataSource );
+                   map.put(mo.getName(), selectItemGenerator);
+                   map.put(StringUtils.unCapitalize(mo.getName()), selectItemGenerator);
+               }
+        };
+
+        Map<String, SelectItemGenerator> selectItemGenerators = new ManagedObjectsLazyInitMap<String, SelectItemGenerator>(managedObjects(), drc);
         return selectItemGenerators;
     }
     /**

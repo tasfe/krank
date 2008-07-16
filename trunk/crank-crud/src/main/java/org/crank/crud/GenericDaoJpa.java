@@ -396,7 +396,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	@SuppressWarnings("unchecked")
 	public int count() {
-		final String entityName = getEntityName(type);
+        logger.debug("count() called");
+        final String entityName = getEntityName(type);
 		return (Integer) getJpaTemplate().execute(new JpaCallback() {
 
 			public Object doInJpa(EntityManager em) throws PersistenceException {
@@ -438,7 +439,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	public int count(final Criterion... criteria) {
-		final Group group = criteria != null ? Group.and(criteria) : null;
+        if (logger.isDebugEnabled()) {
+            logger.debug("count called with Criteria " + criteria);
+        }
+        final Group group = criteria != null ? Group.and(criteria) : null;
 
 		final StringBuilder sbquery = new StringBuilder("SELECT count("
 				+ (this.distinct ? "DISTINCT " : "") + "o ) " + " FROM ");
@@ -467,6 +471,11 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	public int count(Join[] joins, final Criterion... criteria) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("count called with Criteria=%s and joins=%s ", criteria,
+                    joins!=null ? Arrays.asList(joins) : "no joins"));
+        }
+
 		final Group group = criteria != null ? Group.and(criteria) : null;
 
 		final StringBuilder sbquery = new StringBuilder("SELECT count("

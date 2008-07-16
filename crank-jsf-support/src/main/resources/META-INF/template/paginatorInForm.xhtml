@@ -11,6 +11,8 @@
 	xmlns:crank="http://www.googlecode.com/crank">
 
 <ui:composition>
+	#{paginator.init}
+
 	<c:if test="${empty immediate}">
 		<c:set var="immediate" value="false" />
 	</c:if>

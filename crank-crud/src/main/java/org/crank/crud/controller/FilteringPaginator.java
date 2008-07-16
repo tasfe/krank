@@ -184,6 +184,23 @@ public class FilteringPaginator extends Paginator implements
             initFilterProperties();
         }
     }
+    
+    protected int count() {
+    	debug(log, "count()");
+    	if (assumedCount==NO_ASSUMED_COUNT) {
+    		debug(log, "NO_ASSUMED_COUNT returning real count from datasource");
+    		return dataSource.getCount();
+    	} else {
+    		if (!this.filterableProperties.isEmpty() || !criteria.isEmpty()) {
+    			debug(log, "returning ASSUMED count from datasource");
+    			return assumedCount;
+    		} else {
+    			debug(log, "returning real count from datasource because there are filters or criteria");
+    			return dataSource.getCount();
+    		}
+    	}
+    }
+    
 
     private void initFilterProperties() {
 

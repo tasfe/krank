@@ -12,6 +12,8 @@
 
 <ui:composition>
 
+	#{paginator.init}
+
 	<c:if test="${empty addNewImg}">
 		<c:set var="addNewImg" value="/images/add-new${imgAdjust}.gif"/>
 	</c:if>

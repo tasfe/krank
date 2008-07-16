@@ -25,6 +25,8 @@ public class Paginator implements Pageable, Serializable {
     protected Logger logger = Logger.getLogger(Paginator.class);
     protected List<?> page;
     protected boolean initialized;
+    public static int NO_ASSUMED_COUNT = -1;
+    protected int assumedCount = NO_ASSUMED_COUNT; 
 
 
     
@@ -106,7 +108,7 @@ public class Paginator implements Pageable, Serializable {
     public void reset() {
     	reset = true;
         logger.debug("reset() was called");
-        this.count = dataSource.getCount();
+        this.count = count();
         this.numberOfPages = count / itemsPerPage;
         if ((count % itemsPerPage) != 0) {
             this.numberOfPages++;
@@ -115,6 +117,14 @@ public class Paginator implements Pageable, Serializable {
         this.initialized = false;
         LogUtils.debug(logger, "reset() count=%s, itesmPerPage=%s, numberOfPages=%s", count, itemsPerPage, numberOfPages);
 
+    }
+    
+    protected int count() {
+    	if (assumedCount==NO_ASSUMED_COUNT) {
+    		return dataSource.getCount();
+    	} else {
+    		return assumedCount;
+    	}
     }
 
 
@@ -190,6 +200,12 @@ public class Paginator implements Pageable, Serializable {
         return pageNumberList;
     }
 
+    public String getInit() {
+    	if (!reset) {
+    		reset();
+    	}
+    	return "";
+    }
 
     public List getPage() {
     	if (!reset) {
@@ -332,5 +348,9 @@ public class Paginator implements Pageable, Serializable {
     public int getPageCount() {
         return numberOfPages;
     }
+
+	public void setAssumedCount(int assumedCount) {
+		this.assumedCount = assumedCount;
+	}
 
 }

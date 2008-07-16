@@ -70,14 +70,17 @@ public abstract class CrudDAOConfig implements InitializingBean {
 	@Bean(scope = DefaultScopes.SINGLETON, aliases = "repos")
 	public Map<String, GenericDao> repositories() throws Exception {
 
-		Map<String, GenericDao> repositories = new HashMap<String, GenericDao>();
+        DeferredResourceCreator drc = new DeferredResourceCreator(){
+               public void createResource(Map map, CrudManagedObject cmo) throws Exception{
 
-		for (CrudManagedObject mo : managedObjects()) {
-			GenericDao dao = createDao(mo);
-			repositories.put(mo.getName(), dao);
-		}
+                   GenericDao dao = createDao(cmo);
+                   map.put(cmo.getName(), dao);
 
-		return repositories;
+               }
+        };
+
+        Map<String, GenericDao> repositories = new ManagedObjectsLazyInitMap<String, GenericDao>(managedObjects(), drc);
+        return repositories;
 	}
 
 	/**

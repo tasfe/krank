@@ -32,6 +32,7 @@ public class PaginatorTest extends TestCase {
         Paginator paginatorImpl = new Paginator(dataSource);
         //paginatorImpl.setDataSource( dataSource );
         paginator = paginatorImpl;
+        paginator.reset();
     }
 
     @SuppressWarnings("unchecked")

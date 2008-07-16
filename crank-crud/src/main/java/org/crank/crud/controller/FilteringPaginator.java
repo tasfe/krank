@@ -538,13 +538,17 @@ public class FilteringPaginator extends Paginator implements
 
 	private int propertyDepth = 1;
 
-	/**
+    private boolean filtered = false;
+
+    /**
 	 * The filter method fires a before filter event, prepares user filters
 	 * (comparisons), prepares orderBys, prepares programatic criteria, then
 	 * sets up the joins for the datasource, calls reset, lastly fires an after
 	 * filter event.
 	 */
 	public void filter() {
+
+        filtered = true;
 
         debug(log, "filter()");
 
@@ -566,8 +570,15 @@ public class FilteringPaginator extends Paginator implements
 		/* Reset the page count and such for pagination. */
 		reset();
 	}
+    
+    public List getPage() {
+        if (!filtered) {
+            filter();
+        }
+        return super.getPage();
+    }
 
-	/** Builds the programmatic criteria list. */
+    /** Builds the programmatic criteria list. */
 	private void prepareProgramaticCriteriaForFilter() {
 		/* Build the Criteria list. */
 		if (criteria != null && criteria.size() > 0) {

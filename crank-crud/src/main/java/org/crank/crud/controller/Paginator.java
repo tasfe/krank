@@ -38,7 +38,7 @@ public class Paginator implements Pageable, Serializable {
     
     public Paginator (PagingDataSource dataSource) {
         this.dataSource = dataSource;
-        reset();
+        //reset();
     }
     
 
@@ -101,7 +101,10 @@ public class Paginator implements Pageable, Serializable {
         firePagination();
     }
 
+    private boolean reset = false;
+    
     public void reset() {
+    	reset = true;
         logger.debug("reset() was called");
         this.count = dataSource.getCount();
         this.numberOfPages = count / itemsPerPage;
@@ -189,6 +192,9 @@ public class Paginator implements Pageable, Serializable {
 
 
     public List getPage() {
+    	if (!reset) {
+    		reset();
+    	}
         logger.debug("getPage()");
         if (initialized) {
             logger.debug("getPage() send cached page");

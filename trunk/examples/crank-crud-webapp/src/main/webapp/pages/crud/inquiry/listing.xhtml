@@ -24,6 +24,9 @@
 						parentForm="petClinicLeadListForm" propertyNames="name,inquiry" ajax="${true}" />
 				</h:panelGroup>
 			</a4j:outputPanel>
+
+   				<h:selectBooleanCheckbox id="cbGrou55" value="" styleClass="imageCenter"/>
+
 			<crank:listing jsfCrudAdapter="${petClinicLeadCrud}" propertyNames="name,inquiry.anotherProp"
 				parentForm="petClinicLeadListForm" />
 		</h:form>
@@ -38,6 +41,7 @@
 						parentForm="petClinicInquiryListForm" propertyNames="name,anotherProp" ajax="${true}" />
 				</h:panelGroup>
 			</a4j:outputPanel>
+
 			<crank:listing jsfCrudAdapter="${cruds.petClinicInquiry}" propertyNames="name,anotherProp"
 				parentForm="petClinicInquiryListForm" />
 

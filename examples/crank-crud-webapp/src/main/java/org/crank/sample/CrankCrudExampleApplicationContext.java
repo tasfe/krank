@@ -148,6 +148,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	@Bean(scope = DefaultScopes.SESSION, aliases = "deptCrud")
 	public JsfCrudAdapter deptCrudController() throws Exception {
 		JsfCrudAdapter adapter = cruds().get("Department");
+		adapter.getController().setDeleteStrategy(CrudOperations.DELETE_BY_ENTITY);
 		adapter.getController().addChild("employees",
 				new JsfDetailController(Employee.class, true)).addChild("tasks",
 						new JsfDetailController(Task.class));

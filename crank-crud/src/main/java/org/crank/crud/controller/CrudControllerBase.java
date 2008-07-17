@@ -544,9 +544,10 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 		for (T entity : listToDelete) {
 			fireBeforeDelete(entity);
 			doDelete(entity);
+			fireToggle();
 			fireAfterDelete(entity);
 		}
-		fireToggle();
+    	MessageManagerUtils.getCurrentInstance().addStatusMessage("Deleted selections");        
 		return null;
 	}
 

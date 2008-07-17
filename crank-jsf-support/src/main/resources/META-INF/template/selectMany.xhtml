@@ -36,6 +36,7 @@
 	<c:if test="${empty id}">
 		<c:set var="id" value="${entityName}PaginatedListing" />
 	</c:if>
+	<c:set var="selectedRowsGroupId" value="selManyCbGroup${id}" />
 	<c:if test="${empty autoLink}">
 		<c:set var="autoLink" value="${true}" />
 	</c:if>
@@ -134,7 +135,7 @@
 					<rich:columnGroup>
 						<h:column>
 							<crank:commandLink id="selectAll${id}"
-											   onclick="toggleAllCheckBoxes('${parentForm}',true);"
+											   onclick="toggleAllCheckBoxesGrouped('${parentForm}','${selectedRowsGroupId}',true);"
 							                   toolTipText="Click to select all rows"
 							                   immediate="${immediate}"
 							                   >
@@ -142,7 +143,7 @@
 								<h:graphicImage id="selectAll${id}Img" value="${selectAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
 							</crank:commandLink>
 							<crank:commandLink id="selectNone${id}"
-							                   onclick="toggleAllCheckBoxes('${parentForm}',false);"
+							                   onclick="toggleAllCheckBoxesGrouped('${parentForm}','${selectedRowsGroupId}',false);"
 							                   toolTipText="Click to un-select all rows"
 							                   immediate="${immediate}">
 								<h:graphicImage id="selectNone${id}Img" value="${selectNoneImg}" border="0" styleClass="${listingImageButtonClass}"/>
@@ -166,7 +167,7 @@
 				</f:facet>
 				
 				<h:column>
-	   				<h:selectBooleanCheckbox value="#{row.selected}" styleClass="imageCenter" immediate="true"/>
+	   				<h:selectBooleanCheckbox id="${selectedRowsGroupId}${row.object.id}" value="#{row.selected}" styleClass="imageCenter" immediate="true"/>
 				</h:column>
 				
 				<c:forEach items="${pNames}" var="property">

@@ -56,6 +56,8 @@ public interface Pageable {
     void addPaginationListener(PaginationListener listener);
     /* Unregister for notifcation of page changes. */
     void removePaginationListener(PaginationListener listener);
+    
+    boolean isInitialized();
 
 
 }

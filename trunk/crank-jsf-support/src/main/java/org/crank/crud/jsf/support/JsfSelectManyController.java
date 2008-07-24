@@ -52,6 +52,9 @@ public class JsfSelectManyController<T extends Serializable, PK extends Serializ
 	public Set<Object> getSelectedEntities() {
         List<Row> list = (List<Row>) model.getWrappedData();
         Set<Object> selectedList = new LinkedHashSet<Object>(10);
+        if (list==null || list.size()==0) {
+        	return selectedList;
+        }
         for (Row row : list){
             if (row.isSelected()) {
                 selectedList.add( row.getObject() );
@@ -64,6 +67,9 @@ public class JsfSelectManyController<T extends Serializable, PK extends Serializ
 	public Set<Object> getEntitiesInView() {
         List<Row> list = (List<Row>) model.getWrappedData();
         Set<Object> selectedList = new LinkedHashSet<Object>(10);
+        if (list==null || list.size()==0) {
+        	return selectedList;
+        }        
         for (Row row : list){
            selectedList.add( row.getObject() );
         }

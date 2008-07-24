@@ -22,6 +22,10 @@ public abstract class SelectManyController<T extends Serializable, PK extends Se
 	
     public SelectManyController (Class clazz, String propertyName, FilterablePageable pageable, CrudOperations<T> crudController) {
     	this.paginator = pageable;
+    	
+    	if (!this.paginator.isInitialized()){
+    		this.paginator.moveToStartPage();
+    	}
     	this.controller = (CrudControllerBase<T, PK>) crudController;
     	
 		manager = new SelectManyRelationshipManager();

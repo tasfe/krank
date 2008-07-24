@@ -139,6 +139,18 @@ public class FilteringPaginatorTest extends TestCase {
 	
 
 	@Test
+    public void testCompoundRelationship() {
+        paginator = new FilteringPaginator(dataSource, A.class, "b.name");
+        FilterableProperty filterableProperty = paginator.getFilterableProperties().get("b.name");
+        assertNotNull(filterableProperty);
+        assertNotNull(filterableProperty.getParentType());
+        assertNotNull(filterableProperty.getType());
+        assertEquals(A.class, filterableProperty.getParentType());
+        assertEquals(String.class, filterableProperty.getType());
+
+    }
+
+	@Test
     public void testClearCriteria() {
         paginator = new FilteringPaginator(dataSource, A.class);
         paginator.addCriterion(Comparison.eq("name", "foo"));

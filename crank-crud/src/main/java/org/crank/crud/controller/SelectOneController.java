@@ -63,6 +63,10 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
     public SelectOneController(Class entityClass, String propertyName, FilterablePageable pageable, CrudOperations crudController) {
         debug(logger, "JsfSelectOneListingController(entityClass=%s, propertyName=%s, pageable=%s, crudController=%s)", entityClass, propertyName, pageable, crudController);
         this.paginator = pageable;
+    	if (!this.paginator.isInitialized()){
+    		this.paginator.moveToStartPage();
+    	}
+        
         this.crudController = (CrudControllerBase<T, PK>) crudController;
         this.targetPropertyName = propertyName;
         this.entityClass = entityClass;

@@ -352,5 +352,9 @@ public class Paginator implements Pageable, Serializable {
 	public void setAssumedCount(int assumedCount) {
 		this.assumedCount = assumedCount;
 	}
+	
+	public boolean isInitialized() {
+		return initialized;
+	}
 
 }

@@ -59,5 +59,7 @@ public interface Pageable {
     
     boolean isInitialized();
 
+    void setAssumedCount(int assumedCount);
+
 
 }

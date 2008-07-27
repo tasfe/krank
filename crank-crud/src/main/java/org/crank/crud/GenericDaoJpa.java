@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.regex.Pattern;
+
 
 /**
  * This is our GenericDAO interface that supports its own Criteria API and
@@ -401,9 +401,24 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return (Integer) getJpaTemplate().execute(new JpaCallback() {
 
 			public Object doInJpa(EntityManager em) throws PersistenceException {
-				Query query = em.createQuery("SELECT count(*) FROM " + entityName + " instance");
+				Query query = null;
+				try {
+					query = em.createNamedQuery(entityName + ".countAll");
+					logger.debug("using native countAll query for entity " + entityName);
+				}
+				catch (IllegalArgumentException iae) {
+					// thrown if a query has not been defined with the given name
+					query = em.createQuery("SELECT count(*) FROM " + entityName + " instance");
+					logger.debug("using JPA countAll query for entity " + entityName);
+				}
+				catch(PersistenceException pe) {
+					// JPA spec says IllegalArgumentException should be thrown, yet
+					// hibernate throws PersistenceException instead
+					query = em.createQuery("SELECT count(*) FROM " + entityName + " instance");
+					logger.debug("using JPA countAll query for entity " + entityName);
+				}
 				prepareQueryHintsIfNeeded(query);
-				Long count = (Long) query.getResultList().get(0);
+				Number count = (Number) query.getSingleResult();
 				return count.intValue();
 			}});
 	}
@@ -439,6 +454,11 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	public int count(final Criterion... criteria) {
+		if (criteria == null || criteria.length == 0) {
+			// count all if no criteria specified
+			return count();
+		}
+		
         if (logger.isDebugEnabled()) {
             logger.debug("count called with Criteria " + criteria);
         }
@@ -471,6 +491,14 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	public int count(Join[] joins, final Criterion... criteria) {
+		if ((joins == null || joins.length == 0) &&
+			(criteria == null || criteria.length == 0)	)
+		{
+			// count all if no joins or criteria specified
+			return count();
+		}
+		
+		
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("count called with Criteria=%s and joins=%s ", criteria,
                     joins!=null ? Arrays.asList(joins) : "no joins"));

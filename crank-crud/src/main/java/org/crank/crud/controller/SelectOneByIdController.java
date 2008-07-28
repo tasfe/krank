@@ -113,4 +113,13 @@ public abstract class SelectOneByIdController
     }
 
 
+    public boolean isRendered() {
+		if (toParent) {
+            return true;
+        } else {
+            return super.isRendered();
+        }
+    }
+
+
 }

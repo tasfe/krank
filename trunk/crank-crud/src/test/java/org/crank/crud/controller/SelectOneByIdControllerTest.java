@@ -65,6 +65,7 @@ public class SelectOneByIdControllerTest extends TestCase {
     class Employee1 implements Serializable{
 		private Long id;
         private Long tagId;
+        private TagHolder tagHolder = new TagHolder();
 
         Employee1(Long id, Long tagId) {
             this.id = id;
@@ -86,6 +87,14 @@ public class SelectOneByIdControllerTest extends TestCase {
         public void setTagId(Long tagId) {
             this.tagId = tagId;
         }
+
+        public TagHolder getTagHolder() {
+            return tagHolder;
+        }
+
+        public void setTagHolder(TagHolder tagHolder) {
+            this.tagHolder = tagHolder;
+        }
     }
 
     class Tag1 implements Serializable{
@@ -94,6 +103,18 @@ public class SelectOneByIdControllerTest extends TestCase {
         Tag1(Long id) {
             this.id = id;
         }
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+    }
+
+    class TagHolder implements Serializable{
+        private Long id;
 
         public Long getId() {
             return id;
@@ -168,6 +189,15 @@ public class SelectOneByIdControllerTest extends TestCase {
         controller.setClickedItem(tag2List.get(0));
         controller.process();
         assertEquals((Long)1L, (Long)tag2List.get(0).getEmployeeId());
+
+        test1=true;
+
+        controller.setSourceProperty("id");
+        controller.setTargetProperty("tagHolder.id");
+        controller.setToParent(true);
+        controller.setClickedItem(tag1List.get(1));
+        controller.process();
+        assertEquals((Long)2L, (Long)employee1List.get(0).getTagHolder().getId());
 
 
     }

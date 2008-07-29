@@ -97,6 +97,10 @@
         <c:set var="requiredMarker" value="*"/>
     </c:if>
 
+	<!-- this is if you want to show the small input text box if your field length is annotated to be more than 80 characters and you dont want mulineinput box -->
+	<c:if test="${empty forceSmallText}">
+	    <c:set var="forceSmallText" value="${false}"/>
+	</c:if>	
     <!--  The label is optional. Generate it if it is missing.  Decorate it if required -->
 	<c:choose>
 		<c:when test="${required=='true' and not crud:isBoolean(type,fieldName)}">
@@ -147,7 +151,7 @@
 			<c:if test="${simpleType}">
 		    <c:if test="${crud:isText(type,fieldName) or forceInputText}">
 				<c:choose>
-					<c:when test="${crud:isLargeText(type,fieldName)}">
+					<c:when test="${crud:isLargeText(type,fieldName) and not forceSmallText}">
 						<a4j:outputPanel ajaxRendered="true" rendered="${rendered}">
 						<c:if test="${(crud:textSize(type,fieldName)/50) > 20}">
 							<c:set var="numRows" value="20"/>

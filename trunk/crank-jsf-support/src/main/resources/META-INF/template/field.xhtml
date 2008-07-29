@@ -101,6 +101,11 @@
 	<c:if test="${empty forceSmallText}">
 	    <c:set var="forceSmallText" value="${false}"/>
 	</c:if>	
+	
+	<c:if test="${empty renderSize}">
+	    <c:set var="renderSize" value=""/>
+	</c:if>	
+	
     <!--  The label is optional. Generate it if it is missing.  Decorate it if required -->
 	<c:choose>
 		<c:when test="${required=='true' and not crud:isBoolean(type,fieldName)}">
@@ -191,7 +196,8 @@
 							                 value="#{entity[fieldName]}" 
 							                 required="${required}" 
 							                 styleClass="${formFieldStyleClasses}"
-							                 title="${title}" >
+							                 title="${title}" 
+											 size="${renderSize}">
 					        		<validation:validateBasedOnMetaData  formClass="${type}" fieldName="${fieldName}" parentObject="${entity}"/>							
 									<c:if test="${crud:textSize(type,fieldName)>0}">
 										<f:validateLength maximum="${crud:textSize(type,fieldName)}" />

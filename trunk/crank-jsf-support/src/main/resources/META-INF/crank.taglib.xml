@@ -119,5 +119,8 @@
 		<tag-name>ifdef</tag-name>
 		<handler-class>org.crank.crud.jsf.support.IfDefHandler</handler-class>
 	</tag>
-
+    <tag>
+        <tag-name>multipleField</tag-name>
+        <source>template/multipleField.xhtml</source>
+    </tag>
 </facelet-taglib>

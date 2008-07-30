@@ -48,13 +48,12 @@ public abstract class SelectByIdController<PT extends Serializable, T extends Se
 		this.show = true;
 	}
 
-	@SuppressWarnings("unchecked")
+    private CrudController<T, PK> cc;
+
+    @SuppressWarnings("unchecked")
 	public void init() {
-		final CrudController<T, PK> cc = (CrudController<T, PK>) parentCrudController;
-		cc.setCreateOutcome(CrudOutcome.FORM);
-		cc.setUseEntityAsCurrent(true);
-		cc.setAddStrategy(CrudOperations.ADD_BY_MERGE);
-		
+
+
 		paginator.addFilteringListener(new FilteringListener(){
 	
 			public void afterFilter(FilteringEvent fe) {
@@ -70,13 +69,22 @@ public abstract class SelectByIdController<PT extends Serializable, T extends Se
 			public void pagination(PaginationEvent pe) {
 				prepareModelChoices();
 			}});
-		
-		parentCrudController.addCrudControllerListener(new CrudControllerListenerAdapter(){
+
+        if (parentCrudController instanceof CrudController) {
+            cc = (CrudController<T, PK>) parentCrudController;
+		    cc.setCreateOutcome(CrudOutcome.FORM);
+		    cc.setUseEntityAsCurrent(true);
+		    cc.setAddStrategy(CrudOperations.ADD_BY_MERGE);
+        }
+
+        parentCrudController.addCrudControllerListener(new CrudControllerListenerAdapter(){
 	
 			public void afterCreate(CrudEvent event) {
-				/* Force form to reload in edit mode. */
-				cc.stayOnForm();
-			}
+                if (cc!=null) {
+                    /* Force form to reload in edit mode. */
+				    cc.stayOnForm();
+                }
+            }
 	
 			@SuppressWarnings("unchecked")
 			public void afterLoadCreate(CrudEvent event) {

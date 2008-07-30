@@ -661,7 +661,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
     public void testJoinEntity() {
 //    	employeeDao.find(join(entityJoin("Person", "p")), 
-//    			Comparison.eq("firstName", "Rick").eq("ssn", "333333311"));
+//    			'.eq("ssn", "333333311"));
 
     	personDao.find(join(entityJoin("Employee", "e")), 
     			eq("e.firstName", true, "Rick"), 

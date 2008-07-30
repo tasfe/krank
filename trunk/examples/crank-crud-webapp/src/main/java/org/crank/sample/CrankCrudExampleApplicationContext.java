@@ -229,7 +229,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 	}
 
 	@SuppressWarnings("unchecked")
-	@ExternalBean
+	@ExternalBean                                                            
 	abstract JsfCrudAdapter empCrud();
 	
 	@ExternalBean

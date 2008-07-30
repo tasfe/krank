@@ -187,6 +187,24 @@ http://krank.googlecode.com/svn/wiki/img/compositePanel.jpg
 ||readOnlyProperties||The property names, comma separated, which should only be displayed and not editable||String||no||none||
 ||readOnly||To set the fields to no editable state||boolean||no||false||
 
+==multipleField componet==
+This component is built around the concept of the composite panel. It is used to represent a list of fields that represent one line item. For example, a phone number in the database might be represented with a area code, prefix, number and extension. Rather then display this in a composite panel which shows each item on a separate line with it's associated label next to the feild you may want to display something like Home phone and each field next separated by dashes. This can be applied to SSN type fields, credit card and so on. 
+
+*multipleField*
+{{{
+ <crank:multipleField entity="${crud.entity.phoneInfo.home}" name="phoneInfoHome"
+                                       propertyNames="areaCode,exchange,number,extension" token="-" renderSize="4"/>
+}}}
+http://krank.googlecode.com/svn/wiki/img/multipleField.jpg
+
+|| *Parameters* || *Description* || *Type* || *Required* || *Default* ||
+||entity||Used to reference the entity object within the controller||Object||yes||none||
+||propertyNames||The property names, comma separated, from the data object that are to be displayable and selectable||String||yes||none||
+||readOnlyProperties||The property names, comma separated, which should only be displayed and not editable||String||no||none||
+||readOnly||To set the fields to no editable state||boolean||no||false||
+||token|| The separation value between each field||String||no|| - (dash) ||
+||renderSize||The size of the input field||Number||no||40||
+
 ==commandLink==
 {placeholder todo}
 

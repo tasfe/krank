@@ -96,7 +96,7 @@ http://krank.googlecode.com/svn/wiki/img/master_detail_pic_controlle_mapping.jpg
 ||createButtonText||Text to display on create button||String||no only if overrideButtonLabels set to true||"CREATE "||
 ||updateButtonText||Text to display on update button||String||no only if overrideButtonLabels set to true||"UPDATE "||
 ||resetButtonText||Text to display on reset button||String||no only if overrideButtonLabels set to true||"Reset"||
-||cancelButtonText||Text to display on cancel button||String||no only if overrideButtonLabels set to true||"Cancle"||
+||cancelButtonText||Text to display on cancel button||String||no only if overrideButtonLabels set to true||"Cancel"||
 
 ==SelectOneListing==
 This component is typically found wrapped inside a <crank:form> component. This is used to represents a many to one relationship in a crank form, and allows for searchable listings.
@@ -193,7 +193,7 @@ This component is built around the concept of the composite panel. It is used to
 *multipleField*
 {{{
  <crank:multipleField entity="${crud.entity.phoneInfo.home}" name="phoneInfoHome"
-                                       propertyNames="areaCode,exchange,number,extension" token="-" renderSize="4"/>
+                                       propertyNames="areaCode,exchange,number,extension" token="-" label="Home" renderSize="4"/>
 }}}
 http://krank.googlecode.com/svn/wiki/img/multipleField.jpg
 
@@ -204,6 +204,7 @@ http://krank.googlecode.com/svn/wiki/img/multipleField.jpg
 ||readOnly||To set the fields to no editable state||boolean||no||false||
 ||token|| The separation value between each field||String||no|| - (dash) ||
 ||renderSize||The size of the input field||Number||no||40||
+||label|| Label to be applied to the set of fields.||String||no|| blank||
 
 ==commandLink==
 {placeholder todo}

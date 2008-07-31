@@ -29,7 +29,7 @@
     <c:if test="${empty token}">
         <c:set var="token" value="-" />
     </c:if>
-	<!-- sets the input text field size this overrides the default input text box size which is something like 40 characters you might want smaller sized field entry boxes -->
+    <!-- sets the input text field size this overrides the default input text box size which is something like 40 characters you might want smaller sized field entry boxes -->
     <c:if test="${empty renderSize}">
         <c:set var="renderSize" value=""/>
     </c:if>
@@ -37,31 +37,35 @@
     <c:set var="pNames"
            value="${fn:split(propertyNames, '[, ]')}" />
 
-	<!-- count the number of fields to determine the column width of the panel-->	   
+    <!-- count the number of fields to determine the column width of the panel-->
     <c:set var="columnCount" value="0"/>
     <c:forEach items="${pNames}" var="property">
         <c:set var="columnCount" value="${columnCount + 1}"/>
-    </c:forEach>	
+    </c:forEach>
     <c:set var="columnCount" value="${columnCount * 3}"/>
-	
+
+     <c:if test="${empty label}">
+        <c:set var="label" value=" "/>
+    </c:if>
+
     <h:panelGrid id="${crud.name}_${name}FieldsFormPanelGridId"
                  columns="${columnCount}" rowClasses="formRowClass1, formRowClass2">
         <c:set var="xCount" value="0"/>
         <c:forEach items="${pNames}" var="property">
-		    <!-- if this is the first field then don't render the token-->
-             <c:choose>
-            <c:when test="${xCount >= 1}">
-                 <crank:field entity="${entity}" type="${entity.class}" fieldName="${property}"
-                         prefix="${name}"
-                         disabled="${crud:isInCollection(property, readOnlyProperties)}" label="${token}" renderSize="${renderSize}"/>
+            <!-- if this is the first field then don't render the token-->
+            <c:choose>
+                <c:when test="${xCount >= 1}">
+                    <crank:field entity="${entity}" type="${entity.class}" fieldName="${property}"
+                                 prefix="${name}"
+                                 disabled="${crud:isInCollection(property, readOnlyProperties)}" label="${token}" renderSize="${renderSize}"/>
 
-            </c:when>
-            <c:otherwise>
-                <crank:field entity="${entity}" type="${entity.class}" fieldName="${property}"
-                         prefix="${name}"
-                         disabled="${crud:isInCollection(property, readOnlyProperties)}" label=" " renderSize="${renderSize}"/>
-                <c:set var="xCount" value="${xCount + 1}"/>
-            </c:otherwise>  
+                </c:when>
+                <c:otherwise>
+                    <crank:field entity="${entity}" type="${entity.class}" fieldName="${property}"
+                                 prefix="${name}"
+                                 disabled="${crud:isInCollection(property, readOnlyProperties)}" label="${label}" renderSize="${renderSize}"/>
+                    <c:set var="xCount" value="${xCount + 1}"/>
+                </c:otherwise>
             </c:choose>
         </c:forEach>
     </h:panelGrid>

@@ -242,11 +242,11 @@ http://krank.googlecode.com/svn/wiki/img/breadCrumb.jpg
 ==field==
 This is the lowest level component of the jsf support api. The field component is meant to render jpa annotated fields and provide some levels of validation based on additional annotations. There are different data types and the field component will render them according to their type. This can be boolean, string, long strings, enum, and date. Additional not associated to a data type is many to one as a selection, and file.
 
-String fields when they are larger than 80 characters will be rendered as an input text area. Boolean fields are rendered as a checkbox. Date fields are rendered as a input text field for manual entry and with a button that pops-up a calendar widget; so users can select a date which fills the input text field. Enum type objects are renderd as a select one dropdown. 
+String fields when they are larger than 80 characters will be rendered as an input text area. Boolean fields are rendered as a check-box. Date fields are rendered as a input text field for manual entry and with a button that pops-up a calendar widget; so users can select a date which fills the input text field. Enum type objects are rendered as a select one drop-down. 
 
 The additional fields such as a file object allows upload feature. The many to one relationship is rendered as a select one drop down.
 
-Fields are rendered with a label of the annotated field name and an associated input field. Most cases when dealing with crank the developer won't have to use a field component as it is rendered automatically when specified in the crank:form component. The rare cases that do require a field component modification are because the developer needs some overriding feature. When this is the case and the field is encapsulated in the crank:form component. Do not include the field in the form propertyNames list in the crank:form. 
+Fields are rendered with a label of the annotated field name and an associated input field. Most cases when dealing with crank the developer won't have to use a field component as it is rendered automatically when specified in the crank:form component. The rare cases that do require a field component modification are because the developer needs some overriding feature. When this is the case and the field is encapsulated in the crank:form component. *Do not include the field in the form propertyNames list in the crank:form*. 
 
 *field*
 {{{
@@ -271,7 +271,7 @@ Fields are rendered with a label of the annotated field name and an associated i
 ||entity||Used to reference the entity object's the controller||Object||yes||none||
 ||type||Used to reference the entity object's class type||Object||yes||none||
 ||fieldName||Used to display the field label||String||yes||none||
-||forceSmallText||To force strings larger then 80 characters to render a normal input text field but still retain length validation||boolean||no||false||
+||forceSmallText||To force string fields with lengths larger than 80 characters to render a normal input text field but still retain length validation||boolean||no||false||
 ||renderSize||The default input text field length is normally used but some cases may require to render a smaller input text field||integer||no||40||
 
 

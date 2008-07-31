@@ -1,0 +1,77 @@
+#Crank webapplication 1-2-3
+= Introduction =
+We can all look at the Crank web application example and create a web application using crank. Another is take the blank project and start building using that as our template to start our new crank project. Still to the novice developer jumping into a web application and seeing something we need to know what we are doing. 
+
+The goal here is to take a blank project and make something of it. Walk the developer through simple steps in creating the first web application and do it within an a few hours. Had to find the happy medium between "learn crank in 24 hours" or "crank for dummies".
+
+==Building with Maven==
+Some may agree some may not, but Maven 2 proves pretty useful for managing dependencies and the cursed jarmagedon. The basis of the application will be Maven 2 so the first step is download it [http://maven.apache.org/]Maven2. 
+
+Once you have it and know you can use it in your command line you should be off and running. The first thing is look at your project pom.xml. Maven has a typical file structure it likes to follow so following maven's recipe of where java files, templates, resources and the works are important. Break the recipe and instead of cake you have disaster. 
+
+Let's start with dependencies in the pom.xml of the blank project:
+
+The first set of dependencies is for spring wiring. Spring if you don't know is an inversion of control container. You can read more about it at [http://www.springframework.org/] Spring's website. The reason we use it in crank is it helps us deal with configurations, allows us to loosely couple the application so that you can use different layers of crank and wire it into some other framework, say you like to use Ibatis over Hibernate, or you want to wire into Struts instead of JSF. 
+
+{{{
+ <!-- spring wiring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+            <version>2.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>2.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>2.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>2.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-support</artifactId>
+            <version>2.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-javaconfig</artifactId>
+            <version>1.0-m2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.aopalliance</groupId>
+                    <artifactId>aopalliance</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-webmvc</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-aop</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+}}}
+
+The next set of dependencies is the 

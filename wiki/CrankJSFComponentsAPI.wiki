@@ -2,7 +2,7 @@
 
 = Introduction =
 
-"Onions have layers. Ogres have layers. Onions have layers. You get it? We both have layers". Crank like Ogres has layers like an onion. The top layer can be any number of rendering technology, such as JSF, Struts, Spring MVC, or Flex. The focus here is to discuss the crank-jsf-support package, and the various components within it.
+"Onions have layers. Ogres have layers. Onions have layers. You get it? We both have layers" -- Shrek. Crank like Ogres has layers like an onion. The top layer can be any number of rendering technology, such as JSF, Struts, Spring MVC, or Flex. The focus here is to discuss the crank-jsf-support package, and the various components within it.
 
 
 == Listings ==
@@ -45,6 +45,7 @@ http://krank.googlecode.com/svn/wiki/img/listingProperty.jpg
 ||enableEdit||Flag to show and allow editing of a row item in the Action column||boolean||no||true||
 ||debug||Flag to show crank debug information||boolean||no||false||
 
+----
 == Paginator ==
 This a component within the listing component that handles filtering and pagination of the listings. The paginator being a child within the JSF component tree can be managed from the parent crank:listing. In otherwords, the property/parameters set here can and should be set on the crank:listing component.
 
@@ -57,6 +58,8 @@ http://krank.googlecode.com/svn/wiki/img/paginator_controlls.jpg
 ||enableAdd||Flag to enable the + add button||boolean||no||true||
 ||debug||Flag to show crank debug information||boolean||no||false||
 
+
+----
 == Form ==
 The crank form allows for adding or editing a selected row. This is a top level form component which can have other detail controllers within it, crank fields, selectManyListing,selectManyByIdListing,simpleField and others.
 
@@ -98,6 +101,7 @@ http://krank.googlecode.com/svn/wiki/img/master_detail_pic_controlle_mapping.jpg
 ||resetButtonText||Text to display on reset button||String||no only if overrideButtonLabels set to true||"Reset"||
 ||cancelButtonText||Text to display on cancel button||String||no only if overrideButtonLabels set to true||"Cancel"||
 
+----
 ==SelectOneListing==
 This component is typically found wrapped inside a <crank:form> component. This is used to represents a many to one relationship in a crank form, and allows for searchable listings.
 
@@ -138,9 +142,13 @@ http://krank.googlecode.com/svn/wiki/img/selectOneListing.jpg
 ||collapseText||Text link to display next to field to collapse listing||String||no||"(cancel)"||
 ||showField||Show the select on listing field||boolean||no||true||
 
+
+----
 ==selectOneByIdListing==
 {placeholder todo}
 
+
+----
 ==selectMany==
 This component represents from a UI standpoint an object or form that has a many relationship. In this example, an employee has many roles.
 *selectMany*
@@ -168,9 +176,12 @@ http://krank.googlecode.com/svn/wiki/img/selectManyStep2.jpg
 ||expandText||Text link to display next to field to show listing||String||no||"..."||
 
 
+----
 ==selectManyByIdListing==
 {placeholder todo}
 
+
+----
 ==compositePanel==
 Composite panel is used to represent an object that is annotated as @Embedded inside another object. For example, address object is referenced inside a Person object. From the person object you want to edit the address object from the current form. The composite panel is referenced within a <crank:form> See http://code.google.com/p/krank/wiki/CrankCrudTutorial. 
 
@@ -187,6 +198,8 @@ http://krank.googlecode.com/svn/wiki/img/compositePanel.jpg
 ||readOnlyProperties||The property names, comma separated, which should only be displayed and not editable||String||no||none||
 ||readOnly||To set the fields to no editable state||boolean||no||false||
 
+
+----
 ==multipleField componet==
 This component is built around the concept of the composite panel. It is used to represent a list of fields that represent one line item. For example, a phone number in the database might be represented with a area code, prefix, number and extension. Rather then display this in a composite panel which shows each item on a separate line with it's associated label next to the feild you may want to display something like Home phone and each field next separated by dashes. This can be applied to SSN type fields, credit card and so on. 
 
@@ -206,9 +219,13 @@ http://krank.googlecode.com/svn/wiki/img/multipleField.jpg
 ||renderSize||The size of the input field||Number||no||40||
 ||label|| Label to be applied to the set of fields.||String||no|| blank||
 
+
+----
 ==commandLink==
 {placeholder todo}
 
+
+----
 ==crudBreadCrumb==
 This component renders a bread crumb trail for a user experience. The breadcrumb trail creates navigation links to forms, listings, and the home page of the crank JSF enabled application. This component does not sit inside a <crank:form>. It can create a trail based on the crank crud controller object. 
 
@@ -221,5 +238,7 @@ http://krank.googlecode.com/svn/wiki/img/breadCrumb.jpg
 || *Parameters* || *Description* || *Type* || *Required* || *Default* ||
 ||crud||Used to reference the entity object's the controller||Object||yes||none||
 
+
+----
 ==autoComplete==
 {placeholder todo}

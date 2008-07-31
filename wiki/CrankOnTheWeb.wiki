@@ -74,4 +74,297 @@ The first set of dependencies is for spring wiring. Spring if you don't know is 
         </dependency>
 }}}
 
-The next set of dependencies is the 
+The next set of dependencies allows crank to use a object-relational mapping framework, or now Java Persistence framework (JPA). In this case, it will be hibernate. The other dependency is to the database driver itself to MySQL, and some logging frameworks used by both spring and the apache commons.
+
+The final library is spring-jpa this allows crank to plugin hibernate and spring together with the JPA framework.
+{{{
+ <!-- hibernate JPA -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-tools</artifactId>
+            <version>3.2.0.beta9a</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>3.2.1.ga</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>3.2.1.ga</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.persistence</groupId>
+                    <artifactId>ejb</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate</artifactId>
+            <version>3.2.2.ga</version>
+        </dependency>
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>1.5.3</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-pool</groupId>
+            <artifactId>commons-pool</artifactId>
+            <version>1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
+            <version>1.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.13</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>avalon-framework</groupId>
+                    <artifactId>avalon-framework</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>logkit</groupId>
+                    <artifactId>logkit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jpa</artifactId>
+            <version>2.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.5.3</version>
+        </dependency>
+}}}
+
+The next thing after the third party dependencies, add the crank libraries that provides interfaces to these libraries and provides additional support. These are the crank-core, crank-crud, and crank-validation libraries. Crank-core provides support for crank based annotations, utilities used by crank higher level frameworks such as crank-jsf-support, and crank based listeners.
+
+Crank-crud is the bread and butter to cranks create, update, retrieve, delete operations. It provides filter facilities, cacheing, and criteria support. All of these facilities help to make issues with transaction management, sorting and querying information easier for end development. 
+
+The last crank-validation provides annotation support for column, table validation. Some validation features are phone number, email, length, number, and regular expression. These  annotations for validations can be applied to the JPA object, which crank display frameworks can use to validate the data and error to the user messages.
+{{{
+<dependency>
+            <groupId>org.crank</groupId>
+            <artifactId>crank-core</artifactId>
+            <version>0.23-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.crank</groupId>
+            <artifactId>crank-crud</artifactId>
+            <version>0.23-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.crank</groupId>
+            <artifactId>crank-validation</artifactId>
+            <version>0.23-SNAPSHOT</version>
+        </dependency>
+}}}
+
+Unit testing is important and typically with crank, it's been using TestNG. Little more beefier than JUnit. Notice this particular library the scope is set to test as we only want it for unit testing and builds and not the final deployment into the webapplication. 
+{{{
+<dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.1</version>
+            <classifier>jdk15</classifier>
+            <scope>test</scope>
+        </dependency>
+}}}
+
+This application is going to make use of JSF and crank's support for this. Therefore the following dependencies incorporate servelet support, jsf, and java EL support.
+
+{{{
+<!-- JSF stuff -->
+        <dependency>
+            <groupId>com.sun.facelets</groupId>
+            <artifactId>jsf-facelets</artifactId>
+            <version>1.1.12</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+            <version>1.2_04</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.faces</groupId>
+            <artifactId>jsf-impl</artifactId>
+            <version>1.2_04</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>el-impl</groupId>
+            <artifactId>el-impl</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>el-api</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+         <!-- JSF ControllerBean-->
+        <dependency>
+            <groupId>poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>2.5.1-final-20040804</version>
+        </dependency>
+        <dependency>
+            <groupId>org.htmlparser</groupId>
+            <artifactId>htmlparser</artifactId>
+            <version>1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>1.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- JSF ControllerBean END-->
+}}}
+
+Now add the final crank libraries that interface int JSF. This is the crank-jsf-support, which provides the facilities of controllers, validators, and transformers. This library also contains the crank components templates, which are templates that are used to render out listings, fields, and forms. This is the visual things you see when you think of crank. 
+
+The other library is crank-jsf-validation; this provides a number of utilities for JSF validation.
+
+{{{
+ <!-- JSF ControllerBean END-->
+		<dependency>
+            <groupId>org.crank</groupId>
+            <artifactId>crank-jsf-support</artifactId>
+            <version>0.23-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.el</groupId>
+                    <artifactId>el-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>el-impl</groupId>
+                    <artifactId>el-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.faces</groupId>
+                    <artifactId>jsf-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.faces</groupId>
+                    <artifactId>jsf-impl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--needed for org.crank.config.spring.support.CrudDAOConfig-->
+        <dependency>
+            <groupId>org.crank</groupId>
+            <artifactId>crank-jsf-validation</artifactId>
+            <version>0.22</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.el</groupId>
+                    <artifactId>el-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>el-impl</groupId>
+                    <artifactId>el-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.faces</groupId>
+                    <artifactId>jsf-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.faces</groupId>
+                    <artifactId>jsf-impl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>		
+}}}
+
+Some special things, in the build, there is is a requirement that Java 1.5 or higher be used to build application with crank. The other is that to make builds go by fast and see the application quickly the application can be run within jetty. This is much faster when doing debuging than building a whole web application war and deploying it into and application container such as tomcat or jboss. 
+
+So to run the application within jetty from maven the command is:
+
+_mvn jetty:run_
+
+Or you can use the batch files in the blank project as other examples for running in debug mode, and connecting to the database.
+
+{{{
+ <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                        <version>1.2.13</version>
+                        <type>jar</type>
+                    </dependency>
+                    <dependency>
+                        <groupId>javax.faces</groupId>
+                        <artifactId>jsf-api</artifactId>
+                        <version>1.2_04</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>javax.faces</groupId>
+                        <artifactId>jsf-impl</artifactId>
+                        <version>1.2_04</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+}}}
+
+Now that you've gone through most of the pom.xml for maven all that takes to compile the project is the command:
+
+_mvn clean install_
+
+And you thought life was tough in maven. Obviously there won't be anything yet because there is still the issue you need to write some code.
+
+==Create a Simple table and JPA object==

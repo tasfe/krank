@@ -411,9 +411,11 @@ create table `MOVIE` (`MOVIE_ID` int(11) NOT NULL auto_increment,
   PRIMARY KEY  (`MOVIE_ID`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 }}}
-}}}
+
 
 The next thing is to write some code that represents an object of this database. Pretty much if you follow this tutorial http://code.google.com/p/krank/wiki/CrankCrudTutorial on the employee table and apply it to this project you got it. 
+
+Create a MovieBO object and put this in the project src/org/crank/movie/ location.
 
 Here is the solution to how the annotations look. We import the JPA libraries and add annotations of Entity, the table and have the object in this case the MovieBO implement serializable. 
 
@@ -462,4 +464,31 @@ public class MovieBO implements Serializable {
 
     @Column(name="GENRE", length=30)
     private String genre;
+    ...
 }}}
+
+The rest is going to be the access modifier methods which can be auto generated through an IDE (auto generate getter/setter).
+
+==Wire to persistence==
+If everything was copied from the blank crank project there should be in the resources directory a persistence.xml. This is going to be modified from what is there to suite this project needs.
+
+The first step is change the persistence unit name to "crank-movie". The next is to add the object created above to the persistence unit group so it is accessible. This is required for Hibernate JPA persistence management to know which classes are persistable.
+
+<class>org.crank.movie.MovieBO</class>
+
+Solution:
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
+			http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+    version="1.0">
+
+    <persistence-unit name="crank-movie" transaction-type="RESOURCE_LOCAL">
+        <class>org.crank.movie.MovieBO</class>
+    </persistence-unit>
+
+</persistence>
+}}}
+

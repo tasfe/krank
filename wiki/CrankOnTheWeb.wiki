@@ -9,7 +9,23 @@ Some may agree some may not, but Maven 2 proves pretty useful for managing depen
 
 Once you have it and know you can use it in your command line you should be off and running. The first thing is look at your project pom.xml. Maven has a typical file structure it likes to follow so following maven's recipe of where java files, templates, resources and the works are important. Break the recipe and instead of cake you have disaster. 
 
-Let's start with dependencies in the pom.xml of the blank project:
+Your maven project folder should mirror the crank examples->blank-project. Copy everything in webapp, resources, org/crank to the respective folders
+
+http://krank.googlecode.com/svn/wiki/img/maven-folder-structure.jpg
+
+Now, we have to modify some stuff and understand other things to move forward. The first section is the basic project. We are making a movie database application so we want our project to reflect that. The top of the pom.xml we will change the blank-project stuff over to our application. The result is the following:
+
+{{{
+  <modelVersion>4.0.0</modelVersion>
+    
+    <groupId>com.vmc.system</groupId>
+    <artifactId>crank-movie</artifactId>
+    <packaging>war</packaging>
+    <version>0.1.0.0-SNAPSHOT</version>
+    <name>Crank movie example</name>
+}}}
+
+Couple of things to learn about dependencies. Let's start with dependencies in the pom.xml of the blank project:
 
 The first set of dependencies is for spring wiring. Spring if you don't know is an inversion of control container. You can read more about it at [http://www.springframework.org/] Spring's website. The reason we use it in crank is it helps us deal with configurations, allows us to loosely couple the application so that you can use different layers of crank and wire it into some other framework, say you like to use Ibatis over Hibernate, or you want to wire into Struts instead of JSF. 
 
@@ -173,7 +189,7 @@ The final library is spring-jpa this allows crank to plugin hibernate and spring
         </dependency>
 }}}
 
-The next thing after the third party dependencies, add the crank libraries that provides interfaces to these libraries and provides additional support. These are the crank-core, crank-crud, and crank-validation libraries. Crank-core provides support for crank based annotations, utilities used by crank higher level frameworks such as crank-jsf-support, and crank based listeners.
+After the third party dependencies, add the crank libraries that provides interfaces to these libraries and provides additional support. These are the crank-core, crank-crud, and crank-validation libraries. Crank-core provides support for crank based annotations, utilities used by crank higher level frameworks such as crank-jsf-support, and crank based listeners.
 
 Crank-crud is the bread and butter to cranks create, update, retrieve, delete operations. It provides filter facilities, cacheing, and criteria support. All of these facilities help to make issues with transaction management, sorting and querying information easier for end development. 
 
@@ -368,9 +384,9 @@ _mvn clean install_
 And you thought life was tough in maven. Obviously there won't be anything yet because there is still the issue you need to write some code.
 
 ==Create a Simple table and JPA object==
-If you haven't read http://code.google.com/p/krank/wiki/CrankCrudTutorial that may be ok. That is because the fundamentals are there but there are some evolution changes and we will start from the ground up in building the webapplication.
+If you haven't read http://code.google.com/p/krank/wiki/CrankCrudTutorial that may be ok. That is because the fundamentals are there but there are some evolution changes and we will start from the ground up in building the web application.
 
-The goal of the application is to create a table in a database (mysql), and display its information and allow the user to add, edit, delete, or update data in this. Sounds simple and it should be. The data model that the application is going to simulate is a movie database.
+The goal of the application is to create a table in a database (mysql), and display its information and allow the user to add, edit, delete, or update data in this. Sounds simple and it should. The data model that the application is going to simulate is a movie database.
 
 First create the database called "crank". (_These are Mysql commands_)
 {{{
@@ -395,4 +411,55 @@ create table `MOVIE` (`MOVIE_ID` int(11) NOT NULL auto_increment,
   PRIMARY KEY  (`MOVIE_ID`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 }}}
+}}}
+
+The next thing is to write some code that represents an object of this database. Pretty much if you follow this tutorial http://code.google.com/p/krank/wiki/CrankCrudTutorial on the employee table and apply it to this project you got it. 
+
+Here is the solution to how the annotations look. We import the JPA libraries and add annotations of Entity, the table and have the object in this case the MovieBO implement serializable. 
+
+The next are the attributes that we annotate to the columns they represent in the database. 
+{{{
+package org.crank.movie;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * Child http assertion
+ */
+@Entity
+@Table( name = "MOVIE" )
+public class MovieBO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue( strategy = GenerationType.AUTO )
+    @Column( name = "ID" )
+    private Long id;
+    @Column( name = "CREATED_BY", length = 45 )
+    private String createdBy;
+    @Temporal( value = TemporalType.TIMESTAMP )
+    @Column( name = "CREATED_DATE" )
+    private Date createdDate;
+    @Column( name = "UPDATED_BY", length = 45 )
+    private String updatedBy;
+    @Temporal( value = TemporalType.TIMESTAMP )
+    @Column( name = "UPDATED_DATE" )
+    private Date updatedDate;
+     @Column(name="NAME", length=80)
+    private String name;
+    @Column(name="DESCRIPTION")
+    private String description;
+     @Column(name="CHECKED_OUT", length=65535)
+    private boolean checkedOut;
+     @Column(name="YEAR")
+    private int year;
+
+    @Column(name="RATING", length=4)
+    private int rating;
+
+    @Column(name="GENRE", length=30)
+    private String genre;
 }}}

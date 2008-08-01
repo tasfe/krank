@@ -372,8 +372,14 @@ If you haven't read http://code.google.com/p/krank/wiki/CrankCrudTutorial that m
 
 The goal of the application is to create a table in a database (mysql), and display its information and allow the user to add, edit, delete, or update data in this. Sounds simple and it should be. The data model that the application is going to simulate is a movie database.
 
-First create the database called "crank" next create a table called "movie". Movie table will have a primary key, title, year, rating, genre.
+First create the database called "crank". (_These are Mysql commands_)
+{{{
+create database crank;
+}}}
 
+Next create a table called "movie". Movie table will have a primary key, created by and date, updated by and date, name, description, ,checked out, year, rating, genre.
+
+The reason we have all this created data and updated date name and description is not that it's necessary, but this is going to demonstrate extending from some base crank JPA objects. This is not required, but can be considered good practice.
 {{{
 create table `MOVIE` (`MOVIE_ID` int(11) NOT NULL auto_increment,
   `CREATED_BY` varchar(45) default NULL,
@@ -384,6 +390,7 @@ create table `MOVIE` (`MOVIE_ID` int(11) NOT NULL auto_increment,
   `DESCRIPTION` varchar(255) default NULL,
   `CHECKED_OUT` bit(1) default NULL,
   `YEAR` int(4) default NULL,
+  `RATING` varchar(4),
   `GENRE` varchar(30) NOT NULL,
   PRIMARY KEY  (`MOVIE_ID`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;

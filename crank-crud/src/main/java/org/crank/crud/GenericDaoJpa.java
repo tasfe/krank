@@ -1241,4 +1241,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		this.idPropertyName = idPropertyName;
 	}
 
+    public <Z> Z getReference(Class<Z> entityClass, Object primaryKey) {
+        return this.getJpaTemplate().getReference(entityClass, primaryKey);
+    }
+
 }

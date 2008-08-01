@@ -840,5 +840,10 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+    public <Z> Z getReference(Class<Z> entityClass, Object primaryKey) {
+        //TODO finish this
+        return null;
+    }
 	
 }

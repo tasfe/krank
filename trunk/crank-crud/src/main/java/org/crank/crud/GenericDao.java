@@ -331,4 +331,6 @@ public interface GenericDao<T, PK extends Serializable> {
 			int maxResults,
 			Criterion... criteria);
 
+    <Z> Z getReference(Class<Z> entityClass, Object primaryKey);
+
 }

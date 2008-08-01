@@ -368,3 +368,24 @@ _mvn clean install_
 And you thought life was tough in maven. Obviously there won't be anything yet because there is still the issue you need to write some code.
 
 ==Create a Simple table and JPA object==
+If you haven't read http://code.google.com/p/krank/wiki/CrankCrudTutorial that may be ok. That is because the fundamentals are there but there are some evolution changes and we will start from the ground up in building the webapplication.
+
+The goal of the application is to create a table in a database (mysql), and display its information and allow the user to add, edit, delete, or update data in this. Sounds simple and it should be. The data model that the application is going to simulate is a movie database.
+
+First create the database called "crank" next create a table called "movie". Movie table will have a primary key, title, year, rating, genre.
+
+{{{
+create table `MOVIE` (`MOVIE_ID` int(11) NOT NULL auto_increment,
+  `CREATED_BY` varchar(45) default NULL,
+  `CREATED_DATE` datetime default NULL,
+  `UPDATED_BY` varchar(45) default NULL,
+  `UPDATED_DATE` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `NAME` varchar(80) default NULL,
+  `DESCRIPTION` varchar(255) default NULL,
+  `CHECKED_OUT` bit(1) default NULL,
+  `YEAR` int(4) default NULL,
+  `GENRE` varchar(30) NOT NULL,
+  PRIMARY KEY  (`MOVIE_ID`)
+)ENGINE=InnoDB DEFAULT CHARSET=latin1;
+}}}
+}}}

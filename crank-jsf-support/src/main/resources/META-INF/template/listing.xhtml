@@ -12,7 +12,18 @@
 	xmlns:crank="http://www.googlecode.com/crank">
 
 <ui:composition>
-	<c:set var="crud" value="${jsfCrudAdapter.controller}"/>
+
+
+    <c:if test="${empty debug}">
+            <c:if test="#{empty initParam['crank.debug']}">
+                <c:set var="debug" value="${false}" />
+            </c:if>
+            <c:if test="#{not empty initParam['crank.debug']}">
+                <c:set var="debug" value="#{initParam['crank.debug']}" />
+            </c:if>
+    </c:if>
+
+    <c:set var="crud" value="${jsfCrudAdapter.controller}"/>
 	<c:set var="entityName" value="${crud.name}" />
 	<c:set var="entityNameLabel" value="${crud:createLabel(crud.name)}" />
 	<c:set var="paginator" value="${jsfCrudAdapter.paginator}"/>
@@ -128,7 +139,18 @@
 		<c:set var="listingImageButtonClass" value="paginationImageButton" />
 	</c:if>
 	<c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
-	<a4j:outputPanel ajaxRendered="true">
+
+    <c:if test="${debug}">
+        <h4>Debug for lListing id=${id}</h4>
+        <table>
+            <tr><td>crud</td>		            <td>${crud}</td></tr>
+            <tr><td>crud.name</td>				<td>${crud.name}</td></tr>
+            <tr><td>crud.entityClass</td>		<td>${crud.entityClass}</td></tr>
+            <tr><td>paginator</td>				<td>${paginator}</td></tr>
+        </table>
+    </c:if>
+
+    <a4j:outputPanel ajaxRendered="true">
 
 		<h:panelGrid id="listPanel${id}" columns="1" width="${dataTableWidth}">
 			<crank:paginator paginator="${paginator}" reRender="${reRender}" ajaxSingle="${ajaxSingle}" readOnly="${readOnly}"/>

@@ -14,7 +14,17 @@
 
 <ui:composition>
 
-	<!-- DEFINE VARIABLES --> 
+    <c:if test="${empty debug}">
+            <c:if test="#{empty initParam['crank.debug']}">
+                <c:set var="debug" value="${false}" />
+            </c:if>
+            <c:if test="#{not empty initParam['crank.debug']}">
+                <c:set var="debug" value="#{initParam['crank.debug']}" />
+            </c:if>
+    </c:if>
+
+
+    <!-- DEFINE VARIABLES -->
 	<c:if test="${empty immeidate}">
 	    <c:set var="immeidate" value="${true}" />
 	</c:if>
@@ -62,7 +72,18 @@
 
 	<!-- END DEFINE VARIABLES -->
 
-	<h:column styleClass="${columnHeaderClass}">
+    <h:column styleClass="${columnHeaderClass}">
+        <c:if test="${debug}">
+            <h4>Debug for lListing id=${id}</h4>
+            <table>
+                <tr><td>paginator</td>				<td>${paginator}</td></tr>
+                <tr><td>filter</td>				    <td>${filter}</td></tr>
+                <tr><td>orderBy</td>				<td>${orderBy}</td></tr>
+                <tr><td>comparison</td>				<td>${comparison}</td></tr>
+                <tr><td>filter.parentType</td>	    <td>${filter.parentType}</td></tr>
+            </table>
+        </c:if>
+
         <c:if test="${not empty filter}">
             <div style="${columnHeaderClass}">
             	<a4j:outputPanel ajaxRendered="true">

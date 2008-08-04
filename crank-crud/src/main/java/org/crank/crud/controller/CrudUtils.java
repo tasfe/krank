@@ -28,7 +28,10 @@ public class CrudUtils {
         return System.currentTimeMillis();
     }
     public static boolean isFilterPropertyText(boolean autoCreatePrependParentAlias, Class<?> parentType, String property) {
-    	if (autoCreatePrependParentAlias) {
+        if (parentType == null) {
+            return true;
+        }
+        if (autoCreatePrependParentAlias) {
     		return TypeUtils.isText(parentType, property);
     	} else {
         	String propMinusLeadingName = property.substring(property.indexOf('.')+1, property.length());
@@ -36,6 +39,9 @@ public class CrudUtils {
     	}
     }    
     public static boolean isFilterPropertyDate(boolean autoCreatePrependParentAlias, Class<?> parentType, String property) {
+        if (parentType == null) {
+            return false;
+        }
     	if (autoCreatePrependParentAlias) {
     		return TypeUtils.isDate(parentType, property);
     	} else {
@@ -44,6 +50,9 @@ public class CrudUtils {
     	}
     }    
     public static boolean isFilterPropertyBoolean(boolean autoCreatePrependParentAlias, Class<?> parentType, String property) {
+        if (parentType == null) {
+            return false;
+        }
     	if (autoCreatePrependParentAlias) {
     		return TypeUtils.isBoolean(parentType, property);
     	} else {
@@ -52,6 +61,9 @@ public class CrudUtils {
     	}
     }
     public static boolean isFilterPropertyEnum(boolean autoCreatePrependParentAlias, Class<?> parentType, String property) {
+        if (parentType == null) {
+            return false;
+        }
     	if (autoCreatePrependParentAlias) {
     		return TypeUtils.isEnum(parentType, property);
     	} else {
@@ -61,7 +73,9 @@ public class CrudUtils {
     }
     
     public static boolean isRequired(Class<?> clazz, String propertyName) {
-  	
+        if (clazz == null) {
+            return false;
+        }  	
     	if (clazz == null || propertyName == null) {
     		throw new CrankException("CrankUtils.isRequired: Null arguments are not allowed " +
     				" clazz = %s, propertyName = %s ", clazz, propertyName);

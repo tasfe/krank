@@ -5,9 +5,9 @@ We can all look at the Crank web application example and create a web applicatio
 The goal here is to take a blank project and make something of it. Walk the developer through simple steps in creating the first web application and do it within an a few hours. Had to find the happy medium between "learn crank in 24 hours" or "crank for dummies".
 
 == Requirements ==
-* Jdk 1.5 or higher
-* Mysql database
-* Maven 2.07 or higher
+  * Jdk 1.5 or higher
+  * Mysql database
+  * Maven 2.07 or higher
 
 ==Building with Maven==
 Some may agree some may not, but Maven 2 proves pretty useful for managing dependencies and the cursed jarmagedon. The basis of the application will be Maven 2 so the first step is download it [http://maven.apache.org/]Maven2. 
@@ -699,10 +699,315 @@ hibernate.use_sql_comments=true
 hibernate.query.substitutions=true 1, false 0
 }}}
 
+==Spring wire data sources==
+The application needs access to the database, and to do this it needs to know a couple of things about the user and password to access the database. In the resources directory, there is an applicationContext.xml file. Right now all we will change is the reference to 'employeeDatasources' to the movie application source name, which will be 'movieDataSource'. A find and replace should work here.
 
+Solution:
+{{{
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"    
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
 
+    <bean class="org.crank.controller.MovieExampleApplicationContext" />
+   
+    <bean id="movieDataSource"
+          class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close" lazy-init="true">
+        <property name="driverClassName" value="${krank.jdbc.driver}" />
+        <property name="url" value="${krank.jdbc.url}" />
+        <property name="username" value="${krank.jdbc.user}" />
+        <property name="password" value="${krank.jdbc.password}" />
+        <property name="minIdle" value="5" />
+        <property name="maxIdle" value="15" />
+        <property name="initialSize" value="200" />
+        <property name="maxOpenPreparedStatements" value="100" />
+        <property name="maxWait" value="3000" />
+        <property name="timeBetweenEvictionRunsMillis" value="3600000" />
+    </bean>
+
+    <bean id="jpaConfigProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="classpath:jpa.properties" />
+    </bean>
+
+    <bean name="jpaVendorAdapter"
+          class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="showSql" value="false" />
+        <property name="databasePlatform" value="${krank.hibernate.dialect}" />
+    </bean>
+
+    <bean class="org.crank.config.spring.support.CrudDAOConfig">
+        <property name="dataSource" ref="movieDataSource" />
+        <property name="jpaProperties" ref="jpaConfigProperties" />
+    </bean>
+
+    <bean class="org.springframework.config.java.process.ConfigurationPostProcessor" />
+    <import resource="classpath:/validationContext.xml" />
+</beans>
+}}}
+
+If you notice the jpaProperties are referenced by a spring PropertiesFactoryBean and then injected into the CrudDAOConfig. 
+
+There are also a number of 'krank' properties, and these are property values that are found and replaced, when the maven build is run. These properties are fed in by the maven pom.xml file so to do this before the profile tag add properties tags. The result is this:
+
+{{{
+    <properties>
+        <krank.jdbc.url>
+            jdbc:mysql://localhost:3306/crank?autoReconnect=true
+        </krank.jdbc.url>
+        <krank.jdbc.driver>com.mysql.jdbc.Driver</krank.jdbc.driver>
+        <krank.jdbc.user>crankuser</krank.jdbc.user>
+        <krank.jdbc.password>crank</krank.jdbc.password>
+       <krank.hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</krank.hibernate.dialect>
+    </properties>
+}}}
+
+If you just copied everything above, you probably missed this line:
+
+_<bean class="org.crank.controller.MovieExampleApplicationContext" />_
+
+This is the controller that is going to be created.
 ==Create A Controller==
+The controller is the heart of the application. It is used to connect crank to the datasources and entity objects. Learn more about this architecture here:
+http://code.google.com/p/krank/wiki/CrankCrudDesignDocs
+
+First create a .java source file in your src/main/org/crank/controller/. Called MovieExampleApplicationContext. This will be an abstract class and extend the abstract class of CrudJSFConfig. The class will be annotated to be a Spring configuration. 
+
+{{{
+@Configuration(defaultLazy = Lazy.TRUE)
+public abstract class MovieExampleApplicationContext extends CrudJSFConfig {
+}}}
+
+The jsf pages will use crank's CrudManagedObjects, which will be wrapped in a JsfCrudAdapter controller. Set up the managed objects as a list, that will be a static singleton list like this:
+{{{
+        private static List<CrudManagedObject> managedObjects;
+
+	@Bean(scope = DefaultScopes.SINGLETON)
+	public List<CrudManagedObject> managedObjects() {
+		if (managedObjects == null) {
+			managedObjects = new ArrayList<CrudManagedObject>();
+            managedObjects.add(new CrudManagedObject(MovieBO.class, "MovieBO", IMovieDao.class));
+        }
+		return managedObjects;
+
+	}
+}}}
+
+The next step is to wire in the datasource and persistence unit group that was changed in the applicationContext.xml and the persistence.xml. This is done as follows, specify a string return method called persistenceUnitName the returns the name of the persistence.xml unit name. 
+
+Then get the external bean dataSource of the movieDataSource in the applicationContext.xml into this bean.
+
+{{{
+      @Bean
+     public String persistenceUnitName() {
+		return "crank-movie";
+     }
+
+    @ExternalBean
+    abstract DataSource movieDataSource();
+}}}
+
+Create a simple controller that will allow one page to display a listing and another page to display a form for editing and updating a selected listing. This case the JSF controller will use the MovieBO managed crud object above. The wrapping controller is a JsfCrudAdapter. The method is going to be called 'movieCrud'. The method and controller will be scoped on requests. 
+
+Solution:
+{{{
+    @SuppressWarnings("unchecked")
+    @Bean(scope = DefaultScopes.REQUEST)
+    public JsfCrudAdapter<MovieBO, Long> movieCrud() throws Exception {
+        JsfCrudAdapter adapter = cruds().get("MovieBO");
+        return adapter;
+    }
+}}}
+
+That about completes to this point. This will be revisited and enhanced later for some other functionality.
 
 ==Create A Page==
+The first two pages to be created will be a navigation page to the listings. The navigation page is going to be a modification of the home.xhtml page in src/main/webapp/pages/.  
+
+First remove everthing between 'ui:define name="content"' tag and add the following:
+
+{{{
+        <h:form>
+            <h:panelGrid columns="1">
+                <br/>
+                <h:commandLink action="MOVIE" value="Movie List" styleClass="titleCommandLink"/>               
+         </h:panelGrid>
+        </h:form>
+}}}
+
+==Create a Listing Page==
+Create in 'pages' directory create a subdirectory called crud/movie/.  This subdirectory is where we will put our editing form, listing form and export form. The first is create a listing form. Create a file called listing.xhtml.
+
+The same steps in modifying the home.xhtml file can be applied here. It's possible just to copy the home.xhtml file rename the copied file to listing.xhtml and remove everything between the 'ui:define name="content"' tag. 
+
+There are a number of components going to be used by this page and more then what the home.xhtml declared in the html tag so to allow use of these additional components(a4j,crank,core JSTL) on the page and java standard template library (JSTL); it has to be modified as such:
+{{{
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+      xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:crank="http://www.googlecode.com/crank"
+        >
+}}}
+The first thing is we will use the use JSTL to define a variable which references the 'MovieBO' name. 
+
+{{{
+  <c:if test="${empty daoName}">
+            <c:set var="daoName" value="MovieBO"/>
+  </c:if>
+}}}
+
+This leads to adding a number of crank components to our page. Read more about the different components here: http://code.google.com/p/krank/wiki/CrankJSFComponentsAPI
+
+The first component is a bread crumb component. The bread crumb allows a trail for navigation but it needs to know about the controller we created earlier, in the 'MovieExampleApplicationContext'. This is how the bread crumb is added to the page:
+
+{{{
+ <crank:crudBreadCrumb crud="${movieCrud.controller}" />
+}}}
+
+The 'movieCrud', is the name of the method that returns the JsfAdapterCrud. The dot'controller' is the controller object within the JsfAdapterCrud. 
+
+Now add to the page a page title, and call it 'Movie' or any other name like 'Movie Listing'. Here you can use the h:output component of Jsf. The styleClass in this component can use the Crank style sheet class 'pageTitle'.
+
+{{{
+  <h:outputText value="Movie" styleClass="pageTitle"/>
+}}} 
+
+Here is where things can get hairy, but to allow some dynamic rendering for sorting and filter the page will use a4j, which are ajax components. The a4j region and form will wrap around our crank listing component. Read more on crank listing attributes under the CrankJSFComponentAPI wiki.
+
+The crank listing specify for the propertyNames in comma separated (no spaces) the method/attributes you annotated in the MovieBO object. 
+
+Here is the result:
+{{{
+<a4j:region renderRegionOnly="false">
+            <a4j:form id="${daoName}ListForm">
+                <crank:listing
+                        id="${daoName}Listing"
+                        paginator="#{paginators[daoName]}"
+                        jsfCrudAdapter="#{cruds[daoName]}"
+                        propertyNames="id,createdDate,createdBy,updatedDate,updatedBy,name,checkedOut,rating,year,genre"
+                        pageTitle="${daoName}"
+                        autoLink="false"
+                        parentForm="${daoName}ListForm"
+                        reRender="${daoName}ListForm"
+                        crud="#{movieCrud.controller}"
+                        isSelectableColumn="${false}"/>
+            </a4j:form>
+        </a4j:region>
+}}}
+
+You'll notice that the 'daoName' variable is used to create variable names. This is why it was specified earlier in the page. Could have done with out the variable declaration but would have been a lot more repeat typing. There are many other options and features to crank listing, but this is the most common set-up.
+
+==Navigation Rules for JSF==
+Before the application can be run some modification on how JSF and crank manages user page flows. Open the faces-config.xml in webapp/WEB-INF directory.
+
+Remove all navigation-rules that do not have from-outcomes of 'HOME' or 'EMPLOYEES'. Then the 'EMPLOYEES' will get changed to 'MOVIE'
+
+Recall adding to the home the 'MOVIE' action. This is going to navigate the user to /pages/crud/listing.xhtml
+
+{{{
+  
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>HOME</from-outcome>
+  		<to-view-id>/pages/home.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+  
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>MOVIE</from-outcome>
+  		<to-view-id>/pages/crud/movie/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+}}} 
+ 
 
 ==See the Results==
+You should be able to run at this point:
+
+_mvn jetty:run_  
+
+Go to http://localhost:8080  and see a link to the application.
+
+You should see the home page with a link to Movie and this takes the user to the movie listing. Of course, if there is no data in the database it won't show anything, and the application hasn't been configured to have a form for adding and editing. 
+
+==Add a form==
+
+==Form navigation==
+The form navigation rules are the same for all forms. So this is why if when there is a table that is going to have crank crud operations the folders should be separated in pages/crud/tablename or similar (for clarity only your free to do what you want).
+
+First is add to the faces-config.xml the following changes:
+{{{
+<navigation-rule>
+  	<from-view-id>/pages/crud/movie/*</from-view-id>
+  	<navigation-case>
+  		<from-outcome>LISTING</from-outcome>
+  		<to-view-id>/pages/crud/movie/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  	<navigation-case>
+  		<from-outcome>FORM</from-outcome>
+  		<to-view-id>/pages/crud/movie/Form.xhtml</to-view-id>
+  	</navigation-case>  	
+  	<navigation-case>
+  		<from-outcome>EXPORT</from-outcome>
+  		<to-view-id>/pages/crud/movie/ExportListing.xhtml</to-view-id>
+  	</navigation-case>  	
+  </navigation-rule>
+}}}
+
+The rules for the outcome are always the same when using the JsfCrudAdapter. The 'to-view-id' pages url are based on where the specified page for listing, form or export listing are located.
+
+==Crank Form==
+Recall the inital steps for the Create a Listing page. Same thing here, only this time we call the page Form.xhtml.
+
+Add a bread crumb component first:
+{{{
+ <crank:crudBreadCrumb crud="${movieCrud.controller}" />
+}}}
+
+Add a display title switching so the form displays one title for edit mode and another title for add mode:
+{{{
+        <c:choose>
+            <c:when test='${movieCrud.controller.state == "ADD"}'>
+                <h:outputText value="Create Movie Entry" styleClass="pageTitle"/>
+            </c:when>
+            <c:otherwise>
+                <h:outputText value="Edit Movie" styleClass="pageTitle"/>
+            </c:otherwise>
+        </c:choose>
+}}}
+
+The form can display error messages, because a user may enter text in a numeric only field, or not enter information when there is required information. Validation errors willl show up next to the entry field, but form erros will need to be displayed on top or bottom of the form. Here we will put it at the top of the form.
+
+{{{
+<h:messages errorClass="pageErrorMessage"/>
+}}}
+
+Finally, add the crank:form with a comma separated (no spaces) list of the attributes to be editable and added. Not if some fields were annotated in the MovieBO to be required and it's not included on the form for add. The user will experience a required field entry error and never be able to add the information until the developer form includes it.
+
+{{{
+   <a4j:region renderRegionOnly="false">
+            <a4j:form
+                    id="movieForm">
+
+                <crank:form
+                        crud="#{movieCrud.controller}"
+                        propertyNames="createdBy,createdDate,updatedBy,updatedDate,name,description,checkedOut,year,rating,genre"
+                        createButtonText="Create Inquiry"
+                        updateButtonText="Update Inquiry Information"
+                        cancelButtonText="Cancel"
+                        resetButtonText="Reset"
+                        ajax="${false}">
+                </crank:form>
+
+            </a4j:form>
+        </a4j:region>
+}}}

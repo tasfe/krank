@@ -1011,3 +1011,9 @@ Finally, add the crank:form with a comma separated (no spaces) list of the attri
             </a4j:form>
         </a4j:region>
 }}}
+
+Go ahead and run the application again:
+_mvn jetty:run_
+
+==Export Listing (Advanced)==
+Export listings allow the user to export the data base information to an excel spreadsheet. 

@@ -939,7 +939,8 @@ Go to http://localhost:8080  and see a link to the application.
 
 You should see the home page with a link to Movie and this takes the user to the movie listing. Of course, if there is no data in the database it won't show anything, and the application hasn't been configured to have a form for adding and editing. 
 
-==Add a form==
+=Add a form=
+Developing JSF it's good to start with navigation and the move to flushing out your forms. 
 
 ==Form navigation==
 The form navigation rules are the same for all forms. So this is why if when there is a table that is going to have crank crud operations the folders should be separated in pages/crud/tablename or similar (for clarity only your free to do what you want).
@@ -1016,4 +1017,33 @@ Go ahead and run the application again:
 _mvn jetty:run_
 
 ==Export Listing (Advanced)==
-Export listings allow the user to export the data base information to an excel spreadsheet. 
+Export listings allow the user to export the data base information to an excel spreadsheet. This is a feature you may want or not so it's left for last. The first thing is notice the "ExcelExporterBean" in the example project. This bean should be proxyed to the user session. Do the following in in the 'MovieExampleExampleContext.java' controller.
+
+{{{
+        @Bean(scope = DefaultScopes.SESSION)
+	@ScopedProxy
+	public ExcelExportControllerBean controllerBean() throws Exception {
+		return new ExcelExportControllerBean();
+	}
+}}}
+
+Noticed above that change to the 'faces-config.xml' contained reference to 'EXPORT' outcome. If you tried to click on the listing page's icon for an excel spread sheet you would have gotten an error. This is because no listing page existed.
+
+==Create Listing page==
+Same process of creating the form, and listing page applies to the export listing. Create a file called 'ExportListing.xhtml'. 
+
+Add a title for the page within the ui:define tags:
+{{{
+<span class="pageTitle">Export Employees Preview</span>
+}}}
+
+Add a jsf form and add an crankExportListing component.
+
+{{{
+     <h:form>
+		<crank:exportListing  jsfCrudAdapter="#{cruds['MovieBO']}"
+				propertyNames="id,createdDate,createdBy,updatedDate,updatedBy,name,description,checkedOut,year,rating,genre"/>
+     </h:form>
+}}}
+
+That's all there is to it to have a listing that is exportable to excel.

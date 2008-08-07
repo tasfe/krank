@@ -1017,7 +1017,7 @@ Go ahead and run the application again:
 _mvn jetty:run_
 
 ==Export Listing (Advanced)==
-Export listings allow the user to export the data base information to an excel spreadsheet. This is a feature you may want or not so it's left for last. The first thing is notice the "ExcelExporterBean" in the example project. This bean should be proxyed to the user session. Do the following in in the 'MovieExampleExampleContext.java' controller.
+Export listings allow the user to export the data base information to an excel spreadsheet. This is a feature you may want or not so it's left for last. The first thing is notice the "ExcelExporterBean" in the example project. This bean should be proxyed to the user session. Do the following in in the 'MovieExampleExampleContext.java' controller. Eventually someone will include this bean as part of the crank framework till then do the following:
 
 {{{
         @Bean(scope = DefaultScopes.SESSION)

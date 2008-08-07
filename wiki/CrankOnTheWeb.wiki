@@ -4,6 +4,11 @@ We can all look at the Crank web application example and create a web applicatio
 
 The goal here is to take a blank project and make something of it. Walk the developer through simple steps in creating the first web application and do it within an a few hours. Had to find the happy medium between "learn crank in 24 hours" or "crank for dummies".
 
+== Requirements ==
+* Jdk 1.5 or higher
+* Mysql database
+* Maven 2.07 or higher
+
 ==Building with Maven==
 Some may agree some may not, but Maven 2 proves pretty useful for managing dependencies and the cursed jarmagedon. The basis of the application will be Maven 2 so the first step is download it [http://maven.apache.org/]Maven2. 
 
@@ -431,11 +436,11 @@ Now add the final crank libraries that interface int JSF. This is the crank-jsf-
 The other library is crank-jsf-validation; this provides a number of utilities for JSF validation.
 
 {{{
- <!-- JSF ControllerBean END-->
-		<dependency>
+ <!-- crank jsf presentation layer libraries -->
+        <dependency>
             <groupId>org.crank</groupId>
             <artifactId>crank-jsf-support</artifactId>
-            <version>0.23-SNAPSHOT</version>
+            <version>1.0RC2-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.el</groupId>
@@ -455,11 +460,10 @@ The other library is crank-jsf-validation; this provides a number of utilities f
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--needed for org.crank.config.spring.support.CrudDAOConfig-->
         <dependency>
             <groupId>org.crank</groupId>
             <artifactId>crank-jsf-validation</artifactId>
-            <version>0.22</version>
+            <version>1.0RC2-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.el</groupId>
@@ -478,19 +482,33 @@ The other library is crank-jsf-validation; this provides a number of utilities f
                     <artifactId>jsf-impl</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>		
+        </dependency>
 }}}
 
-Some special things, in the build, there is is a requirement that Java 1.5 or higher be used to build application with crank. The other is that to make builds go by fast and see the application quickly the application can be run within jetty. This is much faster when doing debuging than building a whole web application war and deploying it into and application container such as tomcat or jboss. 
+To make builds go by fast and see the application, the project can be run within jetty. A plugin feature in maven allows maven to start up a jetty container and runs the application. It reduces the time to compile, package the application, copy it to a application container's deploy directory, start up the application container, and then see the results. This is much faster when doing debuging than building a whole web application war and deploying it into and application container such as tomcat or jboss. 
 
-So to run the application within jetty from maven the command is:
+Running the application within jetty from maven the command is:
 
 _mvn jetty:run_
 
-Or you can use the batch files in the blank project as other examples for running in debug mode, and connecting to the database.
+Use the batch files in the blank project as other examples for running in debug mode, and connecting to the database. Modify the build section of the pom.xml to have a final name of 'movie-demo'. The build section of the pom should look like this:
 
 {{{
- <plugins>
+  <build>
+        <finalName>movie-demo</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
+        <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -501,12 +519,12 @@ Or you can use the batch files in the blank project as other examples for runnin
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
+                <version>6.1.5</version>
                 <dependencies>
                     <dependency>
                         <groupId>log4j</groupId>
                         <artifactId>log4j</artifactId>
                         <version>1.2.13</version>
-                        <type>jar</type>
                     </dependency>
                     <dependency>
                         <groupId>javax.faces</groupId>
@@ -520,9 +538,11 @@ Or you can use the batch files in the blank project as other examples for runnin
                     </dependency>
                 </dependencies>
             </plugin>
+        </plugins>
+    </build>
 }}}
 
-Now that you've gone through most of the pom.xml for maven all that takes to compile the project is the command:
+Now, that you've gone through most of the pom.xml for maven all that takes to compile the project is the command:
 
 _mvn clean install_
 

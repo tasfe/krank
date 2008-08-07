@@ -549,7 +549,7 @@ _mvn clean install_
 And you thought life was tough in maven. Obviously there won't be anything yet because there is still the issue you need to write some code.
 
 ==Create a Simple table and JPA object==
-If you haven't read http://code.google.com/p/krank/wiki/CrankCrudTutorial that may be ok. That is because the fundamentals are there but there are some evolution changes and we will start from the ground up in building the web application.
+If you haven't read http://code.google.com/p/krank/wiki/CrankCrudTutorial that may be ok. The fundamentals are there but there are some evolution changes that have happened up to crank 1.0 and we will start from the ground up in building the web application.
 
 The goal of the application is to create a table in a database (mysql), and display its information and allow the user to add, edit, delete, or update data in this. Sounds simple and it should. The data model that the application is going to simulate is a movie database.
 
@@ -558,9 +558,12 @@ First create the database called "crank". (_These are Mysql commands_)
 create database crank;
 }}}
 
-Next create a table called "movie". Movie table will have a primary key, created by and date, updated by and date, name, description, ,checked out, year, rating, genre.
+Next create a table called "movie". Movie table will have a primary key, created by and date, updated by and date, name, description, ,checked out, year, rating, genre. 
 
-The reason we have all this created data and updated date name and description is not that it's necessary, but this is going to demonstrate extending from some base crank JPA objects. This is not required, but can be considered good practice.
+The reason we have all this created data and updated date name and description is not that it's necessary, but allows you to create some sort of history of change to a row in a database table. 
+
+We could allow hibernate to auto generate the table in the database from the annotations on the persistent type object. This is good for development, bad for production release. You run the risk of forgetting you are auto generating tables and when you go to production tables are dropped, data is lost, and you have a big headache. 
+
 {{{
 create table `MOVIE` (`MOVIE_ID` int(11) NOT NULL auto_increment,
   `CREATED_BY` varchar(45) default NULL,
@@ -576,7 +579,6 @@ create table `MOVIE` (`MOVIE_ID` int(11) NOT NULL auto_increment,
   PRIMARY KEY  (`MOVIE_ID`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 }}}
-
 
 The next thing is to write some code that represents an object of this database. Pretty much if you follow this tutorial http://code.google.com/p/krank/wiki/CrankCrudTutorial on the employee table and apply it to this project you got it. 
 
@@ -623,21 +625,47 @@ public class MovieBO implements Serializable {
     private boolean checkedOut;
      @Column(name="YEAR")
     private int year;
-
     @Column(name="RATING", length=4)
     private int rating;
-
     @Column(name="GENRE", length=30)
     private String genre;
     ...
 }}}
 
-The rest is going to be the access modifier methods which can be auto generated through an IDE (auto generate getter/setter).
+@Entity defines this object as a persistable entity. @Table annotation describes what table this entity object maps to. @Column annotations describe which column in the database each attribute maps. There is a good tutorial on some of this http://www.onjava.com/pub/a/onjava/2007/02/08/an-introduction-to-hibernate-3-annotations.html
+and at http://www.hibernate.org
 
-==Wire to persistence==
-If everything was copied from the blank crank project there should be in the resources directory a persistence.xml. This is going to be modified from what is there to suite this project needs.
+The rest is going to be the access modifier methods which can be auto generated through an IDE (auto generate getter/setter). One difference is the access/modifier for the boolean attribute, this looks like this:
+{{{
+    public boolean isCheckedOut() {
+        return checkedOut;
+    }
 
-The first step is change the persistence unit name to "crank-movie". The next is to add the object created above to the persistence unit group so it is accessible. This is required for Hibernate JPA persistence management to know which classes are persistable.
+    public void setCheckedOut(boolean checkedOut) {
+        this.checkedOut = checkedOut;
+    }
+
+}}}
+
+==Data access object (DAO)===
+To run 'queries' and select data sets, you need a data access object. In crank, this can be accomplished by extending facilities used in the crank's GenericDao interface. The GenericDao allows the basic functionality of reads, update, delete, creates of objects. The read facility allows filtering on columns for set values encapsulated in overloaded "find" methods. There is dated documentation on how the finder method's work in the GenericDao. http://code.google.com/p/krank/wiki/UsingDAO
+
+This data access object is going to be a simple, in that it will extend the GenericDao interface. The interface then allows the DAO created to make use of crank's GenericDaoJpa facilities. This code will go in the same package that the MovieBO was placed.
+
+{{{
+package org.crank.movie;
+
+import org.crank.crud.GenericDao;
+
+public interface IMovieDao extends GenericDao<MovieBO, Long> {
+}
+}}}
+
+
+==Map to persistence==
+If everything was copied from the blank crank project there should be in the resources/META-INF/ directory a persistence.xml. This is going to be modified from what is there to suite this project needs.
+
+Change the persistence unit name to "crank-movie". The next is to add the object created above to the persistence unit group so it is accessible. This is required for Hibernate JPA persistence management. This allows hibernate to know which classes are persistable.
 
 <class>org.crank.movie.MovieBO</class>
 
@@ -656,6 +684,22 @@ Solution:
 
 </persistence>
 }}}
+
+==Modify JPA settings==
+After modifying the persistence.xml file, change the jpa.properties file in resources directory. The jpa.properties file is an externalization of the persistence.xml properties. It is possible to have these properties in the persistence.xml and not in a separate file as in this project. As discussed above, it was pointed out that it might not be good to have hibernate auto generate the tables in the database. Change the 'hibernate.hbm2ddl.auto=update' to 'false'.
+
+{{{
+openjpa.jdbc.SynchronizeMappings=buildSchema(SchemaAction='add')
+openjpa.Log=DefaultLevel=TRACE,SQL=TRACE
+
+hibernate.hbm2ddl.auto=false
+hibernate.show_sql=false
+hibernate.format_sql=true
+hibernate.use_sql_comments=true
+hibernate.query.substitutions=true 1, false 0
+}}}
+
+
 
 ==Create A Controller==
 

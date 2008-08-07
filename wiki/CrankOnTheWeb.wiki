@@ -9,16 +9,20 @@ Some may agree some may not, but Maven 2 proves pretty useful for managing depen
 
 Once you have it and know you can use it in your command line you should be off and running. The first thing is look at your project pom.xml. Maven has a typical file structure it likes to follow so following maven's recipe of where java files, templates, resources and the works are important. Break the recipe and instead of cake you have disaster. 
 
-Your maven project folder should mirror the crank examples->blank-project. Copy everything in webapp, resources, org/crank to the respective folders
+Your maven project folder should mirror or copy the crank examples->blank-project to any location on your computer. Make sure to copy everything in webapp, resources, org/crank to the respective folders
 
 http://krank.googlecode.com/svn/wiki/img/maven-folder-structure.jpg
 
-Now, we have to modify some stuff and understand other things to move forward. The first section is the basic project. We are making a movie database application so we want our project to reflect that. The top of the pom.xml we will change the blank-project stuff over to our application. The result is the following:
+Now, we have to modify some stuff and understand other things to move forward. The first section is the basic project. We are making a movie database application so we want our project to reflect that. The top of the pom.xml we will change the blank-project stuff over to our application. First remove reference to <parent> pom. by removing this section. The reason is to be independent of building entire crank libraries. The crank libraries for all purposes should have been built already on your local system if your using a snapshot release. (See building crank http://code.google.com/p/krank/wiki/BuildingCrankWithMaven)
+
+Set the group id tag to 'org.crank'; artifact tag group to 'crank-movie'; name of the project 'Crank movie example'. The other tags you can ignore or deletge.
+ 
+The result is the following:
 
 {{{
   <modelVersion>4.0.0</modelVersion>
     
-    <groupId>com.vmc.system</groupId>
+    <groupId>org.crank</groupId>
     <artifactId>crank-movie</artifactId>
     <packaging>war</packaging>
     <version>0.1.0.0-SNAPSHOT</version>
@@ -30,10 +34,15 @@ Couple of things to learn about dependencies. Let's start with dependencies in t
 The first set of dependencies is for spring wiring. Spring if you don't know is an inversion of control container. You can read more about it at [http://www.springframework.org/] Spring's website. The reason we use it in crank is it helps us deal with configurations, allows us to loosely couple the application so that you can use different layers of crank and wire it into some other framework, say you like to use Ibatis over Hibernate, or you want to wire into Struts instead of JSF. 
 
 {{{
- <!-- spring wiring -->
+  <!-- spring library dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring</artifactId>
+            <version>2.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
             <version>2.0.6</version>
         </dependency>
         <dependency>
@@ -57,15 +66,18 @@ The first set of dependencies is for spring wiring. Spring if you don't know is 
             <version>2.0.6</version>
         </dependency>
         <dependency>
-            <groupId>aopalliance</groupId>
-            <artifactId>aopalliance</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-javaconfig</artifactId>
             <version>1.0-m2</version>
             <exclusions>
+                <exclusion>
+                    <groupId>asm</groupId>
+                    <artifactId>asm-commons</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-support</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>org.aopalliance</groupId>
                     <artifactId>aopalliance</artifactId>
@@ -88,79 +100,29 @@ The first set of dependencies is for spring wiring. Spring if you don't know is 
                 </exclusion>
             </exclusions>
         </dependency>
-}}}
 
-The next set of dependencies allows crank to use a object-relational mapping framework, or now Java Persistence framework (JPA). In this case, it will be hibernate. The other dependency is to the database driver itself to MySQL, and some logging frameworks used by both spring and the apache commons.
-
-The final library is spring-jpa this allows crank to plugin hibernate and spring together with the JPA framework.
-{{{
- <!-- hibernate JPA -->
+        <!-- spring aspect libraries -->
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-tools</artifactId>
-            <version>3.2.0.beta9a</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>2.0.6</version>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>3.2.1.ga</version>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+            <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>3.2.1.ga</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.persistence</groupId>
-                    <artifactId>ejb</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-            <version>3.2.2.ga</version>
-        </dependency>
-        <dependency>
-            <groupId>asm</groupId>
-            <artifactId>asm</artifactId>
+            <groupId>aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
             <version>1.5.3</version>
         </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-pool</groupId>
-            <artifactId>commons-pool</artifactId>
-            <version>1.3</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging-api</artifactId>
-            <version>1.0.4</version>
-        </dependency>
+
+}}}
+
+The application also needs the ability to log messages to the console or file so to accommodate this and offer the libraries like spring and hibernate dependencies, but at the same time exclude log4j when the application is deployed to an application server container. The following dependency is added:
+{{{
+<!-- common to multiple layers of application (spring, hibernate)-->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -177,15 +139,89 @@ The final library is spring-jpa this allows crank to plugin hibernate and spring
                 </exclusion>
             </exclusions>
         </dependency>
+}}}
+
+The next set of dependencies allows crank to use a object-relational mapping framework, or and integrate to the Java Persistence framework (JPA). In this case, it will be hibernate. The other dependency is to the database driver itself to MySQL, and some logging frameworks used by both spring and the apache commons.
+
+Set up your driver dependency for the database, for this exercise this is mysql. 
+{{{
+  <!-- database driver for mysql-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.0.3</version>
+        </dependency>
+}}}
+
+Set up some pooling resource dependencies. The application will make use of the apache dbcp library to do this, and some configurations to be covered later. 
+{{{
+ <!-- database pooling within webapp -->
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.2.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-collections</groupId>
+                    <artifactId>commons-collections</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2</version>
+        </dependency>
+}}}
+
+The final library is hibernate libraries and spring, which allows crank to plugin hibernate and spring together with the JPA framework.
+{{{
+  <!-- hibernate integration with JPA -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-tools</artifactId>
+            <version>3.2.0.beta9a</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>3.2.1.ga</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>3.2.1.ga</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate</artifactId>
+            <version>3.2.2.ga</version>
+            <scope>compile</scope>
+        </dependency>
+          <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>1.5.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.openjpa</groupId>
+            <artifactId>openjpa-persistence-jdbc</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jpa</artifactId>
             <version>2.0.6</version>
         </dependency>
+        <!-- used for hibernate cacheing-->
         <dependency>
-            <groupId>aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-            <version>1.5.3</version>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>1.3.0</version>
         </dependency>
 }}}
 
@@ -195,73 +231,131 @@ Crank-crud is the bread and butter to cranks create, update, retrieve, delete op
 
 The last crank-validation provides annotation support for column, table validation. Some validation features are phone number, email, length, number, and regular expression. These  annotations for validations can be applied to the JPA object, which crank display frameworks can use to validate the data and error to the user messages.
 {{{
-<dependency>
+ <!-- Crank core libraries -->
+        <dependency>
             <groupId>org.crank</groupId>
             <artifactId>crank-core</artifactId>
-            <version>0.23-SNAPSHOT</version>
+            <version>1.0RC2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.crank</groupId>
             <artifactId>crank-crud</artifactId>
-            <version>0.23-SNAPSHOT</version>
+            <version>1.0RC2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.crank</groupId>
             <artifactId>crank-validation</artifactId>
-            <version>0.23-SNAPSHOT</version>
+            <version>1.0RC2-SNAPSHOT</version>
         </dependency>
 }}}
 
-Unit testing is important and typically with crank, it's been using TestNG. Little more beefier than JUnit. Notice this particular library the scope is set to test as we only want it for unit testing and builds and not the final deployment into the webapplication. 
+Unit testing is important and typically with crank, it's been using TestNG. Little more beefier than JUnit. Notice this particular library the scope is set to test as we only want it for unit testing and builds and not the final deployment into the webapplication. The other is spring-mock which allows use of spring mock object when we use unit testing.
 {{{
-<dependency>
+ <!-- unit testing library dependencies -->
+        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>5.1</version>
             <classifier>jdk15</classifier>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-mock</artifactId>
+            <version>2.0.6</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-jdbc</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-jpa</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-webmvc</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
 }}}
 
-This application is going to make use of JSF and crank's support for this. Therefore the following dependencies incorporate servelet support, jsf, and java EL support.
+This application is going to make use of JSF and crank's support for this. Therefore the following dependencies incorporate servelet support, jsf, and java EL support, and rich faces for ajax capabilities.
 
 {{{
-<!-- JSF stuff -->
-        <dependency>
-            <groupId>com.sun.facelets</groupId>
-            <artifactId>jsf-facelets</artifactId>
-            <version>1.1.12</version>
+ <dependency>
+            <groupId>org.richfaces.ui</groupId>
+            <artifactId>richfaces-ui</artifactId>
+            <version>3.1.4.GA</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xmlParserAPIs</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.faces</groupId>
-            <artifactId>jsf-api</artifactId>
-            <version>1.2_04</version>
-            <scope>provided</scope>
+            <groupId>org.richfaces.framework</groupId>
+            <artifactId>richfaces-api</artifactId>
+            <version>3.1.4.GA</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xmlParserAPIs</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
-            <groupId>javax.faces</groupId>
-            <artifactId>jsf-impl</artifactId>
-            <version>1.2_04</version>
-            <scope>provided</scope>
+            <groupId>org.richfaces.framework</groupId>
+            <artifactId>richfaces-impl</artifactId>
+            <version>3.1.4.GA</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xmlParserAPIs</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-        <dependency>
-            <groupId>el-impl</groupId>
-            <artifactId>el-impl</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>el-api</artifactId>
-            <version>1.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2.1</version>
-        </dependency>
-         <!-- JSF ControllerBean-->
+        <!-- JSF stuff -->
+        <!-- JSF ControllerBean library depenency-->
         <dependency>
             <groupId>poi</groupId>
             <artifactId>poi</artifactId>
@@ -278,7 +372,58 @@ This application is going to make use of JSF and crank's support for this. There
             <version>1.2</version>
             <scope>compile</scope>
         </dependency>
-        <!-- JSF ControllerBean END-->
+        <dependency>
+            <groupId>javax.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+            <version>1.2_04-p01</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.faces</groupId>
+            <artifactId>jsf-impl</artifactId>
+            <version>1.2_04-p01</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.facelets</groupId>
+            <artifactId>jsf-facelets</artifactId>
+            <version>1.1.14</version>
+        </dependency>
+        <dependency>
+            <groupId>el-impl</groupId>
+            <artifactId>el-impl</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.3.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>oro</groupId>
+            <artifactId>oro</artifactId>
+            <version>2.0.8</version>
+            <scope>test</scope>
+        </dependency>
 }}}
 
 Now add the final crank libraries that interface int JSF. This is the crank-jsf-support, which provides the facilities of controllers, validators, and transformers. This library also contains the crank components templates, which are templates that are used to render out listings, fields, and forms. This is the visual things you see when you think of crank. 

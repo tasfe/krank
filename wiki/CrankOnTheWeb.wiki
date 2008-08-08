@@ -833,7 +833,116 @@ Solution:
 . . . 
 }}}
 
-That about completes to this point. This will be revisited and enhanced later for some other functionality.
+That about completes to this point. This will be revisited and enhanced later for some other functionality. The entire solution listing looks like this:
+{{{
+package org.crank.controller;
+
+import org.crank.config.spring.support.CrudJSFConfig;
+import org.crank.crud.controller.CrudManagedObject;
+import org.crank.crud.jsf.support.JsfCrudAdapter;
+import org.crank.crud.jsf.support.SelectItemGenerator;
+import org.crank.movie.IMovieDao;
+import org.crank.movie.MovieBO;
+import org.springframework.config.java.annotation.Bean;
+import org.springframework.config.java.annotation.Configuration;
+import org.springframework.config.java.annotation.ExternalBean;
+import org.springframework.config.java.annotation.Lazy;
+import org.springframework.config.java.annotation.aop.ScopedProxy;
+import org.springframework.config.java.util.DefaultScopes;
+
+import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+@Configuration(defaultLazy = Lazy.TRUE)
+public abstract class MovieExampleApplicationContext extends CrudJSFConfig {
+
+	private static List<CrudManagedObject> managedObjects;
+
+	@Bean(scope = DefaultScopes.SINGLETON)
+	public List<CrudManagedObject> managedObjects() {
+		if (managedObjects == null) {
+			managedObjects = new ArrayList<CrudManagedObject>();
+            managedObjects.add(new CrudManagedObject(MovieBO.class, "MovieBO", IMovieDao.class));
+              }
+		return managedObjects;
+
+	}
+
+	@Bean
+	public String persistenceUnitName() {
+		return "crank-movie";
+	}
+
+        @ExternalBean
+	abstract DataSource movieDataSource();
+
+        @SuppressWarnings("unchecked")
+        @Bean(scope = DefaultScopes.REQUEST)
+        public JsfCrudAdapter<MovieBO, Long> movieCrud() throws Exception {
+             JsfCrudAdapter adapter = cruds().get("MovieBO");
+             return adapter;
+        }
+}
+}}}
+
+==Navigation Rules for JSF==
+JSF needs to understand which pages to send a user to based on various outcomes. Crank has a number of outcomes that occur with the JsfCrudAdapter's controller. The most common in crank are LISTING, FORM, and EXPORT. These outcome flows will be created a little later. For now, open the faces-config.xml in webapp/WEB-INF directory.
+
+Remove all navigation-rules that do not have from-outcomes of 'HOME' or 'EMPLOYEES'. Then the 'EMPLOYEES' will get changed to 'MOVIE'
+
+Recall adding to the home the 'MOVIE' action, this is going to navigate the user to /pages/crud/listing.xhtml. In JSF the faces-config.xml contains the flows when controllers return set states or outcomes occur. The 'MOVIE' outcome flows the user to the Listing.xhtml page for movies. 
+
+The 'HOME' outcome is expected outcome when clicking on the Home link from a crank:breadcrumb component. This will be discussed later, for now, set up an outcome for 'HOME' to go to the home.xhtml page. The 'MOVIE' outcome flows the user to the Listing.xhtml page for movies. 
+
+The total faces-config.xml listing should look like this:
+
+{{{  
+ <?xml version="1.0"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd"
+    version="1.2">
+
+  <application>
+    <action-listener>org.crank.crud.jsf.support.JsfMessageActionListener</action-listener>
+    <variable-resolver>org.springframework.web.jsf.DelegatingVariableResolver</variable-resolver>
+    <message-bundle>messages</message-bundle>
+  </application>
+
+  <component>
+    <component-type>org.crank.javax.faces.SelectOne</component-type>
+    <component-class>org.crank.javax.faces.component.UISelectOne</component-class>
+  </component>
+  
+  <render-kit>
+      <renderer>
+      <component-family>javax.faces.SelectOne</component-family>
+      <renderer-type>org.crank.javax.faces.Listbox</renderer-type>
+      <renderer-class>
+			org.crank.javax.faces.component.ListboxRenderer
+  	  </renderer-class>
+    </renderer>
+  
+  </render-kit>
+    
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>HOME</from-outcome>
+  		<to-view-id>/pages/home.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+  
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>MOVIE</from-outcome>
+  		<to-view-id>/pages/crud/movie/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+</faces-config> 
+}}} 
+ 
 
 ==Create A Page==
 The first two pages to be created will be a navigation page to the listings. The navigation page is going to be a modification of the home.xhtml page in src/main/webapp/pages/.  
@@ -847,6 +956,29 @@ First remove everthing between 'ui:define name="content"' tag and add the follow
                 <h:commandLink action="MOVIE" value="Movie List" styleClass="titleCommandLink"/>               
          </h:panelGrid>
         </h:form>
+}}}
+
+Earlier, the navigation rule for 'MOVIE' outcome was set in faces-config.xml. What will occur here is when the user clicks on the JSF _h:commandLink_ component and with the action set to "MOVIE". JSF will redirect the user to the listings.xhtml page that will be created next.
+
+Entire home.xhtml solution:
+{{{
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	>
+<ui:composition template="/templates/layout.xhtml">
+	<ui:define name="content">
+		<h:form>
+            <h:panelGrid columns="1">
+                <br/>
+                <h:commandLink action="MOVIE" value="Movie List" styleClass="titleCommandLink"/>               
+         </h:panelGrid>
+        </h:form>
+	</ui:define>
+</ui:composition>
+</html>
 }}}
 
 ==Create a Listing Page==
@@ -884,7 +1016,7 @@ The first component is a bread crumb component. The bread crumb allows a trail f
 
 The 'movieCrud', is the name of the method that returns the JsfAdapterCrud. The dot'controller' is the controller object within the JsfAdapterCrud. 
 
-Now add to the page a page title, and call it 'Movie' or any other name like 'Movie Listing'. Use the h:output component of Jsf. The styleClass in this component can use the Crank style sheet class 'pageTitle'.
+Add to the page a page title, and call it 'Movie' or any other name like 'Movie Listing'. Use the h:output component of Jsf. The styleClass in this component can use the Crank style sheet class 'pageTitle'.
 
 {{{
   <h:outputText value="Movie" styleClass="pageTitle"/>
@@ -915,29 +1047,51 @@ Here is the result:
 
 Notice, that the 'daoName' variable is used to create variable names. This is why it was specified earlier in the page. This could have been done without the variable declaration but would have been a lot more repeat typing. There are many other options and features to crank listing, but this is the most common set-up.
 
-==Navigation Rules for JSF==
-Before the application can be run some modification on how JSF and crank manages user page flows. Open the faces-config.xml in webapp/WEB-INF directory.
+Following the above steps, the entire page for listings should look like this:
+{{{
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+      xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:crank="http://www.googlecode.com/crank"
+      xmlns:vmc="http://www.vantagemedia.com/vmc"
+        >
+<ui:composition template="/templates/layout.xhtml">
+    <ui:define name="content">
 
-Remove all navigation-rules that do not have from-outcomes of 'HOME' or 'EMPLOYEES'. Then the 'EMPLOYEES' will get changed to 'MOVIE'
+        <c:if test="${empty daoName}">
+            <c:set var="daoName" value="MovieBO"/>
+        </c:if>
 
-Recall adding to the home the 'MOVIE' action. This is going to navigate the user to /pages/crud/listing.xhtml
+        <crank:crudBreadCrumb crud="${movieCrud.controller}" />
 
-{{{  
-  <navigation-rule>
-  	<navigation-case>
-  		<from-outcome>HOME</from-outcome>
-  		<to-view-id>/pages/home.xhtml</to-view-id>
-  	</navigation-case>
-  </navigation-rule>
-  
-  <navigation-rule>
-  	<navigation-case>
-  		<from-outcome>MOVIE</from-outcome>
-  		<to-view-id>/pages/crud/movie/Listing.xhtml</to-view-id>
-  	</navigation-case>
-  </navigation-rule>
-}}} 
- 
+        <h:outputText value="Movie" styleClass="pageTitle"/>
+
+
+        <a4j:region renderRegionOnly="false">
+            <a4j:form id="${daoName}ListForm">
+                <crank:listing
+                        id="${daoName}Listing"
+                        paginator="#{paginators[daoName]}"
+                        jsfCrudAdapter="#{cruds[daoName]}"
+                        propertyNames="id,createdDate,createdBy,updatedDate,updatedBy,name,checkedOut"
+                        pageTitle="${daoName}"
+                        autoLink="false"
+                        parentForm="${daoName}ListForm"
+                        reRender="${daoName}ListForm"
+                        crud="#{movieCrud.controller}"
+                        isSelectableColumn="${false}"/>
+            </a4j:form>
+        </a4j:region>
+
+    </ui:define>
+</ui:composition>
+</html>
+}}}
 
 ==See the Results==
 You should be able to run at this point:
@@ -949,7 +1103,7 @@ Go to http://localhost:8080  and see a link to the application.
 There should be a home page with a link to Movie and this takes the user to the movie listing. Of course, if there is no data in the database it won't show anything, and the application hasn't been configured to have a form for adding and editing either. 
 
 =Add a form=
-Developing JSF it's good to start with navigation and then move to flushing out the forms. 
+There lacks still the ability to do full CRUD operations currently, all that happens is a select of all information in the database. The next step is to add a crank form that will allow users to add or edit a row in the database table.
 
 ==Form navigation==
 The form navigation rules are the same for all forms. This is why if there is a table that is going to have crank crud operations the folders should be separated in pages/crud/tablename or similar (for clarity only developers are free to do what they want).
@@ -973,7 +1127,7 @@ First is add to the faces-config.xml the following changes:
   </navigation-rule>
 }}}
 
-The rules for the outcome are always the same when using the JsfCrudAdapter. The 'to-view-id' pages url are based on where the specified page for listing, form or export listing are located.
+The rules for the outcome are always the same when using the JsfCrudAdapter's controller. The 'to-view-id' pages url are based on where the specified page for listing, form or export listing are located.
 
 ==Crank Form==
 Recall the inital steps for the Create a Listing page. Same thing here, only this time we call the page Form.xhtml.
@@ -1001,7 +1155,7 @@ The form can display error messages, because a user may enter text in a numeric 
 <h:messages errorClass="pageErrorMessage"/>
 }}}
 
-Finally, add the crank:form with a comma separated (no spaces) list of the attributes to be editable and added. Not if some fields were annotated in the MovieBO to be required and it's not included on the form for add. The user will experience a required field entry error and never be able to add the information until the developer form includes it.
+Finally, add the crank:form with a comma separated (no spaces) list of the attributes to be editable and added. Note if some fields were annotated in the MovieBO to be required and it's not included on the form for add. The user will experience a required field entry error and never be able to add the information until the property is added to the crank form. The form will also provide a number of basic validations and error messages based on field level annotations in the MovieBO. There is more on the architectual detail of the messages here: http://code.google.com/p/krank/wiki/CrankValidationDesignDocument
 
 {{{
    <a4j:region renderRegionOnly="false">
@@ -1024,6 +1178,8 @@ Finally, add the crank:form with a comma separated (no spaces) list of the attri
 
 Go ahead and run the application again:
 _mvn jetty:run_
+
+The application now should display a listing, and click on the green plus button on the listing page and the user is presented with a blank form to enter information. If all the data entered is correct the form returns back to the listing page, and the new entry will show up on this page. The user can also click on the notepad with pencil icon on a row in the listing, and the form will display with the information of this row pre-filled in the form, and the user can make modifications and submit. 
 
 ==Export Listing (Advanced)==
 Export listings allow the user to export the data base information to an excel spreadsheet. This is a feature you may want or not so it's left for last. The first thing is notice the "ExcelExporterBean" in the example project. This bean should be proxyed to the user session. Do the following in in the 'MovieExampleExampleContext.java' controller. Eventually someone will include this bean as part of the crank framework till then do the following:

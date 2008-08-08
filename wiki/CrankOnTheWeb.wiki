@@ -10,22 +10,25 @@ The goal here is to take a blank project and make something of it. Walk the deve
   * Maven 2.07 or higher
   * Crank 1.0 or higher
 
+
 ==Building with Maven==
-Some may agree some may not, but Maven 2 proves pretty useful for managing dependencies and the cursed jarmagedon. The basis of the application will be Maven 2 so the first step is download it [http://maven.apache.org/]Maven2. 
+Some may agree, some may not, but Maven 2 proves pretty useful for managing dependencies and the cursed jarmagedon. The basis of the application will be Maven 2 so the first step is download it [http://maven.apache.org/]Maven2. 
 
-Once you have it and know you can use it in your command line you should be off and running. The first thing is look at your project pom.xml. Maven has a typical file structure it likes to follow so following maven's recipe of where java files, templates, resources and the works are important. Break the recipe and instead of cake you have disaster. 
+Once installed and know it is executable from a command line, you should be off and running. The first thing is look at the project pom.xml. Maven has a typical file structure it likes to follow so following maven's recipe of where java files, templates, resources and the works are important. Break the recipe and instead of cake you have disaster. 
 
-Your maven project folder should mirror or copy the crank examples->blank-project to any location on your computer. Make sure to copy everything in webapp, resources, org/crank to the respective folders
+The  maven project folder should mirror or copy from the crank examples->blank-project to any location on the computer. Make sure to copy everything in webapp, resources, org/crank to the respective folders
 
 http://krank.googlecode.com/svn/wiki/img/maven-folder-structure.jpg
 
-Now, we have to modify some stuff and understand other things to move forward. The first section is the basic project. We are making a movie database application so we want our project to reflect that. The top of the pom.xml we will change the blank-project stuff over to our application. First remove reference to <parent> pom. by removing this section. The reason is to be independent of building entire crank libraries. The crank libraries for all purposes should have been built already on your local system if your using a snapshot release. (See building crank http://code.google.com/p/krank/wiki/BuildingCrankWithMaven)
+Now, modify some dependencies in the pom.xml and understand other things about the pom.xml to move forward. The first section is the basic project. The goal is making a movie database application so the pom.xml project should reflect that. At the top of the pom.xml, change the blank-project stuff over to the movie application project. First step. Remove reference to <parent> pom by removing this section. The reason is to be independent of building entire crank libraries. The crank libraries for all purposes should have been built already on the local system if using a snapshot release. (See building crank http://code.google.com/p/krank/wiki/BuildingCrankWithMaven)
 
-Set the group id tag to 'org.crank'; artifact tag group to 'crank-movie'; name of the project 'Crank movie example'. The other tags you can ignore or deletge.
+Set the group id tag to 'org.crank'. Artifact tag group to 'crank-movie'. Name of the project 'Crank movie example'. The other tags can be ignored or deleted.
  
 The result is the following:
 
 {{{
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
     
     <groupId>org.crank</groupId>
@@ -33,11 +36,12 @@ The result is the following:
     <packaging>war</packaging>
     <version>0.1.0.0-SNAPSHOT</version>
     <name>Crank movie example</name>
+   ...
 }}}
 
-Couple of things to learn about dependencies. Let's start with dependencies in the pom.xml of the blank project:
+Couple of things to learn about dependencies. Let's start with dependencies in the pom.xml of the blank project. First remove everything from the 'dependencies' section tag as these steps will cover adding new dependency libraries.
 
-The first set of dependencies is for spring wiring. Spring if you don't know is an inversion of control container. You can read more about it at [http://www.springframework.org/] Spring's website. The reason we use it in crank is it helps us deal with configurations, allows us to loosely couple the application so that you can use different layers of crank and wire it into some other framework, say you like to use Ibatis over Hibernate, or you want to wire into Struts instead of JSF. 
+The first set of dependencies is for spring wiring. Spring if it is not understood is an inversion of control container. More information about it is at this link  [http://www.springframework.org/] to the Spring's website. The reason it is used in crank is it helps deal with configurations, allows loose coupling of the application. This provides the facility to use different layers of crank and wire it into some other framework, say like the requirement to use Ibatis over Hibernate, or the need to wire into Struts instead of JSF. 
 
 {{{
   <!-- spring library dependencies -->
@@ -126,7 +130,7 @@ The first set of dependencies is for spring wiring. Spring if you don't know is 
 
 }}}
 
-The application also needs the ability to log messages to the console or file so to accommodate this and offer the libraries like spring and hibernate dependencies, but at the same time exclude log4j when the application is deployed to an application server container. The following dependency is added:
+The application also needs the ability to log messages to the console or file. To accommodate logging and offer the libraries like spring and hibernate dependencies, at the same time, exclude log4j when the application is deployed to an application server container. The following dependency is added:
 {{{
 <!-- common to multiple layers of application (spring, hibernate)-->
         <dependency>
@@ -159,7 +163,7 @@ Set up your driver dependency for the database, for this exercise this is mysql.
         </dependency>
 }}}
 
-Set up some pooling resource dependencies. The application will make use of the apache dbcp library to do this, and some configurations to be covered later. 
+Set up some pooling resource dependencies. The application will make use of the apache dbcp library to do this, and some configurations to be covered later. It's possible to use JNDI look up from an application container, but that will be saved for a more advanced discussion.
 {{{
  <!-- database pooling within webapp -->
         <dependency>
@@ -180,7 +184,7 @@ Set up some pooling resource dependencies. The application will make use of the 
         </dependency>
 }}}
 
-The final library is hibernate libraries and spring, which allows crank to plugin hibernate and spring together with the JPA framework.
+The final library is hibernate libraries and spring JPA, which allows crank to plugin hibernate and spring together with the JPA framework.
 {{{
   <!-- hibernate integration with JPA -->
         <dependency>
@@ -231,9 +235,9 @@ The final library is hibernate libraries and spring, which allows crank to plugi
         </dependency>
 }}}
 
-After the third party dependencies, add the crank libraries that provides interfaces to these libraries and provides additional support. These are the crank-core, crank-crud, and crank-validation libraries. Crank-core provides support for crank based annotations, utilities used by crank higher level frameworks such as crank-jsf-support, and crank based listeners.
+After the third party dependencies are added, add the crank libraries that provides interfaces to these libraries and provides additional support. These are the crank-core, crank-crud, and crank-validation libraries. Crank-core provides support for crank based annotations, utilities used by crank higher level frameworks such as crank-jsf-support, and crank based listeners.
 
-Crank-crud is the bread and butter to cranks create, update, retrieve, delete operations. It provides filter facilities, cacheing, and criteria support. All of these facilities help to make issues with transaction management, sorting and querying information easier for end development. 
+Crank-crud is the bread and butter to crank's create, update, retrieve, delete operations. It provides filter facilities, cacheing, and criteria support. All of these facilities help to make issues with transaction management, sorting and querying information easier for end development. 
 
 The last crank-validation provides annotation support for column, table validation. Some validation features are phone number, email, length, number, and regular expression. These  annotations for validations can be applied to the JPA object, which crank display frameworks can use to validate the data and error to the user messages.
 {{{
@@ -255,7 +259,7 @@ The last crank-validation provides annotation support for column, table validati
         </dependency>
 }}}
 
-Unit testing is important and typically with crank, it's been using TestNG. Little more beefier than JUnit. Notice this particular library the scope is set to test as we only want it for unit testing and builds and not the final deployment into the webapplication. The other is spring-mock which allows use of spring mock object when we use unit testing.
+Unit testing is important and typically with crank, it's been using TestNG. Little more beefier than JUnit. Notice, this particular library the scope is set to test as it is used only for unit testing and builds; not the final deployment into the webapplication. The other is spring-mock which allows use of spring mock object when used in unit testing interfaces.
 {{{
  <!-- unit testing library dependencies -->
         <dependency>
@@ -300,7 +304,7 @@ Unit testing is important and typically with crank, it's been using TestNG. Litt
 
 }}}
 
-This application is going to make use of JSF and crank's support for this. Therefore the following dependencies incorporate servelet support, jsf, and java EL support, and rich faces for ajax capabilities.
+This application is going to make use of JSF and crank's support for this. Therefore the following dependencies incorporate servelet support, jsf, and java EL(expression language) support, and rich faces for ajax capabilities.
 
 {{{
  <dependency>
@@ -432,7 +436,7 @@ This application is going to make use of JSF and crank's support for this. There
         </dependency>
 }}}
 
-Now add the final crank libraries that interface int JSF. This is the crank-jsf-support, which provides the facilities of controllers, validators, and transformers. This library also contains the crank components templates, which are templates that are used to render out listings, fields, and forms. This is the visual things you see when you think of crank. 
+Now, add the final crank libraries that interface int JSF. This is the crank-jsf-support, which provides the facilities of controllers, validators, and transformers. This library also contains the crank components templates, which are templates that are used to render out listings, fields, and forms. This is the visual things you see when you think of crank. 
 
 The other library is crank-jsf-validation; this provides a number of utilities for JSF validation.
 
@@ -492,7 +496,7 @@ Running the application within jetty from maven the command is:
 
 _mvn jetty:run_
 
-Use the batch files in the blank project as other examples for running in debug mode, and connecting to the database. Modify the build section of the pom.xml to have a final name of 'movie-demo'. The build section of the pom should look like this:
+It's possible to use the batch files in the blank project as other examples for running in debug mode, and connecting to the database. Modify the build section of the pom.xml to have a final name of 'movie-demo'. The build section of the pom should look like this:
 
 {{{
   <build>
@@ -547,7 +551,7 @@ Now, that you've gone through most of the pom.xml for maven all that takes to co
 
 _mvn clean install_
 
-And you thought life was tough in maven. Obviously there won't be anything yet because there is still the issue you need to write some code.
+Obviously,  there won't be anything yet because there is still the issue to write some code.
 
 ==Create a Simple table and JPA object==
 If you haven't read http://code.google.com/p/krank/wiki/CrankCrudTutorial that may be ok. The fundamentals are there but there are some evolution changes that have happened up to crank 1.0 and we will start from the ground up in building the web application.
@@ -559,11 +563,11 @@ First create the database called "crank". (_These are Mysql commands_)
 create database crank;
 }}}
 
-Next create a table called "movie". Movie table will have a primary key, created by and date, updated by and date, name, description, ,checked out, year, rating, genre. 
+Next, create a table called "movie". Movie table will have a primary key, created by and date, updated by and date, name, description, ,checked out, year, rating, genre. 
 
 The reason we have all this created data and updated date name and description is not that it's necessary, but allows you to create some sort of history of change to a row in a database table. 
 
-We could allow hibernate to auto generate the table in the database from the annotations on the persistent type object. This is good for development, bad for production release. You run the risk of forgetting you are auto generating tables and when you go to production tables are dropped, data is lost, and you have a big headache. 
+It is possible to allow hibernate to auto generate the table in the database from the annotations on the persistent type object. This is good for development, bad for production release. Developers run the risk of forgetting that they are auto generating tables and then go to production and see tables are dropped, data is lost, and have a big headache later. 
 
 {{{
 create table `MOVIE` (`MOVIE_ID` int(11) NOT NULL auto_increment,
@@ -585,9 +589,9 @@ The next thing is to write some code that represents an object of this database.
 
 Create a MovieBO object and put this in the project src/org/crank/movie/ location.
 
-Here is the solution to how the annotations look. We import the JPA libraries and add annotations of Entity, the table and have the object in this case the MovieBO implement serializable. 
+Here is the solution on how the annotations should look. Import the JPA libraries and add annotations of Entity, the table and have the object in this case the MovieBO implement serializable. 
 
-The next are the attributes that we annotate to the columns they represent in the database. 
+The next are the attributes that are annotate to the columns they represent in the database. 
 {{{
 package org.crank.movie;
 
@@ -638,6 +642,7 @@ and at http://www.hibernate.org
 
 The rest is going to be the access modifier methods which can be auto generated through an IDE (auto generate getter/setter). One difference is the access/modifier for the boolean attribute, this looks like this:
 {{{
+  . . .
     public boolean isCheckedOut() {
         return checkedOut;
     }
@@ -645,7 +650,7 @@ The rest is going to be the access modifier methods which can be auto generated 
     public void setCheckedOut(boolean checkedOut) {
         this.checkedOut = checkedOut;
     }
-
+  . . . 
 }}}
 
 ==Data access object (DAO)===
@@ -751,7 +756,7 @@ Solution:
 </beans>
 }}}
 
-If you notice the jpaProperties are referenced by a spring PropertiesFactoryBean and then injected into the CrudDAOConfig. 
+Notice, the jpaProperties are referenced by a spring PropertiesFactoryBean and then injected into the CrudDAOConfig. 
 
 There are also a number of 'krank' properties, and these are property values that are found and replaced, when the maven build is run. These properties are fed in by the maven pom.xml file so to do this before the profile tag add properties tags. The result is this:
 
@@ -803,6 +808,7 @@ The next step is to wire in the datasource and persistence unit group that was c
 Then get the external bean dataSource of the movieDataSource in the applicationContext.xml into this bean.
 
 {{{
+  . . . 
       @Bean
      public String persistenceUnitName() {
 		return "crank-movie";
@@ -810,18 +816,21 @@ Then get the external bean dataSource of the movieDataSource in the applicationC
 
     @ExternalBean
     abstract DataSource movieDataSource();
+   . . .
 }}}
 
 Create a simple controller that will allow one page to display a listing and another page to display a form for editing and updating a selected listing. This case the JSF controller will use the MovieBO managed crud object above. The wrapping controller is a JsfCrudAdapter. The method is going to be called 'movieCrud'. The method and controller will be scoped on requests. 
 
 Solution:
 {{{
+. . . 
     @SuppressWarnings("unchecked")
     @Bean(scope = DefaultScopes.REQUEST)
     public JsfCrudAdapter<MovieBO, Long> movieCrud() throws Exception {
         JsfCrudAdapter adapter = cruds().get("MovieBO");
         return adapter;
     }
+. . . 
 }}}
 
 That about completes to this point. This will be revisited and enhanced later for some other functionality.
@@ -857,7 +866,7 @@ There are a number of components going to be used by this page and more then wha
       xmlns:crank="http://www.googlecode.com/crank"
         >
 }}}
-The first thing is we will use the use JSTL to define a variable which references the 'MovieBO' name. 
+The first thing use JSTL to define a variable which references the 'MovieBO' name. 
 
 {{{
   <c:if test="${empty daoName}">
@@ -875,7 +884,7 @@ The first component is a bread crumb component. The bread crumb allows a trail f
 
 The 'movieCrud', is the name of the method that returns the JsfAdapterCrud. The dot'controller' is the controller object within the JsfAdapterCrud. 
 
-Now add to the page a page title, and call it 'Movie' or any other name like 'Movie Listing'. Here you can use the h:output component of Jsf. The styleClass in this component can use the Crank style sheet class 'pageTitle'.
+Now add to the page a page title, and call it 'Movie' or any other name like 'Movie Listing'. Use the h:output component of Jsf. The styleClass in this component can use the Crank style sheet class 'pageTitle'.
 
 {{{
   <h:outputText value="Movie" styleClass="pageTitle"/>
@@ -904,7 +913,7 @@ Here is the result:
         </a4j:region>
 }}}
 
-You'll notice that the 'daoName' variable is used to create variable names. This is why it was specified earlier in the page. Could have done with out the variable declaration but would have been a lot more repeat typing. There are many other options and features to crank listing, but this is the most common set-up.
+Notice, that the 'daoName' variable is used to create variable names. This is why it was specified earlier in the page. This could have been done without the variable declaration but would have been a lot more repeat typing. There are many other options and features to crank listing, but this is the most common set-up.
 
 ==Navigation Rules for JSF==
 Before the application can be run some modification on how JSF and crank manages user page flows. Open the faces-config.xml in webapp/WEB-INF directory.
@@ -913,8 +922,7 @@ Remove all navigation-rules that do not have from-outcomes of 'HOME' or 'EMPLOYE
 
 Recall adding to the home the 'MOVIE' action. This is going to navigate the user to /pages/crud/listing.xhtml
 
-{{{
-  
+{{{  
   <navigation-rule>
   	<navigation-case>
   		<from-outcome>HOME</from-outcome>
@@ -938,13 +946,13 @@ _mvn jetty:run_
 
 Go to http://localhost:8080  and see a link to the application.
 
-You should see the home page with a link to Movie and this takes the user to the movie listing. Of course, if there is no data in the database it won't show anything, and the application hasn't been configured to have a form for adding and editing. 
+There should be a home page with a link to Movie and this takes the user to the movie listing. Of course, if there is no data in the database it won't show anything, and the application hasn't been configured to have a form for adding and editing either. 
 
 =Add a form=
-Developing JSF it's good to start with navigation and the move to flushing out your forms. 
+Developing JSF it's good to start with navigation and then move to flushing out the forms. 
 
 ==Form navigation==
-The form navigation rules are the same for all forms. So this is why if when there is a table that is going to have crank crud operations the folders should be separated in pages/crud/tablename or similar (for clarity only your free to do what you want).
+The form navigation rules are the same for all forms. This is why if there is a table that is going to have crank crud operations the folders should be separated in pages/crud/tablename or similar (for clarity only developers are free to do what they want).
 
 First is add to the faces-config.xml the following changes:
 {{{

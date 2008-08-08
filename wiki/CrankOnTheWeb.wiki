@@ -8,6 +8,7 @@ The goal here is to take a blank project and make something of it. Walk the deve
   * Jdk 1.5 or higher
   * Mysql database
   * Maven 2.07 or higher
+  * Crank 1.0 or higher
 
 ==Building with Maven==
 Some may agree some may not, but Maven 2 proves pretty useful for managing dependencies and the cursed jarmagedon. The basis of the application will be Maven 2 so the first step is download it [http://maven.apache.org/]Maven2. 

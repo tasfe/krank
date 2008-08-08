@@ -760,7 +760,9 @@ Notice, the jpaProperties are referenced by a spring PropertiesFactoryBean and t
 
 There are also a number of 'krank' properties, and these are property values that are found and replaced, when the maven build is run. These properties are fed in by the maven pom.xml file so to do this before the profile tag add properties tags. The result is this:
 
+pom.xml add modification:
 {{{
+. . .
     <properties>
         <krank.jdbc.url>
             jdbc:mysql://localhost:3306/crank?autoReconnect=true
@@ -770,6 +772,7 @@ There are also a number of 'krank' properties, and these are property values tha
         <krank.jdbc.password>crank</krank.jdbc.password>
        <krank.hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</krank.hibernate.dialect>
     </properties>
+. . .
 }}}
 
 If you just copied everything above, you probably missed this line:

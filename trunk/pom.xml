@@ -228,6 +228,13 @@
                 https://springframework.svn.sourceforge.net/svnroot/springframework/repos/repo-snapshots
             </url>
         </repository>
+		
+		<repository>
+            <id>spring.amazon</id>
+            <url>
+                https://s3.amazonaws.com/maven.springframework.org/milestone
+            </url>
+        </repository>
     </repositories>
 
     <pluginRepositories>

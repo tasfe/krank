@@ -808,8 +808,7 @@ The jsf pages will use crank's CrudManagedObjects, which will be wrapped in a Js
 
 The next step is to wire in the datasource and persistence unit group that was changed in the applicationContext.xml and the persistence.xml. This is done as follows, specify a string return method called persistenceUnitName the returns the name of the persistence.xml unit name. 
 
-Then get the external bean dataSource of the movieDataSource in the applicationContext.xml into this bean.
-
+Remember, the CrudDAOConfig created above will use the dataSource property to get the access to the data base throughout the crank web application.
 {{{
   . . . 
       @Bean
@@ -817,8 +816,7 @@ Then get the external bean dataSource of the movieDataSource in the applicationC
 		return "crank-movie";
      }
 
-    @ExternalBean
-    abstract DataSource movieDataSource();
+   
    . . .
 }}}
 

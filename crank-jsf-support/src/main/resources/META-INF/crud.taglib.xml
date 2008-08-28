@@ -28,8 +28,17 @@
         </function-signature>
     </function>
 
-	
-	<function>
+    <function>
+		<function-name>getEntityName</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			java.lang.String getEntityName(java.lang.Class)
+		</function-signature>
+	</function>
+
+
+
+    <function>
 		<function-name>isEnum</function-name>
 		<function-class>org.crank.core.TypeUtils</function-class>
 		<function-signature>

@@ -26,15 +26,15 @@ import org.apache.log4j.Logger;
  */
 public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> implements EntityLocator<T>, Serializable {
 	private static final long serialVersionUID = 1L;
-	private FilterablePageable paginator;
-    private DataModel model = new ListDataModel();
-    private CrudOperations<T> controller;
-	private List<T> page;
-    private String[] availableProperties;
-    private String[] properties;
-    private List<SelectItem> availablePropertyList;
-    private boolean propertyEditorOpen;
-    private String entityName;
+	protected FilterablePageable paginator;
+    protected DataModel model = new ListDataModel();
+    protected CrudOperations<T> controller;
+	protected List<T> page;
+    protected String[] availableProperties;
+    protected String[] properties;
+    protected List<SelectItem> availablePropertyList;
+    protected boolean propertyEditorOpen;
+    protected String entityName;
 
     protected Logger log = Logger.getLogger(JsfCrudAdapter.class);
 

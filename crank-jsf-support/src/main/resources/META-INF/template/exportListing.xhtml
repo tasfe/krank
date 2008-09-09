@@ -24,9 +24,11 @@
 	<c:if test="${empty dataTableWidth}">
 		<c:set var="${dataTableWidth}" value="100%" />
 	</c:if>
+    <c:if test="${empty exportModel}">
+        <c:set var="exportModel" value="${jsfCrudAdapter.model}"/>
+    </c:if>
 
-
-	<!-- Style classes -->
+    <!-- Style classes -->
 	<c:if test="${empty listingCommandButtonClass}">
 		<c:set var="listingCommandButtonClass" value="commandButtonClass" />
 	</c:if>
@@ -62,7 +64,7 @@
 			columnClasses="columnHeaderLeft"
 			rowClasses="${listingDataTableRowClasses}"
 			preserveDataModel="false"
-			value="#{jsfCrudAdapter.model}" 
+			value="${exportModel}" 
 			var="row">
 			
 			<c:forEach items="${pNames}" var="property">

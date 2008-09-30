@@ -7,9 +7,9 @@ import org.crank.crud.QueryHint;
 
 @SuppressWarnings("serial")
 public class CrudManagedObject implements Serializable {
-    private Class idType = Long.class;
-    private Class entityType;
-    private Class daoInterface;
+	private Class<?> idType = Long.class;
+    private Class<?> entityType;
+    private Class<?> daoInterface;
     private String name;
     private boolean needsConverter;
     private boolean needsDropDownSupport;
@@ -42,12 +42,12 @@ public class CrudManagedObject implements Serializable {
         
     }
     
-    public CrudManagedObject (final Class entityType) {
+    public CrudManagedObject (final Class<?> entityType) {
         this.entityType = entityType;
     }
 
 
-    public static CrudManagedObject createWithEntityNameAndProperties(String name, final Class entityType, final String... propertyNames) {
+    public static CrudManagedObject createWithEntityNameAndProperties(String name, final Class<?> entityType, final String... propertyNames) {
         CrudManagedObject crudManagedObject = new CrudManagedObject();
         crudManagedObject.name = name;
         crudManagedObject.entityType = entityType;
@@ -55,14 +55,14 @@ public class CrudManagedObject implements Serializable {
         return crudManagedObject;
     }
 
-    public static CrudManagedObject createWithProperties(final Class entityType, final String... propertyNames) {
+    public static CrudManagedObject createWithProperties(final Class<?> entityType, final String... propertyNames) {
         CrudManagedObject crudManagedObject = new CrudManagedObject();
         crudManagedObject.entityType = entityType;
         crudManagedObject.propertyNames = propertyNames;        
         return crudManagedObject;
     }
 
-    public static CrudManagedObject createWithPropertiesAndDAO(final Class entityType, final Class daoInterface, final String... propertyNames) {
+    public static CrudManagedObject createWithPropertiesAndDAO(final Class<?> entityType, final Class<?> daoInterface, final String... propertyNames) {
         CrudManagedObject crudManagedObject = new CrudManagedObject();
         crudManagedObject.entityType = entityType;
         crudManagedObject.propertyNames = propertyNames;
@@ -70,7 +70,8 @@ public class CrudManagedObject implements Serializable {
         return crudManagedObject;
     }
 
-    public static CrudManagedObject createWithNameAndDAOAndProperties(final String name, final Class entityType, final Class daoInterface, final String... propertyNames) {
+    public static CrudManagedObject createWithNameAndDAOAndProperties(final String name, final Class<?> entityType, 
+    		final Class<?> daoInterface, final String... propertyNames) {
         CrudManagedObject crudManagedObject = new CrudManagedObject();
         crudManagedObject.entityType = entityType;
         crudManagedObject.propertyNames = propertyNames;
@@ -81,16 +82,17 @@ public class CrudManagedObject implements Serializable {
 
 
 
-    public CrudManagedObject (final Class entityType, final Class daoInterface) {
+    public CrudManagedObject (final Class<?> entityType, final Class<?> daoInterface) {
         this.entityType = entityType;
         this.daoInterface = daoInterface;
     }
-    public CrudManagedObject (final Class entityType, final String name, final Class daoInterface) {
+    public CrudManagedObject (final Class<?> entityType, final String name, final Class<?> daoInterface) {
         this.entityType = entityType;
         this.name = name;
         this.daoInterface = daoInterface;
     }
-    public CrudManagedObject (final Class entityType, final Class idType, final String name, final Class daoInterface) {
+    public CrudManagedObject (final Class<?> entityType, final Class<?> idType, final String name, 
+    		final Class<?> daoInterface) {
         this.entityType = entityType;
         this.idType = idType;
         this.name = name;
@@ -103,22 +105,22 @@ public class CrudManagedObject implements Serializable {
     public void setName( String name ) {
         this.name = name;
     }
-    public Class getEntityType() {
+    public Class<?> getEntityType() {
         return entityType;
     }
-    public void setEntityType( Class entityType ) {
+    public void setEntityType( Class<?> entityType ) {
         this.entityType = entityType;
     }
-    public Class getIdType() {
+    public Class<?> getIdType() {
         return idType;
     }
-    public void setIdType( Class idType ) {
+    public void setIdType( Class<?> idType ) {
         this.idType = idType;
     }
-    public Class getDaoInterface() {
+    public Class<?> getDaoInterface() {
         return daoInterface;
     }
-    public void setDaoInterface( Class daoInterface ) {
+    public void setDaoInterface( Class<?> daoInterface ) {
         this.daoInterface = daoInterface;
     }
     public boolean isNeedsConverter() {

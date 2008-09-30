@@ -4,7 +4,6 @@ import org.crank.crud.criteria.Comparison;
 import org.crank.crud.criteria.Select;
 import org.crank.crud.join.Join;
 import org.crank.crud.test.DbUnitTestBase;
-import org.crank.crud.test.dao.EmployeeDAO;
 import org.crank.crud.test.model.Department;
 import org.crank.crud.test.model.Employee;
 import org.crank.crud.test.model.PetClinicInquiry;
@@ -15,7 +14,6 @@ import org.testng.annotations.Test;
 import java.util.List;
 import static org.testng.AssertJUnit.fail;
 import static org.testng.AssertJUnit.assertEquals;
-import org.testng.AssertJUnit;
 
 /**
  * 

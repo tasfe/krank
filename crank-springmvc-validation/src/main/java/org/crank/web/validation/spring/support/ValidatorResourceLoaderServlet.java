@@ -18,6 +18,7 @@ import org.crank.web.validation.ValidationScriptReaper;
  * 
  * @author Rick Hightower
  */
+@SuppressWarnings("serial")
 public class ValidatorResourceLoaderServlet extends HttpServlet  {
 
     /** Holds the validationScriptReaper which this class delegates to. */

@@ -25,6 +25,7 @@ import org.testng.annotations.Test;
 
 public class JsfCrudAdapterIntegrationTest extends SpringTestNGBase {
 	private CrankMockObjects crankMockObjects;
+	@SuppressWarnings("unchecked")
 	private JsfCrudAdapter petClinicLeadCrud;
 	
 	@SuppressWarnings("unchecked")
@@ -86,7 +87,6 @@ public class JsfCrudAdapterIntegrationTest extends SpringTestNGBase {
 	}
 			
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getConfigLocations() {
 		return new ArrayList<String>(Arrays.asList(new String [] {"classpath:applicationContext.xml"}));
@@ -112,14 +112,17 @@ public class JsfCrudAdapterIntegrationTest extends SpringTestNGBase {
 		this.repos = repos;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public GenericDao<PetClinicLead, Long> leadRepo() {
 		return (GenericDao<PetClinicLead, Long>)repos.get("PetClinicLead");
 	}
 
+	@SuppressWarnings("unchecked")
 	public GenericDao<PetClinicInquiry, Long> inquiryRepo() {
 		return (GenericDao<PetClinicInquiry, Long>)repos.get("PetClinicInquiry");
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setPetClinicLeadCrud(JsfCrudAdapter petClinicLeadCrud) {
 		this.petClinicLeadCrud = petClinicLeadCrud;
 	}

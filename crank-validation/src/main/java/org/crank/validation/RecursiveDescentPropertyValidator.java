@@ -100,7 +100,7 @@ public abstract class RecursiveDescentPropertyValidator {
         return properties;
     }
 
-    protected List<ValidatorMetaData> readMetaData(Class clazz,
+    protected List<ValidatorMetaData> readMetaData(Class<?> clazz,
             String propertyName) {
         return validatorMetaDataReader.readMetaData(clazz,
                 propertyName);

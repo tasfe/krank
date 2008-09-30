@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Set;
 
 
-import org.crank.crud.criteria.Comparison;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 

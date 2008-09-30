@@ -18,8 +18,9 @@ public class TomahawkFileUploadHandler implements FileUploadHandler {
     private String  bytesProperty ="bytes";
     private String nameProperty = "name";
     private String contentTypeProperty = "contentType";
-    private Class fileClass = PersistedFile.class;
+    private Class<?> fileClass = PersistedFile.class;
 
+	@SuppressWarnings("unchecked")
 	public void upload( CrudOperations crudOperations ) {
           BeanWrapper wrapper = new BeanWrapperImpl(crudOperations.getEntity());
           Map<String, Object> dynamicProperties = crudOperations.getDynamicProperties();
@@ -92,7 +93,7 @@ public class TomahawkFileUploadHandler implements FileUploadHandler {
         this.nameProperty = nameProperty;
     }
 
-    public void setFileClass( Class fileClass ) {
+    public void setFileClass( Class<?> fileClass ) {
         this.fileClass = fileClass;
     }
 

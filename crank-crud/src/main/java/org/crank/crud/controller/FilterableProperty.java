@@ -27,7 +27,7 @@ public class FilterableProperty implements Serializable, Toggleable {
 	private Class type;
     
     /** Parent class type. */
-    private Class parentType;
+    private Class<?> parentType;
     
     /** Should we append an o.prop or was it already add as in e.prop. */
     private boolean autoCreatePrependParentAlias=true;
@@ -185,11 +185,11 @@ public class FilterableProperty implements Serializable, Toggleable {
 		this.autoCreatePrependParentAlias = autoCreatePrependParentAlias;
 	}
 
-	public Class getParentType() {
+	public Class<?> getParentType() {
 		return parentType;
 	}
 
-	public void setParentType(Class parentType) {
+	public void setParentType(Class<?> parentType) {
 		this.parentType = parentType;
 	}
 

@@ -10,7 +10,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
-import javax.faces.component.UIViewRoot;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 

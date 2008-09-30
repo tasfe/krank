@@ -26,7 +26,8 @@ public class SelectManyRelationshipManager extends RelationshipManager {
        return String.format("SelectManyRelationshipManager(parentObject=%s, idProperty=%s,  labelProperty=%s)", parentObject, idProperty, labelProperty);
     }
 
-    public Collection getChildCollectionAsCollection() {
+    @SuppressWarnings("unchecked")
+	public Collection getChildCollectionAsCollection() {
           return (Collection) getChildCollection(this.parentObject);
     }
     
@@ -124,6 +125,7 @@ public class SelectManyRelationshipManager extends RelationshipManager {
 		return iterator;
 	}
 
+	@SuppressWarnings("unchecked")
 	private Set toSet(Object collection) {
 		if (collection instanceof Map) {
 			return new LinkedHashSet(((Map)collection).values());

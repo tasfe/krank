@@ -15,9 +15,10 @@ import static org.testng.AssertJUnit.*;
 
 public class TomahawkFileUploadHandlerTest {
 
-    private CrudControllerBase crudControllerBase;
-    private TomahawkFileUploadHandler fileUploadHandler;
     @SuppressWarnings("unchecked")
+	private CrudControllerBase crudControllerBase;
+    private TomahawkFileUploadHandler fileUploadHandler;
+   
     @BeforeMethod
     protected void setUp() throws Exception {
         

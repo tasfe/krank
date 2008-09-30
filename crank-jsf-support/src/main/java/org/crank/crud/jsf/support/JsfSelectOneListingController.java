@@ -17,16 +17,17 @@ public class JsfSelectOneListingController <T extends Serializable, PK extends S
         super(entityClass, propertyName, pageable, crudController);
     }
 
-	public JsfSelectOneListingController (Class entityClass, String propertyName, FilterablePageable pageable, CrudOperations crudController, String sourceProperty) {
+	@SuppressWarnings("unchecked")
+	public JsfSelectOneListingController (Class<?> entityClass, String propertyName, FilterablePageable pageable, CrudOperations crudController, String sourceProperty) {
         super(entityClass, propertyName, pageable, crudController, sourceProperty);
     }
 
-	public JsfSelectOneListingController (Class entityClass, FilterablePageable pageable) {
+	public JsfSelectOneListingController (Class<?> entityClass, FilterablePageable pageable) {
 		super(entityClass, null, null, pageable);
     }
 
 
-	public JsfSelectOneListingController (Class entityClass, Object parentEntity, String controllerProperty, FilterablePageable pageable) {
+	public JsfSelectOneListingController (Class<?> entityClass, Object parentEntity, String controllerProperty, FilterablePageable pageable) {
         super(entityClass, parentEntity, controllerProperty, pageable);
     }
 

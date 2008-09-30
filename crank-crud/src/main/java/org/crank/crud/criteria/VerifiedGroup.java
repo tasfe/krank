@@ -2,31 +2,31 @@ package org.crank.crud.criteria;
 
 public class VerifiedGroup extends Group {
 	
-	private Class baseType;
+	private Class<?> baseType;
 
 	public VerifiedGroup () {
 		
 	}
-	public VerifiedGroup(final Class aBaseType, final Group group) {
+	public VerifiedGroup(final Class<?> aBaseType, final Group group) {
 		this.baseType = aBaseType;
 		for(Criterion criterion : group){
 			add(criterion);
 		}
 	}
 
-	public Class getBaseType() {
+	public Class<?> getBaseType() {
 		return baseType;
 	}
 
-	public void setBaseType(final Class aBaseType) {
+	public void setBaseType(final Class<?> aBaseType) {
 		this.baseType = aBaseType;
 	}
 	
-	public VerifiedGroup (final Class type) {
+	public VerifiedGroup (final Class<?> type) {
 		this.baseType = type;
 	}
 
-	public VerifiedGroup(Class clazz, Junction and, Criterion[] criteria) {
+	public VerifiedGroup(Class<?> clazz, Junction and, Criterion[] criteria) {
 		
 		super(and, criteria);
 		baseType = clazz;

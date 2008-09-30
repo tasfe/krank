@@ -70,13 +70,11 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
     public DetailController () {
     }
     
-    @SuppressWarnings("unchecked")
     public DetailController (final Class<T> entityClass) {
         this.entityClass = entityClass;
         relationshipManager.setEntityClass( entityClass );
     }
 
-    @SuppressWarnings("unchecked")
     public DetailController (final CrudOperations<?> parent, final Class<T> entityClass) {
         this.entityClass = entityClass;
         setParent(parent);
@@ -131,7 +129,6 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
     }
 
 
-	@SuppressWarnings("unchecked")
 	public CrudOutcome doDelete() {
         doDelete(entity);
         return null;
@@ -145,6 +142,7 @@ public class DetailController<T extends Serializable, PK extends Serializable> e
      * super.entity prior to invoking the super implementation. 
      * 
      */    
+	@SuppressWarnings("unchecked")
 	@Override
 	public CrudOutcome delete() {
         /* Read the entity from the parent object. */

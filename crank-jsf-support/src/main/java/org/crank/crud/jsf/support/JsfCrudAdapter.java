@@ -54,13 +54,14 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
                 null, crudController);
     }
 
-    public JsfCrudAdapter(CrudOperations<T> crudController, Class type) {
+    public JsfCrudAdapter(CrudOperations<T> crudController, Class<?> type) {
         this(org.crank.crud.controller.CrudUtils.getEntityName(type),
                 null, crudController);
     }
 
     
-    public JsfCrudAdapter(String eName, FilterablePageable filterablePageable, CrudOperations<T> crudController) {
+    @SuppressWarnings("unchecked")
+	public JsfCrudAdapter(String eName, FilterablePageable filterablePageable, CrudOperations<T> crudController) {
         this.entityName = eName;
         this.paginator = filterablePageable;
         this.controller = crudController;
@@ -215,7 +216,8 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
         return availableProperties!=null && availableProperties.length>0;
     }
 
-    public List<SelectItem> getAvailablePropertyItems() {
+    @SuppressWarnings("unchecked")
+	public List<SelectItem> getAvailablePropertyItems() {
         if (availablePropertyList == null) {
             availablePropertyList = new ArrayList<SelectItem>();
             Set<String> existingProps = null;
@@ -316,7 +318,8 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
 			}});
 	}
     
-    protected void getPage() {
+    @SuppressWarnings("unchecked")
+	protected void getPage() {
     	page = paginator.getPage();
     }
     
@@ -348,7 +351,8 @@ public class JsfCrudAdapter<T extends Serializable, PK extends Serializable> imp
         paginator.reset();
     }
 
-    public DataModel getModel() {
+    @SuppressWarnings("unchecked")
+	public DataModel getModel() {
     	if (page == null) {
     		page = paginator.getPage();
     	}

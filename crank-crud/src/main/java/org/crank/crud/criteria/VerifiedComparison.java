@@ -6,13 +6,13 @@ import java.beans.PropertyDescriptor;
 
 public class VerifiedComparison extends Comparison {
 
-	private Class baseType;
+	private Class<?> baseType;
 	
 
 	public VerifiedComparison () {
 	}
 
-	public VerifiedComparison (final Class aBaseType, Comparison comparison) {
+	public VerifiedComparison (final Class<?> aBaseType, Comparison comparison) {
 		super(comparison.getName(), comparison.getOperator(), comparison.getValue());
 		this.baseType = aBaseType;
 		verify();
@@ -20,7 +20,7 @@ public class VerifiedComparison extends Comparison {
 	}
 	
 
-	public VerifiedComparison (final Class baseType, final String aName, final Operator aOperator, final Object aValue) {
+	public VerifiedComparison (final Class<?> baseType, final String aName, final Operator aOperator, final Object aValue) {
 		super(aName, aOperator, aValue);
 		this.baseType = baseType;
 		verify();
@@ -40,14 +40,14 @@ public class VerifiedComparison extends Comparison {
 	}
 
 	private void verifyProperties(String [] properties) {
-		Class type = baseType;
+		Class<?> type = baseType;
 		for (String propName : properties) {
 			type = verifyProperty(type, propName);
 		}		
 	}
 
 
-	private Class verifyProperty(final Class type, final String propertyName) {
+	private Class<?> verifyProperty(final Class<?> type, final String propertyName) {
 		try {
 			boolean found = false;
 			BeanInfo beanInfo = Introspector.getBeanInfo(type);
@@ -69,11 +69,11 @@ public class VerifiedComparison extends Comparison {
 	}
 
 
-	public Class getBaseType() {
+	public Class<?> getBaseType() {
 		return baseType;
 	}
 
-	public void setBaseType(Class baseType) {
+	public void setBaseType(Class<?> baseType) {
 		this.baseType = baseType;
 	}
 

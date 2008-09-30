@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision$
  *
  */
+@SuppressWarnings("unchecked")
 public class HeaderMap implements Map {
 
     private HttpServletRequest request;

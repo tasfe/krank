@@ -20,6 +20,7 @@ import java.util.Map;
 
 public class FilteringPaginatorTest extends TestCase {
 	private FilteringPaginator paginator;
+	@SuppressWarnings("unchecked")
 	private FilteringPagingDataSource<?> dataSource = new FilteringPagingDataSource() {
 		
 		private Join[] joins;
@@ -30,12 +31,12 @@ public class FilteringPaginatorTest extends TestCase {
 			return 0;
 		}
 
-		@SuppressWarnings("unchecked")
+
 		public List list(int startItem, int numItems) {
 			return null;
 		}
 
-		@SuppressWarnings("unchecked")
+
 		public List list() {
 			return null;
 		}
@@ -51,14 +52,6 @@ public class FilteringPaginatorTest extends TestCase {
 		public void setOrderBy(OrderBy[] orderBy) {
 			this.orderBy = orderBy;
 		}
-
-        public Join[] fetches() {
-            return null;
-        }
-
-        public void setFetches(Join[] fetches) {
-            throw new RuntimeException("Don't use this... its deprecated. Fool!");
-        }
 
 		public Join[] joins() {
 			return joins;
@@ -171,7 +164,7 @@ public class FilteringPaginatorTest extends TestCase {
 		super.tearDown();
 	}
 
-	@SuppressWarnings({"JpaModelErrorInspection"})
+
     @Embeddable
 	class A {
 
@@ -221,7 +214,6 @@ public class FilteringPaginatorTest extends TestCase {
 
 	}
 
-	@SuppressWarnings({"JpaModelErrorInspection"})
     @Embeddable
 	class C {
 		private String name;
@@ -235,7 +227,6 @@ public class FilteringPaginatorTest extends TestCase {
 		}
 	}
 	
-	@SuppressWarnings({"JpaModelErrorInspection"})
     @Embeddable
 	class B {
 		
@@ -274,7 +265,6 @@ public class FilteringPaginatorTest extends TestCase {
 	}
 	
 	
-	@SuppressWarnings({"JpaModelErrorInspection"})
     @Embeddable
 	class Z {
 		
@@ -284,6 +274,10 @@ public class FilteringPaginatorTest extends TestCase {
 		public void setName(String name) {
 			this.name = name;
 		}
+		
+		public String getName() {
+			return name;
+		}		
 		
 	}
 

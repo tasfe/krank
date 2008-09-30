@@ -35,7 +35,8 @@ public class JsfSelectManyByIdController<PT extends Serializable, T extends Seri
 		return modelChoices;
 	}
 
-    public String getSelectedString() {
+    @SuppressWarnings("unchecked")
+	public String getSelectedString() {
         DataModel model = getAvailableChoices();
         StringBuilder builder = new StringBuilder();
         List<Row> availableTags = (List<Row>) model.getWrappedData();

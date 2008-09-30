@@ -15,7 +15,7 @@ import org.crank.crud.GenericDaoJpa;
  * @author Chris Mathias
  * @version $Revision$
  */
-public class PreloadableCacheableGenericDaoJpa<T, PK extends Serializable> extends GenericDaoJpa implements
+public class PreloadableCacheableGenericDaoJpa<T, PK extends Serializable> extends GenericDaoJpa<T, PK> implements
         PreloadableGenericDao {
 
     private int defaultPreloadCacheSize = 500;
@@ -25,7 +25,7 @@ public class PreloadableCacheableGenericDaoJpa<T, PK extends Serializable> exten
     public PreloadableCacheableGenericDaoJpa() {
     }
 
-    public PreloadableCacheableGenericDaoJpa( Class aType ) {
+    public PreloadableCacheableGenericDaoJpa( Class<T> aType ) {
         super( aType );
     }
 
@@ -59,7 +59,8 @@ public class PreloadableCacheableGenericDaoJpa<T, PK extends Serializable> exten
         preloadResults = find( 0, numberOfObjects );
     }
 
-    public void preload( String hql ) {
+    @SuppressWarnings("unchecked")
+	public void preload( String hql ) {
         EntityManager entityManager = getJpaTemplate().getEntityManagerFactory().createEntityManager();
         Query query = entityManager.createQuery( hql );
         preloadResults = query.getResultList();
@@ -71,7 +72,7 @@ public class PreloadableCacheableGenericDaoJpa<T, PK extends Serializable> exten
             final Object[] noargs = (Object[]) null;
             for (String methodName : preloadConfiguration.getChildrenToInitialize()) {
                 try {
-                    Method method = type.getMethod( methodName, null );
+                    Method method = type.getMethod( methodName, (Class []) null );
                     if (method.getParameterTypes().length == 0 && methodName.equals( method.getName() )) {
                         logger.info("Initializing method " + methodName + " for " + preloadResults.size() + " preloads of type " + type.getName());
                         for (T instanceOfType : preloadResults) {

@@ -24,8 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.crank.crud.criteria.Comparison.eq;
-import static org.crank.crud.criteria.Comparison.in;
 import static org.crank.crud.criteria.Comparison.objectEq;
 import org.crank.crud.criteria.Example;
 import org.crank.crud.criteria.Group;
@@ -115,7 +113,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		Employee employee = new Employee();
 		employee.setFirstName("Rick");
 		employee.setNumberOfPromotions(1);
-		employeeDao.update(employee);
+		employee = employeeDao.merge(employee);
 		Map<String, Object> params = new HashMap<String, Object>();
 		List<Employee> employees = employeeDao.find(params,
 				new String[] { "firstName" });
@@ -148,7 +146,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		AssertJUnit.assertTrue(employees.size()>=14);
 		for (Employee employee : employees) {
 			employee.setFirstName(employee.getFirstName() + "Gak");
-			employeeDao.update(employee);
+			employee = employeeDao.merge(employee);
 		}
 
 		AssertJUnit.assertNotNull(employees);
@@ -360,8 +358,9 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
 		Example ex =  like(employee).excludeProperty("lastName").excludeProperty("tasks");
 		System.out.println(ex);
-		List<Employee> employees = employeeDao.find(ex);
-//		AssertJUnit.assertTrue(employees.size() > 0);
+//		List<Employee> employees = 
+		employeeDao.find(ex);
+		//		AssertJUnit.assertTrue(employees.size() > 0);
 
 		employee = new Employee();
 		employee.setFirstName("Ric%");
@@ -372,7 +371,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		Department department = new Department();
 		department.setName("Eng%");
 		employee.setDepartment(department);
-		employees = employeeDao.find(like(employee)
+		employeeDao.find(like(employee)
 				.excludeProperty("employees").excludeProperty("tasks"));
 //		AssertJUnit.assertTrue(employees.size() > 0);
 
@@ -486,12 +485,12 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
 	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
     public void testEntityEquals () {
-        Department department = departmentDao.update(new Department("r&d"));
+        Department department = departmentDao.merge(new Department("r&d"));
         department = departmentDao.read(department.getId());
         Employee employee = new Employee("Rick", "Hightower");
         employee.setDepartment(department);
         department.getEmployees().add(employee);
-        departmentDao.update(department);
+        departmentDao.merge(department);
         List<Employee> find = employeeDao.find(eq("department", department));
         String firstname = find.get(0).getFirstName();
         AssertJUnit.assertEquals("Rick", firstname);
@@ -657,7 +656,6 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 //        AssertJUnit.assertEquals(0, list.size());
     }
     
-    @SuppressWarnings("static-access")
 	@Test (groups="reads", dependsOnGroups="createsObjectInDB")
     public void testJoinEntity() {
 //    	employeeDao.find(join(entityJoin("Person", "p")), 

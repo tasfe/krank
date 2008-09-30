@@ -11,12 +11,12 @@ import org.crank.crud.test.model.Employee;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.testng.AssertJUnit;
 
 
 public class DaoPaginatableDataSourceTest extends DbUnitTestBase {
     
-    private DaoPagingDataSource paginatableDataSource;
+
+	//private DaoPagingDataSource paginatableDataSource;
     private EmployeeDataCreationUtility creationUtility = new EmployeeDataCreationUtility();
 	private GenericDao<Employee, Long> employeeDao;
 	private GenericDao<Department, Long> departmentDao;
@@ -62,8 +62,10 @@ public class DaoPaginatableDataSourceTest extends DbUnitTestBase {
     }
 
 
-    public void setPaginatableDataSource( DaoPagingDataSource paginatableDataSource ) {
-        this.paginatableDataSource = paginatableDataSource;
+    @SuppressWarnings("unchecked")
+	public void setPaginatableDataSource( DaoPagingDataSource paginatableDataSource ) {
+        //this.paginatableDataSource = paginatableDataSource;
+    	System.out.println("p" + paginatableDataSource);
     }
 
 	public EmployeeDataCreationUtility getCreationUtility() {

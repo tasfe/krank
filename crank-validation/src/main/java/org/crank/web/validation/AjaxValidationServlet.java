@@ -121,7 +121,7 @@ public class AjaxValidationServlet extends HttpServlet {
      * @return
      */
     private Object convertIfNeeded(Object value, String type) {
-        Class clazz = null;
+        Class <?> clazz = null;
         try {
             Class.forName(type);
         } catch (Exception ex) {

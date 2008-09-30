@@ -35,7 +35,6 @@ public class PaginatorTest extends TestCase {
         paginator.reset();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testGetList() {
         List<String> list = paginator.getPage();

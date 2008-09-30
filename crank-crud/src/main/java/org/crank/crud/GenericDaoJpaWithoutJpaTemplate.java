@@ -28,7 +28,6 @@ import org.crank.crud.criteria.OrderDirection;
 import org.crank.crud.criteria.Select;
 import org.crank.crud.criteria.VerifiedBetween;
 import org.crank.crud.join.Join;
-import org.crank.crud.join.JoinType;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 
 public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
-		implements GenericDao<T, PK>, Finder {
+		implements GenericDao<T, PK> {
 
 	protected Class<T> type = null;
 	protected boolean distinct = false;
@@ -171,7 +170,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return (T) entity;
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public T refresh(final T transientObject) {
 		EntityManager em = getEntityManager();
 		T managedEntity = null;
@@ -262,12 +261,12 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return find(Example.like(example));
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public List<T> find(Map<String, Object> propertyValues, String[] orderBy) {
 		return find(orderBy, Group.and(propertyValues));
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public List<T> find(Class<T> clazz, Map<String, Object> propertyValues,
 			String[] orderBy) {
 		return find(clazz, orderBy, Group.and(propertyValues));
@@ -283,7 +282,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return find(clazz, propertyValues);
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public List<T> find() {
 		return find(type);
 	}
@@ -296,6 +295,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return count.intValue();
 	}
 
+	
 	@SuppressWarnings("unchecked")
 	public List<T> find(Class<T> clazz) {
 		String entityName = getEntityName(clazz);
@@ -304,17 +304,17 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return (List<T>) query.getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public List<T> find(String[] propertyNames, Object[] values) {
 		return find(propertyNames, values, null);
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public List<T> find(Class<T> clazz, String[] propertyNames, Object[] values) {
 		return find(clazz, propertyNames, values, null);
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public List<T> find(Criterion... criteria) {
 		return find((String[]) null, criteria);
 	}
@@ -340,12 +340,12 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public List<T> find(Class<T> clazz, Criterion... criteria) {
 		return find(clazz, (String[]) null, criteria);
 	}
 
-	@SuppressWarnings("unchecked")
+
 	public List<T> find(Class<T> clazz, String[] propertyNames, Object[] values,
 			String[] orderBy) {
 		if (propertyNames.length != values.length) {
@@ -362,7 +362,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return find(clazz, propertyValues, orderBy);
 	}
 
-	@SuppressWarnings("unchecked")
+
 	public List<T> find(String[] propertyNames, Object[] values,
 			String[] orderBy) {
 		return find(type, propertyNames, values, orderBy);
@@ -420,7 +420,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return doFind(this.type, orderBy, criteria, null, -1, -1);
 	}
 
-	@SuppressWarnings("unchecked")
+
 	public List<T> find(Class<T> clazz, String[] orderBy, Criterion... criteria) {
 		return doFind(clazz, orderBy, criteria, null);
 	}
@@ -433,7 +433,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return whereClause;
 	}
 
-	@SuppressWarnings("unchecked")
+
 	private List<T> doFind(Class<T> clazz, OrderBy[] orderBy,
 			final Criterion[] criteria, Join[] fetches,
 			final int startPosition, final int maxResult) {
@@ -453,7 +453,6 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 				constructJoins(fetches)).append(constuctWhereClause(group))
 				.append(constructOrderBy(orderBy)).toString();
 
-		// ystem.out.println(sQuery);
 		try {
 			Query query = getEntityManager().createQuery(sQuery);
 			if (criteria != null) {
@@ -469,7 +468,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+
 	private List<T> doFind(Class<T> clazz, String[] orderBy,
 			final Criterion[] criteria, Join[] fetches,
 			final int startPosition, final int maxResult) {
@@ -489,7 +488,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	private List<T> doFind(Class<T> clazz, String[] orderBy, Criterion[] criteria,
 			Join[] fetches) {
 		return doFind(clazz, orderBy, criteria, fetches, -1, -1);
@@ -499,7 +498,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		if (fetches == null || fetches.length == 0) {
 			return "";
 		}
-		StringBuilder builder = new StringBuilder(255);
+//		StringBuilder builder = new StringBuilder(255);
 //		for (Join fetch : fetches) {
 //			if (fetch.getJoin() == JoinType.LEFT) {
 //				builder.append(" left ");
@@ -514,7 +513,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		//return builder.toString();
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public List<T> find(String[] orderBy, Criterion... criteria) {
 		return find(type, orderBy, criteria);
 	}

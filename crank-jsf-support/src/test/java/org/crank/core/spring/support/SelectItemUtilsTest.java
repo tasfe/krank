@@ -33,6 +33,7 @@ public class SelectItemUtilsTest extends TestCase {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testIt() {
 		SelectItemUtils utils = new SelectItemUtils();

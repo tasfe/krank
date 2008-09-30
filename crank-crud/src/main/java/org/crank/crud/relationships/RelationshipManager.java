@@ -29,7 +29,7 @@ public class RelationshipManager implements Serializable {
      * @CONFIG
      * The class of the entity. Used to create new instances of the entity.
      */
-    private Class entityClass;
+    private Class<?> entityClass;
 
     /**
      * @CONFIG @JSF_EXPRESSION
@@ -89,7 +89,7 @@ public class RelationshipManager implements Serializable {
     /**
      * Used to index HashMaps out of the list.
      */
-    private Class keyType = String.class;
+    private Class<?> keyType = String.class;
 
     
     /**
@@ -125,7 +125,8 @@ public class RelationshipManager implements Serializable {
      * If not String use the keyType (Class) and look up a JSF converter
      * for it.
      **/
-    private Serializable readEntityFromParentMap(String indexValue, Object listTypeThing) {
+    @SuppressWarnings("unchecked")
+	private Serializable readEntityFromParentMap(String indexValue, Object listTypeThing) {
         Map map = (Map) listTypeThing;
         if (keyType==String.class) {
             return (Serializable) map.get(indexValue);
@@ -139,7 +140,8 @@ public class RelationshipManager implements Serializable {
         return (Serializable) objects[Integer.parseInt(indexValue)];
     }
     
-    private Serializable readEntityFromParentList(String indexValue, Object listTypeThing) {
+    @SuppressWarnings("unchecked")
+	private Serializable readEntityFromParentList(String indexValue, Object listTypeThing) {
         if (indexValue.startsWith("ix--")){
             int index = Integer.parseInt(indexValue.substring(4));
 
@@ -165,7 +167,8 @@ public class RelationshipManager implements Serializable {
     /** This method finds a child object in a children collection for Sets and Bags using the hashcode of the child.
      *  This is for children who are not in the persistence system yet, i.e., not in the database yet.
      * */
-    private Serializable getChildFromChildrenCollectionUsingHashCode(String indexValue, Object listTypeThing) {
+    @SuppressWarnings("unchecked")
+	private Serializable getChildFromChildrenCollectionUsingHashCode(String indexValue, Object listTypeThing) {
         /* Parse the hash code out of the indexValue. */
         long hash = Long.parseLong(indexValue.substring(4));
 
@@ -293,7 +296,8 @@ public class RelationshipManager implements Serializable {
      * This method finds a child object in a children collection for Sets and Bags using the id of the child.
      * This is for children who are in the persistence system already, i.e., in the database already.
      * */
-    private Serializable getChildFromChildrenCollectionUsingId(String indexValue, Object listTypeThing) {
+    @SuppressWarnings("unchecked")
+	private Serializable getChildFromChildrenCollectionUsingId(String indexValue, Object listTypeThing) {
 
         /** Get the current id from the index parameter that was passed. */
         Long id = Long.valueOf(indexValue);
@@ -482,7 +486,7 @@ public class RelationshipManager implements Serializable {
         this.addToParentMethodName = addToParentMethodName;
     }
 
-    public void setEntityClass( Class entityClass ) {
+    public void setEntityClass( Class<?> entityClass ) {
         this.entityClass = entityClass;
         if (entityName == null) {
             entityName = CrudUtils.getClassEntityName(entityClass);
@@ -502,7 +506,8 @@ public class RelationshipManager implements Serializable {
     }
 
     /** Get the object id. */
-    public String getObjectId(Object parent, Object object) {
+    @SuppressWarnings("unchecked")
+	public String getObjectId(Object parent, Object object) {
         try {
             Object listing = retrieveChildCollectionFromParentObject(parent);
             if (listing instanceof Map) {
@@ -526,7 +531,8 @@ public class RelationshipManager implements Serializable {
     }
     
     /** Get the object id. */
-    private String getObjectParameterIdFromBagOrSet(Object object, Collection collection) {
+    @SuppressWarnings("unchecked")
+	private String getObjectParameterIdFromBagOrSet(Object object, Collection collection) {
         BeanWrapper wrapper = new BeanWrapperImpl(object);
         Object idValue =  wrapper.getPropertyValue(this.idPropertyName);
 
@@ -545,7 +551,8 @@ public class RelationshipManager implements Serializable {
     }
     
     /** Get the object id. */
-    private String getObjectParameterIdFromList(Object object, List list) {
+    @SuppressWarnings("unchecked")
+	private String getObjectParameterIdFromList(Object object, List list) {
 
 
         BeanWrapper wrapper = new BeanWrapperImpl(object);
@@ -568,7 +575,8 @@ public class RelationshipManager implements Serializable {
     }
 
     /** Get the object id. */
-    private String getObjectParameterIdFromMap(Object object, Map map) {
+    @SuppressWarnings("unchecked")
+	private String getObjectParameterIdFromMap(Object object, Map map) {
 
         Object idValue = null;
 
@@ -604,7 +612,7 @@ public class RelationshipManager implements Serializable {
     }
     
 
-    public void setKeyType( Class keyType ) {
+    public void setKeyType( Class<?> keyType ) {
         this.keyType = keyType;
     }
 
@@ -624,7 +632,7 @@ public class RelationshipManager implements Serializable {
         this.childCollectionProperty = childCollectionProperty;
     }
 
-	public Class getEntityClass() {
+	public Class<?> getEntityClass() {
 		return entityClass;
 	}
     

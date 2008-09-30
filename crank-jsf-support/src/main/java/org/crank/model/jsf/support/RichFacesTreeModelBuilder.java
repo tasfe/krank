@@ -4,7 +4,6 @@ package org.crank.model.jsf.support;
 
 
 import org.crank.model.AbstractTreeModelBuilder;
-import org.springframework.beans.BeanWrapperImpl;
 
 
 
@@ -39,9 +38,9 @@ public class RichFacesTreeModelBuilder extends AbstractTreeModelBuilder{
 	 * @param child child node
 	 */
 	protected void addToNode(Object parent, Object child) {
-		TreeNodeImpl parentNode = (TreeNodeImpl)parent;
-		TreeNodeImpl childNode = (TreeNodeImpl)child;
-		Object identifier = null;
+		//TreeNodeImpl parentNode = (TreeNodeImpl)parent;
+		//TreeNodeImpl childNode = (TreeNodeImpl)child;
+		//Object identifier = null;
 		
 //		if (childNode.getModel()!=null) {
 //			identifier = new BeanWrapperImpl(childNode.getModel()).getPropertyValue(idProperty);

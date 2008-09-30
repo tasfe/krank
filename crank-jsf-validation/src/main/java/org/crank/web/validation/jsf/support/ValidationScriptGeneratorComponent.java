@@ -93,7 +93,7 @@ public class ValidationScriptGeneratorComponent extends UIOutput {
         formName = (String) values[1];
         objectExpression = ((String) values[2]);
         propertyNames = (String) values[3];
-        parentClass = (Class)values[4]; 
+        parentClass = (Class<?>)values[4]; 
         //ystem.out.println("RESTORE STATE " + this);
     }
 
@@ -127,8 +127,8 @@ public class ValidationScriptGeneratorComponent extends UIOutput {
                 getFormName());
     }
 
-    private Class parentClass = null;
-    private Class findParentClass() {
+    private Class<?> parentClass = null;
+    private Class<?> findParentClass() {
         if (parentClass==null) {
             parentClass = lookupParentObject().getClass();
         }

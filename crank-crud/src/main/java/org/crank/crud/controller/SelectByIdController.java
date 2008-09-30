@@ -86,7 +86,6 @@ public abstract class SelectByIdController<PT extends Serializable, T extends Se
                 }
             }
 	
-			@SuppressWarnings("unchecked")
 			public void afterLoadCreate(CrudEvent event) {
 				prepareModelChoices();				
 			}
@@ -123,7 +122,6 @@ public abstract class SelectByIdController<PT extends Serializable, T extends Se
 		this.repo = dao;
 	}
 
-	@SuppressWarnings("unchecked")
 	protected Set<T> getSelectedChildren() {
 		BeanWrapper parent = getParent();
 		PK parentId = getParentId(parent);

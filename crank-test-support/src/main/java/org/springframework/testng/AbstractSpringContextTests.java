@@ -44,6 +44,7 @@ import org.springframework.util.StringUtils;
  * @see AbstractTransactionalSpringContextTests
  * @see AbstractTransactionalDataSourceSpringContextTests
  */
+@SuppressWarnings("unchecked")
 public abstract class AbstractSpringContextTests {
 
 	/**

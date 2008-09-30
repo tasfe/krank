@@ -20,7 +20,8 @@ public abstract class SelectManyController<T extends Serializable, PK extends Se
     private CrudControllerBase<T, PK> controller;
     private boolean show;
 	
-    public SelectManyController (Class clazz, String propertyName, FilterablePageable pageable, CrudOperations<T> crudController) {
+    @SuppressWarnings("unchecked")
+	public SelectManyController (Class<?> clazz, String propertyName, FilterablePageable pageable, CrudOperations<T> crudController) {
     	this.paginator = pageable;
     	
     	if (!this.paginator.isInitialized()){
@@ -82,7 +83,7 @@ public abstract class SelectManyController<T extends Serializable, PK extends Se
     public void prepareUpdate() {
         debug(logger, "prepareUpdate()");
 
-        Class parentClass = controller.getEntityClass();
+        Class<?> parentClass = controller.getEntityClass();
 
         debug(logger, "prepareUpdate() is the field required --- parentObject class = %s, childCollectionProperty=%s",
                     parentClass, manager.getChildCollectionProperty());
@@ -142,10 +143,8 @@ public abstract class SelectManyController<T extends Serializable, PK extends Se
 		this.show = true;
 	}
 
-	@SuppressWarnings("unchecked")
 	public abstract Set<Object> getSelectedEntities();
 
-	@SuppressWarnings("unchecked")
 	public abstract Set<Object> getEntitiesInView();
 
 	public boolean isShow() {

@@ -45,6 +45,7 @@ import javax.faces.validator.Validator;
  * <p>
  * @author Rick Hightower
  */
+@SuppressWarnings("deprecation")
 public class SpringApplication extends Application {
     /**
      * Get logger.
@@ -351,7 +352,8 @@ public class SpringApplication extends Application {
      *
      * @return Delegate to original.
      */
-    public Iterator getComponentTypes() {
+    @SuppressWarnings("unchecked")
+	public Iterator getComponentTypes() {
         return this.originalApplication.getComponentTypes();
     }
 
@@ -372,7 +374,8 @@ public class SpringApplication extends Application {
      * @param targetClass Delegate to original.
      * @param converterClass Delegate to original.
      */
-    public void addConverter(final Class targetClass,
+    @SuppressWarnings("unchecked")
+	public void addConverter(final Class targetClass,
         final String converterClass) {
         this.originalApplication.addConverter(targetClass, converterClass);
     }
@@ -447,9 +450,9 @@ public class SpringApplication extends Application {
      * @param targetClass the class on which the converter operates
      * @return the resulting Converter
      */
-    public Converter createConverter(final Class targetClass) {
+    @SuppressWarnings("unchecked")
+	public Converter createConverter(final Class targetClass) {
         FacesException originalException = null;
-        String marker = "###############################################";
         
         try {
             // Create converter with original application
@@ -489,11 +492,13 @@ public class SpringApplication extends Application {
      *
      * @return Delegate to original.
      */
-    public Iterator getConverterIds() {
+    @SuppressWarnings("unchecked")
+	public Iterator getConverterIds() {
         return this.originalApplication.getConverterIds();
     }
 
-    private List<Class> jsfConverterTypes;
+    @SuppressWarnings("unchecked")
+	private List<Class> jsfConverterTypes;
     /**
      * Delegate to original.
      *
@@ -523,7 +528,8 @@ public class SpringApplication extends Application {
      * @return Delegate to original.
      *
      */
-    public MethodBinding createMethodBinding(final String ref,
+    @SuppressWarnings("unchecked")
+	public MethodBinding createMethodBinding(final String ref,
         final Class[] params) {
         return this.originalApplication.createMethodBinding(ref, params);
     }
@@ -533,7 +539,8 @@ public class SpringApplication extends Application {
      *
      * @return Delegate to original.
      */
-    public Iterator getSupportedLocales() {
+    @SuppressWarnings("unchecked")
+	public Iterator getSupportedLocales() {
         return this.originalApplication.getSupportedLocales();
     }
 
@@ -542,7 +549,8 @@ public class SpringApplication extends Application {
      *
      * @param locales Delegate to original.
      */
-    public void setSupportedLocales(final Collection locales) {
+    @SuppressWarnings("unchecked")
+	public void setSupportedLocales(final Collection locales) {
         this.originalApplication.setSupportedLocales(locales);
     }
 
@@ -664,7 +672,8 @@ public class SpringApplication extends Application {
         return this.originalApplication.createComponent( componentExpression, context, componentType );
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public Object evaluateExpressionGet( FacesContext context, String expression, Class expectedType ) throws ELException {
         return this.originalApplication.evaluateExpressionGet( context, expression, expectedType );
     }

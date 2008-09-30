@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
  * @version $Revision$
  *
  */
+@SuppressWarnings("unchecked")
 public class SessionMap implements Map {
 
     private HttpSession session;

@@ -51,7 +51,8 @@ public class DaoFilterablePaginatableDataSourceTest extends DbUnitTestBase {
 	public void test() {
 		paginatableDataSource.group().add(
 				new Comparison("firstName", Operator.LIKE, "J%"));
-		int count = paginatableDataSource.getCount();
+		//int count = 
+			paginatableDataSource.getCount();
 //		AssertJUnit.assertEquals(2, count);
 //		AssertJUnit.assertEquals(2, paginatableDataSource.list(0, 10).size());
 //		Employee employee = (Employee) paginatableDataSource.list(0, 3).get(0);
@@ -65,7 +66,7 @@ public class DaoFilterablePaginatableDataSourceTest extends DbUnitTestBase {
 			Employee employee = new Employee();
 			employee.setFirstName("FOO" + index);
 			employee.setNumberOfPromotions(1);
-			employeeDao.create(employee);
+			employeeDao.persist(employee);
 		}
 		employeeDao.flushAndClear();
 		paginatableDataSource.group().clear();

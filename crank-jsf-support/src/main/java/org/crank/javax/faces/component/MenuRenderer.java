@@ -87,7 +87,7 @@ public class MenuRenderer extends HtmlBasicInputRenderer {
               uiSelectMany.getValueExpression("value");
 
         Object result = newValues; // default case, set local value
-        Class modelType = null;
+        Class<?> modelType = null;
         boolean throwException = false;
 
         // If we have a ValueExpression
@@ -161,7 +161,7 @@ public class MenuRenderer extends HtmlBasicInputRenderer {
      */
     private Object convertSelectManyValuesForModel(FacesContext context,
                                                    UISelectMany uiSelectMany,
-                                                   Class modelType,
+                                                   Class<?> modelType,
                                                    String[] newValues) {
         Object result = null;
         if (modelType.isArray()) {
@@ -372,7 +372,7 @@ public class MenuRenderer extends HtmlBasicInputRenderer {
 
     protected Object convertSelectManyValues(FacesContext context,
                                              UISelectMany uiSelectMany,
-                                             Class arrayClass,
+                                             Class<?> arrayClass,
                                              String[] newValues)
           throws ConverterException {
 
@@ -380,7 +380,7 @@ public class MenuRenderer extends HtmlBasicInputRenderer {
         Converter converter = null;
         int len = (null != newValues ? newValues.length : 0);
 
-        Class elementType = arrayClass.getComponentType();
+        Class<?> elementType = arrayClass.getComponentType();
 
         // Optimization: If the elementType is String, we don't need
         // conversion.  Just return newValues.
@@ -622,7 +622,8 @@ public class MenuRenderer extends HtmlBasicInputRenderer {
     }
 
 
-    Object getCurrentSelectedValues(FacesContext context,
+    @SuppressWarnings("unchecked")
+	Object getCurrentSelectedValues(FacesContext context,
                                     UIComponent component) {
 
         if (component instanceof UISelectMany) {
@@ -680,7 +681,8 @@ public class MenuRenderer extends HtmlBasicInputRenderer {
     }
 
 
-    int getOptionNumber(FacesContext context, UIComponent component) {
+    @SuppressWarnings("unchecked")
+	int getOptionNumber(FacesContext context, UIComponent component) {
 
         Iterator items = RenderKitUtils.getSelectItems(context, component);
         int itemCount = 0;
@@ -741,7 +743,8 @@ public class MenuRenderer extends HtmlBasicInputRenderer {
     }
 
 
-    void renderOptions(FacesContext context, UIComponent component)
+    @SuppressWarnings("unchecked")
+	void renderOptions(FacesContext context, UIComponent component)
           throws IOException {
 
         ResponseWriter writer = context.getResponseWriter();

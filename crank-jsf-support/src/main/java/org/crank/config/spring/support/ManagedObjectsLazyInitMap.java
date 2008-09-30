@@ -9,9 +9,11 @@ import org.crank.core.CrankException;
 import java.util.*;
 import java.io.Serializable;
 
+@SuppressWarnings("unchecked")
 public class ManagedObjectsLazyInitMap<K extends Serializable, V> implements Map<K, V> {
 
-    private Map map = new HashMap();
+    
+	private Map map = new HashMap();
     private Map<String, CrudManagedObject> managedObjects;
     private DeferredResourceCreator deferredResourceCreator;
 

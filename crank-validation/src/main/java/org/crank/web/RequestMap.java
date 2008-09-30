@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
  * @version $Revision$
  *
  */
+@SuppressWarnings("unchecked")
 public class RequestMap implements Map {
 
     private HttpServletRequest request;

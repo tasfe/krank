@@ -31,7 +31,8 @@ public class CachingInterceptor implements IntroductionInterceptor {
         return methodInvocation.proceed();
     }
 
-    public boolean implementsInterface( Class intf ) {
+    @SuppressWarnings("unchecked")
+	public boolean implementsInterface( Class intf ) {
         return intf.isInterface() && PreloadableGenericDao.class.isAssignableFrom( intf );
     }
     

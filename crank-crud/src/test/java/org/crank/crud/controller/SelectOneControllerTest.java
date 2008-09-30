@@ -4,11 +4,12 @@ import junit.framework.TestCase;
 
 import java.io.Serializable;
 
+@SuppressWarnings("unchecked")
 public class SelectOneControllerTest extends TestCase {
 
-    TestClass testObject;
-    TestParent parent;
-    SelectOneController controller;
+    private TestClass testObject;
+    private TestParent parent;
+    private SelectOneController controller;
     
     class TestParent implements Serializable {
         private TestClass obj;
@@ -43,7 +44,8 @@ public class SelectOneControllerTest extends TestCase {
         }
     }
 
-    protected void setUp() throws Exception {
+    
+	protected void setUp() throws Exception {
         controller = new SelectOneController(TestClass.class, null) {
             public Row getSelectedRow() {
                 return new Row(testObject);
@@ -105,7 +107,7 @@ public class SelectOneControllerTest extends TestCase {
 
         controller.addSelectListener(new SelectListener(){
             public void select(SelectEvent event) {
-                TestClass tc = (TestClass)event.getValue();
+            		event.getValue();
             }
 
             public void unselect(SelectEvent event) {

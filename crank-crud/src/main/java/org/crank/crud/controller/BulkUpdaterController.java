@@ -19,11 +19,12 @@ public class BulkUpdaterController <T> {
     
     private GenericDao<T, Serializable> repo;
     private Class<T> type;
-    private EntityLocator entityLocator;
+    private EntityLocator<?> entityLocator;
     private boolean show;
     protected Logger log = Logger.getLogger(BulkUpdaterController.class);
     private T prototype;
-    private Map map;
+    @SuppressWarnings("unchecked")
+	private Map map;
     private Set<String> excludeProperties = new HashSet<String> (Arrays.asList(new String[]{"name", "id"}));
     private Map<String, Boolean> excludeProps = new Map<String, Boolean>() {
 
@@ -114,7 +115,8 @@ public class BulkUpdaterController <T> {
 
 
 
-    public Map getMap() {
+    @SuppressWarnings("unchecked")
+	public Map getMap() {
         if (map == null) {
             map = new MagicMap(getPrototype());
         }
@@ -141,6 +143,7 @@ public class BulkUpdaterController <T> {
 		this.show = show;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Transactional
 	public void process() {
         List list = entityLocator.getSelectedEntities();
@@ -202,7 +205,8 @@ public class BulkUpdaterController <T> {
 		}
         MessageManagerUtils.getCurrentInstance().addStatusMessage("Bulk update complete.");
     }
-    public void setRepo(GenericDao repo) {
+    @SuppressWarnings("unchecked")
+	public void setRepo(GenericDao repo) {
         this.repo = repo;
     }
 
@@ -214,6 +218,7 @@ public class BulkUpdaterController <T> {
 		return type;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setEntityLocator(EntityLocator entityLocator) {
         this.entityLocator = entityLocator;
     }

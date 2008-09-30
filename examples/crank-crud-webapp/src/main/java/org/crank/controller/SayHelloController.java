@@ -10,12 +10,15 @@ import org.crank.crud.model.Employee;
 
 public class SayHelloController {
 
+	@SuppressWarnings("unchecked")
 	public JsfDetailController employeesController;
 
+	@SuppressWarnings("unchecked")
 	public JsfDetailController getEmployeesController() {
 		return employeesController;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setEmployeesController(JsfDetailController employeesController) {
 		this.employeesController = employeesController;
 	}

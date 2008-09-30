@@ -92,7 +92,8 @@ public class SpringPropertyResolver extends PropertyResolver {
      * @param property Property whose type is to be returned
      * @return type
      */
-    public Class getType(final Object base, final Object property) {
+    @SuppressWarnings("unchecked")
+	public Class getType(final Object base, final Object property) {
         if (base instanceof ApplicationContext) {
             Object value;
             ApplicationContext context = (ApplicationContext) base;
@@ -160,7 +161,8 @@ public class SpringPropertyResolver extends PropertyResolver {
      * @param index Index whose type is to be returned
      * @return type
      */
-    public Class getType(final Object base, final int index) {
+    @SuppressWarnings("unchecked")
+	public Class getType(final Object base, final int index) {
         if (base instanceof ApplicationContext) {
             return getType(base, "" + index);
         } else {

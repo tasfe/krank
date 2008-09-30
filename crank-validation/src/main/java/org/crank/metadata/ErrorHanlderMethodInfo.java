@@ -13,7 +13,9 @@ import java.util.Set;
  * of processing.
  *
  */
+@SuppressWarnings("unchecked")
 public class ErrorHanlderMethodInfo implements Serializable{
+	
 	
 	public ErrorHanlderMethodInfo () {
 		exceptions = new HashSet<Class>(10);

@@ -17,7 +17,8 @@ public class Paginator implements Pageable, Serializable {
     protected int startItemIndexCurrentPage=0;
     protected int numberOfPages;
     protected int maxItemsPerPage=500;
-    protected PagingDataSource dataSource;
+    @SuppressWarnings("unchecked")
+	protected PagingDataSource dataSource;
     protected int count;
     protected List<Integer> pageNumberList;
     protected RequestParameterMapFinder requestParameterMapFinder;
@@ -38,7 +39,8 @@ public class Paginator implements Pageable, Serializable {
         logger.debug("Paginator()");
     }
     
-    public Paginator (PagingDataSource dataSource) {
+    @SuppressWarnings("unchecked")
+	public Paginator (PagingDataSource dataSource) {
         this.dataSource = dataSource;
         //reset();
     }
@@ -207,7 +209,8 @@ public class Paginator implements Pageable, Serializable {
     	return "";
     }
 
-    public List getPage() {
+    @SuppressWarnings("unchecked")
+	public List getPage() {
     	if (!reset) {
     		reset();
     	}
@@ -325,7 +328,8 @@ public class Paginator implements Pageable, Serializable {
         return startItemIndexCurrentPage;
     }
 
-    public void setDataSource( PagingDataSource dataSource ) {
+    @SuppressWarnings("unchecked")
+	public void setDataSource( PagingDataSource dataSource ) {
         this.dataSource = dataSource;
     }
 

@@ -266,7 +266,6 @@ public class MessageSpecification implements Serializable {
 	
 	/** Allows client objects to set the subject for the current thread
 	 * per instance of the MessageSpecification. */
-	@SuppressWarnings("unchecked")
     public void setCurrentSubject(String subject) {
 		subjectHolder.set(subject);
 	}

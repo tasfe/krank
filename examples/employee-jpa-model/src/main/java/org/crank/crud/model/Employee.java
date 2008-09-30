@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,7 +20,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import org.crank.annotations.validation.Currency;
+
 import org.crank.annotations.validation.Email;
 import org.crank.annotations.validation.LongRange;
 import org.crank.annotations.validation.Phone;

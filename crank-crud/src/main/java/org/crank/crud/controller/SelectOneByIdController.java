@@ -31,7 +31,6 @@ public abstract class SelectOneByIdController
     /**
      * This method gets called when the user clicks on an item in the listing. 
      */
-    @SuppressWarnings("unchecked")
 	public void process() {
         /* retrieve the item selected and wrap it in a bean wrapper. */
         BeanWrapper child = new BeanWrapperImpl(clickedItem);

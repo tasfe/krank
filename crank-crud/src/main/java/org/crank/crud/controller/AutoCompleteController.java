@@ -5,9 +5,6 @@ import static org.crank.crud.criteria.Comparison.startsLike;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.crank.crud.controller.datasource.FilteringDataSource;
@@ -162,7 +159,6 @@ public class AutoCompleteController <S extends Serializable, T extends Serializa
 			return;
 		}
 		List<?> list = getListExact(value);
-		long time = System.currentTimeMillis();
 		if (list.size() == 1) {
 			Object newValue = list.get(0);
 			selectable.fireSelect(newValue);
@@ -201,6 +197,7 @@ public class AutoCompleteController <S extends Serializable, T extends Serializa
 	 * @param pref
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private List<S> getList(String pref) {
 		OrderBy orderBy = new OrderBy(propertyName, OrderDirection.ASC);
         /* Clear the comparison group b/c we are about to recreate it */
@@ -224,6 +221,7 @@ public class AutoCompleteController <S extends Serializable, T extends Serializa
 	 * @param pref
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private List<S> getListExact(String pref) {
 		OrderBy orderBy = new OrderBy(propertyName, OrderDirection.ASC);
 		

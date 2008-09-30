@@ -15,7 +15,7 @@ public class ChainValidatorMetaDataReaderTest {
 	
 	ValidatorMetaDataReader reader1 = new ValidatorMetaDataReader() {
 
-		public List<ValidatorMetaData> readMetaData(Class clazz, String propertyName) {
+		public List<ValidatorMetaData> readMetaData(Class<?> clazz, String propertyName) {
 			List<ValidatorMetaData> list = new ArrayList<ValidatorMetaData>();
 			ValidatorMetaData data = new ValidatorMetaData();
 			data.setName("d1");
@@ -32,7 +32,7 @@ public class ChainValidatorMetaDataReaderTest {
 	};
 	ValidatorMetaDataReader reader2 = new ValidatorMetaDataReader() {
 
-		public List<ValidatorMetaData> readMetaData(Class clazz, String propertyName) {
+		public List<ValidatorMetaData> readMetaData(Class<?> clazz, String propertyName) {
 			List<ValidatorMetaData> list = new ArrayList<ValidatorMetaData>();
 			ValidatorMetaData data = new ValidatorMetaData();
 			data.setName("d1");

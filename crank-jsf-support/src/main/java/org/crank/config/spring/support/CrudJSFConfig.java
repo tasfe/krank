@@ -111,12 +111,10 @@ public abstract class CrudJSFConfig implements InitializingBean {
     @SuppressWarnings("unchecked")
     @ExternalBean
     public abstract Map<String, GenericDao> repos() ;
-    
-    @SuppressWarnings("unchecked")
+       
     @ExternalBean
     public abstract Map<String, JsfCrudAdapter<? extends Serializable, ? extends Serializable>> cruds() ; 
 
-    @SuppressWarnings("unchecked")
     @ExternalBean
     public abstract Map<String, FilterablePageable> pagers() ;
 
@@ -174,7 +172,6 @@ public abstract class CrudJSFConfig implements InitializingBean {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     @Bean (scope = DefaultScopes.SINGLETON)
     public Map<String, Converter> converters() throws Exception {
         Map<String, Converter> converters = new HashMap<String, Converter>();
@@ -191,6 +188,7 @@ public abstract class CrudJSFConfig implements InitializingBean {
 	@ExternalBean
 	public abstract TransactionInterceptor transactionInterceptor();
 	
+	@SuppressWarnings("unchecked")
 	public <T> T addTransactionSupport(T target) {
 		ProxyFactoryBean proxyCreatorSupport = new ProxyFactoryBean();
 		proxyCreatorSupport.setTarget(target);

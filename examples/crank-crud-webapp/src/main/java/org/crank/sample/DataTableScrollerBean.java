@@ -24,7 +24,7 @@ public class DataTableScrollerBean {
             employee.setFirstName( "FOO" + index );
             employee.setLastName( "BAR" + index );
             employee.setActive((activeToggle ^= true));
-            this.employeeDao.create( employee );
+            this.employeeDao.persist( employee );
         }
         employeeDataPaginator.reset();
     }
@@ -37,8 +37,10 @@ public class DataTableScrollerBean {
         return employeeDataPaginator;
     }
 
-    private GenericDao employeeDao;
-    public void setEmployeeDAO( GenericDao employeeDao ) {
+    @SuppressWarnings("unchecked")
+	private GenericDao employeeDao;
+    @SuppressWarnings("unchecked")
+	public void setEmployeeDAO( GenericDao employeeDao ) {
         this.employeeDao = employeeDao;
     }
 

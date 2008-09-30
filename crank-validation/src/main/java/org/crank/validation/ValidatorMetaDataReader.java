@@ -18,6 +18,6 @@ import org.crank.annotations.design.ExtentionPoint;
 @ExtentionPoint
 public interface ValidatorMetaDataReader {
 	
-	public List<ValidatorMetaData> readMetaData(Class clazz, String propertyName);
+	public List<ValidatorMetaData> readMetaData(Class<?> clazz, String propertyName);
 
 }

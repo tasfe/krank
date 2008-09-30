@@ -78,6 +78,7 @@ public class FilteringPaginatorIntegrationTest extends DbUnitTestBase {
 		}
 	}
     
+	@SuppressWarnings("unchecked")
 	@Test (groups="reads")
     public void testGettingFirstPage() {
 		System.out.println("----------------------------------------------------");

@@ -69,7 +69,6 @@ public class SelectManyByIdControllerTest extends SpringTestNGBase {
 		getEmployeeRepo().delete(testEmployee);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test 
 	public void testInitsProperly() {
 		assertNotNull("We have the available tags", availableTags);
@@ -146,15 +145,6 @@ public class SelectManyByIdControllerTest extends SpringTestNGBase {
 		return (EmployeeDAO) repos.get("Employee");
 	}
 	
-//	private JsfCrudAdapter<Employee, Long> getEmployeeCrud() {
-////		JsfCrudAdapter<Employee, Long> adapter = cruds.get("Employee");
-////		assertSame(adapter.getController(), this.tagController.getParentCrudController());
-////		return  adapter;
-//		tagController.getParentCrudController();
-//	}
-	
-	
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getConfigLocations() {
 		return new ArrayList<String>(Arrays.asList(new String [] {"classpath:applicationContext.xml"}));

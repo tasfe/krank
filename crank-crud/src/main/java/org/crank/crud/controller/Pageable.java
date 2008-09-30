@@ -43,7 +43,8 @@ public interface Pageable {
     /** Reset the controller. Usually becuase underlying model was updated. */
     void reset();
     /** Get the current page of data. */
-    List getPage();
+    @SuppressWarnings("unchecked")
+	List getPage();
     /** Get the page number list. This is used to allow to display page numbers
      * to end users so they can jump to a page quickly. It will only show X pages at a time. */
     List<Integer> getPageNumberList();

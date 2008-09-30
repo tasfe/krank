@@ -34,7 +34,7 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
     protected String targetPropertyName;
 
     /** Entity class of the class instance that are being selected. */
-    protected Class entityClass;
+    protected Class<?> entityClass;
 
     /** Name of the id property. */
     protected String idProperty = "id";
@@ -73,18 +73,19 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
         init();
     }
 
-    public SelectOneController(Class entityClass, String propertyName, FilterablePageable pageable, CrudOperations crudController, String sourceProperty) {
+    @SuppressWarnings("unchecked")
+	public SelectOneController(Class<?> entityClass, String propertyName, FilterablePageable pageable, CrudOperations crudController, String sourceProperty) {
         this(entityClass, propertyName, pageable, crudController);
         this.sourcePropertyName = sourceProperty;
         debug(logger, "sourcePropertyName=%s", sourceProperty);
     }
 
-    public SelectOneController(Class entityClass, FilterablePageable pageable) {
+    public SelectOneController(Class<?> entityClass, FilterablePageable pageable) {
         this(entityClass, null, null, pageable);
     }
 
 
-    public SelectOneController(Class entityClass, Object parentEntity, String controllerProperty, FilterablePageable pageable) {
+    public SelectOneController(Class<?> entityClass, Object parentEntity, String controllerProperty, FilterablePageable pageable) {
         debug(logger, "JsfSelectOneListingController(entityClass=%s, parentEntity=%s, controllerProperty=%s, pageable=%s)", entityClass, parentEntity, controllerProperty, pageable);
         this.entityClass = entityClass;
         this.paginator = pageable;
@@ -190,7 +191,7 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
 
     public void prepareUpdate() {
         debug(logger, "prepareUpdate()");
-        Class parentClass = parentObject().getClass();
+        Class<?> parentClass = parentObject().getClass();
         if (CrudUtils.isRequired(parentClass, targetPropertyName)) {
             debug(logger, "prepareUpdate() the field was required --- parentObject class = %s, entityClass=%s, targetPropertyName=%s", parentClass, entityClass, targetPropertyName);
             if (extractWrappedParent().getPropertyValue(this.targetPropertyName) == null) {
@@ -231,12 +232,12 @@ public abstract class SelectOneController<T extends Serializable, PK extends Ser
     }
 
 
-    public Class getEntityClass() {
+    public Class<?> getEntityClass() {
         return entityClass;
     }
 
 
-    public void setEntityClass(Class entityClass) {
+    public void setEntityClass(Class<?> entityClass) {
         this.entityClass = entityClass;
     }
 

@@ -90,6 +90,7 @@ public class ValidationScriptGeneratorTag extends SimpleTagSupport {
                 getFormName());
     }
 
+   @SuppressWarnings("unchecked")
    private Class findParentClass() {
     	Object object = getJspContext().findAttribute(beanName);
         assert object!=null;

@@ -45,7 +45,7 @@ import org.crank.validation.validators.CompositeValidator;
 public class JSFBridgeMetaDataDrivenValidator extends
 		AbstractJSFBridgeValidator {
 	private ValidatorMetaDataReader jsfBridgeValidatorMetaDataReader = null;
-    private Class formClass;
+    private Class<?> formClass;
     private String fieldName;
     private Object parentObject;
 
@@ -183,7 +183,7 @@ public class JSFBridgeMetaDataDrivenValidator extends
 		return validatorsList;
 	}
 
-	protected List<ValidatorMetaData> readMetaData(Class clazz,
+	protected List<ValidatorMetaData> readMetaData(Class<?> clazz,
 			String propertyName) {
 		initIfNeeded();
 		return jsfBridgeValidatorMetaDataReader.readMetaData(clazz,
@@ -277,11 +277,11 @@ public class JSFBridgeMetaDataDrivenValidator extends
 			jsfBridgeValidatorPropertiesUtil;
 	}
 
-    public Class getFormClass() {
+    public Class<?> getFormClass() {
         return formClass;
     }
 
-    public void setFormClass( Class formClass ) {
+    public void setFormClass( Class<?> formClass ) {
         this.formClass = formClass;
     }
 

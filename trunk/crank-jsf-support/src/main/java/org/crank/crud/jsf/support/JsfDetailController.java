@@ -67,7 +67,6 @@ public class JsfDetailController<T extends Serializable, PK extends Serializable
 		this.subForm = subForm;
 	}
 
-	@SuppressWarnings("unchecked")
 	public DataModel getModel() {
 		List<?> al = getRowData();
 		if (allowsSelection || magicMaps) {
@@ -99,7 +98,6 @@ public class JsfDetailController<T extends Serializable, PK extends Serializable
 		return al;
 	}
 
-	@SuppressWarnings("unchecked")
 	private List wrapListElementsInRowObjects(List al) {
 		ArrayList newList = new ArrayList(al.size());
 		Iterator iterator = al.iterator();

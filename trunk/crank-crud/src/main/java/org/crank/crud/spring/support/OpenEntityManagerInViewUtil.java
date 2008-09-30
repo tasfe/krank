@@ -2,7 +2,6 @@ package org.crank.crud.spring.support;
 
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.orm.jpa.EntityManagerHolder;
-import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.apache.log4j.Logger;
 

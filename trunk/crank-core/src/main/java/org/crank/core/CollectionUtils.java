@@ -35,9 +35,9 @@ public class CollectionUtils {
         return count;
     }
 
-    public static Collection filterByValue(String propertyName, Object value,
+    public static Collection<?> filterByValue(String propertyName, Object value,
             Collection<?> collection) {
-        List list = new ArrayList(collection.size());
+        List<Object> list = new ArrayList<Object>(collection.size());
         for (Object o : collection) {
             BeanWrapper bw = new BeanWrapperImpl(o);
             Object propertyValue = bw.getPropertyValue(propertyName);
@@ -48,9 +48,9 @@ public class CollectionUtils {
         return list;
     }
 
-    public static Collection filterByNotValue(String propertyName, Object value,
+    public static Collection<?> filterByNotValue(String propertyName, Object value,
             Collection<?> collection) {
-        List list = new ArrayList(collection.size());
+        List<Object> list = new ArrayList<Object>(collection.size());
         for (Object o : collection) {
             BeanWrapper bw = new BeanWrapperImpl(o);
             Object propertyValue = bw.getPropertyValue(propertyName);

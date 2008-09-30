@@ -29,7 +29,7 @@ public class SpringSupportTest {
 	
 	@Test
 	public void testSpringApplicationContextObjectRegistry() {
-		SpringApplicationContextObjectRegistry sacor = new SpringApplicationContextObjectRegistry();
+	//	SpringApplicationContextObjectRegistry sacor = new SpringApplicationContextObjectRegistry();
 	//	sacor.convertObject(value, clazz);
 	}
 }

@@ -274,7 +274,6 @@ public class TemplateUtils {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
     public static List<String> loadTemplate(String sFile)
 			throws FileNotFoundException, IOException {
 

@@ -2,9 +2,8 @@ package org.crank.sample;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -16,8 +15,6 @@ import org.crank.crud.GenericDao;
 import org.crank.crud.model.Address;
 import org.crank.crud.model.Department;
 import org.crank.crud.model.Employee;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class DataInitServlet implements Servlet {
 	private List<Department> departments = new ArrayList<Department>(3);
@@ -33,7 +30,6 @@ public class DataInitServlet implements Servlet {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void init(ServletConfig config) throws ServletException {
 //		ApplicationContext context = WebApplicationContextUtils
 //				.getWebApplicationContext(config.getServletContext());
@@ -63,7 +59,6 @@ public class DataInitServlet implements Servlet {
 //		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public Address getNewAddress() {
 		Address address = new Address();
 		address.setLine_1("One Two St");

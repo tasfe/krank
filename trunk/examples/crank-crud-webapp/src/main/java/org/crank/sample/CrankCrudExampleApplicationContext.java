@@ -131,7 +131,6 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		return bean;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Bean(scope = DefaultScopes.REQUEST)
 	public SelectEmployeeListingController selectEmployeeListingController()
 			throws Exception {
@@ -356,6 +355,7 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		return "employee-example";
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Bean(scope = DefaultScopes.SESSION) 
 	public SayHelloController hello(){
 		SayHelloController helloController = new SayHelloController();

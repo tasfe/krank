@@ -24,6 +24,7 @@ import javax.faces.convert.ConverterException;
  *
  * @author Rick Hightower
  */
+@SuppressWarnings("unchecked")
 public class EntityConverter implements Converter, Serializable {
 
     /**
@@ -67,7 +68,6 @@ public class EntityConverter implements Converter, Serializable {
 	 * @return An Entity
 	 *
 	 */
-	@SuppressWarnings("unchecked")
 	public Object getAsObject(final FacesContext facesContext,
 			final UIComponent component, final String value) {
         logger.debug(String.format("getAsObject() called value=%s, component=%s, value class=%s", value, component.getClientId(facesContext), value.getClass().getName()));

@@ -13,6 +13,7 @@ import org.crank.crud.criteria.Select;
 import org.crank.crud.join.Join;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+@SuppressWarnings("unchecked")
 public class EmployeeDataSource implements FilteringPagingDataSource {
 	
 	/** The group holds conditions used by the listing to filter results. */
@@ -39,7 +40,6 @@ public class EmployeeDataSource implements FilteringPagingDataSource {
 	 * @param startItem where to start retrieving records.
 	 * @param how many records to retrieve.
 	 */
-	@SuppressWarnings("unchecked")
 	public List list(int startItem, int numItems) {
 		String query = SELECT_ROW + constructWhereClause() + constructOrderByClause() + 
 		" LIMIT " + (startItem + numItems) + " OFFSET " + startItem;
@@ -51,7 +51,6 @@ public class EmployeeDataSource implements FilteringPagingDataSource {
 	/**
 	 * Get all employees.
 	 */
-	@SuppressWarnings("unchecked")
 	public List list() {
 		return jdbcTemplate.query(
 				SELECT_ROW + constructWhereClause() + constructOrderByClause(), 

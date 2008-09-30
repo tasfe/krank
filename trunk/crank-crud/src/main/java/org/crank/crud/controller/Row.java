@@ -1,14 +1,7 @@
 package org.crank.crud.controller;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
-
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 
 @SuppressWarnings("serial")
 public class Row extends MagicMap implements Serializable {

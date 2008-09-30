@@ -116,7 +116,8 @@ final class SelectItemsIterator implements Iterator<SelectItem> {
      *
      * @throws NoSuchElementException if there are no more elements
      */
-    public SelectItem next() {
+    @SuppressWarnings("unchecked")
+	public SelectItem next() {
 
         if (!hasNext()) {
             throw new NoSuchElementException();

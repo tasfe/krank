@@ -89,7 +89,7 @@ public class CrudUtils {
 	            return true;
 	        }
 	        
-	        Map map = getAnnotationDataAsMap( clazz, propertyName );
+	        Map<String, AnnotationData> map = getAnnotationDataAsMap( clazz, propertyName );
 
 
             boolean found = map.get( "required" ) != null;
@@ -123,9 +123,6 @@ public class CrudUtils {
 	        }
 	        
 	        Map<String, AnnotationData> map = getAnnotationDataAsMap( clazz, propertyName );
-	        for (AnnotationData element : map.values()) {
-	        	Map<String, Object> values = element.getValues();
-			}
 	        if (map.containsKey( "toolTip" ) ) {
 	            return (String) ((AnnotationData) map.get( "toolTip" )).getValues().get("value");
 	        }
@@ -150,9 +147,6 @@ public class CrudUtils {
 	        }
 	        
 	        Map<String, AnnotationData> map = getAnnotationDataAsMap( clazz, propertyName );
-	        for (AnnotationData element : map.values()) {
-	        	Map<String, Object> values = element.getValues();
-			}
 	        if (map.containsKey( "toolTipFromNameSpace" ) ) {
 	            return true;
 	        }
@@ -177,9 +171,6 @@ public class CrudUtils {
 	        }
 	        
 	        Map<String, AnnotationData> map = getAnnotationDataAsMap( clazz, propertyName );
-	        for (AnnotationData element : map.values()) {
-	        	Map<String, Object> values = element.getValues();
-			}
 	        if (map.containsKey( "toolTip" ) ) {
 	            return (String) ((AnnotationData) map.get( "toolTip" )).getValues().get("labelValue");
 	        }
@@ -191,14 +182,14 @@ public class CrudUtils {
         }
     }
     
-    private static boolean isRequiredColumnNullable(Map map, String columnType) {
+    private static boolean isRequiredColumnNullable(Map<String, AnnotationData> map, String columnType) {
     	boolean result = false;
     	
         boolean found = map.get( columnType ) != null;
 
         if (found) {
                 /* If the column annotation data was found, see if the length flag was set. */
-                AnnotationData ad = (AnnotationData) map.get( columnType );
+                AnnotationData ad =  map.get( columnType );
                 Object object = ad.getValues().get("nullable");
                 /* If the nullable flag was set, return its value. */
                 if (object != null) {
@@ -213,13 +204,13 @@ public class CrudUtils {
         return result;
     }
     
-    private static boolean isRequiredColumnOptional(Map map, String columnType) {
+    private static boolean isRequiredColumnOptional(Map<String, AnnotationData> map, String columnType) {
     	boolean result = false;
     	
         boolean found = map.get( columnType ) != null;
 
         if (found) {
-                AnnotationData ad = (AnnotationData) map.get( columnType );
+                AnnotationData ad = map.get( columnType );
                 Object object = ad.getValues().get("optional");
                 /* If the optional flag was set, return its value. */
                 if (object != null) {
@@ -235,13 +226,13 @@ public class CrudUtils {
     }
     
 
-    public static boolean isLargeText(Class clazz, String propertyName) {
+    public static boolean isLargeText(Class<?> clazz, String propertyName) {
     	
         try {
             if (!(getPropertyDescriptor(clazz, propertyName).getPropertyType() == String.class)) {
                 return false;
             }
-            Map map = getAnnotationDataAsMap( clazz, propertyName );
+            Map<String, AnnotationData> map = getAnnotationDataAsMap( clazz, propertyName );
 
             boolean found = map.get( "column" ) != null;
             /* If you found an annotation called required, return true. */
@@ -265,11 +256,11 @@ public class CrudUtils {
         
     }
     
-    public static int textSize(Class clazz, String propertyName) {
+    public static int textSize(Class<?> clazz, String propertyName) {
         return columnSize( clazz, propertyName );
     }
 
-    public static boolean isFile(Class clazz, String propertyName) {
+    public static boolean isFile(Class<?> clazz, String propertyName) {
         if (PersistedFile.class.isAssignableFrom( getPropertyDescriptor( clazz, propertyName ).getPropertyType() )) {
             return true;
         } else {
@@ -277,7 +268,8 @@ public class CrudUtils {
         }
     }
 
-    public static int columnSize(Class clazz, String propertyName) {
+    @SuppressWarnings("unchecked")
+	public static int columnSize(Class<?> clazz, String propertyName) {
 
         boolean found = false;
         List<AnnotationData> list = AnnotationUtils.getAnnotationDataForClass(clazz, allowedPackages);
@@ -323,7 +315,8 @@ public class CrudUtils {
         
     }
 
-    private static Map<String, AnnotationData> getAnnotationDataAsMap( Class clazz, String propertyName ) {
+    @SuppressWarnings("unchecked")
+	private static Map<String, AnnotationData> getAnnotationDataAsMap( Class<?> clazz, String propertyName ) {
         Collection<AnnotationData> annotationDataForProperty = AnnotationUtils.getAnnotationDataForFieldAndProperty( clazz, propertyName, allowedPackages );
         Map<String, AnnotationData> map = MapUtils.convertListToMap( "name", annotationDataForProperty);
         return map;
@@ -342,16 +335,16 @@ public class CrudUtils {
         }
     }
 
-    public static boolean isManyToOne(Class clazz, String propertyName) {
-        Map map = getAnnotationDataAsMap(clazz, propertyName);
+    public static boolean isManyToOne(Class<?> clazz, String propertyName) {
+        Map<String, AnnotationData> map = getAnnotationDataAsMap(clazz, propertyName);
         return map.get("manyToOne") != null;
     }
 
-    public static boolean isParentManyToOne(Class clazz, String propertyName) {
+    public static boolean isParentManyToOne(Class<?> clazz, String propertyName) {
         return isManyToOne(clazz, getParentProperty(propertyName));
     }
 
-    public static boolean isManyToOneOptional(Class clazz, String propertyName) {
+    public static boolean isManyToOneOptional(Class<?> clazz, String propertyName) {
         Map<String, AnnotationData> map = getAnnotationDataAsMap( clazz, propertyName );
         AnnotationData data = map.get( "manyToOne" );
         if (data != null) {
@@ -365,13 +358,13 @@ public class CrudUtils {
         return false;
     }
 
-    public static boolean isOneToOne(Class clazz, String propertyName) {
-        Map map = getAnnotationDataAsMap( clazz, propertyName );
+    public static boolean isOneToOne(Class<?> clazz, String propertyName) {
+        Map<String, AnnotationData> map = getAnnotationDataAsMap( clazz, propertyName );
         return map.get( "oneToOne" ) != null; 
     }
     
-    public static boolean isEnumerated(Class clazz, String propertyName) {
-        Map map = getAnnotationDataAsMap( clazz, propertyName );
+    public static boolean isEnumerated(Class<?> clazz, String propertyName) {
+        Map<String, AnnotationData> map = getAnnotationDataAsMap( clazz, propertyName );
         return map.get( "enumerated" ) != null; 
     }
     
@@ -391,7 +384,7 @@ public class CrudUtils {
     }
 
 
-    public static String getEntityName(Class aType) {
+    public static String getEntityName(Class<?> aType) {
 		Entity entity = (Entity) aType.getAnnotation(Entity.class);
 		if (entity == null) {
 			return aType.getSimpleName();
@@ -408,19 +401,19 @@ public class CrudUtils {
 
 	}
 
-    public static boolean isEntity (Class clazz) {
+    public static boolean isEntity (Class<?> clazz) {
         AnnotationData data = (AnnotationData)MapUtils.convertListToMap( "name",
                 AnnotationUtils.getAnnotationDataForClass( clazz, allowedPackages )).get( "entity" );
         return data != null;
     }
 
-    public static boolean isEmbeddable (Class clazz) {
+    public static boolean isEmbeddable (Class<?> clazz) {
         AnnotationData data = (AnnotationData)MapUtils.convertListToMap( "name",
                 AnnotationUtils.getAnnotationDataForClass( clazz, allowedPackages )).get( "embeddable" );
         return data != null;
     }
 
-    public static String getClassEntityName(Class clazz) {
+    public static String getClassEntityName(Class<?> clazz) {
         AnnotationData data = (AnnotationData)MapUtils.convertListToMap( "name",
                 AnnotationUtils.getAnnotationDataForClass( clazz, allowedPackages )).get( "entity" );
         if (data != null) {
@@ -437,7 +430,8 @@ public class CrudUtils {
         return TypeUtils.getPropertyDescriptor( clazz, propertyName );
     }
     
-    public static String getObjectId(DetailController detailController, Object row) {
+    @SuppressWarnings("unchecked")
+	public static String getObjectId(DetailController detailController, Object row) {
     	
     	if (row instanceof Row) {
     		row = ((Row)row).getObject();

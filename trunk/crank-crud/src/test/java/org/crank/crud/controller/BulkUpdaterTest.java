@@ -5,15 +5,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.crank.crud.GenericDao;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
-
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
+@SuppressWarnings("unchecked")
 public class BulkUpdaterTest extends TestCase {
 	private BulkUpdaterController<Employee> bulkUpdater;
 	private List<Employee> employees = null;
+	
 	
 	public void setUp() {
 		employees = new ArrayList<Employee>();

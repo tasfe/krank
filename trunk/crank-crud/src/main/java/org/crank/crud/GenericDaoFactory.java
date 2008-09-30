@@ -19,9 +19,9 @@ import org.crank.crud.cache.CachingAdvisor;
  */
 public class GenericDaoFactory extends ProxyFactoryBean implements InitializingBean {
 
-    private Class intf;
+    private Class<?> intf;
 
-    private Class bo;
+    private Class<?> bo;
 
     private EntityManagerFactory entityManagerFactory;
     
@@ -48,7 +48,7 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
         this.entityManagerFactory = entityManagerFactory;
     }
 
-    public void setInterface( final Class intf ) {
+    public void setInterface( final Class<?> intf ) {
         this.intf = intf;
     }
 
@@ -89,7 +89,8 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
         return dao;
     }
 
-    private GenericDaoJpa loadCachingDao() {
+    @SuppressWarnings("unchecked")
+	private GenericDaoJpa loadCachingDao() {
         if (preloadConfiguration == null) {
             throw new RuntimeException( "The Caching Configuration property must be set to use a caching dao." );
         }
@@ -107,7 +108,7 @@ public class GenericDaoFactory extends ProxyFactoryBean implements InitializingB
         return preloadConfiguration != null;
     }
 
-    public void setBo( Class bo ) {
+    public void setBo( Class<?> bo ) {
         this.bo = bo;
     }
 

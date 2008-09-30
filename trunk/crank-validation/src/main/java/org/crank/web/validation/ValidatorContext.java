@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 
 /** Holds fieldName being validated and validation rule meta-data. */
+@SuppressWarnings("unchecked")
 public class ValidatorContext {
 	
 	private Map<String, Object> validationRuleMetaData = 

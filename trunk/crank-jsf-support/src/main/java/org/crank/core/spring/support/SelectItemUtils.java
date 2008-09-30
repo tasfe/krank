@@ -19,6 +19,7 @@ import org.springframework.beans.NotReadablePropertyException;
  * 
  * @author Rick Hightower
  */
+@SuppressWarnings("unchecked")
 public class SelectItemUtils {
     private PropertiesUtil propertiesUtil = new SpringBeanWrapperPropertiesUtil();
     /**
@@ -38,7 +39,7 @@ public class SelectItemUtils {
     /**
      * Class of id. Defaults to java.lang.Long.
      */
-    private Class classTypeOfId = Long.class;
+	private Class classTypeOfId = Long.class;
 
     /**
      * Is the id primitive. Defaults to false.
@@ -49,7 +50,6 @@ public class SelectItemUtils {
     	return createSelectItems(list, idProperty, labelProperty, false);
     }
 
-    @SuppressWarnings("unchecked")
     public List createSelectItems( final Collection list, String idProperty, String labelProperty, boolean optional ) {
         List selectItems = new ArrayList(list.size()); // new list of selectItems
         if (optional) {

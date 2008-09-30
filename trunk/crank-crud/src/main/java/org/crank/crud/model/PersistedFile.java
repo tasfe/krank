@@ -3,7 +3,6 @@ package org.crank.crud.model;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-@SuppressWarnings({"JpaDataSourceORMInspection"})
 @Embeddable
 public class PersistedFile {
 

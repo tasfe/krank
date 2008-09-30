@@ -12,17 +12,22 @@ import org.crank.model.TreeModelBuilder;
 public class TreeControllerBean {
 	private DaoFilteringDataSource<Department, Long> dataSource;
 	
+	@SuppressWarnings("unchecked")
 	private TreeModelBuilder treeBuilder;
 	private Object treeModel;
 	private Object componentState;
+	@SuppressWarnings("unchecked")
 	private JsfCrudAdapter employeeCrud;
+	@SuppressWarnings("unchecked")
 	private JsfCrudAdapter deptCrud;
 
+	@SuppressWarnings("unchecked")
 	public void setTreeBuilder(TreeModelBuilder treeBuilder) {
 		this.treeBuilder = treeBuilder;
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	public void buildTree () {
 		treeModel = treeBuilder.createTreeModelFromList(dataSource.list());
 	}
@@ -65,10 +70,12 @@ public class TreeControllerBean {
 		return "DEPARTMENT_FORM";
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setEmployeeCrud(JsfCrudAdapter employeeCrud) {
 		this.employeeCrud = employeeCrud;
 		
 	}
+	@SuppressWarnings("unchecked")
 	public void setDeptCrud(JsfCrudAdapter deptCrud) {
 		this.deptCrud = deptCrud;
 		

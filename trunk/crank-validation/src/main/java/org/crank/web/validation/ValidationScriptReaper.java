@@ -3,7 +3,6 @@ package org.crank.web.validation;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,7 +117,7 @@ public class ValidationScriptReaper {
      * @param formName
      * @throws IOException
      */
-    public void outputFieldValidation(Writer writer, Class clazz, 
+    public void outputFieldValidation(Writer writer, Class<?> clazz, 
             String[] propertyNames, String formName) throws IOException {
         /* Get the meta data from the class and property names. */
         Map<String, List<ValidatorMetaData>> validatorMetaData = 
@@ -231,7 +230,7 @@ public class ValidationScriptReaper {
      * @param propertyNames
      * @return
      */
-    private Map<String, List<ValidatorMetaData>> collectMetaDataFromClass(Class clazz,
+    private Map<String, List<ValidatorMetaData>> collectMetaDataFromClass(Class<?> clazz,
             String[] propertyNames) {
         /*
          * Holds the meta-data we collect in a map, where the key is

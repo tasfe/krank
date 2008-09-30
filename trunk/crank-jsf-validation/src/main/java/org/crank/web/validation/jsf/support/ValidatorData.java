@@ -1,15 +1,9 @@
 package org.crank.web.validation.jsf.support;
 
-import java.util.Map;
 
 import javax.faces.context.FacesContext;
 
 import org.crank.annotations.design.DependsOnJSF;
-import org.crank.core.CrankContext;
-import org.crank.core.ObjectRegistry;
-import org.crank.crud.GenericDao;
-import org.crank.crud.controller.CrudController;
-import org.crank.crud.jsf.support.JsfCrudAdapter;
 
 /** 
  * Utility class.
@@ -30,9 +24,9 @@ class ValidatorData {
 			useBracketForPropertyExtraction=true;
 		}
 	}
-	private Class parentClassOfTheField;
+	private Class<?> parentClassOfTheField;
 
-	public ValidatorData  (String expressionString, FacesContext facesContext, Class parentClass, String fieldName, Object parentObject) {
+	public ValidatorData  (String expressionString, FacesContext facesContext, Class<?> parentClass, String fieldName, Object parentObject) {
         this.parentClassOfTheField = parentClass;
         this.propertyNameOfTheField = fieldName;
 		this.expressionString = expressionString;
@@ -42,7 +36,7 @@ class ValidatorData {
         }
 		this.parentObject = parentObject;
 	}
-	public ValidatorData  (String expressionString, FacesContext facesContext, Class parentClass, String fieldName) {
+	public ValidatorData  (String expressionString, FacesContext facesContext, Class<?> parentClass, String fieldName) {
         this.parentClassOfTheField = parentClass;
         this.propertyNameOfTheField = fieldName;
 		this.expressionString = expressionString;
@@ -190,7 +184,7 @@ class ValidatorData {
         }
         return null;
 	}
-	public Class getParentClassOfTheField() {
+	public Class<?> getParentClassOfTheField() {
 		return parentClassOfTheField;
 	}
 	public String getPropertyNameOfTheField() {

@@ -27,7 +27,7 @@ public class SpringValidatorContext {
 
 
 	public String getBindingPath() {
-        return validationContext.getBindingPath();
+        return ValidationContext.getBindingPath();
     }
 
 

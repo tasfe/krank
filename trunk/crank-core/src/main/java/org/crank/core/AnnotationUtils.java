@@ -27,7 +27,7 @@ public class AnnotationUtils {
         return clazz.getAnnotations();
     }
 
-    public static Collection<AnnotationData> getAnnotationDataForFieldAndProperty(Class clazz, String propertyName, Set<String> allowedPackages) {
+    public static Collection<AnnotationData> getAnnotationDataForFieldAndProperty(Class<?> clazz, String propertyName, Set<String> allowedPackages) {
         /* Extract the AnnotationData from the Java annotations. */
         List<AnnotationData> propertyAnnotationDataList =
             AnnotationUtils.getAnnotationDataForProperty( clazz, propertyName, false, allowedPackages);

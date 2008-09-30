@@ -1,5 +1,6 @@
 package org.crank.crud.controller;
 
 public interface FileUploadHandler {
-    public void upload(CrudOperations crudOperations);
+    @SuppressWarnings("unchecked")
+	public void upload(CrudOperations crudOperations);
 }

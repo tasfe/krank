@@ -2,6 +2,7 @@ package org.crank.web;
 
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public class CrankWebContext {
 	private Map sessionScope;
 	private Map requestScope;

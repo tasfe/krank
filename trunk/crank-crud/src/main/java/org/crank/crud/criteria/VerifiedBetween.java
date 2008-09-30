@@ -7,7 +7,7 @@ public class VerifiedBetween extends VerifiedComparison{
 	public VerifiedBetween () {
 		this.setOperator(Operator.BETWEEN);
 	}
-	public VerifiedBetween(Class aBaseType, String aName, Object aValue, Object aValue2) {
+	public VerifiedBetween(Class<?> aBaseType, String aName, Object aValue, Object aValue2) {
 		super(aBaseType, aName, Operator.BETWEEN, aValue);
 		this.value2 = aValue2;
 	}

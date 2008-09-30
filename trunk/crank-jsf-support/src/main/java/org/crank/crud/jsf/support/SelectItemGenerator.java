@@ -10,13 +10,16 @@ import org.crank.crud.controller.datasource.DataSource;
 public class SelectItemGenerator {
     
     private SelectItemUtils selectItemUtils = new SelectItemUtils();
-    private DataSource dataSource;
+    @SuppressWarnings("unchecked")
+	private DataSource dataSource;
 
-    public DataSource getDataSource() {
+    @SuppressWarnings("unchecked")
+	public DataSource getDataSource() {
         return dataSource;
     }
 
-    public void setDataSource( DataSource dataSource ) {
+    @SuppressWarnings("unchecked")
+	public void setDataSource( DataSource dataSource ) {
         this.dataSource = dataSource;
     }
 
@@ -29,7 +32,6 @@ public class SelectItemGenerator {
         return selectItemUtils.createSelectItems( dataSource.list() );
     }
     
-    @SuppressWarnings("unchecked")
     public List<SelectItem> getListOptional() {
         return selectItemUtils.createSelectItems( dataSource.list(), true );
     }

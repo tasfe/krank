@@ -206,7 +206,7 @@ public abstract class AbstractTreeModelBuilder<T, N> implements TreeModelBuilder
 	 * @param level The current level that we are on.
 	 * @param root The root object that this will be added to.
 	 */
-	protected void createBaseObjects(List list, String[] levels, int level, N root) {
+	protected void createBaseObjects(List<?> list, String[] levels, int level, N root) {
 
 		String mainObjectPropertyLabel = getFirstLevelLabel(levels);
 		level ++; //walk down the tree. index = 2
@@ -215,7 +215,7 @@ public abstract class AbstractTreeModelBuilder<T, N> implements TreeModelBuilder
 		/* Iterate through the list. For each object recursively walk the object properties, using
 		 * the build directions as a guide for building the tree.
 		 */
-		Iterator iterator = list.iterator();
+		Iterator<?> iterator = list.iterator();
 		while(iterator.hasNext()) {
 			Object object = iterator.next();
 
@@ -298,7 +298,7 @@ public abstract class AbstractTreeModelBuilder<T, N> implements TreeModelBuilder
 			}
 
 			N realParentNode = createParentNodeIfNeeded(parentNode, createContainer, listProperty);
-			Iterator iterator = getIteratorOfChildObjectsFromParentObject(object, listProperty);
+			Iterator<?> iterator = getIteratorOfChildObjectsFromParentObject(object, listProperty);
 
 			/* Process the children node. */
 			while(iterator.hasNext()) {
@@ -403,10 +403,11 @@ public abstract class AbstractTreeModelBuilder<T, N> implements TreeModelBuilder
 	 * @param listProperty The list property (can be a Set or any java.util.Collection)
 	 * @return iterator
 	 */
-	protected Iterator getIteratorOfChildObjectsFromParentObject(Object parentObject, String listProperty) {
+	@SuppressWarnings("unchecked")
+	protected Iterator<?> getIteratorOfChildObjectsFromParentObject(Object parentObject, String listProperty) {
 		BeanWrapper wrapper = new BeanWrapperImpl(parentObject);
 		Object listTypeThing = wrapper.getPropertyValue(listProperty);
-		Collection collection = null;
+		Collection<?> collection = null;
 		if (listTypeThing instanceof Map) {
 			collection = ((Map)listTypeThing).values();
 		} else {

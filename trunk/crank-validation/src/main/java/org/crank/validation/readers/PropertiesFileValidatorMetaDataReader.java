@@ -66,7 +66,7 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
     /**
      * Read the meta-data from a properties file.
      */
-    public List<ValidatorMetaData> readMetaData(Class clazz, String propertyName) {
+    public List<ValidatorMetaData> readMetaData(Class<?> clazz, String propertyName) {
 
         /* Load the properties file. */
         Properties props = loadMetaDataPropsFile(clazz);
@@ -85,7 +85,7 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
      * @return
      */
     private Properties loadMetaDataPropsFile(
-            Class clazzWhoseValidationMetaDataWeAreReading) {
+            Class<?> clazzWhoseValidationMetaDataWeAreReading) {
         String className = clazzWhoseValidationMetaDataWeAreReading.getName();
 
         /*
@@ -143,7 +143,7 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
             "something that ValidatorMetaData should handle internally. " +
             "Then we could reuse this ability with other meta-data readers, " +
             " i.e., one that reads the metadata from a Spring config file. ")
-    private List<ValidatorMetaData> extractMetaDataFromString(Class clazz,
+    private List<ValidatorMetaData> extractMetaDataFromString(Class<?> clazz,
             String propertyName, String unparsedString) {
         String propertyKey = clazz.getName() + "." + propertyName;
 

@@ -73,7 +73,7 @@ public class MessageSpecificationTest {
     public void testExpressionLanguage() {
         try {
 			messageSpecification.setDetailMessage( "#{foo.bar}" );
-			String string = messageSpecification.createDetailMessage(  );
+			messageSpecification.createDetailMessage(  );
 			assertTrue(false);
 		} catch (UnsupportedOperationException e) {
 			// expected

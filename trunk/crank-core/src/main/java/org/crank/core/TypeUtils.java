@@ -227,7 +227,7 @@ public class TypeUtils {
          }
     }
 
-    public static Class getPropertyType( final Class<?> type, final String propertyName ) {
+    public static Class<?> getPropertyType( final Class<?> type, final String propertyName ) {
         try {
             return getPropertyDescriptor(type, propertyName).getPropertyType();
         } catch (Exception ex) {

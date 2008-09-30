@@ -173,7 +173,8 @@ public class FilteringPaginator extends Paginator implements
 		createFilterProperties();
 	}
 
-    public FilteringPaginator(FilteringPagingDataSource dataSource, Class type, String... pNames) {
+    @SuppressWarnings("unchecked")
+	public FilteringPaginator(FilteringPagingDataSource dataSource, Class type, String... pNames) {
         super(dataSource);
         debug(log, "FilteringPaginator(dataSource=%s, type=%s)", dataSource, type);
         this.type = type;
@@ -302,6 +303,7 @@ public class FilteringPaginator extends Paginator implements
 	}
 
 	/** Helper method to cast dataSource into the one we need. */
+	@SuppressWarnings("unchecked")
 	private FilteringPagingDataSource filterablePaginatableDataSource() {
 		return (FilteringPagingDataSource) this.dataSource;
 	}
@@ -588,7 +590,8 @@ public class FilteringPaginator extends Paginator implements
 		reset();
 	}
     
-    public List getPage() {
+    @SuppressWarnings("unchecked")
+	public List getPage() {
         if (!filtered) {
             filter();
         }

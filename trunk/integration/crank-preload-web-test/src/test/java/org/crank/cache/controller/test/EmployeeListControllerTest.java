@@ -18,7 +18,8 @@ public class EmployeeListControllerTest extends SpringTestNGBase {
         this.employeeDao = employeeDao;
     }
     
-    @Test(groups={"broken"})
+    @SuppressWarnings("unchecked")
+	@Test(groups={"broken"})
     public void testEmployeeList() throws Exception {
         EmployeeListController employeeListController = new EmployeeListController();
         employeeListController.setEmployeeDao( employeeDao );
@@ -34,8 +35,6 @@ public class EmployeeListControllerTest extends SpringTestNGBase {
         
         assert employeeList.size() > 0;
         
-//        assertEquals("Incorrect view name", detailsViewName,   
-  //                           modelAndView.getViewName());
     }
     
 }

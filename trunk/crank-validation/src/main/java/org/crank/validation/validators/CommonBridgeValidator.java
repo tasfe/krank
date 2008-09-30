@@ -19,7 +19,7 @@ import org.crank.validation.ValidatorMessageHolder;
  */
 public class CommonBridgeValidator extends AbstractValidator {
 
-    private Class validatorClass;
+    private Class<?> validatorClass;
     private String methodName="isValid";
     private String factoryMethod="getInstance";
     private Object validator;
@@ -72,7 +72,7 @@ public class CommonBridgeValidator extends AbstractValidator {
         this.methodName = methodName;
     }
 
-    public void setValidatorClass(Class validatorClass) {
+    public void setValidatorClass(Class<?> validatorClass) {
         this.validatorClass = validatorClass;
     }
 

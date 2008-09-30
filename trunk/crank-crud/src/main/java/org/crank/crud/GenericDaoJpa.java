@@ -33,7 +33,7 @@ import java.util.*;
  * @author Rick Hightower
  */
 public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
-		implements GenericDao<T, PK>, Finder, DaoMethods {
+		implements GenericDao<T, PK>, DaoMethods {
 	
 	protected Class<T> type = null;
 
@@ -394,7 +394,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return find(type);
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	public int count() {
         logger.debug("count() called");
         final String entityName = getEntityName(type);
@@ -625,7 +625,6 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return whereClause;
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<T> doFind(Class<T> clazz, OrderBy[] orderBy,
 			final Criterion[] criteria, Join[] fetches,
 			final int startPosition, final int maxResult) {

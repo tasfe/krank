@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision$
  * 
  */
+@SuppressWarnings("unchecked")
 public class CookieMap implements Map {
 
     private Map<String, String> cookies = new HashMap<String, String>();

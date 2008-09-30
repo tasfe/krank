@@ -52,10 +52,6 @@ public class DaoFilteringDataSource<T, PK extends Serializable> extends DaoDataS
 		}
 	}
 
-    @Deprecated
-	public void setFetches(Join... fetches) {
-		this.fetches = fetches;
-	}
 
 	public Join[] joins() {
 		// TODO Auto-generated method stub

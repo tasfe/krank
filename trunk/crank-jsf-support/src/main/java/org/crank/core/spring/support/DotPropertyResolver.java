@@ -130,7 +130,7 @@ public class DotPropertyResolver extends PropertyResolver {
      * @param property Property whose type is to be returned
      * @return type
      */
-    public Class getType(final Object base, final Object property) {
+    public Class<?> getType(final Object base, final Object property) {
         if (base == null) {
             return original.getType(base, property);
         }
@@ -191,7 +191,7 @@ public class DotPropertyResolver extends PropertyResolver {
      * @param index Index whose type is to be returned
      * @return type
      */
-    public Class getType(final Object base, final int index) {
+    public Class<?> getType(final Object base, final int index) {
         return original.getType(base, index);
     }
 }

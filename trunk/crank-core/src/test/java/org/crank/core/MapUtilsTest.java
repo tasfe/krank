@@ -7,6 +7,7 @@ import static org.testng.AssertJUnit.*;
 import org.testng.annotations.Test;
 
 public class MapUtilsTest {
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testConvertToMap() {
 		Collection<TestSupport> items = new ArrayList<TestSupport>();

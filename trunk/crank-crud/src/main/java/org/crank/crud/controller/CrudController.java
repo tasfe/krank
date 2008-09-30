@@ -33,7 +33,6 @@ public class CrudController<T extends Serializable, PK extends Serializable> ext
      * @see CrudOperations#update()
      * @return outcome
      */
-    @SuppressWarnings("unchecked")
     public CrudOutcome doUpdate() {
         logger.debug(String.format("doUpdate() called. About to call dao.store(entity) %s ", entity));
         entity = dao.store(entity);
@@ -47,7 +46,6 @@ public class CrudController<T extends Serializable, PK extends Serializable> ext
      * Creates a new instance of the entity class and sets the entity to this new instance.
      * @see CrudOperations#loadCreate()
      */
-    @SuppressWarnings("unchecked")
     public CrudOutcome doLoadCreate() {
         logger.debug(String.format("doLoadCreate() called from class %s", this));
 
@@ -64,7 +62,6 @@ public class CrudController<T extends Serializable, PK extends Serializable> ext
      * @see CrudOperations#create()
      * @return outcome
      */
-    @SuppressWarnings({ "unchecked", "deprecation" })
     public CrudOutcome doCreate() {
     	if (CrudOperations.ADD_BY_MERGE.equals(addStrategy)) {
     		this.entity = dao.merge(entity);
@@ -90,8 +87,7 @@ public class CrudController<T extends Serializable, PK extends Serializable> ext
      * Notify listeners that the model changed.
      * @see CrudOperations#delete()
      * @return outcome
-     */
-    @SuppressWarnings("unchecked")    
+     */ 
     public CrudOutcome doDelete() {
         doDelete(getCurrentEntity());        
         fireToggle();

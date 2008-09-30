@@ -19,7 +19,8 @@ public class LongRangeValidator extends AbstractRangeValidator {
      * @param the logical name of the value used for generating error messages
      * 
      */
-    @Implements (interfaceClass=FieldValidator.class)
+    @SuppressWarnings("unchecked")
+	@Implements (interfaceClass=FieldValidator.class)
 	public ValidatorMessageHolder validate(Object fieldValue, String fieldLabel) {
 		ValidatorMessage validatorMessage = new ValidatorMessage();
         if (fieldValue == null) {
@@ -43,7 +44,7 @@ public class LongRangeValidator extends AbstractRangeValidator {
 	/** The max value. */
     private Long max;
     /* What type are we working with: Integer, Long, etc. */
-    private Class type;
+    private Class<?> type;
     /* The underMin message used if the value is under the min. */
     private MessageSpecification underMin;
     /* The overMax message used if the value is over the max. */
@@ -120,7 +121,7 @@ public class LongRangeValidator extends AbstractRangeValidator {
 	}
 
 	@AllowsConfigurationInjection
-	public void setType(Class type) {
+	public void setType(Class<?> type) {
 		this.type = type;
 	}
 

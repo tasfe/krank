@@ -1,15 +1,15 @@
 package org.crank.jpasandbox;
 
-import org.crank.crud.test.model.Employee;
-import org.crank.crud.test.model.EmployeeStatus;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+//import org.crank.crud.test.model.Employee;
+//import org.crank.crud.test.model.EmployeeStatus;
+//import org.springframework.context.ApplicationContext;
+//import org.springframework.context.support.ClassPathXmlApplicationContext;
+//import org.testng.annotations.BeforeClass;
+//import org.testng.annotations.Test;
 
 public class EmployeeDaoTest {
     
-    private ApplicationContext applicationContext;
+    //private ApplicationContext applicationContext;
 //    @BeforeClass
 //    public void setup() {
 //        applicationContext = new ClassPathXmlApplicationContext( "org/crank/jpasandbox/applicationContext.xml" );

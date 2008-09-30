@@ -16,7 +16,7 @@ public abstract class CrudUtils {
         return (Serializable) new BeanWrapperImpl(aEntity).getPropertyValue(idPropertyName);
     }
 
-    public static Serializable getIdObject(String idValue, Class classTypeOfId) {
+    public static Serializable getIdObject(String idValue, Class<?> classTypeOfId) {
         if (classTypeOfId == Long.class) {
             return new Long(idValue);
         }

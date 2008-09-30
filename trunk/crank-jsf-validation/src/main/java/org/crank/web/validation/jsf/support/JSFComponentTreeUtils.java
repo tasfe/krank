@@ -19,6 +19,7 @@ public class JSFComponentTreeUtils {
 
     /** Find a component in a component subtree.. 
      * Here we are navigating down the tree. */
+	@SuppressWarnings("unchecked")
 	public static UIComponent findComponent(UIComponent root, String id) {
         
         /* Hey maybe we are lucky and the component is the root. */
@@ -82,7 +83,8 @@ public class JSFComponentTreeUtils {
      * @param propertyName
      * @return
      */
-    @NeedsRefactoring("See long comment at the end of the method.")
+    @SuppressWarnings("unchecked")
+	@NeedsRefactoring("See long comment at the end of the method.")
     public static UIInput findInput(UIComponent container, String propertyName) {
         
         /* Let's try this the easy way first. */

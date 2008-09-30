@@ -206,6 +206,7 @@ public abstract class AbstractDependencyInjectionSpringContextTests extends Abst
 		return super.loadContextLocations(locations);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void initManagedVariableNames() throws IllegalAccessException {
 		LinkedList managedVarNames = new LinkedList();
 		Class clazz = getClass();
@@ -267,12 +268,12 @@ public abstract class AbstractDependencyInjectionSpringContextTests extends Abst
 		}
 	}
 
-	private Field findField(Class clazz, String name) throws NoSuchFieldException {
+	private Field findField(Class<?> clazz, String name) throws NoSuchFieldException {
 		try {
 			return clazz.getDeclaredField(name);
 		}
 		catch (NoSuchFieldException ex) {
-			Class superclass = clazz.getSuperclass();
+			Class<?> superclass = clazz.getSuperclass();
 			if (superclass != AbstractSpringContextTests.class) {
 				return findField(superclass, name);
 			}

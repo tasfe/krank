@@ -19,7 +19,8 @@ public class JsfSelectManyController<T extends Serializable, PK extends Serializ
 	
     private DataModel model = new ListDataModel();
 	
-    public JsfSelectManyController (Class<T> clazz, 
+    @SuppressWarnings("unchecked")
+	public JsfSelectManyController (Class<T> clazz, 
     		String propertyName, FilterablePageable pageable, 
     		CrudOperations crudController) {
     	super(clazz, propertyName, pageable,  crudController);

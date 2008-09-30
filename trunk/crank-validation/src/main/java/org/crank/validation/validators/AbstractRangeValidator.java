@@ -3,6 +3,7 @@ package org.crank.validation.validators;
 
 
 /** Abstract class for range validation. */
+@SuppressWarnings("unchecked")
 public abstract class  AbstractRangeValidator extends AbstractValidator {
 
 	/* The min value for comparison. */

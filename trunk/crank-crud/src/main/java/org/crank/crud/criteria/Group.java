@@ -29,23 +29,23 @@ public class Group extends Criterion implements Iterable<Criterion>{
 		return orderBy;
 	}
 
-	public static Group and (Class baseType) {
+	public static Group and (Class<?> baseType) {
 		VerifiedGroup group =  new VerifiedGroup(); 
 		group.junction = Junction.AND;
 		return group;
 	}
 
-	public static Group or (Class baseType) {
+	public static Group or (Class<?> baseType) {
 		VerifiedGroup group =  new VerifiedGroup();
 		group.junction = Junction.OR;
 		return group;
 	}
 	
-	public static Group and (Class baseType, final Criterion... criteria) {
+	public static Group and (Class<?> baseType, final Criterion... criteria) {
 		return  new VerifiedGroup(baseType, Junction.AND, criteria);
 	}
 
-	public static Group and (Class baseType, final Map <String, Object> map) {
+	public static Group and (Class<?> baseType, final Map <String, Object> map) {
 		VerifiedGroup group =  new VerifiedGroup(); group.setJunction(Junction.AND);
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			group.add(Comparison.eq(entry.getKey(), entry.getValue()));
@@ -53,7 +53,7 @@ public class Group extends Criterion implements Iterable<Criterion>{
 		return group;
 	}
 
-	public static Group or (Class baseType, final Map <String, Object> map) {
+	public static Group or (Class<?> baseType, final Map <String, Object> map) {
 		VerifiedGroup group =  new VerifiedGroup(); group.setJunction(Junction.OR);
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			group.add(Comparison.eq(entry.getKey(), entry.getValue()));
@@ -61,7 +61,7 @@ public class Group extends Criterion implements Iterable<Criterion>{
 		return group;
 	}
 
-	public static Group and (Class baseType, final Map <String, Object> map, Operator operator) {
+	public static Group and (Class<?> baseType, final Map <String, Object> map, Operator operator) {
 		VerifiedGroup group =  new VerifiedGroup(); group.setJunction(Junction.AND);
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			group.add(new Comparison(entry.getKey(), operator, entry.getValue()));
@@ -69,7 +69,7 @@ public class Group extends Criterion implements Iterable<Criterion>{
 		return group;
 	}
 
-	public static Group or (Class baseType, final Map <String, Object> map, Operator operator) {
+	public static Group or (Class<?> baseType, final Map <String, Object> map, Operator operator) {
 		VerifiedGroup group =  new VerifiedGroup(); group.setJunction(Junction.OR);
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			group.add(new Comparison(entry.getKey(), operator, entry.getValue()));
@@ -77,7 +77,7 @@ public class Group extends Criterion implements Iterable<Criterion>{
 		return group;
 	}
 
-	public static Group or (Class baseType, final Criterion... criteria) {
+	public static Group or (Class<?> baseType, final Criterion... criteria) {
 		return  new Group(Junction.OR, criteria);
 	}
 

@@ -87,7 +87,7 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
      * the annotation meta-data from.
      */
     @Implements(interfaceClass=ValidatorMetaDataReader.class)
-    public List<ValidatorMetaData> readMetaData(Class clazz, String propertyName) {
+    public List<ValidatorMetaData> readMetaData(Class<?> clazz, String propertyName) {
 
         /* Generate a key to the cache based on the classname and the propertyName. */
         String propertyKey = clazz.getName() + "." + propertyName;
@@ -116,7 +116,7 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
      * @param validatorMetaDataList validatorMetaDataList
      * @return validator meta data
      */
-    private List<ValidatorMetaData> extractValidatorMetaData(Class clazz, String propertyName, List<ValidatorMetaData> validatorMetaDataList) {
+    private List<ValidatorMetaData> extractValidatorMetaData(Class<?> clazz, String propertyName, List<ValidatorMetaData> validatorMetaDataList) {
         /* If the meta-data was not found, then generate it. */
         if (validatorMetaDataList == null) { // if not found
             /* Read the annotations from the class based on the property name. */

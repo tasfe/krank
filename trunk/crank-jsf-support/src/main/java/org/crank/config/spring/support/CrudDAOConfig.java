@@ -1,10 +1,8 @@
 package org.crank.config.spring.support;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import static java.util.Properties.*;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -48,7 +46,6 @@ public abstract class CrudDAOConfig implements InitializingBean {
         }
     }
 
-	@SuppressWarnings("unchecked")
 	@ExternalBean
 	public abstract List<CrudManagedObject> managedObjects();
 

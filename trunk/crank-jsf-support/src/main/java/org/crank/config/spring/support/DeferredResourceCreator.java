@@ -6,5 +6,6 @@ import java.util.Map;
 
 
 public interface DeferredResourceCreator {
-    void createResource(Map map, CrudManagedObject cmo) throws Exception;
+    @SuppressWarnings("unchecked")
+	void createResource(Map map, CrudManagedObject cmo) throws Exception;
 }

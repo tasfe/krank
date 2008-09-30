@@ -45,7 +45,6 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 	protected Class<T> entityClass;
 	protected CrudState state;
 	protected T entity;
-	@SuppressWarnings("unchecked")
 	private Map<String, DetailController<? extends Serializable, ? extends Serializable>> children = new HashMap<String, DetailController<? extends Serializable, ? extends Serializable>>();
 	private ToggleSupport toggleSupport = new ToggleSupport();
 	private String name;
@@ -165,7 +164,6 @@ public abstract class CrudControllerBase<T extends Serializable, PK extends Seri
 		return state;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Map<String, DetailController<? extends Serializable, ? extends Serializable>> getChildren() {
 		return children;
 	}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class EnumDataSource<T> implements DataSource {
     private List list;
     
@@ -22,7 +23,6 @@ public class EnumDataSource<T> implements DataSource {
         return list;
     }
 
-	@SuppressWarnings("unchecked")
 	private void buildList() {
 
         try {

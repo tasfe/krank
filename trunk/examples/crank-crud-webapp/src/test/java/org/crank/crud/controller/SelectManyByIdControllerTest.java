@@ -42,8 +42,6 @@ public class SelectManyByIdControllerTest extends SpringTestNGBase {
 	@SuppressWarnings("unchecked")
 	private Map<String, GenericDao> repos;
 	
-//	@SuppressWarnings("unchecked")
-//	private Map<String, JsfCrudAdapter<Employee, Long>> cruds;
 	
 	
 	public void setTagController(JsfSelectManyByIdController<Employee, Tag, Long> controller) {

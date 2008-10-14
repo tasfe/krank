@@ -100,7 +100,9 @@ public class SelectManyRelationshipManager extends RelationshipManager {
 			Object object = iterator.next();
 			BeanWrapper wrapper = new BeanWrapperImpl(object);
 			Object propertyValue = wrapper.getPropertyValue(labelProperty);
-			builder.append(propertyValue.toString() + ", ");
+			String value = (propertyValue == null ? "" : propertyValue.toString());
+			builder.append(value);
+			builder.append(", ");
 		}
 		String string = builder.toString();
 		if (string.trim().length() >= 2) { 

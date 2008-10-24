@@ -1,0 +1,1 @@
+set MAVEN_OPTS=

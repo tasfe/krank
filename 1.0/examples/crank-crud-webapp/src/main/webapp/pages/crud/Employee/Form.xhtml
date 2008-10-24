@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:crank="http://www.googlecode.com/crank"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	>
+
+<ui:composition template="/templates/layout.xhtml">
+	<ui:define name="content">
+		<c:set var="crud" value="${employeeCrud.controller}" />
+		<c:set var="taskDetailController" value="${crud.children.tasks}" />
+		<c:set var="contactDetailController" value="${crud.children.contacts}" />
+		<c:set var="directReportDetailController"
+			value="${crud.children.directReports}" />
+
+
+		<crank:crudBreadCrumb crud="${crud}" />
+
+		<span class="pageTitle">Employee Entry</span>
+		<c:set var="ajaxRegion" value="employeeForm"/>
+
+		<a4j:form id="employeeForm" enctype="multipart/form-data">
+		
+			<!-- description, -->
+			<crank:form crud="${crud}" parentForm="employeeForm"
+				propertyNames="firstName,lastName,active,dob,age,phone,email,department,status,file,numberOfPromotions,type:Type"
+                    requiredMarker=" --required-- ">
+			
+				
+				<crank:compositePanel entity="${crud.entity.address}" name="address"
+					propertyNames="line_1,line2,zipCode" />
+
+				<crank:compositePanel entity="${crud.entity.parkingSpot}" name="parkingSpot"
+					propertyNames="spaceId" />
+
+
+				<crank:detailListing detailController="${taskDetailController}"
+					enableGroups="" 
+					formPropertyNames="name,category,startDate,endDate,complete"
+					propertyNames="name,category.name,startDate,endDate,complete">
+				</crank:detailListing>
+
+				<crank:detailListing
+					detailController="${directReportDetailController}" enableGroups=""
+					propertyNames="firstName,lastName,description,active,age,numberOfPromotions" />
+
+
+				<crank:detailListing detailController="${contactDetailController}"
+					enableGroups="" propertyNames="name,phone" />
+					
+				<crank:selectMany jsfSelectManyController="${employeeToRoleController}" 
+					propertyNames="name" parentForm="employeeForm" />
+
+				<crank:selectOneListing jsfSelectOneController="${employeeToSkillController}"
+					propertyNames="name" parentForm="employeeForm" />
+					
+			
+			</crank:form>
+			
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+
+<!-- 
+<br />
+<h4>Add Tasks</h4>
+<crank:detailForm detailController="${taskDetailController}"
+	enableGroups="" 
+	formPropertyNames="name,category,startDate,endDate,complete"
+	propertyNames="name,category.name,startDate,endDate,complete">
+	<h:outputText value="Add your tasks here and they show up in the listing below" />
+</crank:detailForm>
+<crank:detailTable detailController="${taskDetailController}"
+	propertyNames="name,category.name,startDate,endDate,complete">
+		<a4j:commandLink
+			action="#{hello.sayHello}" value="hello" >
+			<f:param name="id" value="${row.id}" />
+		</a4j:commandLink>
+</crank:detailTable>
+
+
+			<div>
+			Employee ID = ${crud.entity.id}
+			</div>
+			<crank:selectOneByIdListing jsfSelectOneController="#{tagOneController}" propertyNames="employeeId,name" />
+
+ -->
+</html>

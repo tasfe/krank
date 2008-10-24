@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:crank="http://www.googlecode.com/crank"
+	xmlns:crud="http://www.googlecode.com/crud">
+
+<ui:composition>
+
+	<c:set var="entityName" value="${crud:createLabel(detailController.name)}" />
+	<c:set var="crud" value="${jsfCrudAdapter.controller}"/>
+	
+	<!-- DEFINE VARIABLES -->
+	<c:if test="${empty id}">
+		<c:set var="id" value="ExportListing" />
+	</c:if>
+	<c:if test="${empty dataTableWidth}">
+		<c:set var="${dataTableWidth}" value="100%" />
+	</c:if>
+    <c:if test="${empty exportModel}">
+        <c:set var="exportModel" value="${jsfCrudAdapter.model}"/>
+    </c:if>
+
+    <!-- Style classes -->
+	<c:if test="${empty listingCommandButtonClass}">
+		<c:set var="listingCommandButtonClass" value="commandButtonClass" />
+	</c:if>
+	<c:if test="${empty listingCommandLinkClass}">
+		<c:set var="listingCommandLinkClass" value="commandLinkClass" />
+	</c:if>
+	<c:if test="${empty listingOutputTextClass}">
+		<c:set var="listingOutputTextClass" value="listingOutputText" />
+	</c:if>
+	<c:if test="${empty listingDataTableColumnClasses}">
+		<c:set var="listingDataTableColumnClasses"
+			value="dataTableColumnClasses" />
+	</c:if>
+	<c:if test="${empty listingDataTableRowClasses}">
+		<c:set var="listingDataTableRowClasses" value="oddRow, evenRow" />
+	</c:if>
+	<c:if test="${empty listingFooterClass}">
+		<c:set var="listingFooterClass" value="listingFooter" />
+	</c:if>
+	<c:if test="${empty listingImageButtonClass}">
+		<c:set var="listingImageButtonClass" value="paginationImageButton" />
+	</c:if>
+	<c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
+	
+	<h:panelGroup>
+	    <h:commandButton value="Export to Excel(tm)" action="#{controllerBean.exportHtmlTableAsExcel}"/>
+	    <h:commandButton action="LISTING" value="Back" />
+	</h:panelGroup>
+	
+	<t:buffer into="#{controllerBean.htmlBuffer}">		
+		<t:dataTable 
+			width="${dataTableWidth}" 
+			columnClasses="columnHeaderLeft"
+			rowClasses="${listingDataTableRowClasses}"
+			preserveDataModel="false"
+			value="${exportModel}" 
+			var="row">
+			
+			<c:forEach items="${pNames}" var="property">
+	           <t:column headerstyleClass="columnHeaderSimple">
+	               <f:facet name="header">
+	                   <h:outputText value="${crud:createLabel(property)}" styleClass="listingOutputText"/>
+	               </f:facet>
+	               <h:outputText value="#{row.object[property]}" styleClass="listingOutputText"/>
+	           </t:column>
+			</c:forEach>
+
+		</t:dataTable>
+	</t:buffer>
+       
+	<h:outputText value="#{controllerBean.htmlBuffer}" escape="false"/>
+
+</ui:composition>
+</html>

@@ -3,7 +3,7 @@
     <groupId>org.crank</groupId>
     <artifactId>crank-base</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>1.0RC3-SNAPSHOT</version>
     <name>Crank :: ROOT</name>
     <url>http://code.google.com/p/krank</url>
     <prerequisites>
@@ -58,8 +58,8 @@
     </developers>
 
     <scm>
-        <connection>scm:svn:https://krank.googlecode.com/svn/tags/mvn_release/1.0</connection>
-        <developerConnection>scm:svn:https://krank.googlecode.com/svn/tags/mvn_release/1.0</developerConnection>
+        <connection>scm:svn:http://krank.googlecode.com/svn/tags/mvn_release/crank-base-0.22-SNAPSHOT</connection>
+        <developerConnection>scm:svn:https://krank.googlecode.com/svn/tags/mvn_release/crank-base-0.20</developerConnection>
     </scm>
 
     <issueManagement>

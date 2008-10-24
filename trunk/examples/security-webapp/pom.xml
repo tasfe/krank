@@ -238,7 +238,7 @@
         <dependency>
             <groupId>org.crank.example</groupId>
             <artifactId>security-jpa-model</artifactId>
-            <version>1.0RC3-SNAPSHOT</version>
+            <version>1.0.1-SNAPSHOT</version>
         </dependency>
         
     </dependencies>

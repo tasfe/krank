@@ -3,7 +3,7 @@
     <groupId>org.crank</groupId>
     <artifactId>crank-base</artifactId>
     <packaging>pom</packaging>
-    <version>1.0RC3-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>Crank :: ROOT</name>
     <url>http://code.google.com/p/krank</url>
     <prerequisites>

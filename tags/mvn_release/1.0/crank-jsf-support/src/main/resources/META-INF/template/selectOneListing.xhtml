@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:crud="http://www.googlecode.com/crank/crud"
+	xmlns:crank="http://www.googlecode.com/crank">
+
+<ui:composition>
+	<c:set var="entityName" value="${jsfSelectOneController.propertyName}" />
+	<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
+	<c:set var="paginator" value="${jsfSelectOneController.paginator}"/>
+	<c:set var="entityClass" value="${jsfSelectOneController.entityClass}" />
+	<c:set var="parentClass" value="${jsfSelectOneController.controller.entityClass}" />
+	
+	
+	<!-- DEFINE VARIABLES -->
+	
+    <c:if test="${crud:isInCollection(property, requiredProperties)}">
+        <c:set var="required" value="${true}" />
+    </c:if>
+    
+    <c:if test="${empty required and not empty parentClass}">
+        <c:set var="required" value="${crud:isRequired(parentClass, entityName)}" />
+    </c:if>
+    
+    <c:if test="${empty requiredMarker}">
+        <c:set var="requiredMarker" value="*"/>
+    </c:if>
+	
+	<c:if test="${empty debug}">
+			<c:if test="#{empty initParam['crank.debug']}">
+				<c:set var="debug" value="false" />
+			</c:if>
+			<c:if test="#{not empty initParam['crank.debug']}">
+				<c:set var="debug" value="#{initParam['crank.debug']}" />
+			</c:if>
+	</c:if>
+
+	<c:if test="${empty selectManyClass}">
+		<c:set var="selectManyClass" value="paginationPageNumberLink" />
+	</c:if>
+	
+	<c:if test="${empty useLabel}">
+		<c:set var="useLabel" value="true" />
+	</c:if>
+	
+	<c:if test="${empty id}">
+		<c:set var="id" value="${entityName}PaginatedListing" />
+	</c:if>
+	<c:if test="${empty fieldId}">
+		<c:set var="fieldId" value="${id}_${entityName}" />
+	</c:if>
+	<c:if test="${empty autoLink}">
+		<c:set var="autoLink" value="${true}" />
+	</c:if>
+	<c:if test="${empty reRender}">
+		<c:set var="reRender" value="panelGroup${id}" />
+	</c:if>
+	<c:if test="${empty dataTableWidth}">
+		<c:set var="dataTableWidth" value="75%" />
+	</c:if>
+	<c:if test="${empty ajaxSingle}">
+		<c:set var="ajaxSingle" value="false" />
+	</c:if>
+	<c:if test="${empty readOnly}">
+		<c:set var="readOnly" value="false" />
+	</c:if>
+	<c:if test="${empty booleanImg}">
+		<c:set var="booleanImg" value="/images/check-sm.gif" />
+	</c:if>
+	<c:if test="${empty editImg}">
+		<c:set var="editImg" value="/images/edit-sm.gif" />
+	</c:if>
+	<c:if test="${empty delImg}">
+		<c:set var="delImg" value="/images/del-sm.gif" />
+	</c:if>
+	<c:if test="${empty selectAllImg}">
+		<c:set var="selectAllImg" value="/images/selected-sm.gif" />
+	</c:if>
+	<c:if test="${empty selectNoneImg}">
+		<c:set var="selectNoneImg" value="/images/unselected-sm.gif" />
+	</c:if>
+	<c:if test="${empty delAllImg}">
+		<c:set var="delAllImg" value="/images/del-alt-sm.gif" />
+	</c:if>
+	<c:if test="${empty immediate}">
+		<c:set var="immediate" value="true" />
+	</c:if>
+	<c:if test="${empty expandText}">
+		<c:set var="expandText" value="edit" />
+	</c:if>
+	<c:if test="${empty collapseText}">
+		<c:set var="collapseText" value="(cancel)" />
+	</c:if>
+	<c:if test="${empty showField}">
+		<c:set var="showField" value="true" />
+	</c:if>
+
+	<!-- Style classes -->
+	<c:if test="${empty listingCommandButtonClass}">
+		<c:set var="listingCommandButtonClass" value="commandButtonClass" />
+	</c:if>
+	<c:if test="${empty listingCommandLinkClass}">
+		<c:set var="listingCommandLinkClass" value="commandLinkClass" />
+	</c:if>
+	<c:if test="${empty listingOutputTextClass}">
+		<c:set var="listingOutputTextClass" value="listingOutputText" />
+	</c:if>
+	<c:if test="${empty listingDataTableColumnClasses}">
+		<c:set var="listingDataTableColumnClasses"
+			value="dataTableColumnClasses" />
+	</c:if>
+	<c:if test="${empty listingDataTableRowClasses}">
+		<c:set var="listingDataTableRowClasses" value="oddRow, evenRow" />
+	</c:if>
+	<c:if test="${empty listingFooterClass}">
+		<c:set var="listingFooterClass" value="listingFooter" />
+	</c:if>
+	<c:if test="${empty listingImageButtonClass}">
+		<c:set var="listingImageButtonClass" value="paginationImageButton" />
+	</c:if>
+	<c:if test="${empty valueBased}">
+		<c:set var="valueBased" value="false" />
+	</c:if>
+	<c:if test="${(empty boundValue) and valueBased}">
+		<c:set var="boundValue" value="${jsfSelectOneController.controller.entity[jsfSelectOneController.propertyName]}"/>
+	</c:if>
+	<c:if test="${(empty boundValue) and not valueBased}">
+		<c:set var="boundValue" value="${jsfSelectOneController.controller.entity[jsfSelectOneController.propertyName][jsfSelectOneController.labelProperty]}"/>
+	</c:if>
+
+
+    <c:if test="${debug}">        
+	<table>
+            	<tr><td>jsfSelectOneController</td><td>${jsfSelectOneController}</td></tr>
+            	<tr><td>jsfSelectOneController.controller</td><td>${jsfSelectOneController.controller}</td></tr>
+            	<tr><td>jsfSelectOneController.controller.entity</td><td>${jsfSelectOneController.controller.entity}</td></tr>
+            	<tr><td>jsfSelectOneController.propertyName</td><td>${jsfSelectOneController.propertyName}</td></tr>
+            	<tr><td>valueBased</td><td>${valueBased}</td></tr>
+            	<tr><td>boundValue</td><td>${boundValue}</td></tr>            	
+            	<tr><td>entityName</td><td>${entityName}</td></tr>            	
+            	<tr><td>entityNameLabel</td><td>${entityNameLabel}</td></tr>            	
+            	<tr><td>paginator</td><td>${paginator}</td></tr>            	
+            	<tr><td>entityClass</td><td>${entityClass}</td></tr>            	
+
+	</table>
+	</c:if>
+	
+	
+	<c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
+	
+	<a4j:outputPanel ajaxRendered="true">
+	
+		<c:choose>
+			<c:when test="${required}">
+               <c:set var="fieldLabel" disabled="${disabled}" value="${entityNameLabel}${requiredMarker}" />
+			</c:when>
+			<c:otherwise>
+			    <c:set var="fieldLabel" value="${entityNameLabel}" />
+			</c:otherwise>
+		</c:choose>
+
+		<h:panelGrid columns="3" columnClasses="nodeLeaf">
+
+			<h:outputLabel rendered="${useLabel}" for="${fieldId}" value="${fieldLabel}&nbsp;&nbsp;" styleClass="fieldLabel"/>
+
+			<!-- readonly="true" prevents submitting of this value which is OK since the action from the listing selects the value --> 
+			<h:inputText
+				readonly="true"
+				styleClass="fieldField"
+				value="${boundValue}"
+				rendered="${showField}"/>
+				
+
+					
+			<crank:node
+				entity="#{jsfSelectOneController}"
+				expandAction="showSelection"
+				expandText="${expandText}"
+				closeAction="cancel"
+				collapseText="${collapseText}"
+				fixedBranch="${true}"
+				layout="vertical"
+				reRender="${reRender}"
+				expandRendered="${not jsfSelectOneController.show}"
+				closeRendered="${jsfSelectOneController.show}"
+				expandToolTip="Click to select ${entityNameLabel}"
+				closeToolTip="Click to hide ${entityNameLabel} selection">
+			
+				<h:panelGrid id="listPanel${id}" columns="1" width="${dataTableWidth}" 
+				             rendered="${jsfSelectOneController.show}">
+					<crank:paginatorInForm paginator="${paginator}" 
+									 reRender="${reRender}" 
+									 ajaxSingle="${ajaxSingle}" 
+									 readOnly="true"
+									 immediate="${immediate}" />
+									 
+					<!-- imgAdjust="-xs"  -->
+		
+					<rich:dataTable width="${dataTableWidth}" id="dataTable${id}"
+						rows="#{paginator.itemsPerPage}" columnClasses="${listingDataTableColumnClasses}"
+						rowClasses="${listingDataTableRowClasses}"
+						value="#{jsfSelectOneController.model}" var="row">
+		
+						<f:facet name="header">
+							<rich:columnGroup>
+								<h:column>
+									<h:outputText value="" />
+								</h:column>
+								<c:forEach items="${pNames}" var="property">
+									<crank:header fieldName="${property}" paginator="${paginator}"
+										reRender="${reRender}" />
+								</c:forEach>
+							</rich:columnGroup>
+			
+						</f:facet>
+						
+						<f:facet name="footer">
+							<h:panelGroup styleClass="${listingFooterClass}">
+							<h:outputText
+								styleClass="${listingOutputTextClass}"
+								value="Page #{paginator.currentPageNumber+1} of #{paginator.pageCount == 0 ? 1 : paginator.pageCount}" />
+							</h:panelGroup>
+						</f:facet>
+						
+						<h:column>
+			   				<a4j:commandLink action="#{jsfSelectOneController.select}" value="select" styleClass="imageCenter" immediate="true" reRender="${selectReRender}"/>
+						</h:column>
+						
+						<c:forEach items="${pNames}" var="property">
+							<c:set var="renderAsText" value="${true}"/>
+							<c:set var="outputText" value=""/>
+							<h:column>
+								<c:choose>
+									<c:when test="${crud:contains(property, '.')}">
+										<c:choose>
+											<c:when test="${crud:isBoolean(entityClass,property)}">
+												<h:graphicImage value="${booleanImg}" rendered="${(row.map[property] == 'true')}" styleClass="imageCenter"/>
+												<c:set var="renderAsText" value="${false}"/>
+											</c:when>
+											<c:when test="${crud:isEnum(entityClass,property)}">
+												<c:set var="outputText" value="#{crud:createEnumLabel(row.map[property])}"/>
+											</c:when>
+											<c:otherwise>
+												<c:set var="outputText" value="#{row.map[property]}"/>
+											</c:otherwise>
+										</c:choose>
+									</c:when>
+									<c:otherwise>
+										<c:choose>
+											<c:when test="${crud:isBoolean(entityClass,property)}">
+												<h:graphicImage value="${booleanImg}" rendered="${(row.object[property] == 'true')}" styleClass="imageCenter"/>
+												<c:set var="renderAsText" value="${false}"/>
+											</c:when>
+											<c:when test="${crud:isEnum(entityClass,property)}">
+												<c:set var="outputText" value="#{crud:createEnumLabel(row.object[property])}"/>
+											</c:when>
+											<c:otherwise>
+												<c:set var="outputText" value="#{row.object[property]}"/>
+											</c:otherwise>
+										</c:choose>
+									</c:otherwise>
+								</c:choose>
+								<h:outputLink 
+									rendered="${renderAsText and autoLink and crud:isUrl(outputText)}"
+									value="${crud:formatAsUrl(outputText)}" 
+									title="Go to ${outputText}">
+									<h:outputText value="${outputText}" />
+								</h:outputLink>
+								<h:outputText
+									rendered="${renderAsText and not (autoLink and crud:isUrl(outputText))}" 
+									value="${outputText}" />
+							</h:column>
+						</c:forEach>				
+					</rich:dataTable>
+                    <a4j:commandLink action="#{jsfSelectOneController.unselect}" value="unselect" styleClass="imageCenter" immediate="true" reRender="${selectReRender}"/>                    
+                </h:panelGrid>
+			</crank:node>				
+			<ui:insert/>
+		</h:panelGrid>
+	</a4j:outputPanel>
+</ui:composition>
+</html>

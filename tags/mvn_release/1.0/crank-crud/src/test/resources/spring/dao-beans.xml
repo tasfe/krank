@@ -1,0 +1,110 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+
+    <bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <constructor-arg index="0" ref="transactionManager" />
+        <constructor-arg index="1">
+            <bean class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource"></bean>
+        </constructor-arg>
+    </bean>
+
+	<bean id="daoFactory"
+		class="org.crank.crud.GenericDaoFactory"
+		abstract="true">
+		<constructor-arg ref="transactionInterceptor"></constructor-arg>
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+ 	
+	<bean id="employeeDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.test.dao.EmployeeDAO</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.Employee</value>
+		</property>
+	</bean>
+
+	<bean id="personDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.GenericDao</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.Person</value>
+		</property>
+	</bean>
+
+    <bean id="departmentDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.test.dao.DepartmentDAO</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.Department</value>
+		</property>
+	</bean>	
+
+	<bean id="inquiryDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.GenericDao</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.Inquiry</value>
+		</property>
+	</bean>
+
+	<bean id="leadDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.GenericDao</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.Lead</value>
+		</property>
+	</bean>
+
+	<bean id="petClinicLeadDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.GenericDao</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.PetClinicLead</value>
+		</property>
+	</bean>
+	
+	<bean id="petStoreLeadDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.GenericDao</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.PetStoreLead</value>
+		</property>
+	</bean>
+	
+	<bean id="petStoreInquiryDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.GenericDao</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.PetStoreInquiry</value>
+		</property>
+	</bean>
+	
+	<bean id="petClinicInquiryDao" parent="daoFactory">
+		<property name="interface">
+			<value>org.crank.crud.GenericDao</value>
+		</property>
+		<property name="bo" >
+			<value>org.crank.crud.test.model.PetClinicInquiry</value>
+		</property>
+	</bean>
+
+	
+	<bean id="paginatableDataSource" class="org.crank.crud.controller.datasource.DaoPagingDataSource">
+		<property name="dao" ref="employeeDao"/>
+	</bean>
+	<bean id="paginatableFilterableDataSource" class="org.crank.crud.controller.datasource.DaoFilteringPagingDataSource">
+		<property name="dao" ref="employeeDao"/>
+	</bean>
+
+</beans>

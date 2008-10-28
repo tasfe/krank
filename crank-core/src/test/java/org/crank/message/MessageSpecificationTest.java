@@ -30,6 +30,14 @@ public class MessageSpecificationTest {
     }
 
     @Test
+    public void testCRANK108() {
+        //args
+        messageSpecification.setDetailMessage( "I love Canada." );
+        String string = messageSpecification.createDetailMessage();
+        assertEquals( "I love Canada.", string);
+    }   
+    
+    @Test
     public void testCreateDetailMessageWithArgs() {
         //args
         messageSpecification.setDetailMessage( "{foo.bar.withargs}" );
@@ -82,20 +90,20 @@ public class MessageSpecificationTest {
     
     @Test
     public void testDottedNoBraces() {
-		messageSpecification.setDetailMessage( "~foo.bar~" );
+		messageSpecification.setDetailMessage( "foo.bar" );
 		String string = messageSpecification.createDetailMessage(  );
 		assertNotNull(string);
 		assertEquals( "Yo Mtv raps!", string);
 		
-		messageSpecification.setDetailMessage( "~not.really.a.key~" );
+		messageSpecification.setDetailMessage( "not.really.a.key" );
 		string = messageSpecification.createDetailMessage(  );
 		assertNotNull(string);
 		assertEquals( "not.really.a.key", string);
 		
-		messageSpecification.setDetailMessage( "~also_not_really_a_key~" );
+		messageSpecification.setDetailMessage( "also_not_really_a_key" );
 		string = messageSpecification.createDetailMessage(  );
 		assertNotNull(string);
-		assertEquals( "~also_not_really_a_key~", string);
+		assertEquals( "also_not_really_a_key", string);
     }
     
 }

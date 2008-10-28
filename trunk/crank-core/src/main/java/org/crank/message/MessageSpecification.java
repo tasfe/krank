@@ -200,27 +200,28 @@ public class MessageSpecification implements Serializable {
     			message = key;
     		}
     	} 
-    	/* If the message starts with the expression marker
-    	 * resolve it as an Expression (Universal, JSF, OGNL, etc.)
-    	 */
-    	else if (key.startsWith(this.expressionMarker)) {
-    		message = resolveExpression(key).toString();
-    	} else {
-    		/* If it does not start with those markers see if 
-    		 * it has a ".". If it has a dot, try to look it up.
-    		 * If it is not found then just return the key as the message.
-    		 */
-    		if (key.contains(".")) {
-                try {
-                    key = key.substring(1, key.length()-1);
-                    message = lookupMessageInBundle(key, bundle, message);
-                } catch (MissingResourceException mre) {
-                    message = key;
-                }
-    		} else {
-    			message = key;
-    		}
-    	}
+    	/*
+		 * If the message starts with the expression marker resolve it as an
+		 * Expression (Universal, JSF, OGNL, etc.)
+		 */
+		else if (key.startsWith(this.expressionMarker)) {
+			message = resolveExpression(key).toString();
+		} else {
+			/*
+			 * If it does not start with those markers see if it has a ".". If
+			 * it has a dot, try to look it up. If it is not found then just
+			 * return the key as the message.
+			 */
+			if (key.contains(".")) {
+				try {
+					message = lookupMessageInBundle(key, bundle, message);
+				} catch (MissingResourceException mre) {
+					message = key;
+				}
+			} else {
+				message = key;
+			}
+		}
 		return message;
 	}
 

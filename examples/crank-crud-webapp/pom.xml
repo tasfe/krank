@@ -93,46 +93,10 @@
         <dependency>
             <groupId>org.crank</groupId>
             <artifactId>crank-jsf-support</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.el</groupId>
-                    <artifactId>el-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>el-impl</groupId>
-                    <artifactId>el-impl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.faces</groupId>
-                    <artifactId>jsf-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.faces</groupId>
-                    <artifactId>jsf-impl</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.crank</groupId>
             <artifactId>crank-jsf-validation</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.el</groupId>
-                    <artifactId>el-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>el-impl</groupId>
-                    <artifactId>el-impl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.faces</groupId>
-                    <artifactId>jsf-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.faces</groupId>
-                    <artifactId>jsf-impl</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

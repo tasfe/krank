@@ -130,30 +130,6 @@
         <dependency>
             <groupId>org.springframework.javaconfig</groupId>
             <artifactId>spring-javaconfig</artifactId>
-            <version>1.0-m2</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.aopalliance</groupId>
-                    <artifactId>aopalliance</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-web</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-webmvc</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-aop</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
-
     </dependencies>
 </project>

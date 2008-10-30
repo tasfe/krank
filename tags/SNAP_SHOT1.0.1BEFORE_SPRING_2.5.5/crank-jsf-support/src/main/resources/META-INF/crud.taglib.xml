@@ -1,0 +1,337 @@
+<?xml version="1.0"?>
+<!DOCTYPE facelet-taglib PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
+  "facelet-taglib_1_0.dtd">
+<facelet-taglib>
+	<namespace>http://www.googlecode.com/crank/crud</namespace>
+	<function>
+		<function-name>createLabelNoPlural</function-name>
+		<function-class>org.crank.web.jsf.support.JSFMessageUtils</function-class>
+		<function-signature>
+			java.lang.String createLabelNoPlural(java.lang.String)
+		</function-signature>
+	</function>
+
+	<function>
+		<function-name>createEnumLabel</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			java.lang.String generateEnumLabelValue(java.lang.String)
+		</function-signature>
+	</function>
+
+    <function>
+        <function-name>sysTime</function-name>
+        <function-class>org.crank.crud.controller.CrudUtils</function-class>
+        <function-signature>
+            long sysTime()
+        </function-signature>
+    </function>
+
+    <function>
+		<function-name>getEntityName</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			java.lang.String getEntityName(java.lang.Class)
+		</function-signature>
+	</function>
+
+
+
+    <function>
+		<function-name>isEnum</function-name>
+		<function-class>org.crank.core.TypeUtils</function-class>
+		<function-signature>
+			boolean isEnum(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isText</function-name>
+		<function-class>org.crank.core.TypeUtils</function-class>
+		<function-signature>
+			boolean isText(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isLargeText</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isLargeText(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isFile</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isFile(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+    <function>
+        <function-name>hasParentProperty</function-name>
+        <function-class>org.crank.crud.controller.CrudUtils</function-class>
+        <function-signature>
+            boolean hasParentProperty(java.lang.String)
+        </function-signature>
+    </function>
+    <function>
+        <function-name>getParentProperty</function-name>
+        <function-class>org.crank.crud.controller.CrudUtils</function-class>
+        <function-signature>
+            java.lang.String getParentProperty(java.lang.String)
+        </function-signature>
+    </function>
+    <function>
+        <function-name>isParentManyToOne</function-name>
+        <function-class>org.crank.crud.controller.CrudUtils</function-class>
+        <function-signature>
+            boolean  isParentManyToOne(java.lang.Class, java.lang.String)
+        </function-signature>
+    </function>
+    <function>
+		<function-name>textSize</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			int textSize(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>columnSize</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			int columnSize(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isBoolean</function-name>
+		<function-class>org.crank.core.TypeUtils</function-class>
+		<function-signature>
+			boolean isBoolean(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isDate</function-name>
+		<function-class>org.crank.core.TypeUtils</function-class>
+		<function-signature>
+			boolean isDate(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>contains</function-name>
+		<function-class>org.crank.core.StringUtils</function-class>
+		<function-signature>
+			boolean contains(java.lang.String, java.lang.String)
+		</function-signature>
+	</function>	
+	<function>
+		<function-name>replace</function-name>
+		<function-class>org.crank.core.StringUtils</function-class>
+		<function-signature>
+			java.lang.String replace(java.lang.String, java.lang.String, java.lang.String)
+		</function-signature>
+	</function>	
+	<function>
+		<function-name>split</function-name>
+		<function-class>org.crank.core.StringUtils</function-class>
+		<function-signature>
+			java.util.List split(java.lang.String)
+		</function-signature>
+	</function>	
+	<function>
+		<function-name>splitProperty</function-name>
+		<function-class>org.crank.core.StringUtils</function-class>
+		<function-signature>
+			java.util.List splitProperty(java.lang.String)
+		</function-signature>
+	</function>	
+	<function>
+		<function-name>getObjectId</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			java.lang.String getObjectId(org.crank.crud.controller.DetailController, java.lang.Object) 
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isManyToOne</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isManyToOne(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isManyToOneRequired</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isManyToOne(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isManyToOneOptional</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isManyToOneOptional(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+
+	<function>
+		<function-name>isOneToOne</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isOneToOne(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isEnumerated</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isEnumerated(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isRequired</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isRequired(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>getToolTip</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			java.lang.String getToolTip(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>getLabelToolTip</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			java.lang.String getLabelToolTip(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>getPropertyEntityName</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			java.lang.String getPropertyEntityName(java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>capitalize</function-name>
+		<function-class>org.crank.core.StringUtils</function-class>
+		<function-signature>
+			java.lang.String capitalize(java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>unCapitalize</function-name>
+		<function-class>org.crank.core.StringUtils</function-class>
+		<function-signature>
+			java.lang.String unCapitalize(java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>numRowsToDisplay</function-name>
+		<function-class>org.crank.crud.jsf.support.CrudUtils</function-class>
+		<function-signature>
+			java.lang.Long getNumRowsToDisplay(java.lang.Long, java.lang.Integer) 
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isInCollection</function-name>
+		<function-class>org.crank.core.TypeUtils</function-class>
+		<function-signature>
+			boolean isInCollection(java.lang.Object, java.lang.Object) 
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isUrl</function-name>
+		<function-class>org.crank.core.TypeUtils</function-class>
+		<function-signature>
+			boolean isUrl(java.lang.Object) 
+		</function-signature>
+	</function>
+	<function>
+		<function-name>formatAsUrl</function-name>
+		<function-class>org.crank.crud.jsf.support.CrudUtils</function-class>
+		<function-signature>
+			java.lang.String formatAsUrl(java.lang.String)
+		</function-signature>
+	</function>
+	<tag>
+		<tag-name>select</tag-name>
+		<component>
+			<component-type>
+				org.crank.javax.faces.SelectOne
+			</component-type>
+			<renderer-type>org.crank.javax.faces.Listbox</renderer-type>
+		</component>
+	</tag>
+	<tag>
+		<tag-name>selectOneMenu</tag-name>
+		<component>
+			<component-type>
+				org.crank.javax.faces.SelectOneMenu
+			</component-type>
+			<renderer-type>org.crank.javax.faces.Menu</renderer-type>
+		</component>
+	</tag>
+	
+	<function>
+		<function-name>createLabel</function-name>
+		<function-class>org.crank.web.jsf.support.JSFMessageUtils</function-class>
+		<function-signature>
+			java.lang.String createLabel(java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>createLabelWithNameSpace</function-name>
+		<function-class>org.crank.web.jsf.support.JSFMessageUtils</function-class>
+		<function-signature>
+			java.lang.String createLabelWithNameSpace(java.lang.String, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>createToolTipWithNameSpace</function-name>
+		<function-class>org.crank.web.jsf.support.JSFMessageUtils</function-class>
+		<function-signature>
+			java.lang.String createToolTipWithNameSpace(java.lang.String, java.lang.String, java.lang.Class)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>createLabelToolTipWithNameSpace</function-name>
+		<function-class>org.crank.web.jsf.support.JSFMessageUtils</function-class>
+		<function-signature>
+			java.lang.String createLabelToolTipWithNameSpace(java.lang.String, java.lang.String, java.lang.Class)
+		</function-signature>
+	</function>
+
+	<function>
+		<function-name>isFilterPropertyBoolean</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isFilterPropertyBoolean(boolean, java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+
+	<function>
+		<function-name>isFilterPropertyEnum</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isFilterPropertyEnum(boolean, java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isFilterPropertyDate</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isFilterPropertyDate(boolean, java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+	<function>
+		<function-name>isFilterPropertyText</function-name>
+		<function-class>org.crank.crud.controller.CrudUtils</function-class>
+		<function-signature>
+			boolean isFilterPropertyText(boolean, java.lang.Class, java.lang.String)
+		</function-signature>
+	</function>
+
+</facelet-taglib>

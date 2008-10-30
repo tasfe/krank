@@ -111,10 +111,6 @@
             <artifactId>spring-javaconfig</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jpa</artifactId>
-        </dependency>
-        <dependency>
             <groupId>aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
         </dependency>

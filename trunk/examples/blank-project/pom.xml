@@ -6,7 +6,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>blank-project</artifactId>
-    <name>Crank :: Crud :: Sample Webapp</name>
+    <name>Crank :: Crud :: Blank Project Webapp</name>
     <version>1.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <url>http://code.google.com/p/krank</url>

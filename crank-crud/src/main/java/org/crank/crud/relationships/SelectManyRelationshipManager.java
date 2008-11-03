@@ -50,6 +50,10 @@ public class SelectManyRelationshipManager extends RelationshipManager {
 		/* Create a set based on the childCollection. */
 		Set currentValuesInChildCollection = toSet(childCollection);
 		
+		if (childCollectioniterator == null || currentValuesInChildCollection  ==  null) {
+			return;
+		}
+		
 		
 		/*
 		 * Iterate through the children objects that are already in the parent object, e.g.,
@@ -115,6 +119,9 @@ public class SelectManyRelationshipManager extends RelationshipManager {
 
 	@SuppressWarnings("unchecked")
 	private Iterator iterator(Object collection) {
+		if (collection == null) {
+			return null;
+		}
         logger.debug("iterator");
         Iterator iterator = null;
 		if (collection instanceof Map) {
@@ -129,6 +136,9 @@ public class SelectManyRelationshipManager extends RelationshipManager {
 
 	@SuppressWarnings("unchecked")
 	private Set toSet(Object collection) {
+		if (collection==null) {
+			return null;
+		}
 		if (collection instanceof Map) {
 			return new LinkedHashSet(((Map)collection).values());
 		} else if (collection instanceof Set) {

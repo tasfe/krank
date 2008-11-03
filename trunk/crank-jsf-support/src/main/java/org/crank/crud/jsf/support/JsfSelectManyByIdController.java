@@ -2,12 +2,15 @@ package org.crank.crud.jsf.support;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 
 import org.crank.crud.controller.Row;
 import org.crank.crud.controller.SelectManyByIdController;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 
 
 
@@ -37,31 +40,27 @@ public class JsfSelectManyByIdController<PT extends Serializable, T extends Seri
 
     @SuppressWarnings("unchecked")
 	public String getSelectedString() {
-        DataModel model = getAvailableChoices();
-        StringBuilder builder = new StringBuilder();
-        List<Row> availableTags = (List<Row>) model.getWrappedData();
-        int hits = 0;
-        for (Row row : availableTags) {
-            if (!row.isSelected()){
-                 continue;
-            }
-            hits++;
-            String label;
-            label = (String) row.get(selectedProperty);
-            if (label == null) {
-               label = (String) row.get("id");
+ 
+    	int hits = 0;
+    	StringBuilder builder = new StringBuilder();
+    	Set<T> children = super.getSelectedChildren();
+    	
+    	for(Object child : children){
+    		hits++;
+    		
+    		BeanWrapper wrapper = new BeanWrapperImpl (child);
+    		Object propertyValue = wrapper.getPropertyValue(selectedProperty);
+
+    		if (propertyValue == null) {
+    			 propertyValue = wrapper.getPropertyValue("id");
             }
 
-            if (label == null) {
-                label = "UNABLE TO RETRIEVE PROPERTY....";
-            }
-
-            builder.append(label + ", ");
-        }
-        if (hits > 0) {
-            return builder.toString().substring(0,builder.length()-2);
+    		builder.append(propertyValue + ", ");
+    	}
+    	if (hits > 0) {
+             return builder.toString().substring(0,builder.length()-2);
         } else {
-            return "<<empty>>";
+             return "<<empty>>";
         }
     }
 

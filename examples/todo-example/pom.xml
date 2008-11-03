@@ -10,8 +10,19 @@
     <version>1.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <url>http://code.google.com/p/krank</url>
-
-    <dependencies>
+   <dependencies>
+        <dependency>
+            <groupId>org.richfaces.ui</groupId>
+            <artifactId>richfaces-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.richfaces.framework</groupId>
+            <artifactId>richfaces-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.richfaces.framework</groupId>
+            <artifactId>richfaces-impl</artifactId>
+        </dependency>
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
@@ -88,17 +99,21 @@
             <artifactId>crank-jsf-validation</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring</artifactId>
-        </dependency>
-        <dependency>
             <groupId>aopalliance</groupId>
             <artifactId>aopalliance</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jpa_3.0_spec</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.javaconfig</groupId>
             <artifactId>spring-javaconfig</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+        </dependency>        
         <dependency>
             <groupId>aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
@@ -131,6 +146,7 @@
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.5</version>
                 <dependencies>
                     <dependency>
                         <groupId>log4j</groupId>
@@ -141,12 +157,12 @@
                     <dependency>
                         <groupId>javax.faces</groupId>
                         <artifactId>jsf-api</artifactId>
-                        <version>1.2_04</version>
+                        <version>1.2_04-p01</version>
                     </dependency>
                     <dependency>
                         <groupId>javax.faces</groupId>
                         <artifactId>jsf-impl</artifactId>
-                        <version>1.2_04</version>
+                        <version>1.2_04-p01</version>
                     </dependency>
                 </dependencies>
             </plugin>

@@ -427,7 +427,7 @@
 				<groupId>org.springframework.javaconfig</groupId>
 				<artifactId>spring-javaconfig</artifactId>
 				<version>1.0.0.m3</version>
-				<exclusions>
+            <exclusions>
 					<exclusion>
 						<groupId>asm</groupId>
 						<artifactId>asm-commons</artifactId>
@@ -456,7 +456,19 @@
 						<groupId>org.springframework</groupId>
 						<artifactId>spring-aop</artifactId>
 					</exclusion>
-				</exclusions>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-core</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-context</artifactId>
+					</exclusion>										
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-beans</artifactId>
+					</exclusion>					
+			    </exclusions> 
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>

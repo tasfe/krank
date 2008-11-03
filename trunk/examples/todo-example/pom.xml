@@ -17,10 +17,6 @@
         </dependency>
         <dependency>
             <groupId>org.richfaces.framework</groupId>
-            <artifactId>richfaces-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.richfaces.framework</groupId>
             <artifactId>richfaces-impl</artifactId>
         </dependency>
         <dependency>

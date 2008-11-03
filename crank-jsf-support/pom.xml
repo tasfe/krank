@@ -25,10 +25,6 @@
             <artifactId>richfaces-ui</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.richfaces.framework</groupId>
-            <artifactId>richfaces-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
         </dependency>

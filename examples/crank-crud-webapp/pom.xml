@@ -11,13 +11,9 @@
     <packaging>war</packaging>
     <url>http://code.google.com/p/krank</url>
     <dependencies>
-        <dependency>
-            <groupId>org.richfaces.ui</groupId>
-            <artifactId>richfaces-ui</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.richfaces.framework</groupId>
-            <artifactId>richfaces-api</artifactId>
+		<dependency>
+				<groupId>org.richfaces.ui</groupId>
+				<artifactId>richfaces-ui</artifactId>
         </dependency>
         <dependency>
             <groupId>org.richfaces.framework</groupId>

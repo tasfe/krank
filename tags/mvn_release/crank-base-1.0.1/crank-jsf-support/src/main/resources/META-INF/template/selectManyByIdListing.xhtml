@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:crud="http://www.googlecode.com/crank/crud"
+	xmlns:crank="http://www.googlecode.com/crank">
+
+<ui:composition>
+	<c:set var="entityName" value="${jsfSelectManyController.relationshipName}" />
+	<c:set var="paginator" value="${jsfSelectManyController.paginator}"/>
+	<c:set var="entityClass" value="${jsfSelectManyController.entityClass}" />
+	
+	<c:if test="${empty entityNameLabel}">
+		<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
+	</c:if>	
+	
+	<div id="editTip${entityName}" class="toolTip">Edit this record</div>
+	<div id="disableTip${entityName}" class="toolTip">Disable this record</div>
+	
+	<!-- DEFINE VARIABLES -->
+	
+	<c:if test="${empty immediate}">
+		<c:set var="immediate" value="true" />
+	</c:if>	
+	<c:if test="${empty selectManyClass}">
+		<c:set var="selectManyClass" value="paginationPageNumberLink" />
+	</c:if>
+	
+	<c:if test="${empty debug}">
+			<c:if test="#{empty initParam['crank.debug']}">
+				<c:set var="debug" value="false" />
+			</c:if>
+			<c:if test="#{not empty initParam['crank.debug']}">
+				<c:set var="debug" value="#{initParam['crank.debug']}" />
+			</c:if>
+	</c:if>
+	
+	<c:if test="${empty id}">
+		<c:set var="id" value="${entityName}PaginatedListing" />
+	</c:if>
+	<c:set var="selectedRowsGroupId" value="selManyIdCbGroup${id}" />
+	<c:if test="${empty autoLink}">
+		<c:set var="autoLink" value="${true}" />
+	</c:if>
+	<c:if test="${empty reRender}">
+		<c:set var="reRender" value="panelGroup${id}" />
+	</c:if>
+	<c:if test="${empty dataTableWidth}">
+		<c:set var="dataTableWidth" value="75%" />
+	</c:if>
+	<c:if test="${empty ajaxSingle}">
+		<c:set var="ajaxSingle" value="false" />
+	</c:if>
+	<c:if test="${empty readOnly}">
+		<c:set var="readOnly" value="false" />
+	</c:if>
+	<c:if test="${empty booleanImg}">
+		<c:set var="booleanImg" value="/images/check-sm.gif" />
+	</c:if>
+	<c:if test="${empty editImg}">
+		<c:set var="editImg" value="/images/edit-sm.gif" />
+	</c:if>
+	<c:if test="${empty delImg}">
+		<c:set var="delImg" value="/images/del-sm.gif" />
+	</c:if>
+	<c:if test="${empty selectAllImg}">
+		<c:set var="selectAllImg" value="/images/selected-sm.gif" />
+	</c:if>
+	<c:if test="${empty selectNoneImg}">
+		<c:set var="selectNoneImg" value="/images/unselected-sm.gif" />
+	</c:if>
+	<c:if test="${empty delAllImg}">
+		<c:set var="delAllImg" value="/images/del-alt-sm.gif" />
+	</c:if>
+
+	<!-- Style classes -->
+	<c:if test="${empty listingCommandButtonClass}">
+		<c:set var="listingCommandButtonClass" value="commandButtonClass" />
+	</c:if>
+	<c:if test="${empty listingCommandLinkClass}">
+		<c:set var="listingCommandLinkClass" value="commandLinkClass" />
+	</c:if>
+	<c:if test="${empty listingOutputTextClass}">
+		<c:set var="listingOutputTextClass" value="listingOutputText" />
+	</c:if>
+	<c:if test="${empty listingDataTableColumnClasses}">
+		<c:set var="listingDataTableColumnClasses"
+			value="dataTableColumnClasses" />
+	</c:if>
+	<c:if test="${empty listingDataTableRowClasses}">
+		<c:set var="listingDataTableRowClasses" value="oddRow, evenRow" />
+	</c:if>
+	<c:if test="${empty listingFooterClass}">
+		<c:set var="listingFooterClass" value="listingFooter" />
+	</c:if>
+	<c:if test="${empty listingImageButtonClass}">
+		<c:set var="listingImageButtonClass" value="paginationImageButton" />
+	</c:if>
+	<c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
+	
+
+    <c:if test="${debug}">        
+	<table>
+				
+				<tr><td>jsfSelectManyController.show</td><td>${jsfSelectManyController.show}</td></tr>
+            	<tr><td>entityName</td><td>${entityName}</td></tr>            	
+            	<tr><td>entityNameLabel</td><td>${entityNameLabel}</td></tr>            	
+            	<tr><td>paginator</td><td>${paginator}</td></tr>            	
+            	<tr><td>entityClass</td><td>${entityClass}</td></tr>
+            	<tr><td>jsfSelectManyController.availableChoices</td><td>${jsfSelectManyController.availableChoices}</td></tr>
+            	<tr><td>jsfSelectManyController.availableChoices.wrappedData</td><td>${jsfSelectManyController.availableChoices.wrappedData}</td></tr>
+            	<tr><td>empty jsfSelectManyController.availableChoices.wrappedData</td><td>${empty jsfSelectManyController.availableChoices.wrappedData}</td></tr>
+				<tr><td>null jsfSelectManyController.availableChoices.wrappedData</td><td>${jsfSelectManyController.availableChoices.wrappedData == null}</td></tr>            	
+            	<tr><td>jsfSelectManyController.parentCrudController</td><td>${jsfSelectManyController.parentCrudController}</td></tr>
+	</table>
+	</c:if>
+
+
+	<a4j:outputPanel ajaxRendered="true" >
+	
+		<h:panelGroup rendered="${jsfSelectManyController.rendered}">
+
+		<span class="${selectManyClass}">${entityNameLabel}: ${jsfSelectManyController.selectedString}</span>
+        <a4j:commandLink rendered="${not jsfSelectManyController.show}"
+		                 action="${jsfSelectManyController.showSelection}" 
+		                 value="..."
+		                 immediate="true"
+		                 title="Show the selection window for ${entityNameLabel}"/>
+
+
+		<h:panelGrid id="listPanel${id}" columns="1" width="${dataTableWidth}" 
+		             rendered="${jsfSelectManyController.show}">
+			<crank:paginatorInForm paginator="${paginator}" 
+							 reRender="${reRender}" 
+							 ajaxSingle="${ajaxSingle}" 
+							 readOnly="true"
+							 immediate="${immediate}"
+							 />
+							 
+			<!-- imgAdjust="-xs"  -->
+
+			<rich:dataTable width="${dataTableWidth}" id="dataTable${id}"
+				rows="#{paginator.itemsPerPage}" columnClasses="${listingDataTableColumnClasses}"
+				rowClasses="${listingDataTableRowClasses}"
+				value="#{jsfSelectManyController.availableChoices}" var="row">
+
+				<f:facet name="header">
+					<rich:columnGroup>
+						<h:column>
+							<crank:commandLink id="selectAll${id}"
+											   onclick="toggleAllCheckBoxesGrouped('${parentForm}','${selectedRowsGroupId}',true);"
+							                   toolTipText="Click to select all rows">
+							                   
+								<h:graphicImage id="selectAll${id}Img" value="${selectAllImg}" border="0" styleClass="${listingImageButtonClass}"/>
+							</crank:commandLink>
+							<crank:commandLink id="selectNone${id}"
+							                   onclick="toggleAllCheckBoxesGrouped('${parentForm}','${selectedRowsGroupId}',false);"
+							                   toolTipText="Click to un-select all rows">
+								<h:graphicImage id="selectNone${id}Img" value="${selectNoneImg}" border="0" styleClass="${listingImageButtonClass}"/>
+							</crank:commandLink>
+							
+						</h:column>
+						<c:forEach items="${pNames}" var="property">
+							<crank:header fieldName="${property}" paginator="${paginator}"
+								reRender="${reRender}" />
+						</c:forEach>
+					</rich:columnGroup>
+	
+				</f:facet>
+				
+				<f:facet name="footer">
+					<h:panelGroup styleClass="${listingFooterClass}">
+						<h:outputText
+							styleClass="${listingOutputTextClass}"
+							value="Page #{paginator.currentPageNumber+1} of #{paginator.pageCount == 0 ? 1 : paginator.pageCount}" />
+					</h:panelGroup>
+				</f:facet>
+				
+				<h:column>
+	   				<h:selectBooleanCheckbox id="${selectedRowsGroupId}${row.object.id}" value="#{row.selected}" styleClass="imageCenter"/>
+				</h:column>
+				
+				<c:forEach items="${pNames}" var="property">
+					<c:set var="renderAsText" value="${true}"/>
+					<c:set var="outputText" value=""/>
+					<h:column>
+						<c:choose>
+							<c:when test="${crud:contains(property, '.')}">
+								<c:choose>
+									<c:when test="${crud:isBoolean(entityClass,property)}">
+										<h:graphicImage value="${booleanImg}" rendered="${(row.map[property] == 'true')}" styleClass="imageCenter"/>
+										<c:set var="renderAsText" value="${false}"/>
+									</c:when>
+									<c:when test="${crud:isEnum(entityClass,property)}">
+										<c:set var="outputText" value="#{crud:createEnumLabel(row.map[property])}"/>
+									</c:when>
+									<c:otherwise>
+										<c:set var="outputText" value="#{row.map[property]}"/>
+									</c:otherwise>
+								</c:choose>
+							</c:when>
+							<c:otherwise>
+								<c:choose>
+									<c:when test="${crud:isBoolean(entityClass,property)}">
+										<h:graphicImage value="${booleanImg}" rendered="${(row.object[property] == 'true')}" styleClass="imageCenter"/>
+										<c:set var="renderAsText" value="${false}"/>
+									</c:when>
+									<c:when test="${crud:isEnum(entityClass,property)}">
+										<c:set var="outputText" value="#{crud:createEnumLabel(row.object[property])}"/>
+									</c:when>
+									<c:otherwise>
+										<c:set var="outputText" value="#{row.object[property]}"/>
+									</c:otherwise>
+								</c:choose>
+							</c:otherwise>
+						</c:choose>
+						<h:outputLink 
+							rendered="${renderAsText and autoLink and crud:isUrl(outputText)}"
+							value="${crud:formatAsUrl(outputText)}" 
+							title="Go to ${outputText}">
+							<h:outputText value="${outputText}" />
+						</h:outputLink>
+						<h:outputText
+							rendered="${renderAsText and not (autoLink and crud:isUrl(outputText))}" 
+							value="${outputText}" />
+					</h:column>
+				</c:forEach>				
+			</rich:dataTable>
+		</h:panelGrid>
+		<a4j:commandLink action="${jsfSelectManyController.process}" 
+						 rendered="${jsfSelectManyController.show}"
+						 value="Save/Update"
+						 styleClass="${selectManyClass}"
+						 title="Add/Remove items to ${entityNameLabel}"
+						 />
+		<a4j:commandLink action="${jsfSelectManyController.cancel}"
+						 rendered="${jsfSelectManyController.show}"
+						 value="Close/Cancel"
+						 styleClass="${selectManyClass}"
+						 immediate="true"
+						 title="Hides the ${entityNameLabel} selection window"
+						 />
+		</h:panelGroup>
+		</a4j:outputPanel>
+</ui:composition>
+</html>

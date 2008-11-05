@@ -40,6 +40,9 @@
 	<c:if test="${empty resetImg}">
 		<c:set var="resetImg" value="/images/reset${imgAdjust}.gif"/>
 	</c:if>
+	<c:if test="${empty refreshImg}">
+		<c:set var="refreshImg" value="/images/refresh${imgAdjust}.gif"/>
+	</c:if>	
 	<c:if test="${empty resetDisabledImg}">
 		<c:set var="resetDisabledImg" value="/images/reset-disabled${imgAdjust}.gif"/>
 	</c:if>
@@ -170,7 +173,7 @@
 	</c:if>
 	
 	<a4j:outputPanel ajaxRendered="true">
-	<h:panelGroup id="paginatorRegion${id}">
+	<a4j:region id="paginatorRegion${id}">
 	<h:panelGrid id="paginator${id}" columns="2">
 	
 		
@@ -234,6 +237,16 @@
 					<h:graphicImage value="${resetImg}" border="0" styleClass="${listingImageButtonClass}"/>
 			</crank:commandLink>
 			<h:graphicImage rendered="#{(not paginator.sorting) and (not paginator.filtering)}" value="${resetDisabledImg}" border="0" styleClass="${listingImageButtonClass}"/>
+
+			<crank:commandLink 
+				id="refreshAll${id}"
+				entity="${paginator}"
+				action="reset"
+				ajaxSingle="${ajaxSingle}"
+				toolTipText="Refresh listing"
+				reRender="${reRender}">
+					<h:graphicImage value="${refreshImg}" border="0" styleClass="${listingImageButtonClass}"/>
+			</crank:commandLink>
 
 			<h:commandLink 
 				id="export${id}"
@@ -390,10 +403,11 @@
 					<a4j:support action="#{paginator.reset}" event="onchange" ajaxSingle="true" reRender="${refreshPaginator}" /> 
 				</h:selectOneMenu>
 			</c:if>
-			
+			<a4j:status startText="Paginating..." stopText="" for="paginatorRegion${id}"
+					startStyleClass="statusStartStyleClass" stopStyleClass="statusStopStyleClass" />	
 		</h:panelGroup>
 	</h:panelGrid>
-	</h:panelGroup>
+	</a4j:region>
 	
 	</a4j:outputPanel>
 </ui:composition>

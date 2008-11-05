@@ -11,6 +11,9 @@ import org.crank.core.StringUtils;
 import org.crank.core.spring.support.SpringBeanWrapperPropertiesUtil;
 import org.crank.crud.GenericDao;
 import org.crank.crud.controller.CrudController;
+import org.crank.crud.controller.CrudControllerListener;
+import org.crank.crud.controller.CrudControllerListenerAdapter;
+import org.crank.crud.controller.CrudEvent;
 import org.crank.crud.controller.CrudManagedObject;
 import org.crank.crud.controller.FilterablePageable;
 import org.crank.crud.controller.FilteringPaginator;
@@ -31,6 +34,16 @@ import org.springframework.transaction.interceptor.TransactionInterceptor;
 
 
 public abstract class CrudJSFConfig implements InitializingBean {
+	
+	private boolean autoWireCrudToPaginators = true;
+
+	public boolean isAutoWireCrudToPaginators() {
+		return autoWireCrudToPaginators;
+	}
+
+	public void setAutoWireCrudToPaginators(boolean autoWireCrudToPaginators) {
+		this.autoWireCrudToPaginators = autoWireCrudToPaginators;
+	}
 
 	public void afterPropertiesSet() throws Exception {
 	}
@@ -60,6 +73,27 @@ public abstract class CrudJSFConfig implements InitializingBean {
                        /* Set the entity class into the crudController. */
                        crudControllerTarget.setEntityClass( mo.getEntityType() );
 
+                       if (autoWireCrudToPaginators) {
+                    	   final FilterablePageable filterablePageable = pagers().get(mo.getName());
+                    	   if (filterablePageable != null) {
+                    		   crudControllerTarget.addCrudControllerListener(new CrudControllerListenerAdapter() {
+								
+                    			public void afterCreate(CrudEvent event) {
+                    				filterablePageable.reset();
+								}
+
+								public void afterDelete(CrudEvent event) {
+									filterablePageable.reset();
+								}
+
+								public void afterUpdate(CrudEvent event) {
+									filterablePageable.reset();
+								}
+
+									
+								});
+                    	   }
+                       }
 
                        /* Inject the repositories. */
                        crudControllerTarget.setDao( repos().get( mo.getName() ) );

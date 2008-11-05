@@ -35,6 +35,9 @@
 	<c:if test="${empty clearSortsDisabledImg}">
 		<c:set var="clearSortsDisabledImg" value="/images/clear-sorts-disabled${imgAdjust}.gif"/>
 	</c:if>
+	<c:if test="${empty refreshImg}">
+		<c:set var="refreshImg" value="/images/refresh${imgAdjust}.gif"/>
+	</c:if>
 	<c:if test="${empty resetImg}">
 		<c:set var="resetImg" value="/images/reset${imgAdjust}.gif"/>
 	</c:if>
@@ -229,6 +232,18 @@
 					<h:graphicImage value="${resetImg}" border="0" styleClass="${listingImageButtonClass}"/>
 			</crank:commandLink>
 			<h:graphicImage rendered="#{(not paginator.sorting) and (not paginator.filtering)}" value="${resetDisabledImg}" border="0" styleClass="${listingImageButtonClass}"/>
+
+
+			
+			<crank:commandLink 
+				id="refreshAll${id}"
+				entity="${paginator}"
+				action="reset"
+				ajaxSingle="${ajaxSingle}"
+				toolTipText="Refresh listing"
+				reRender="${reRender}">
+					<h:graphicImage value="${refreshImg}" border="0" styleClass="${listingImageButtonClass}"/>
+			</crank:commandLink>
 
 			<h:commandLink 
 				id="export${id}"

@@ -7,7 +7,7 @@
 	<name>Crank :: ROOT</name>
 	<url>http://code.google.com/p/krank</url>
 	<prerequisites>
-		<maven>2.0.8</maven><!-- todo change this to 2.0.9 after you upgrade -->
+		<maven>2.0.9</maven>
 	</prerequisites>
 
 	<distributionManagement>
@@ -169,7 +169,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-								<!-- <version>2.5</version> change this back for mvn 2.0.9 -->
+				<version>2.5</version>
 			</plugin>
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
@@ -320,6 +320,21 @@
 				<artifactId>crank-crud</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.crank</groupId>
+				<artifactId>crank-jsf-support</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.crank</groupId>
+				<artifactId>crank-validation</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.crank</groupId>
+				<artifactId>crank-springmvc-validation</artifactId>
+				<version>${project.version}</version>
+			</dependency>			
 			<dependency>
 				<groupId>org.crank</groupId>
 				<artifactId>crank-crud</artifactId>

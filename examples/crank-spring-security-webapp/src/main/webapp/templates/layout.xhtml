@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:s="http://www.crank.org/springsecurity/tags"         
+    >
+
+	<head>
+	  	<title><ui:insert name="title">CRANK!</ui:insert></title>
+		<script type="text/javascript" src="${request.contextPath}/helpers.js"/>
+        <script type="text/javascript" src="${request.contextPath}/js/prototype-1.6.0.2.js"/>
+         <link rel="stylesheet" type="text/css" href="${request.contextPath}/css/main.css" />
+	</head>
+
+	<body>
+			<h:panelGrid columns="1" width="60%">
+				<h:graphicImage value="/images/crank-header.jpg" alt="CRANK!" border="0" />
+			</h:panelGrid>
+
+		<table>
+		<tr>
+		<td valign="top">
+
+  <s:springSecurityAuthorize ifAnyGranted="ROLE_USER">
+             <h:outputLink value="${request.contextPath}/logout">
+				<h:outputText value="Logout"></h:outputText>
+			</h:outputLink>
+        </s:springSecurityAuthorize>
+
+
+
+
+        </td>
+		<td valign="top">
+				<ui:insert name="content"/>
+		</td>
+		</tr>
+		</table>
+
+	<a4j:outputPanel ajaxRendered="true">
+			<h:messages infoClass="infoClass" errorClass="errorClass" layout="table" globalOnly="true"/>
+	</a4j:outputPanel>
+
+	<c:if test="${not empty crankErrorException}">
+			<div>
+			<pre>
+			${crankErrorException}
+			</pre>
+			</div>
+	</c:if>
+	</body>
+	
+	
+	
+	
+	<ui:debug hotkey="d" rendered="#{initParam['facelets.DEBUG']}"/>
+	
+</html>

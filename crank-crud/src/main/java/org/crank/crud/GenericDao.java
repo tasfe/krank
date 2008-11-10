@@ -207,6 +207,15 @@ public interface GenericDao<T, PK extends Serializable> {
 	/**
 	 * Allows getting an object using a map of the field and values
 	 * 
+	 * @param propertyValues
+	 *            properties of VO to use as filters, values matching properties
+	 * @return List of requested objects.
+	 */
+	List<T> find(Map<String, Object> propertyValues, int startRecord, int numRecords);
+	
+	/**
+	 * Allows getting an object using a map of the field and values
+	 * 
 	 * @param propertyNames
 	 *            Names of the fields on which to search.
 	 * @param values

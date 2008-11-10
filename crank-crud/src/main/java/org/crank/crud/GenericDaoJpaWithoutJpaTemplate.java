@@ -844,5 +844,11 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
         //TODO finish this
         return null;
     }
+
+	public List<T> find(Map<String, Object> propertyValues, int startRecord,
+			int numRecords) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

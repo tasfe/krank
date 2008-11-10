@@ -7,6 +7,7 @@ import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.join.*;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.jpa.EntityManagerHolder;
 import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.orm.jpa.JpaSystemException;
@@ -1117,34 +1118,9 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
         });
     }
 
-//    /** This could be more effeciently written. */
-//    private static String[] getArgumentsForUpdateString(final String methodPostFix) {
-//        StringBuilder builder = new StringBuilder();
-//        char[] chars = methodPostFix.toCharArray();
-//        List<String> list = new ArrayList<String>();
-//        for (char ch : chars) {
-//            if (Character.isUpperCase(ch)){
-//                builder.append("_" + ch);
-//            } else {
-//                builder.append(ch);
-//            }
-//        }
-//        return builder.toString().substring(1,builder.length()).split("_");
-//    }
-//
-//    public static void main (String [] args) {
-//        String queryName = "updateArg1Arg2Arg3";
-//        String [] comps = getArgumentsForUpdateString(queryName.substring(6,queryName.length()));
-//        for (String comp : comps) {
-//            System.out.println("# " + comp);
-//        }
-//    }
-
     public Object executeUpdate(final Method method, final Object[] queryArgs) {
         final String methodName = method.getName();
         final String queryName = queryNameFromMethodName(methodName);
-        //String[] updateArguments = getArgumentsForUpdateString(methodName.substring(6,methodName.length()));
-
         return getJpaTemplate().execute(new JpaCallback() {
             public Object doInJpa(EntityManager em) throws PersistenceException {
                 Query query = em.createNamedQuery(queryName);
@@ -1163,6 +1139,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		try {
 			return doReadPopulated(id);
 		} catch (JpaSystemException jpaSystemException) {
+			return read(id);
+		} catch (IllegalArgumentException iae) {
+			return read(id);
+		} catch (InvalidDataAccessApiUsageException idaaue) {
 			return read(id);
 		}
 	}

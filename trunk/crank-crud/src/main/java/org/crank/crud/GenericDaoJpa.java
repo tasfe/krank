@@ -1244,4 +1244,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
         return this.getJpaTemplate().getReference(entityClass, primaryKey);
     }
 
+	public List<T> find(Map<String, Object> propertyValues, int startRecord,
+			int numRecords) {
+		return doFind(this.type, (Select[])null, true, (OrderBy[]) null,
+				new Criterion[]{Group.and(propertyValues)}, (Join[]) null, startRecord, numRecords);
+	}
+
 }

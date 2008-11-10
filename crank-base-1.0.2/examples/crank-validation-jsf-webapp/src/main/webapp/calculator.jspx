@@ -1,0 +1,66 @@
+
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" version="2.0"
+	xmlns:validation="http://code.google.com/p/krank/validation">
+	
+	<ui:composition>
+		<html>	
+		<head>
+			<title>Calculator</title>
+		</head>
+		
+		<body>
+		<h1>Server Validation</h1>
+		<h:form id="calcForm">
+			<div id="clientValidationSummary" />
+			
+			<h:messages showDetail="false" showSummary="true" layout="table"/>
+			<h:panelGrid columns="4">
+				
+				<h:outputLabel value="First Number" for="firstNumber" />
+				<h:inputText id="firstNumber" value="#{CalcBean.firstNumber}"
+					required="true">
+					<validation:validateBasedOnMetaData/> 
+				</h:inputText> 
+				<div id="firstNumberError"/>
+				<h:message for="firstNumber" showSummary="false" showDetail="true"/>
+
+				<h:outputLabel value="Second Number" for="secondNumber" />
+				<h:inputText id="secondNumber" value="#{CalcBean.secondNumber}"
+					required="true">
+					<validation:validateBasedOnMetaData/> 
+				</h:inputText> 
+				<div id="secondNumberError"/>
+				<h:message for="secondNumber" showSummary="false" showDetail="true"/>
+			</h:panelGrid>
+        Result #{CalcBean.result} <br />
+		<h:panelGroup>
+		<!--  
+				onclick="return validate();"
+
+-->
+			<h:commandButton id="submitAdd" action="#{CalcBean.add}" 
+			    value="Add" />
+			<h:commandButton id="submitMultiply" action="#{CalcBean.multiply}"
+				value="Multiply" />
+			<h:commandButton id="submitSubtract" action="#{CalcBean.subtract}"
+				value="Subtract" />
+			<h:commandButton id="submitDivide" action="#{CalcBean.divide}"
+				value="Divide" />
+
+		</h:panelGroup>
+		
+		<br />
+		<!--  validationclientValidator 
+		           objectExpression="#{CalcBean}"
+		           formName="calcForm" 
+		           propertyNames="firstNumber,secondNumber"  -->
+		           
+		<br />
+		</h:form>
+	</body>
+	</html>
+	</ui:composition>
+</jsp:root>

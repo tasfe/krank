@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:crud="http://www.googlecode.com/crank/crud"
+	xmlns:crank="http://www.googlecode.com/crank">
+
+<ui:composition>
+<c:if test="${not empty detailController}">
+<a4j:outputPanel ajaxRendered="true">
+		<c:if test="${empty id}">
+			<c:set var="id" value="DetailListing" />
+		</c:if>
+
+		<c:if test="${empty debug}">
+				<c:if test="#{empty initParam['crank.debug']}">
+					<c:set var="debug" value="${false}" />
+				</c:if>
+				<c:if test="#{not empty initParam['crank.debug']}">
+					<c:set var="debug" value="#{initParam['crank.debug']}" />
+				</c:if>
+		</c:if>
+
+
+		<!-- Variable declaration. -->
+		<c:if test="${empty selectAllImg}">
+			<c:set var="selectAllImg" value="/images/selected-sm.gif" />
+		</c:if>
+
+		<c:if test="${empty selectNoneImg}">
+			<c:set var="selectNoneImg" value="/images/unselected-sm.gif" />
+		</c:if>
+		<c:if test="${empty delAllImg}">
+			<c:set var="delAllImg" value="/images/del-alt-sm.gif" />
+		</c:if>		
+		<c:if test="${empty booleanImg}">
+			<c:set var="booleanImg" value="/images/check-sm.gif" />
+		</c:if>
+		<c:if test="${empty editImg}">
+			<c:set var="editImg" value="/images/edit-sm.gif" />
+		</c:if>
+		<c:if test="${empty delImg}">
+			<c:set var="delImg" value="/images/del-sm.gif" />
+		</c:if>
+		
+		
+		<c:if test="${empty formPropertyNames}">
+			<c:set var="formPropertyNames" value="${propertyNames}" />
+		</c:if>
+		<c:if test="${empty showAdd}">
+			<c:set var="showAdd" value="true" />
+		</c:if>
+		<c:if test="${empty isSelectableColumn}">
+			<c:set var="isSelectableColumn" value="${detailController.allowsSelection}" />
+		</c:if>
+
+		<c:if test="${empty readOnly}">
+			<c:set var="readOnly" value="false" />
+		</c:if>
+
+		<c:if test="${empty enableDelete}">
+			<c:if test="#{empty initParam['crank.detailListing.enableDelete']}">
+				<c:set var="enableDelete" value="true" />
+			</c:if>
+			<c:if test="#{not empty initParam['crank.listing.enableDelete']}">
+				<c:set var="enableDelete" value="#{initParam['crank.detailListing.enableDelete']}" />
+			</c:if>
+		</c:if>
+		<c:if test="${empty ajax}">
+			<c:set var="ajax" value="true" />
+		</c:if>
+		<c:if test="${empty autoLink}">
+			<c:set var="autoLink" value="true" />
+		</c:if>
+		<c:if test="${empty renderAsText}">
+			<c:set var="renderAsText" value="true" />
+		</c:if> 
+		<c:if test="${empty manyToMany}">
+			<c:set var="manyToMany" value="false" />
+		</c:if>
+		<c:set var="entityName" value="${detailController.relationshipManager.childCollectionProperty}" />
+		<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
+		
+		<c:if test="${debug}">
+			<h4>Debug for detailListing id=${id}</h4>
+			<table>
+				<tr><td>formPropertyNames</td>		<td>${formPropertyNames}</td></tr>
+				<tr><td>showAdd</td>				<td>${showAdd}</td></tr>
+				<tr><td>isSelectableColumn</td>		<td>${isSelectableColumn}</td></tr>
+				<tr><td>readOnly</td>				<td>${readOnly}</td></tr>
+				<tr><td>enableDelete</td>			<td>${enableDelete}</td></tr>
+				<tr><td>ajax</td>					<td>${ajax}</td></tr>
+				<tr><td>autoLink</td>				<td>${autoLink}</td></tr>
+				<tr><td>renderAsText</td>			<td>${renderAsText}</td></tr>
+				<tr><td>manyToMany</td>				<td>${manyToMany}</td></tr>
+				<tr><td>entityName</td>				<td>${entityName}</td></tr>
+				<tr><td>entityNameLabel</td>		<td>${entityNameLabel}</td></tr>
+				<tr><td>propertyNames</td>					<td>${propertyNames}</td></tr>
+				<tr><td>pNames</td>							<td>${pNames}</td></tr>
+				<tr><td>useFormBody</td>						<td>${useFormBody}</td></tr>
+				<tr><td>detailController</td>				<td>${detailController}</td></tr>
+				<tr><td>detailController.showDetails</td>	<td>${detailController.showDetails}</td></tr>
+				<tr><td>detailController.showForm</td>		<td>${detailController.showForm}</td></tr>
+				<tr><td>parentForm</td>						<td>${parentForm}</td></tr>
+				<tr><td>reRender</td>						<td>${reRender}</td></tr>
+				<tr><td>detailController.model.wrappedData</td>		<td>${detailController.model.wrappedData}</td></tr>
+			</table>
+		</c:if>
+
+		<!-- detail controller starts here. -->
+		<h:panelGroup binding="${detailController.subForm}">				
+				<!-- CRUD controls Add new and form. -->
+					<rich:spacer width="10" height="10"/>
+					<h:panelGrid columns="1" styleClass="detailPanelGrid" >
+						<crank:commandLink 
+							entity="${detailController}"
+							action="loadCreate"
+							immediate="true"
+							rendered="#{(not detailController.showForm) and (not readOnly) and showAdd}"
+							toolTipText="Click to add a new detail record..."
+							reRender="${reRender}"
+							styleClass="${toggleLinkClass}"
+							ajax="${ajax}">
+								<h:outputText value="Add new..."/>
+						</crank:commandLink>							
+						<c:if test="${detailController.showForm and not manyToMany}">
+							<crank:form   
+								crud="${detailController}" 
+								propertyNames="${formPropertyNames}"
+								immediate="true"
+								reRender="${reRender}"
+								parentForm="${parentForm}"
+								entityName="${entityName}"
+								resetMode="${false}"
+								ajax="${ajax}">
+								
+									<c:set var="formPropertyNames" value=""/>
+									<c:set var="isSelectableColumnCopy" value="${isSelectableColumn}"/>
+									<c:set var="isSelectableColumn" value=""/>
+									<ui:insert/>
+									<c:set var="isSelectableColumn" value="${isSelectableColumnCopy}"/>
+								
+							</crank:form>
+						</c:if>
+				</h:panelGrid>			
+		</h:panelGroup>
+</a4j:outputPanel>
+</c:if>
+
+<c:if test="${empty detailController}">
+	<h:outputText value="DETAIL CONTROLLER IS NULL"/>
+</c:if>
+</ui:composition>
+</html>

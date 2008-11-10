@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:crank="http://www.googlecode.com/crank"
+    xmlns:proto="http://crankcrud.org/proto"
+    xmlns:s="http://www.crank.org/springsecurity/tags"        
+    >
+<ui:composition template="/templates/layout.xhtml">
+	<ui:define name="content">
+       <s:springSecurityAuthorize ifNotGranted="ROLE_SUPERVISOR,ROLE_USER">
+           ifNotGranted="ROLE_SUPERVISOR" <br></br>
+           You Don't Have Role ROLE_SUPERVISOR <BR></BR>
+            ifNotGranted="ROLE_ASSHOLLE" <br></br>
+           You Don't Have Role ROLE_ASSHOLLE <BR></BR>
+        </s:springSecurityAuthorize>
+
+	    <s:springSecurityAuthorize ifAnyGranted="ROLE_USER">
+            If Any Granted = ROLE_USER <BR></BR>
+            You have ROLE_USER<BR></BR>
+        </s:springSecurityAuthorize>
+
+        <s:springSecurityAuthorize ifAnyGranted="ROLE_SUPERVISOR">
+            ifAnyGranted="ROLE_SUPERVISOR" <BR></BR>
+            You have ROLE_USER or ROLE_SUPERVISOR granted. <BR></BR>
+        </s:springSecurityAuthorize>
+
+        <s:springSecurityAuthorize ifAllGranted="ROLE_SUPERVISOR,ROLE_USER">
+           ifAllGranted="ROLE_SUPERVISOR,ROLE_USER" <Br></Br>
+           You have ROLE_SUPERVISOR and ROLE_USER <BR></BR>
+        </s:springSecurityAuthorize>
+
+
+        <h:form>
+			<h:panelGroup>
+				<h:commandLink action="HOME" value="Home" styleClass="paginationPageNumberLink"/>
+				<h:outputText value="|" styleClass="paginationPageNumberLink"/>
+				<h:outputText value="Users" styleClass="paginationPageNumberLink"/>
+			</h:panelGroup>
+		</h:form>
+	
+	    <span class="pageTitle">Users Listing</span>
+
+		<a4j:form id="usersListingForm">
+                <proto:secureListing
+                        jsfCrudAdapter="${usersCrud}"
+                        propertyNames="username,password,authority"
+                        parentForm="usersListingForm"
+                    />
+		</a4j:form>
+				
+	</ui:define>
+</ui:composition>
+</html>

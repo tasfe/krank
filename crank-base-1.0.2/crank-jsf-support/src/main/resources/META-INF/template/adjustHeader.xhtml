@@ -1,0 +1,298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	  xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	  xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+	  xmlns:crud="http://www.googlecode.com/crank/crud"
+      xmlns:crank="http://www.googlecode.com/crank">
+
+<ui:composition>
+
+	<!-- DEFINE VARIABLES --> 
+	<c:if test="${empty immeidate}">
+	    <c:set var="immeidate" value="${true}" />
+	</c:if>
+
+	<c:if test="${empty label}">
+	    <c:set var="label" value="${crud:replace(crud:createLabelWithNameSpace(entityName,fieldName),'.','_')}" />
+	</c:if>
+
+	<c:if test="${empty sortDescImg}">
+		<c:set var="sortDescImg" value="/images/sortdesc.gif"/>
+	</c:if>
+	<c:if test="${empty sortAscImg}">
+		<c:set var="sortAscImg" value="/images/sortasc.gif"/>
+	</c:if>
+	<c:if test="${empty filterOnImg}">
+		<c:set var="filterOnImg" value="/images/filterOn.gif"/>
+	</c:if>
+	<c:if test="${empty filterOffImg}">
+		<c:set var="filterOffImg" value="/images/filterOff.gif"/>
+	</c:if>
+	
+	<c:set var="filter" value="${paginator.filterableProperties[fieldName]}"/>
+
+
+    <c:set var="orderBy" value="${filter.orderBy}"/>
+	<c:set var="comparison" value="${filter.comparison}"/>
+
+
+    <!--  Style classes -->
+	<c:if test="${empty headerLinkClass}">
+	    <c:set var="headerLinkClass" value="linkClass" />
+	</c:if>
+	<c:if test="${empty headerTextClass}">
+	    <c:set var="headerTextClass" value="textClass" />
+	</c:if>
+	<c:if test="${empty headerFilterInputTextClass}">
+	    <c:set var="headerFilterInputTextClass" value="inputTextClass" />
+	</c:if>
+	<c:if test="${empty columnHeaderClass}">
+	    <c:set var="columnHeaderClass" value="dataTableColumnHeader" />
+	</c:if>
+
+
+    <c:set var="fieldId" value="${crud:replace(fieldName,'.','_')}_${crud:sysTime()}"/>
+
+	<!-- END DEFINE VARIABLES -->
+
+	<h:column styleClass="${columnHeaderClass}">
+        <c:if test="${not empty filter}">
+            <div style="${columnHeaderClass}">
+            	<a4j:outputPanel ajaxRendered="true">
+
+				<a4j:commandLink styleClass="${headerLinkClass}" 
+				    value="${label}" reRender="${reRender}"
+				    title="${sortTip}"
+					action="#{orderBy.toggle}"
+					immediate="true"/>
+
+				
+				<h:outputText value="&#160; ${(orderBy.sequence+1)}" rendered="${orderBy.enabled}" styleClass="${headerLinkClass}"/>
+
+
+                <a4j:commandLink
+                    styleClass="${headerLinkClass}"
+                    rendered="${jsfCrudAdapter.propertiesPresent}"    
+                    action="#{jsfCrudAdapter.movePropertyLeft}"
+                    immediate="true"
+                    >
+                    <f:setPropertyActionListener value="${orderBy.name}" target="${jsfCrudAdapter.propertyToMove}" />
+                    &lt;
+                </a4j:commandLink>
+
+                <a4j:commandLink
+                    styleClass="${headerLinkClass}"
+                    rendered="${jsfCrudAdapter.propertiesPresent}"
+                    action="#{jsfCrudAdapter.movePropertyRight}"
+                    immediate="true"
+                    >
+                    <f:setPropertyActionListener value="${orderBy.name}" target="${jsfCrudAdapter.propertyToMove}"/>
+                    &gt;
+                </a4j:commandLink>
+
+
+
+                <br />
+				
+				<div style="text-align: right">
+				
+				<rich:spacer width="25" height="10"/>
+
+				<!-- Sort Descending  -->
+				<a4j:commandLink 
+					styleClass="${headerLinkClass}"
+					reRender="${reRender}"
+					rendered="#{orderBy.asc and orderBy.enabled}"
+					title="${sortAscTip}"
+					action="#{orderBy.toggle}"
+					immediate="true"
+					>
+					
+					<h:graphicImage value="${sortDescImg}" border="0"/>
+				</a4j:commandLink>
+
+				<!-- Sort Ascending  -->
+				<a4j:commandLink 
+					styleClass="${headerLinkClass}"
+				    reRender="${reRender}"
+					rendered="#{orderBy.desc and orderBy.enabled}"
+					title="${sortDescTip}"
+					action="#{orderBy.toggle}"
+					immediate="true"
+					>
+					<h:graphicImage value="${sortAscImg}"  border="0"/>
+				</a4j:commandLink>
+				
+				<a4j:commandLink  
+					reRender="${reRender}"
+					action="#{comparison.enable}"
+					rendered="#{not comparison.enabled}"
+					title="${filterTip}"
+					styleClass="${headerLinkClass}"
+					immediate="true"
+					>
+					<h:graphicImage value="${filterOnImg}" border="0"/>
+				</a4j:commandLink>
+				
+				<c:if test="${not useSubmitForFilter or empty useSubmitForFilter}">
+				<a4j:commandLink action="${paginator.filter}"
+							rendered="#{paginator.filtering and comparison.enabled}"
+							title="Click to apply column filters"
+							styleClass="${headerLinkClass}" value="filter"
+							immediate="false"
+							>
+				</a4j:commandLink>
+                </c:if>
+
+                <c:if test="${useSubmitForFilter}">
+                <h:commandLink action="${paginator.filter}"
+                            rendered="#{paginator.filtering and comparison.enabled}"
+                            title="Click to apply column filters"
+                            styleClass="${headerLinkClass}" value="Filter"
+                            immediate="false"
+                            >
+                </h:commandLink>
+                </c:if>
+
+
+                </div>
+				
+				<a4j:outputPanel axajRendered="true" rendered="#{comparison.enabled and not crud:isFilterPropertyDate(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
+
+                    <c:choose>
+                         <c:when test="${filter.long or filter.integer or filter.bigDecimal or filter.double or filter.float or filter.short or filter.bigInteger}">
+                             <h:selectOneMenu value="${comparison.operator}">
+                                 <f:selectItem itemValue="EQ" itemLabel="=" escape="false"/>
+                                 <f:selectItem itemValue="GT" itemLabel="&gt;" escape="false"/>
+                                 <f:selectItem itemValue="LT" itemLabel="&lt;" escape="false"/>
+                                 <f:selectItem itemValue="GE" itemLabel="&gt;=" escape="false"/>
+                                 <f:selectItem itemValue="LE" itemLabel="&lt;=" escape="false"/>
+                             </h:selectOneMenu>
+                         </c:when>
+                         <c:when test="${filter.string}">
+                            <h:selectOneMenu value="${comparison.operator}">
+                                <f:selectItem itemValue="LIKE" itemLabel="like" escape="false"/>
+                                <f:selectItem itemValue="LIKE_START" itemLabel="starts with" escape="false"/>
+                                <f:selectItem itemValue="LIKE_END" itemLabel="ends with" escape="false"/>
+                                <f:selectItem itemValue="LIKE_CONTAINS" itemLabel="contains" escape="false"/>
+                            </h:selectOneMenu>
+                         </c:when>
+                     </c:choose>
+
+					<h:inputText        id="${fieldId}"
+                                        styleClass="${headerFilterInputTextClass}"
+										value="#{comparison.value}"
+										size="5"
+										rendered="${crud:isFilterPropertyText(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}"
+                                        immediate="true"
+                                        label="${label}"
+                                        >
+                                <f:attribute name="filterName" value="${fieldId}"/>
+                                <c:choose>
+									<c:when test="${filter.long}">
+										<f:converter converterId="javax.faces.Long"/>
+									</c:when>
+									<c:when test="${filter.integer}">
+										<f:converter converterId="javax.faces.Integer"/>
+									</c:when>
+									<c:when test="${filter.bigDecimal}">
+										<f:converter converterId="javax.faces.BigDecimal"/>
+									</c:when>
+									<c:when test="${filter.double}">
+										<f:converter converterId="javax.faces.Double"/>
+									</c:when>
+									<c:when test="${filter.float}">
+										<f:converter converterId="javax.faces.Float"/>
+									</c:when>
+									<c:when test="${filter.short}">
+										<f:converter converterId="javax.faces.Short"/>
+									</c:when>
+									<c:when test="${filter.bigInteger}">
+										<f:converter converterId="javax.faces.BigInteger"/>
+									</c:when>
+								</c:choose>
+								
+					</h:inputText>
+                    <h:message for="${fieldId}"
+                               styleClass="fieldMessage"
+                               style="color: red; text-decoration: underline"
+                            />
+
+                    <h:panelGroup rendered="${crud:isFilterPropertyEnum(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
+				        <c:set var="propEntityName" value="${crud:getPropertyEntityName(filter.parentType,fieldName)}" />
+				        <h:selectOneMenu value="#{comparison.value}" immediate="true">
+							<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
+						</h:selectOneMenu>
+					</h:panelGroup>
+
+					<h:panelGroup rendered="${crud:isFilterPropertyBoolean(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
+						<h:selectBooleanCheckbox styleClass="${headerFilterInputTextClass}" 
+											value="#{comparison.value}" immediate="true"/>
+					</h:panelGroup>
+
+					<a4j:commandLink  
+						rendered="${not crud:isFilterPropertyEnum(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}"
+						reRender="${reRender}"
+						action="#{comparison.disable}"
+						title="${filterRemTip}"
+						styleClass="${headerLinkClass}"
+						immediate="true"
+						>
+						<h:graphicImage value="${filterOffImg}" border="0"/>
+					</a4j:commandLink>
+				</a4j:outputPanel>
+					<br />
+					<h:panelGrid columns="4" rendered="${comparison.enabled and crud:isFilterPropertyDate(filter.autoCreatePrependParentAlias,filter.parentType,fieldName)}">
+					
+						<h:outputText value=""/>
+				        <t:calendar id="${fieldId}Date1"
+                                renderAsPopup="true" renderPopupButtonAsImage="true"
+				        			size="8"
+				                    value="#{comparison.value}"
+                                    immediate="true"
+                                >
+				        </t:calendar>
+                        <h:message for="${fieldId}Date1"
+                                   styleClass="fieldMessage"
+                                   style="color: red; text-decoration: underline"
+                                />
+
+                        <h:outputText value=""/>
+						<h:outputText value="thru" styleClass="headerTextClass"/>
+					    <t:calendar id="${fieldId}Date2"
+                                renderAsPopup="true" renderPopupButtonAsImage="true"
+				        			size="8"
+					                    value="${comparison.value2}"
+                                immediate="true">
+					    </t:calendar>
+                        <h:message for="${fieldId}Date2"
+                                   styleClass="fieldMessage"
+                                   style="color: red; text-decoration: underline"
+                                />
+
+                        <a4j:commandLink  reRender="${reRender}"
+										  action="#{comparison.disable}"
+										  title="${filterRemTip}"
+										  styleClass="${headerLinkClass}"
+										  immediate="true"								  
+										  >
+							<h:graphicImage value="${filterOffImg}" border="0"/>
+						</a4j:commandLink>
+				    </h:panelGrid>
+				 </a4j:outputPanel>					
+			</div>
+        </c:if>
+        <c:if test="${empty filter}">
+            ${label}
+        </c:if>
+    </h:column>
+
+</ui:composition>
+</html>

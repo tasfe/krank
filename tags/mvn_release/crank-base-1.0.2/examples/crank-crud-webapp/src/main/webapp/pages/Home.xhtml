@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:crank="http://www.googlecode.com/crank"
+	>
+<ui:composition template="/templates/layout.xhtml">
+	<ui:define name="content">
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:commandLink action="${selectEmployeeListingController.showListing}" value="Employees" styleClass="titleCommandLink"/>
+				<h:commandLink action="DEPARTMENTS" value="Departments" styleClass="titleCommandLink"/>
+				<h:commandLink action="SPECIALTY" value="Specialties" styleClass="titleCommandLink"/>
+				<h:commandLink action="ROLES" value="Roles" styleClass="titleCommandLink"/>
+				<h:commandLink action="SKILLS" value="Skills" styleClass="titleCommandLink"/>			
+				<h:commandLink action="EMPLOYEE_RECS" value="Employee Records" styleClass="titleCommandLink"/>
+				<h:commandLink action="INQUIRY" value="Inquiry" styleClass="titleCommandLink"/>
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

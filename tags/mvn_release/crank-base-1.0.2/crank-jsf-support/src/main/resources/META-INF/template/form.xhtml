@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:crud="http://www.googlecode.com/crank/crud"
+	xmlns:crank="http://www.googlecode.com/crank"
+	>
+
+<!-- 	xmlns:crankcc="http://www.googlecode.com/crank/comp/components"
+  -->
+<ui:composition>
+
+    <c:if test="${empty showFormButtons}">
+        <c:set var="showFormButtons" value="${true}" />
+    </c:if>
+
+	<c:if test="${empty reportingMode}">
+		<c:set var="reportingMode" value="false" />
+	</c:if>
+
+	<c:if test="${empty immediate}">
+		<c:set var="immediate" value="false" />
+	</c:if>
+
+	<c:if test="${empty ajax}">
+		<c:set var="ajax" value="${false}" />
+	</c:if>
+
+	<c:if test="${empty cancelAlwaysOn}">
+		<c:set var="cancelAlwaysOn" value="true" />
+	</c:if>
+
+	<c:if test="${empty hideCancel}">
+		<c:set var="hideCancel" value="false" />
+	</c:if>
+
+	<c:if test="${empty formButtonClass}">
+		<c:set var="formButtonClass" value="paginationGroupButton" />
+	</c:if>
+
+	<c:if test="${empty rendered}">
+		<c:set var="rendered" value="true" />
+	</c:if>
+
+	<c:if test="${empty renderExpression}">
+		<c:set var="renderExpression"
+			value="${rendered and ((crud.state=='ADD') or (crud.state == 'EDIT'))}" />
+	</c:if>
+
+	<c:if test="${not empty formFieldLabels}">
+		<c:set var="fieldLabels"
+			value="${fn:split(formFieldLabels, '[,]')}" />
+	</c:if>
+
+	<c:if test="${empty formFieldLabels}">
+		<c:set var="fieldLabels" value="" />
+	</c:if>
+
+	<c:when test="${ajax}">
+		<c:set var="reRender" value="${reRender},buttons${id}" />
+	</c:when>
+
+
+	<c:if test="${empty entityName}">
+		<c:set var="entityName" value="${crud.name}" />
+	</c:if>
+
+	<!-- If overriding, then the component assumes that all labels will be provided -->
+	<c:if test="${empty overrideButtonLabels}">
+		<c:set var="overrideButtonLabels" value="false" />
+	</c:if>
+	<c:if test="${not overrideButtonLabels}">
+		<c:set var="createButtonText"
+			value="Create ${crud:createLabelNoPlural(entityName)}" />
+	</c:if>
+	<c:if test="${not overrideButtonLabels}">
+		<c:set var="updateButtonText"
+			value="Update ${crud:createLabelNoPlural(entityName)}" />
+	</c:if>
+	<c:if test="${not overrideButtonLabels}">
+		<c:set var="resetButtonText" value="Reset" />
+	</c:if>
+	<c:if test="${not overrideButtonLabels}">
+		<c:set var="cancelButtonText" value="Cancel" />
+	</c:if>
+
+    <a4j:outputPanel ajaxRendered="true">
+    <h:panelGrid columns="1" rendered="${renderExpression}">
+		<!-- Main for fields -->
+		
+		<ui:insert name="headerForm"/>
+		
+		<h:panelGrid columns="3" rowClasses="formRowClass1, formRowClass2"
+			columnClasses="topLeft">
+			<c:if test="${not empty propertyNames}">
+				<c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
+                <c:set var="firstProperty" value="${pNames[0]}"/>
+                <c:set var="labelIndex" value="0"/>
+				<c:forEach items="${pNames}" var="property">
+					<c:if test="${not empty fieldLabels}">
+						<crank:field entity="#{crud.entity}" crud="${crud}"
+							type="${crud.entityClass}" fieldName="${property}"
+							entityName="${entityName}"
+							label="${fieldLabels[labelIndex]}"
+							disabled="${crud:isInCollection(property, readOnlyProperties)}" 
+							requiredProperty="${crud:isInCollection(property, requiredProperties)}"
+						/>
+							<c:set var="labelIndex" value="${labelIndex + 1}"/>			
+					</c:if>
+					<c:if test="${empty fieldLabels}">
+						<crank:field entity="#{crud.entity}" crud="${crud}"
+							type="${crud.entityClass}" fieldName="${property}"
+							entityName="${entityName}"
+							disabled="${crud:isInCollection(property, readOnlyProperties)}"
+							requiredProperty="${crud:isInCollection(property, requiredProperties)}" 
+						/>
+					</c:if>
+				</c:forEach>
+			</c:if>
+		</h:panelGrid>
+
+		<!-- Enabled / Disabled Toggle Groups (javascript version) -->
+		<c:if test="${not empty enableGroups}">
+			<c:set var="enGroups" value="${fn:split(enableGroups, ',')}" />
+			<h:panelGrid columns="1" rowClasses="radioGroup" cellspacing="5"
+				width="100%">
+				<c:set var="counter" value="0" />
+				<c:forEach items="${enGroups}" var="group">
+					<c:set var="groupId" value="${entityName}enGroup${counter}" />
+					<c:set var="enableItems" value="${fn:split(group, ':')}" />
+					<c:set var="i" value="0" />
+					<c:set var="disabledDefault" value="${false}" />
+					<h:panelGrid columns="3" columnClasses="topLeft">
+						<c:forEach items="${enableItems}" var="enableItem">
+
+							<c:choose>
+								<c:when test="${i == 0}">
+
+									<crank:field fieldId="${groupId}${enableItem}"
+										onclick="setEnableGroup('${parentForm}','${enableItem}','${groupId}');"
+										crud="${crud}" entity="${crud.entity}"
+										type="${crud.entityClass}" fieldName="${enableItem}"
+										entityName="${entityName}"
+										requiredProperty="${crud:isInCollection(property, requiredProperties)}" 
+									/>
+									<c:set var="disabledDefault"
+										value="${not crud.entity[enableItem]}" />
+								</c:when>
+								<c:otherwise>
+
+									<crank:field fieldId="${groupId}${enableItem}"
+										disabled="${disabledDefault}" crud="${crud}"
+										entity="${crud.entity}" type="${crud.entityClass}"
+										fieldName="${enableItem}" entityName="${entityName}"
+										requiredProperty="${crud:isInCollection(property, requiredProperties)}" 
+									/>
+
+								</c:otherwise>
+							</c:choose>
+
+							<c:set var="i" value="${i + 1}" />
+
+						</c:forEach>
+					</h:panelGrid>
+					<c:set var="counter" value="${counter + 1}" />
+				</c:forEach>
+			</h:panelGrid>
+		</c:if>
+
+
+        <!-- Radio Groups -->
+		<c:if test="${not empty exclusiveGroups}">
+			<c:set var="eGroups" value="${fn:split(exclusiveGroups, ',')}" />
+			<h:panelGrid columns="1" rowClasses="radioGroup" cellspacing="5"
+				width="100%">
+				<c:set var="counter" value="0" />
+				<c:forEach items="${eGroups}" var="group">
+					<c:set var="groupId" value="${entityName}Group${counter}" />
+					<c:set var="exclusiveBoxes" value="${fn:split(group, ':')}" />
+					<h:panelGrid columns="3" columnClasses="topLeft">
+						<c:forEach items="${exclusiveBoxes}" var="exclusiveField">
+							<c:if test="${crud:isBoolean(crud.entityClass,exclusiveField)}">
+								<crank:field fieldId="${groupId}${exclusiveField}"
+									onclick="setExclusiveGroup('${parentForm}','${exclusiveField}','${groupId}',false);"
+									entity="#{crud.entity}" type="${crud.entityClass}"
+									crud="${crud}" fieldName="${exclusiveField}"
+									entityName="${entityName}"
+									requiredProperty="${crud:isInCollection(property, requiredProperties)}" 
+								/>
+							</c:if>
+						</c:forEach>
+					</h:panelGrid>
+					<c:set var="counter" value="${counter + 1}" />
+				</c:forEach>
+			</h:panelGrid>
+		</c:if>
+
+		<c:set var="entityName" value="" />
+		<c:set var="ajaxOrg" value="${ajax}" />
+		<c:set var="ajax" value="" />
+		<c:set var="renderExpression" value="" />
+		<ui:insert />
+
+
+
+		<c:if test="${empty addCreateMode}">
+			<!--  <c:set var="addCreateMode" value="${(crud.state=='ADD') or (crud.state == null) or (crud.state=='UNKNOWN')}" />  -->
+			<c:set var="addCreateMode" value="${crud.state=='ADD'}" />
+		</c:if>
+
+		<c:if test="${empty editMode}">
+			<c:set var="editMode" value="${(crud.state=='EDIT')}" />
+		</c:if>
+
+		<c:if test="${empty cancelMode}">
+			<c:set var="cancelMode"
+				value="${((crud.state=='ADD') or (crud.state == 'EDIT') or (cancelAlwaysOn)) and not hideCancel }" />
+		</c:if>
+
+		<c:if test="${empty resetMode}">
+			<c:set var="resetMode"
+				value="${(crud.state=='ADD') or (crud.state == 'EDIT')}" />
+		</c:if>
+
+		<c:set var="ajax" value="${ajaxOrg}" />
+
+
+        <c:if test="${showFormButtons}">
+
+
+			
+			<h:panelGrid columns="4" rendered="${not ajax}">
+				<h:commandButton rendered="${addCreateMode}"
+					styleClass="${formButtonClass}" immediate="${immediate}"
+					value="${createButtonText}" action="${crud.create}" />
+				<h:commandButton rendered="${editMode}"
+					styleClass="${formButtonClass}" immediate="${immediate}"
+					value="${updateButtonText}" action="${crud.update}" />
+
+                <c:if test="${not useJavaScriptReset}">
+                <h:commandButton rendered="${resetMode}"
+					value="${resetButtonText}"
+					styleClass="${formButtonClass}" type="reset" />
+                </c:if>
+                <c:if test="${useJavaScriptReset}">
+                    <input type="button" onclick="reset_${parentForm}_${methodStub}();"  value="${resetButtonText}"></input>
+                </c:if>
+                <h:commandButton value="${cancelButtonText}"
+					rendered="${cancelMode}" styleClass="${formButtonClass}"
+					action="${crud.cancel}" immediate="true" />
+			</h:panelGrid>
+
+			
+			<h:panelGrid columns="4" rendered="${ajax}">
+				<a4j:commandLink rendered="${addCreateMode}"
+					reRender="${reRender}" styleClass="${formButtonClass}"
+					value="${createButtonText}" action="${crud.create}" />
+				<a4j:commandLink rendered="${editMode}" reRender="${reRender}"
+					styleClass="${formButtonClass}" value="${updateButtonText}"
+					action="${crud.update}" />
+
+                <c:if test="${not useJavaScriptReset}">
+                <a4j:commandLink rendered="${resetMode}"
+					value="${resetButtonText}" reRender="${reRender}"
+					styleClass="${formButtonClass}" type="reset" />
+                </c:if>
+                <c:if test="${useJavaScriptReset}">
+                    <a onclick="reset_${parentForm}_${methodStub}();" style="color: #003366" class="${formButtonClass}">${resetButtonText}</a>
+                </c:if>
+                <a4j:commandLink value="${cancelButtonText}" immediate="true"
+					rendered="${cancelMode}" reRender="${reRender}"
+					styleClass="${formButtonClass}"
+					action="${crud.cancel}" />
+
+			</h:panelGrid>
+
+        </c:if>
+    </h:panelGrid>
+
+    <!--
+    <c:if test="${not empty firstProperty}">
+    <script type="text/javascript">
+        var firstField = $("${parentForm}:__${crud.name}_${firstProperty}");
+        firstField.focus();      
+    </script>
+    </c:if>
+    -->
+
+    </a4j:outputPanel>
+
+    <c:set var="ajax" value="" />
+	<c:set var="addCreateMode" value="" />
+	<c:set var="editMode" value="" />
+	<c:set var="resetMode" value="" />
+	<c:set var="cancelMode" value="" />
+    <c:set var="showFormButtons" value="" />
+
+
+
+    <!--  </crankcc:form>  -->
+</ui:composition>
+
+</html>
+

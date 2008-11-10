@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:crank="http://www.googlecode.com/crank"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+    xmlns:acegijsf="http://sourceforge.net/projects/jsf-comp/acegijsf"
+    xmlns:proto="http://crankcrud.org/proto"
+    >
+<!--
+http://vigilbose.blogspot.com/2008/06/integrating-spring-security-with.html
+-->
+<ui:composition template="/templates/layout.xhtml">
+	<ui:define name="content">
+		<c:set var="crud" value="${usersCrud.controller}" />
+
+          <acegijsf:authorize ifAllGranted="ROLE_SUPERVISOR">
+              I am a Supervisor
+          </acegijsf:authorize>
+
+        <acegijsf:authorize ifAllGranted="ROLE_USER">
+              I am just a user
+          </acegijsf:authorize>
+
+        <crank:crudBreadCrumb crud="${crud}" />
+
+		<span class="pageTitle">Users Entry</span>
+		<c:set var="ajaxRegion" value="usersForm"/>
+
+		<a4j:form id="employeeForm" enctype="multipart/form-data">
+		
+			<!-- description, -->
+			<proto:secureForm crud="${crud}" parentForm="employeeForm"
+				propertyNames="username,password,authority,enabled"
+                requiredMarker=" --required-- ">
+			</proto:secureForm>
+			
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+
+</html>

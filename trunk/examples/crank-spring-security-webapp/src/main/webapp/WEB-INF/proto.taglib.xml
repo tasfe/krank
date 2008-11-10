@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE facelet-taglib PUBLIC "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN" "facelet-taglib_1_0.dtd">
+<facelet-taglib>
+    <namespace>http://crankcrud.org/proto</namespace>
+	<tag>
+		<tag-name>bulkListing</tag-name>
+		<source>template/bulkListing.xhtml</source>
+	</tag>
+	<tag>
+		<tag-name>bulkHeader</tag-name>
+		<source>template/bulkHeader.xhtml</source>
+	</tag>
+	<tag>
+		<tag-name>selectManyByIdListing</tag-name>
+		<source>template/selectManyByIdListing.xhtml</source>
+	</tag>
+	<tag>
+		<tag-name>selectOneByIdListing</tag-name>
+		<source>template/selectOneByIdListing.xhtml</source>
+	</tag>	
+	<tag>
+		<tag-name>detailForm</tag-name>
+		<source>template/detailForm.xhtml</source>
+	</tag>
+	<tag>
+		<tag-name>detailTable</tag-name>
+		<source>template/detailTable.xhtml</source>
+	</tag>
+    <tag>
+		<tag-name>secureListing</tag-name>
+		<source>template/secureListing.xhtml</source>
+	</tag>
+    <tag>
+		<tag-name>secureForm</tag-name>
+		<source>template/secureForm.xhtml</source>
+	</tag>
+ <tag>
+		<tag-name>securePaginator</tag-name>
+		<source>template/securePaginator.xhtml</source>
+	</tag>
+		
+</facelet-taglib>

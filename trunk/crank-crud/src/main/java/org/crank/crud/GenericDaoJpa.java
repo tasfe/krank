@@ -8,6 +8,7 @@ import org.crank.crud.join.*;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.dao.UncategorizedDataAccessException;
 import org.springframework.orm.jpa.EntityManagerHolder;
 import org.springframework.orm.jpa.JpaCallback;
 import org.springframework.orm.jpa.JpaSystemException;
@@ -1143,6 +1144,8 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		} catch (IllegalArgumentException iae) {
 			return read(id);
 		} catch (InvalidDataAccessApiUsageException idaaue) {
+			return read(id);
+		} catch (UncategorizedDataAccessException udae) {
 			return read(id);
 		}
 	}

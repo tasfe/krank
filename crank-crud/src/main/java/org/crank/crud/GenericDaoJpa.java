@@ -1,7 +1,6 @@
 package org.crank.crud;
 
 import org.apache.log4j.Logger;
-import org.crank.crud.controller.CrudUtils;
 import org.crank.crud.criteria.*;
 import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.join.*;
@@ -380,11 +379,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	
 	public int count() {
 		logger.debug("count() called");
-		final String entityName = getEntityName(type);
 		return (Integer) getJpaTemplate().execute(new JpaCallback() {
 
 			public Object doInJpa(EntityManager em) throws PersistenceException {
-				Query query = createCountQuery(entityName, em);
+				Query query = createCountQuery(em);
 				prepareQueryHintsIfNeeded(query);
 				Number count = (Number) query.getSingleResult();
 				return count.intValue();
@@ -393,24 +391,24 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		});
 	}
 
-	private Query createCountQuery(final String entityName, EntityManager em) {
+	private Query createCountQuery(EntityManager em) {
 		Query query = null;
 		try {
-			query = em.createNamedQuery(entityName + ".countAll");
+			query = em.createNamedQuery(getEntityName() + ".countAll");
 			logger
 					.debug("using native countAll query for entity "
-							+ entityName);
+							+ getEntityName() );
 		} catch (IllegalArgumentException iae) {
 			// thrown if a query has not been defined with the given name
-			query = em.createQuery("SELECT count(*) FROM " + entityName
+			query = em.createQuery("SELECT count(*) FROM " + getEntityName() 
 					+ " instance");
-			logger.debug("using JPA countAll query for entity " + entityName);
+			logger.debug("using JPA countAll query for entity " + getEntityName() );
 		} catch (PersistenceException pe) {
 			// JPA spec says IllegalArgumentException should be thrown, yet
 			// hibernate throws PersistenceException instead
-			query = em.createQuery("SELECT count(*) FROM " + entityName
+			query = em.createQuery("SELECT count(*) FROM " + getEntityName() 
 					+ " instance");
-			logger.debug("using JPA countAll query for entity " + entityName);
+			logger.debug("using JPA countAll query for entity " + getEntityName() );
 		}
 		return query;
 	}
@@ -761,7 +759,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	@SuppressWarnings("unchecked")
 	private T doReadPopulated(final PK id) {
-		final String queryName = CrudUtils.getClassEntityName(type)
+		final String queryName = getEntityName()
 				+ ".readPopulated";
 		return (T) getJpaTemplate().execute(new JpaCallback() {
 			public Object doInJpa(EntityManager em) throws PersistenceException {

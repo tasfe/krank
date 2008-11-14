@@ -18,7 +18,6 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -47,7 +46,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	
 	private List<QueryHint<?>> queryHints;
 	
-	protected String idPropertyName = "id";
+	protected String idPropertyName = null;
 
 
 
@@ -82,28 +81,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
         return persistedEntity;
     }
 
-    protected boolean hasId(T entity) {
-		BeanWrapper bw = new BeanWrapperImpl(entity);
-		Object propertyValue = bw.getPropertyValue(this.idPropertyName);
-		if (propertyValue==null) {
-            logger.debug("hasId: no id was found returning false");
-            return false;
-		}
-		
-		if (propertyValue instanceof Number) {
-	        boolean isPrimitive = bw.getPropertyType( this.idPropertyName ).isPrimitive();
-	        
-			Number number = (Number) propertyValue;
-			if (isPrimitive && number.longValue() <= 0) {
-                logger.debug("hasId: an id was found and it was a number, but it was less than zero returning false");
-                return false;
-			} else {
-                logger.debug("hasId: an id was found and it was a number returning true");
-                return true;
-			}
-		}
-		
-		return true;
+
+
+	protected boolean hasId(T entity) {
+		return GenericDaoUtils.hasId(entity, this.getIdPropertyName());
 	}
 
 	@Transactional
@@ -174,7 +155,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 			public Object doInJpa(EntityManager entityManager)
 					throws PersistenceException {
 				String queryString = "DELETE FROM " + getEntityName()
-						+ " WHERE " + getPrimaryKeyName() + " = " + id;
+						+ " WHERE " + getIdPropertyName() + " = " + id;
 				Query query = entityManager.createQuery(queryString);
 				query.executeUpdate();
 				return null;
@@ -271,7 +252,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 			// the entity is not managed in this context, presumedly detached
 			// we'll find it in the context by primary key
 			BeanWrapper bw = new BeanWrapperImpl(entity);
-			PK key = (PK)bw.getPropertyValue(getPrimaryKeyName());
+			PK key = (PK)bw.getPropertyValue(getIdPropertyName());
 			Class<T> entityClass = (Class<T>)entity.getClass();
 			managedObject = em.find(entityClass, key);
 			if (managedObject == null) {
@@ -398,33 +379,43 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 	
 	public int count() {
-        logger.debug("count() called");
-        final String entityName = getEntityName(type);
+		logger.debug("count() called");
+		final String entityName = getEntityName(type);
 		return (Integer) getJpaTemplate().execute(new JpaCallback() {
 
 			public Object doInJpa(EntityManager em) throws PersistenceException {
-				Query query = null;
-				try {
-					query = em.createNamedQuery(entityName + ".countAll");
-					logger.debug("using native countAll query for entity " + entityName);
-				}
-				catch (IllegalArgumentException iae) {
-					// thrown if a query has not been defined with the given name
-					query = em.createQuery("SELECT count(*) FROM " + entityName + " instance");
-					logger.debug("using JPA countAll query for entity " + entityName);
-				}
-				catch(PersistenceException pe) {
-					// JPA spec says IllegalArgumentException should be thrown, yet
-					// hibernate throws PersistenceException instead
-					query = em.createQuery("SELECT count(*) FROM " + entityName + " instance");
-					logger.debug("using JPA countAll query for entity " + entityName);
-				}
+				Query query = createCountQuery(entityName, em);
 				prepareQueryHintsIfNeeded(query);
 				Number count = (Number) query.getSingleResult();
 				return count.intValue();
-			}});
+			}
+
+		});
 	}
 
+	private Query createCountQuery(final String entityName, EntityManager em) {
+		Query query = null;
+		try {
+			query = em.createNamedQuery(entityName + ".countAll");
+			logger
+					.debug("using native countAll query for entity "
+							+ entityName);
+		} catch (IllegalArgumentException iae) {
+			// thrown if a query has not been defined with the given name
+			query = em.createQuery("SELECT count(*) FROM " + entityName
+					+ " instance");
+			logger.debug("using JPA countAll query for entity " + entityName);
+		} catch (PersistenceException pe) {
+			// JPA spec says IllegalArgumentException should be thrown, yet
+			// hibernate throws PersistenceException instead
+			query = em.createQuery("SELECT count(*) FROM " + entityName
+					+ " instance");
+			logger.debug("using JPA countAll query for entity " + entityName);
+		}
+		return query;
+	}
+	
+	
 	@SuppressWarnings("unchecked")
 	public List<T> find(Class<T> clazz) {
 		String entityName = getEntityName(clazz);
@@ -466,29 +457,27 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
         }
         final Group group = criteria != null ? Group.and(criteria) : null;
 
-		final StringBuilder sbquery = new StringBuilder("SELECT count("
-				+ (this.distinct ? "DISTINCT " : "") + "o ) " + " FROM ");
-		sbquery.append(getEntityName(type));
-		sbquery.append(" ");
-		sbquery.append("o").append(" ").append(constuctWhereClause(group));
-		return executeCountQuery(group, sbquery, criteria);
+		final String squery = CriteriaUtils.createCountQuery(group, this.type, this.distinct);
+		return executeCountQuery(group, squery, criteria);
 	}
 
+
+
 	private int executeCountQuery(final Group group,
-			final StringBuilder sbquery, final Criterion... criteria) {
+			final String squery, final Criterion... criteria) {
 		try {
 			return (Integer) this.getJpaTemplate().execute(new JpaCallback() {
 				public Object doInJpa(EntityManager em)
 						throws PersistenceException {
-					Query query = em.createQuery(sbquery.toString());
+					Query query = em.createQuery(squery.toString());
 					if (criteria != null) {
-						addGroupParams(query, group, null);
+						GenericDaoUtils.addGroupParams(query, group, null);
 					}
 					return ((Long) query.getResultList().get(0)).intValue();
 				}
 			});
 		} catch (Exception ex) {
-			throw new RuntimeException("Unable to run query : " + sbquery, ex);
+			throw new RuntimeException("Unable to run query : " + squery, ex);
 		}
 	}
 
@@ -510,33 +499,14 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 
 		final StringBuilder sbquery = new StringBuilder("SELECT count("
 				+ (this.distinct ? "DISTINCT " : "") + "o )  ");
-		sbquery.append(constructFrom(joins));
-		sbquery.append(constructJoins(joins));
+		sbquery.append(CriteriaUtils.constructFrom(type, joins));
+		sbquery.append(CriteriaUtils.constructJoins(joins));
 		sbquery.append(" ");
-		sbquery.append(constuctWhereClause(group));
-		return executeCountQuery(group, sbquery, criteria);
+		sbquery.append(CriteriaUtils.constuctWhereClause(group));
+		return executeCountQuery(group, sbquery.toString(), criteria);
 		
 	}
 	
-	private String constructFrom(Join[] joins) {
-		final StringBuilder sbquery = new StringBuilder(35);
-		sbquery.append(" FROM ");
-		sbquery.append(getEntityName(type));
-		sbquery.append(" o ");
-		if (joins == null || joins.length == 0) {
-			return sbquery.toString();
-		}
-		for (Join join : joins){
-			if (join instanceof EntityJoin) {
-				EntityJoin ej = (EntityJoin) join;
-				sbquery.append(" , ");
-				sbquery.append(ej.getName());
-				sbquery.append(" ");
-				sbquery.append(ej.getAlias());
-			}
-		}
-		return sbquery.toString();
-	}
 
 	public List<T> find(Class<T> clazz, Criterion... criteria) {
 		return find(clazz, (String[]) null, criteria);
@@ -619,13 +589,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return doFind(clazz, orderBy, criteria, null);
 	}
 
-	private String constuctWhereClause(final Group group) {
-		String whereClause = "";
-		if (group == null || group.size() > 0) {
-			whereClause = constructWhereClauseString(group, false);
-		}
-		return whereClause;
-	}
+
 
 	private List<T> doFind(Class<T> clazz, OrderBy[] orderBy,
 			final Criterion[] criteria, Join[] fetches,
@@ -641,7 +605,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		final Group group = criteria != null ? Group.and(criteria)
 				: new Group();
 
-		final String sQuery = createQuery(clazz, selects, distinctFlag,
+		final String sQuery = CriteriaUtils.createQuery(clazz, selects, this.newSelectStatement, distinctFlag,
 				orderBy, joins, group);
 		
 		
@@ -660,7 +624,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 						throws PersistenceException {
 					Query query = em.createQuery(sQuery);
 					if (criteria != null) {
-						addGroupParams(query, group, null);
+						GenericDaoUtils.addGroupParams(query, group, null);
 					}
 					if (startPosition != -1 && maxResult != -1) {
 						query.setFirstResult(startPosition);
@@ -685,18 +649,6 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		}
 	}
 
-	private String createQuery(Class<T> clazz, Select[] selects,
-			boolean distinctFlag, OrderBy[] orderBy, Join[] joins,
-			final Group group) {
-		StringBuilder sbQuery = new StringBuilder(255);
-		final String sQuery = sbQuery
-				.append(	constructSelect(selects, getEntityName(clazz), "o", distinctFlag))
-				.append(    constructFrom(joins) )
-				.append(    constructJoins(joins)).append(constuctWhereClause(group))
-				.append(	constructOrderBy(orderBy)).toString();
-		logger.debug(String.format("Query %s ", sQuery));
-		return sQuery;
-	}
 
 	private List<T> doFind(Class<T> clazz, String[] orderBy,
 			final Criterion[] criteria, Join[] fetches,
@@ -722,258 +674,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return doFind(clazz, orderBy, criteria, fetches, -1, -1);
 	}
 
-	private String constructJoins(Join[] joins) {
-		if (joins == null || joins.length == 0) {
-			return "";
-		}
-		StringBuilder builder = new StringBuilder(255);
-		for (Join join : joins) {
-			if (join instanceof RelationshipJoin) {
-				RelationshipJoin rj = (RelationshipJoin) join;
-
-				
-				if (rj.getJoinType() == JoinType.LEFT) {
-					builder.append(" left ");
-				}
-				
-				if (rj instanceof RelationshipFetch) {
-					builder.append(" join fetch ");
-				} else if (rj instanceof SimpleRelationshipJoin) {
-					builder.append(" join ");
-				}
-
-				builder.append(rj.isAliasedRelationship() ? "" : "o.");
-				builder.append(rj.getRelationshipProperty());
-				builder.append(" ");
-				builder.append(rj.getAlias().equals("") ? rj.getDefaultAlias()
-						: rj.getAlias());
-			}
-		}
-
-		return builder.toString();
-	}
-
 	public List<T> find(String[] orderBy, Criterion... criteria) {
 		return find(type, orderBy, criteria);
 	}
 
-	private void addGroupParams(Query query, Group group, Set<String> names) {
-
-		if (names == null) {
-			names = new HashSet<String>();
-		}
-		for (Criterion criterion : group) {
-			if (criterion instanceof Group) {
-				addGroupParams(query, (Group) criterion, names);
-			} else {
-				Comparison comparison = (Comparison) criterion;
-				
-				if (comparison.isObjectIdentity()) {
-					continue;
-				}
-				
-				String name = ditchDot(comparison.getName());
-
-				name = ensureUnique(names, name);
-
-				if (comparison.getValue() != null) {
-					final String sOperator = comparison.getOperator()
-							.getOperator();
-					if (!"like".equalsIgnoreCase(sOperator)) {
-						if (comparison instanceof Between) {
-							Between between = (Between) comparison;
-							query.setParameter(name + "_1", comparison
-									.getValue());
-							query
-									.setParameter(name + "_2", between
-											.getValue2());
-						} else if (comparison instanceof VerifiedBetween) {
-							VerifiedBetween between = (VerifiedBetween) comparison;
-							query.setParameter(name + "_1", comparison
-									.getValue());
-							query
-									.setParameter(name + "_2", between
-											.getValue2());
-						} else {
-							query.setParameter(name, comparison.getValue());
-						}
-
-					} else {
-						Operator operator = comparison.getOperator();
-						StringBuilder value = new StringBuilder(50);
-						if (operator == Operator.LIKE) {
-							value.append(comparison.getValue());
-						} else if (operator == Operator.LIKE_CONTAINS) {
-							value.append("%").append(comparison.getValue())
-									.append("%");
-						} else if (operator == Operator.LIKE_END) {
-							value.append("%").append(comparison.getValue());
-						} else if (operator == Operator.LIKE_START) {
-							value.append(comparison.getValue()).append("%");
-						}
-						if (logger.isDebugEnabled()) {
-							logger.debug("parameters");
-							logger
-									.debug("value name = "
-											+ comparison.getName());
-							logger.debug("value value = " + value);
-						}
-						query.setParameter(name, value.toString());
-					}
-				}
-			}
-		}
-	}
-
-	private String ensureUnique(Set<String> names, String name) {
-		if (names.contains(name)) {
-			int index = 0;
-			String tempVar = null;
-			while (true) {
-				tempVar = name + "_" + index;
-				if (!names.contains(tempVar)) {
-					break;
-				}
-				index++;
-			}
-			name = tempVar;
-		}
-		names.add(name);
-		return name;
-	}
-
-	protected String constructWhereClauseString(Group group, boolean parens) {
-		StringBuilder builder = new StringBuilder(255);
-		if (group == null || group.size() == 0) {
-			return "";
-		} else if (group.size() == 1) {
-			Criterion criterion = group.iterator().next();
-			if (criterion instanceof Group) {
-				Group innerGroup = (Group) criterion;
-				if (innerGroup.size() == 0) {
-					return "";
-				}
-			}
-		}
-		builder.append(" WHERE ");
-		constructWhereClauseString(builder, group, false, null);
-		return builder.toString();
-	}
-
-	protected void constructWhereClauseString(StringBuilder builder,
-			Group group, boolean parens, Set<String> names) {
-
-		if (names == null) {
-			names = new HashSet<String>();
-		}
-
-		if (parens) {
-			builder.append(" ( ");
-		}
-		if (group.size() == 1) {
-			Criterion criterion = group.iterator().next();
-			if (criterion instanceof Group) {
-				constructWhereClauseString(builder, (Group) criterion, true,
-						names);
-			} else if (criterion instanceof Comparison) {
-				addComparisonToQueryString((Comparison) criterion, builder,
-						names);
-			}
-		} else {
-			int size = group.size();
-			int index = 0;
-			for (Criterion criterion : group) {
-				index++;
-				if (criterion instanceof Group) {
-					constructWhereClauseString(builder, (Group) criterion,
-							true, names);
-				} else if (criterion instanceof Comparison) {
-					addComparisonToQueryString((Comparison) criterion, builder,
-							names);
-				}
-				if (index != size) {
-					builder.append(" ");
-					builder.append(group.getJunction());
-					builder.append(" ");
-				}
-			}
-		}
-		if (parens) {
-			builder.append(" ) ");
-		}
-	}
-
-	private void addComparisonToQueryString(Comparison comparison,
-			StringBuilder builder, Set<String> names) {
-
-		String var = ":" + ditchDot(comparison.getName());
-		var = ensureUnique(names, var);
-
-		if (comparison.isObjectIdentity()) {
-			builder.append(comparison.getName());
-			builder.append("=");
-			builder.append(comparison.getValue());
-			return;
-		}
-		
-		if (comparison.getValue() != null) {
-			final String sOperator = comparison.getOperator().getOperator();
-
-			if (!comparison.isAlias()) {
-				builder.append(" o.");
-			} else {
-				builder.append(" ");
-			}
-			builder.append(comparison.getName());
-
-			builder.append(" ");
-			builder.append(sOperator);
-			builder.append(" ");
-
-			if (comparison instanceof Between
-					|| comparison instanceof VerifiedBetween) {
-				builder.append(var).append("_1");
-				builder.append(" ");
-				builder.append("and ").append(var).append("_2");
-			} else if (comparison.getOperator() == Operator.IN) {
-				builder.append(" (");
-				builder.append(var);
-				builder.append(") ");
-			} else {
-				builder.append(var);
-			}
-			builder.append(" ");
-		} else {
-			if (!comparison.isAlias()) {
-				builder.append(" o.");
-			} else {
-				builder.append(" ");
-			}
-			builder.append(comparison.getName());
-			if (comparison.getOperator() == Operator.EQ) {
-				builder.append(" is null ");
-			} else if (comparison.getOperator() == Operator.NE) {
-				builder.append(" is not null ");
-			}
-		}
-	}
-
-	protected String getEntityName(Class<T> aType) {
-		Entity entity = aType.getAnnotation(Entity.class);
-		if (entity == null) {
-			return aType.getSimpleName();
-		}
-		String entityName = entity.name();
-
-		if (entityName == null) {
-			return aType.getSimpleName();
-		} else if (!(entityName.length() > 0)) {
-			return aType.getSimpleName();
-		} else {
-			return entityName;
-		}
-
-	}
 
 	protected String getEntityName() {
 		if (type == null) {
@@ -983,105 +687,10 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		return getEntityName(this.type);
 	}
 
-	@SuppressWarnings("unchecked")
-	private String searchFieldsForPK(Class<T> aType) {
-		String pkName = null;
-		Field[] fields = aType.getDeclaredFields();
-		for (Field field : fields) {
-			Id id = field.getAnnotation(Id.class);
-			if (id != null) {
-				pkName = field.getName();
-				break;
-			}
-		}
-		if (pkName == null && aType.getSuperclass() != null) {
-			pkName = searchFieldsForPK((Class<T>) aType.getSuperclass());
-		}
-		return pkName;
+	private String getEntityName(Class<T> type) {
+		return GenericDaoUtils.getEntityName(type);
 	}
 
-	private String searchMethodsForPK(Class<? super T> aType) {
-		String pkName = null;
-		Method[] methods = aType.getDeclaredMethods();
-		for (Method method : methods) {
-			Id id = method.getAnnotation(Id.class);
-			if (id != null) {
-				pkName = method.getName().substring(4);
-				pkName = method.getName().substring(3, 4).toLowerCase()
-						+ pkName;
-				break;
-			}
-		}
-		if (pkName == null && aType.getSuperclass() != null) {
-			pkName = searchMethodsForPK(aType.getSuperclass());
-		}
-		return pkName;
-	}
-
-	protected String getPrimaryKeyName(Class<T> aType) {
-		String pkName = searchFieldsForPK(aType);
-		if (null == pkName) {
-			pkName = searchMethodsForPK(aType);
-		}
-		return pkName;
-	}
-
-	protected String getPrimaryKeyName() {
-		if (type == null) {
-			throw new UnsupportedOperationException(
-					"The type must be set to use this method.");
-		}
-		return getPrimaryKeyName(this.type);
-	}
-
-	private String constructOrderBy(OrderBy[] orderBy) {
-		StringBuilder query = new StringBuilder(100);
-		if (null != orderBy && orderBy.length > 0) {
-			query.append(" ORDER BY ");
-			for (int index = 0; index < orderBy.length; index++) {
-				if (!orderBy[index].isAlias()) {
-					query.append("o." + orderBy[index].getName());
-				} else {
-					query.append(orderBy[index].getName());
-				}
-				query.append(" ");
-				query.append(orderBy[index].getDirection().toString());
-				if (index + 1 < orderBy.length) {
-					query.append(", ");
-				}
-			}
-		}
-		return query.toString();
-	}
-
-	private String constructSelect(Select[] selects, String entityName, String instanceName, boolean distinctFlag) {
-		StringBuilder query = new StringBuilder(255);
-		query.append("SELECT ");
-
-		if (newSelectStatement != null) {
-			query.append(newSelectStatement);
-			return query.toString();
-		}			
-		query.append((distinctFlag ? " DISTINCT " : " "));
-		query.append(instanceName);
-		
-		if (selects == null || selects.length == 0) {
-			return query.toString();
-		} else {
-			query.append(", ");
-			for (Select select : selects) {
-				query.append((select.isDistinct() ? " DISTINCT " : " "));
-				query.append(select.getName());
-				query.append(", ");
-			}
-			return query.substring(0, query.length()-2);			
-		}		
-	}
-
-	private String ditchDot(String propName) {
-		propName = propName.replace('.', '_');
-		return propName;
-	}
 
 	public Object executeFinder(final Method method, final Object[] queryArgs) {
 		final String queryName = queryNameFromMethodName(method.getName());
@@ -1208,14 +817,27 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 		final Group group = criteria != null ? Group.and(criteria)
 				: new Group();
 
-		final String sQuery = createQuery(this.type, selects, this.distinct,
+		final String sQuery = CriteriaUtils.createQuery(this.type, selects, this.newSelectStatement, this.distinct,
 				orderBy, joins, group);
 
 		return (List<Object[]>)executeQueryWithJPA(criteria, startPosition, maxResults, group,
 				sQuery);
 	}
 
+
+	
 	public String getIdPropertyName() {
+		if (idPropertyName==null) {       
+			idPropertyName = GenericDaoUtils.searchFieldsForPK(this.type);
+			if (idPropertyName==null) {
+				logger.debug("Unable to find @Id in fields looking in getter methods");
+				idPropertyName = GenericDaoUtils.searchMethodsForPK(this.type);
+			}
+			if (idPropertyName==null) {
+				logger.debug("Unable to find @Id using default of id");
+				idPropertyName="id";
+			}
+		}
 		return idPropertyName;
 	}
 

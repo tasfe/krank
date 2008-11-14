@@ -3,31 +3,29 @@ package org.crank.crud;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.persistence.Entity;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 
-import org.crank.crud.criteria.Between;
-import org.crank.crud.criteria.Comparison;
+import org.apache.log4j.Logger;
 import org.crank.crud.criteria.Criterion;
 import org.crank.crud.criteria.Example;
 import org.crank.crud.criteria.Group;
-import org.crank.crud.criteria.Operator;
 import org.crank.crud.criteria.OrderBy;
 import org.crank.crud.criteria.OrderDirection;
 import org.crank.crud.criteria.Select;
-import org.crank.crud.criteria.VerifiedBetween;
 import org.crank.crud.join.Join;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.dao.UncategorizedDataAccessException;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,12 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @version $Revision:$
  * @author Rick Hightower
  * 
- * NOTE: This is not completely baked at this point. The persistence annotations
- * are a result of trying to get transaction awareness to work, which it does
- * not right now.
- * 
- * Basically annotated transactions seem to be broken unless using the jpa
- * template.
  * 
  */
 
@@ -52,13 +44,26 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		implements GenericDao<T, PK> {
 
 	protected Class<T> type = null;
+
 	protected boolean distinct = false;
+
+	protected Logger logger = Logger.getLogger(GenericDaoJpa.class);
+	
+	private String newSelectStatement = null;
+	
+	private List<QueryHint<?>> queryHints;
+	
+	protected String idPropertyName = null;
 
 	@PersistenceContext
 	protected EntityManager entityManager;
 
 	@PersistenceUnit
 	protected EntityManagerFactory entityManagerFactory;
+	
+    public void setQueryHints(List<QueryHint<?>> queryHints) {
+		this.queryHints = queryHints;
+	}
 
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
@@ -100,18 +105,28 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	}
 
 	@Transactional
-	public T store(T entity) {
-		T persistedEntity = entity;
-		try {
-			// TODO: the error reporting could be deferred (the entity has an ID
-			// that is in the db but not in the enity manager)
-			getEntityManager().persist(entity);
-		} catch (EntityExistsException e) {
-			// if the entity exists then we call merge
-			persistedEntity = (T) getEntityManager().merge(entity);
-		}
-		return persistedEntity;
-	}
+    public T store(T entity) {
+        logger.debug(String.format("store(entity) called, %s", entity));
+        T persistedEntity = entity;
+        /*
+         * If the entity has a null id, then use the persist method,
+         * otherwise use the merge method.
+         */
+        if (!hasId(entity)) {
+            // TODO: the error reporting could be deferred (the entity has an ID
+            // that is in the db but not in the entity manager)
+            logger.debug("Calling perist on JPA");
+            getEntityManager().persist(entity);
+        } else {
+            logger.debug("Calling merge since an id was found");
+            persistedEntity = (T) getEntityManager().merge(entity);
+        }
+        return persistedEntity;
+    }
+	
+	protected boolean hasId(T entity) {
+		return GenericDaoUtils.hasId(entity, this.getIdPropertyName());
+	}	
 
 	@Transactional
 	public void persist(T entity) {
@@ -128,13 +143,15 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return getEntityManager().merge(entity);
 	}
 	
+	@Transactional
 	public void delete(final PK id) {
-		getEntityManager().remove(read(id));
+		String queryString = "DELETE FROM " + getEntityName() + " WHERE "
+				+ getIdPropertyName() + " = " + id;
+		Query query = getEntityManager().createQuery(queryString);
+		query.executeUpdate();
 	}
 
 	public void delete(T entity) {
-		// TODO: this really should be using the methods on GenericDaoJpa to get
-		// the PK and call delete(PK)
 		T managedEntity = entity;
 		if (!getEntityManager().contains(entity)) {
 			managedEntity = getEntityManager().merge(entity);
@@ -213,6 +230,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	/**
 	 * @deprecated use merge
 	 */
+	@Transactional
 	public T update(final T transientObject) {
 		return getEntityManager().merge(transientObject);
 	}
@@ -288,19 +306,47 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	}
 
 	public int count() {
-		String entityName = getEntityName(type);
-		Query query = getEntityManager().createQuery(
-				"SELECT count(*) FROM " + entityName + " instance");
-		Long count = (Long) query.getResultList().get(0);
+		String entityName = getEntityName();
+		Query query = createCountQuery(entityName, getEntityManager());
+		prepareQueryHintsIfNeeded(query);
+		Number count = (Number) query.getSingleResult();
 		return count.intValue();
 	}
 
+	private Query createCountQuery(final String entityName, EntityManager em) {
+		Query query = null;
+		try {
+			query = em.createNamedQuery(entityName + ".countAll");
+			logger
+					.debug("using native countAll query for entity "
+							+ entityName);
+		} catch (IllegalArgumentException iae) {
+			// thrown if a query has not been defined with the given name
+			query = em.createQuery("SELECT count(*) FROM " + entityName
+					+ " instance");
+			logger.debug("using JPA countAll query for entity " + entityName);
+		} catch (PersistenceException pe) {
+			// JPA spec says IllegalArgumentException should be thrown, yet
+			// hibernate throws PersistenceException instead
+			query = em.createQuery("SELECT count(*) FROM " + entityName
+					+ " instance");
+			logger.debug("using JPA countAll query for entity " + entityName);
+		}
+		return query;
+	}
 	
 	@SuppressWarnings("unchecked")
 	public List<T> find(Class<T> clazz) {
-		String entityName = getEntityName(clazz);
-		Query query = getEntityManager().createQuery(
-				"SELECT instance FROM " + entityName + " instance");
+		String entityName = getEntityName();
+		String sQuery = null;
+		if (newSelectStatement == null) {
+			sQuery = "SELECT instance FROM " + entityName + " instance";
+		} else {
+			sQuery =  "SELECT " + newSelectStatement + " FROM " + entityName + " o";
+		}
+		
+		Query query = getEntityManager().createQuery(sQuery);
+		prepareQueryHintsIfNeeded(query);
 		return (List<T>) query.getResultList();
 	}
 
@@ -320,24 +366,18 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	}
 
 	public int count(final Criterion... criteria) {
-		final Group group = criteria != null ? Group.and(criteria) : null;
-
-		final StringBuilder sbquery = new StringBuilder("SELECT count("
-				+ (this.distinct ? "DISTINCT " : "") + "o )" + " FROM ");
-		sbquery.append(getEntityName(type));
-		sbquery.append(" ");
-		sbquery.append("o").append(" ").append(constuctWhereClause(group));
-
-		try {
-			Query query = getEntityManager().createQuery(sbquery.toString());
-			if (criteria != null) {
-				addGroupParams(query, group);
-			}
-			return ((Long) query.getResultList().get(0)).intValue();
-
-		} catch (Exception ex) {
-			throw new RuntimeException("Unable to run query : " + sbquery, ex);
+		if (criteria == null || criteria.length == 0) {
+			// count all if no criteria specified
+			return count();
 		}
+		
+        if (logger.isDebugEnabled()) {
+            logger.debug("count called with Criteria " + criteria);
+        }
+        final Group group = criteria != null ? Group.and(criteria) : null;
+
+		final String squery = CriteriaUtils.createCountQuery(group, this.type, this.distinct);
+		return executeCountQuery(group, squery, criteria);
 	}
 
 	
@@ -425,47 +465,29 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return doFind(clazz, orderBy, criteria, null);
 	}
 
-	private String constuctWhereClause(final Group group) {
-		String whereClause = "";
-		if (group == null || group.size() > 0) {
-			whereClause = constructWhereClauseString(group, false);
-		}
-		return whereClause;
-	}
 
 
 	private List<T> doFind(Class<T> clazz, OrderBy[] orderBy,
 			final Criterion[] criteria, Join[] fetches,
 			final int startPosition, final int maxResult) {
-		return doFind(clazz, this.distinct, orderBy, criteria, fetches, startPosition,
+		return doFind(clazz, (Select[])null, this.distinct, orderBy, criteria, fetches, startPosition,
 				maxResult);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<T> doFind(Class<T> clazz, boolean distinctFlag, OrderBy[] orderBy,
-			final Criterion[] criteria, Join[] fetches,
-			final int startPosition, final int maxResult) {
-		StringBuilder sbQuery = new StringBuilder(255);
-		final Group group = criteria != null ? Group.and(criteria) : null;
+	private List<T> doFind(Class<T> clazz, Select[] selects, boolean distinctFlag, OrderBy[] orderBy,
+			final Criterion[] criteria, Join[] joins, final int startPosition, final int maxResult) {
 
-		final String sQuery = sbQuery.append(
-				constructSelect(getEntityName(clazz), "o", distinctFlag)).append(
-				constructJoins(fetches)).append(constuctWhereClause(group))
-				.append(constructOrderBy(orderBy)).toString();
+		final Group group = criteria != null ? Group.and(criteria)
+				: new Group();
 
-		try {
-			Query query = getEntityManager().createQuery(sQuery);
-			if (criteria != null) {
-				addGroupParams(query, group);
-			}
-			if (startPosition != -1 && maxResult != -1) {
-				query.setFirstResult(startPosition);
-				query.setMaxResults(maxResult);
-			}
-			return query.getResultList();
-		} catch (Exception ex) {
-			throw new RuntimeException("Unable to run query : " + sQuery, ex);
-		}
+		final String sQuery = CriteriaUtils.createQuery(clazz, selects, this.newSelectStatement, distinctFlag,
+				orderBy, joins, group);
+		
+		
+
+		return (List<T>)executeQueryWithJPA(criteria, startPosition, maxResult, group,
+				sQuery);
 	}
 
 
@@ -494,230 +516,19 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		return doFind(clazz, orderBy, criteria, fetches, -1, -1);
 	}
 
-	private String constructJoins(Join[] fetches) {
-		if (fetches == null || fetches.length == 0) {
-			return "";
-		}
-//		StringBuilder builder = new StringBuilder(255);
-//		for (Join fetch : fetches) {
-//			if (fetch.getJoin() == JoinType.LEFT) {
-//				builder.append(" left ");
-//			}
-//			builder.append(" join fetch ").append(
-//					fetch.isAliasedRelationship() ? "" : "o.").append(
-//					fetch.getRelationshipProperty()).append(" ").append(
-//					fetch.getAlias().equals("") ? fetch.getDefaultAlias()
-//							: fetch.getAlias());
-//		}
-		throw new RuntimeException("NOT IMPLEMENTED");
-		//return builder.toString();
-	}
-
-	
 	public List<T> find(String[] orderBy, Criterion... criteria) {
 		return find(type, orderBy, criteria);
 	}
 
-	private void addGroupParams(Query query, Group group) {
 
-		for (Criterion criterion : group) {
-			if (criterion instanceof Group) {
-				addGroupParams(query, (Group) criterion);
-			} else {
-				Comparison comparison = (Comparison) criterion;
-				if (comparison.getValue() != null) {
-					final String sOperator = comparison.getOperator()
-							.getOperator();
-					if (!"like".equals(sOperator)) {
-						if (comparison instanceof Between) {
-							Between between = (Between) comparison;
-							query.setParameter(ditchDot(comparison.getName())
-									+ "1", comparison.getValue());
-							query.setParameter(ditchDot(comparison.getName())
-									+ "2", between.getValue2());
-						} else if (comparison instanceof VerifiedBetween) {
-							VerifiedBetween between = (VerifiedBetween) comparison;
-							query.setParameter(ditchDot(comparison.getName())
-									+ "1", comparison.getValue());
-							query.setParameter(ditchDot(comparison.getName())
-									+ "2", between.getValue2());
-						} else {
-							query.setParameter(ditchDot(comparison.getName()),
-									comparison.getValue());
-						}
 
-					} else {
-						Operator operator = comparison.getOperator();
-						StringBuilder value = new StringBuilder(50);
-						if (operator == Operator.LIKE) {
-							value.append(comparison.getValue());
-						} else if (operator == Operator.LIKE_CONTAINS) {
-							value.append("%").append(comparison.getValue())
-									.append("%");
-						} else if (operator == Operator.LIKE_END) {
-							value.append("%").append(comparison.getValue());
-						} else if (operator == Operator.LIKE_START) {
-							value.append(comparison.getValue()).append("%");
-						}
-						query.setParameter(ditchDot(comparison.getName()),
-								value.toString());
-					}
-				}
-			}
-		}
-	}
-
-	protected String constructWhereClauseString(Group group, boolean parens) {
-		StringBuilder builder = new StringBuilder(255);
-		if (group == null || group.size() == 0) {
-			return "";
-		} else if (group.size() == 1) {
-			Criterion criterion = group.iterator().next();
-			if (criterion instanceof Group) {
-				Group innerGroup = (Group) criterion;
-				if (innerGroup.size() == 0) {
-					return "";
-				}
-			}
-		}
-		builder.append(" WHERE ");
-		constructWhereClauseString(builder, group, false);
-		return builder.toString();
-	}
-
-	protected void constructWhereClauseString(StringBuilder builder,
-			Group group, boolean parens) {
-		if (parens) {
-			builder.append(" ( ");
-		}
-		if (group.size() == 1) {
-			Criterion criterion = group.iterator().next();
-			if (criterion instanceof Group) {
-				constructWhereClauseString(builder, (Group) criterion, true);
-			} else if (criterion instanceof Comparison) {
-				addComparisonToQueryString((Comparison) criterion, builder);
-			}
-		} else {
-			int size = group.size();
-			int index = 0;
-			for (Criterion criterion : group) {
-				index++;
-				if (criterion instanceof Group) {
-					constructWhereClauseString(builder, (Group) criterion, true);
-				} else if (criterion instanceof Comparison) {
-					addComparisonToQueryString((Comparison) criterion, builder);
-				}
-				if (index != size) {
-					builder.append(" ");
-					builder.append(group.getJunction());
-					builder.append(" ");
-				}
-			}
-		}
-		if (parens) {
-			builder.append(" ) ");
-		}
-	}
-
-	private void addComparisonToQueryString(Comparison comparison,
-			StringBuilder builder) {
-
-		String var = ":" + ditchDot(comparison.getName());
-		if (comparison.getValue() != null) {
-			final String sOperator = comparison.getOperator().getOperator();
-
-			if (!comparison.isAlias()) {
-				builder.append(" o.");
-			} else {
-				builder.append(" ");
-			}
-			builder.append(comparison.getName());
-
-			builder.append(" ");
-			builder.append(sOperator);
-			builder.append(" ");
-
-			if (comparison instanceof Between
-					|| comparison instanceof VerifiedBetween) {
-				builder.append(var).append("1");
-				builder.append(" ");
-				builder.append("and ").append(var).append("2");
-			} else if (comparison.getOperator() == Operator.IN) {
-				builder.append(" (");
-				builder.append(var);
-				builder.append(") ");
-			} else {
-				builder.append(var);
-			}
-			builder.append(" ");
-		} else {
-			if (!comparison.isAlias()) {
-				builder.append(" o.");
-			} else {
-				builder.append(" ");
-			}
-			builder.append(comparison.getName());
-			if (comparison.getOperator() == Operator.EQ) {
-				builder.append(" is null ");
-			} else if (comparison.getOperator() == Operator.NE) {
-				builder.append(" is not null ");
-			}
-		}
-	}
-
-	protected String getEntityName(Class<T> aType) {
-		Entity entity = aType.getAnnotation(Entity.class);
-		if (entity == null) {
-			return aType.getSimpleName();
-		}
-		String entityName = entity.name();
-
-		if (entityName == null) {
-			return aType.getSimpleName();
-		} else if (!(entityName.length() > 0)) {
-			return aType.getSimpleName();
-		} else {
-			return entityName;
-		}
-
-	}
 
 	protected String getEntityName() {
 		if (type == null) {
 			throw new UnsupportedOperationException(
 					"The type must be set to use this method.");
 		}
-		return getEntityName(this.type);
-	}
-
-	private String constructOrderBy(OrderBy[] orderBy) {
-		StringBuilder query = new StringBuilder(100);
-		if (null != orderBy && orderBy.length > 0) {
-			query.append(" ORDER BY ");
-			for (int index = 0; index < orderBy.length; index++) {
-				query.append(orderBy[index].getName());
-				query.append(" ");
-				query.append(orderBy[index].getDirection().toString());
-				if (index + 1 < orderBy.length) {
-					query.append(", ");
-				}
-			}
-		}
-		return query.toString();
-	}
-
-	private String constructSelect(String entityName, String instanceName, boolean distinctFlag) {
-		StringBuilder query = new StringBuilder("SELECT "
-				+ (distinctFlag ? "DISTINCT " : "") + instanceName + " FROM ");
-		query.append(entityName);
-		query.append(" ");
-		query.append(instanceName).append(" ");
-		return query.toString();
-	}
-
-	private String ditchDot(String propName) {
-		propName = propName.replace('.', '_');
-		return propName;
+		return 		GenericDaoUtils.getEntityName(type);
 	}
 
 	public Object executeFinder(final Method method, final Object[] queryArgs) {
@@ -757,9 +568,15 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 
 	public T readPopulated(final PK id) {
 		try {
-			return readPopulated(type, id);
+			return doReadPopulated(id);
 		} catch (JpaSystemException jpaSystemException) {
-			return read(type, id);
+			return read(id);
+		} catch (IllegalArgumentException iae) {
+			return read(id);
+		} catch (InvalidDataAccessApiUsageException idaaue) {
+			return read(id);
+		} catch (UncategorizedDataAccessException udae) {
+			return read(id);
 		}
 	}
 
@@ -818,37 +635,119 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		runnable.run();
 	}
 
-	public int count(Join[] fetches, Criterion... criteria) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int count(Join[] joins, final Criterion... criteria) {
+		if ((joins == null || joins.length == 0) &&
+			(criteria == null || criteria.length == 0)	)
+		{
+			// count all if no joins or criteria specified
+			return count();
+		}
+		
+		
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("count called with Criteria=%s and joins=%s ", criteria,
+                    joins!=null ? Arrays.asList(joins) : "no joins"));
+        }
+
+		final Group group = criteria != null ? Group.and(criteria) : null;
+
+		final StringBuilder sbquery = new StringBuilder("SELECT count("
+				+ (this.distinct ? "DISTINCT " : "") + "o )  ");
+		sbquery.append(CriteriaUtils.constructFrom(type, joins));
+		sbquery.append(CriteriaUtils.constructJoins(joins));
+		sbquery.append(" ");
+		sbquery.append(CriteriaUtils.constuctWhereClause(group));
+		return executeCountQuery(group, sbquery.toString(), criteria);
+		
 	}
+	
+	private int executeCountQuery(final Group group, final String squery,
+			final Criterion... criteria) {
+		try {
+			Query query = this.getEntityManager()
+					.createQuery(squery.toString());
+			if (criteria != null) {
+				GenericDaoUtils.addGroupParams(query, group, null);
+			}
+			return ((Long) query.getResultList().get(0)).intValue();
+		} catch (Exception ex) {
+			throw new RuntimeException("Unable to run query : " + squery, ex);
+		}
+	}	
 
 	public void clear() {
-		// TODO Auto-generated method stub
-		
+		getEntityManager().clear();
 	}
 
 	public void flush() {
-		// TODO Auto-generated method stub
+		getEntityManager().flush();
 		
 	}
-
-	public List<Object[]> find(Select[] select, Join[] joins,
+	public String getIdPropertyName() {
+		if (idPropertyName==null) {       
+			idPropertyName = GenericDaoUtils.searchFieldsForPK(this.type);
+			if (idPropertyName==null) {
+				logger.debug("Unable to find @Id in fields looking in getter methods");
+				idPropertyName = GenericDaoUtils.searchMethodsForPK(this.type);
+			}
+			if (idPropertyName==null) {
+				logger.debug("Unable to find @Id using default of id");
+				idPropertyName="id";
+			}
+		}
+		return idPropertyName;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Object[]> find(Select[] selects, Join[] joins,
 			OrderBy[] orderBy, int startPosition, int maxResults,
 			Criterion... criteria) {
-		// TODO Auto-generated method stub
-		return null;
+		final Group group = criteria != null ? Group.and(criteria)
+				: new Group();
+
+		final String sQuery = CriteriaUtils.createQuery(this.type, selects, this.newSelectStatement, this.distinct,
+				orderBy, joins, group);
+
+		return (List<Object[]>)executeQueryWithJPA(criteria, startPosition, maxResults, group,
+				sQuery);
 	}
 
+	@SuppressWarnings("unchecked")
+	private List executeQueryWithJPA(final Criterion[] criteria,
+			final int startPosition, final int maxResult, final Group group,
+			final String sQuery) {
+		try {
+					Query query = getEntityManager().createQuery(sQuery);
+					if (criteria != null) {
+						GenericDaoUtils.addGroupParams(query, group, null);
+					}
+					if (startPosition != -1 && maxResult != -1) {
+						query.setFirstResult(startPosition);
+						query.setMaxResults(maxResult);
+					}
+					prepareQueryHintsIfNeeded(query);
+					return query.getResultList();
+			} catch (Exception ex) {
+			logger.debug("failed to run a query", ex);
+			throw new RuntimeException("Unable to run query : " + sQuery, ex);
+		}
+	}	
+	
+	private final void prepareQueryHintsIfNeeded(Query query) {
+		if (queryHints!=null && queryHints.size()>0) {
+			for (QueryHint<?> qh : queryHints) {
+				query.setHint(qh.getName(), qh.getValue());
+			}
+		}
+	}	
     public <Z> Z getReference(Class<Z> entityClass, Object primaryKey) {
-        //TODO finish this
-        return null;
+    	return this.getEntityManager().getReference(entityClass, primaryKey);
     }
 
 	public List<T> find(Map<String, Object> propertyValues, int startRecord,
 			int numRecords) {
-		// TODO Auto-generated method stub
-		return null;
+		return doFind(this.type, (Select[])null, true, (OrderBy[]) null,
+				new Criterion[]{Group.and(propertyValues)}, (Join[]) null, startRecord, numRecords);
 	}
 	
 }

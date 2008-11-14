@@ -249,7 +249,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		GenericDaoJpa<Employee, Long> dao = new GenericDaoJpa<Employee, Long>();
 		Group group = and(eq("firstName", "Rick"), eq("lastName", "Hightower"),
 				or(eq("foo", "bar"), eq("baz", "foo")));
-		String string = dao.constructWhereClauseString(group, false);
+		String string = CriteriaUtils.constructWhereClauseString(group, false);
 		AssertJUnit
 				.assertEquals(
 						" WHERE  o.firstName = :firstName  AND  o.lastName = :lastName  AND  (  o.foo = :foo  OR  o.baz = :baz  ) ",
@@ -257,23 +257,23 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 
 		group = and(eq("firstName", "Rick"), eq("lastName", "Hightower"),
 				or(eq("foo", "bar")));
-		string = dao.constructWhereClauseString(group, false);
+		string = CriteriaUtils.constructWhereClauseString(group, false);
 		AssertJUnit
 				.assertEquals(
 						" WHERE  o.firstName = :firstName  AND  o.lastName = :lastName  AND  (  o.foo = :foo  ) ",
 						string);
 
 		group = and(eq("firstName", "Rick"));
-		string = dao.constructWhereClauseString(group, false);
+		string = CriteriaUtils.constructWhereClauseString(group, false);
 		AssertJUnit.assertEquals(" WHERE  o.firstName = :firstName ", string);
 
 		group = and(between("age", 1, 100));
-		string = dao.constructWhereClauseString(group, false);
+		string = CriteriaUtils.constructWhereClauseString(group, false);
 		AssertJUnit.assertEquals(" WHERE  o.age BETWEEN :age_1 and :age_2 ",
 				string);
 
 		group = and(Employee.class, between("age", 1, 100));
-		string = dao.constructWhereClauseString(group, false);
+		string = CriteriaUtils.constructWhereClauseString(group, false);
 		AssertJUnit.assertEquals(" WHERE  o.age BETWEEN :age_1 and :age_2 ",
 				string);
 
@@ -285,7 +285,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 		employee.setDepartment(department);
 		group = like(employee).excludeProperty("employees").excludeProperty(
 				"numberOfPromotions");
-		string = dao.constructWhereClauseString(group, false);
+		string = CriteriaUtils.constructWhereClauseString(group, false);
 		AssertJUnit
 				.assertEquals(
 						" WHERE  o.active = :active  AND  (  o.department.name LIKE :department_name  )  AND  o.firstName LIKE :firstName  AND  o.tasks = :tasks ",
@@ -381,7 +381,7 @@ public class GenericDaoJpaTest extends DbUnitTestBase {
 	public void testQueryBuildingNullParameter() {
 		GenericDaoJpa<Employee, Long> localDao = new GenericDaoJpa<Employee, Long>();
 
-		String gimp = localDao.constructWhereClauseString(
+		String gimp = CriteriaUtils.constructWhereClauseString(
 				and(eq("gimp", null)), true);
 		AssertJUnit.assertEquals(" WHERE  o.gimp is null ", gimp);
 	}

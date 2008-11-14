@@ -777,7 +777,7 @@ public class GenericDaoJpa<T, PK extends Serializable> extends JpaDaoSupport
 	}
 
 	public String queryNameFromMethodName(String finderMethod) {
-		return type.getSimpleName() + "." + finderMethod;
+		return getEntityName() + "." + finderMethod;
 	}
 
 	@Transactional

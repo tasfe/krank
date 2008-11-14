@@ -39,7 +39,6 @@ import org.springframework.transaction.annotation.Transactional;
  * 
  * 
  */
-
 public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 		implements GenericDao<T, PK> {
 
@@ -306,31 +305,30 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	}
 
 	public int count() {
-		String entityName = getEntityName();
-		Query query = createCountQuery(entityName, getEntityManager());
+		Query query = createCountQuery(getEntityManager());
 		prepareQueryHintsIfNeeded(query);
 		Number count = (Number) query.getSingleResult();
 		return count.intValue();
 	}
 
-	private Query createCountQuery(final String entityName, EntityManager em) {
+	private Query createCountQuery(EntityManager em) {
 		Query query = null;
 		try {
-			query = em.createNamedQuery(entityName + ".countAll");
+			query = em.createNamedQuery(getEntityName() + ".countAll");
 			logger
 					.debug("using native countAll query for entity "
-							+ entityName);
+							+ getEntityName());
 		} catch (IllegalArgumentException iae) {
 			// thrown if a query has not been defined with the given name
-			query = em.createQuery("SELECT count(*) FROM " + entityName
+			query = em.createQuery("SELECT count(*) FROM " + getEntityName()
 					+ " instance");
-			logger.debug("using JPA countAll query for entity " + entityName);
+			logger.debug("using JPA countAll query for entity " + getEntityName());
 		} catch (PersistenceException pe) {
 			// JPA spec says IllegalArgumentException should be thrown, yet
 			// hibernate throws PersistenceException instead
-			query = em.createQuery("SELECT count(*) FROM " + entityName
+			query = em.createQuery("SELECT count(*) FROM " + getEntityName()
 					+ " instance");
-			logger.debug("using JPA countAll query for entity " + entityName);
+			logger.debug("using JPA countAll query for entity " + getEntityName());
 		}
 		return query;
 	}
@@ -581,7 +579,7 @@ public class GenericDaoJpaWithoutJpaTemplate<T, PK extends Serializable>
 	}
 
 	public String queryNameFromMethod(Method finderMethod) {
-		return type.getSimpleName() + "." + finderMethod.getName();
+		return getEntityName() + "." + finderMethod.getName();
 	}
 
 	public void delete(Collection<T> entities) {

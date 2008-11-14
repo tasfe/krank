@@ -152,8 +152,8 @@ public abstract class CrudDAOConfig implements InitializingBean {
 	@SuppressWarnings("unchecked")
 	public GenericDao createDao(CrudManagedObject cmo)
 			throws Exception {
-		GenericDaoFactory genericDaoFactory = new GenericDaoFactory(
-				transactionInterceptor());
+		GenericDaoFactory genericDaoFactory = new GenericDaoFactory();
+		genericDaoFactory.setTransactionInterceptor(transactionInterceptor());
 		if (cmo.getDaoInterface() == null) {
 			genericDaoFactory.setInterface(GenericDao.class);
 		} else {

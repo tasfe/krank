@@ -11,7 +11,6 @@ import org.crank.core.StringUtils;
 import org.crank.core.spring.support.SpringBeanWrapperPropertiesUtil;
 import org.crank.crud.GenericDao;
 import org.crank.crud.controller.CrudController;
-import org.crank.crud.controller.CrudControllerListener;
 import org.crank.crud.controller.CrudControllerListenerAdapter;
 import org.crank.crud.controller.CrudEvent;
 import org.crank.crud.controller.CrudManagedObject;

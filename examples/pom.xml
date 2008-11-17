@@ -21,5 +21,6 @@
       <module>blank-project</module>
       <module>todo-example</module>
       <module>security-webapp</module>
+      <module>crank-spring-security-webapp</module>      
     </modules>
 </project>

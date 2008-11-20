@@ -21,6 +21,6 @@
       <module>blank-project</module>
       <module>todo-example</module>
       <module>security-webapp</module>
-      <module>crank-spring-security-webapp</module>      
+      <!-- Please get this to compile before adding it back... <module>crank-spring-security-webapp</module>-->      
     </modules>
 </project>

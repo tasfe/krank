@@ -1,0 +1,15 @@
+#summary Crank Spring Security Webapp is a direct copy of the crank-crud-webapp in the 'examples/' folder , and it has been modified to integrate JSF/Facelets with Spring Security 2.0.4
+#labels examples,springsecurity
+
+= Introduction =
+
+The Crank Spring Security Webapp is a mini-example application that utilizes Spring Security 2.x.x to enforce user logins to secured resources. Out of the box, Spring Security 2.x.x does not integrate at all with JSF, so a little code had to be written so that it would. By default if you use Spring Security's JDBC Authentication Provider, Spring assumes that you have certain table names and columns defined to do out of the box authentication with a database. You can define your own tables and authentication queries, but out of the box, Spring has nailed down a pretty good ERD for the way they have implemented the basic concepts of Security which are Users, Roles, Groups, etc... 
+
+For a more detailed explanation of Spring Security 2 you can visit the following links:
+  * http://static.springframework.org/spring-security/site/ 
+  * http://www.parleys.com/display/PARLEYS/Using+Spring+Security+2
+  
+
+
+= Details =
+More to Come Very Soon

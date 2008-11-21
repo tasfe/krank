@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+
+    <category name="org.ajax4jsf">
+        <priority value="WARN" />
+    </category>
+
+    <category name="org.richfaces">
+        <priority value="WARN" />
+    </category>    
+
+    <category name="org.apache.commons.digester">
+        <priority value="WARN" />
+    </category>    
+
+	
+
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+              value="[%d{ISO8601}] %-5p %c %m %n" />
+        </layout>
+    </appender>
+
+    <category name="org.hibernate">
+        <priority value="ERROR" />
+    </category>
+
+    <category name="org.hibernate.SQL">
+        <priority value="ERROR" />
+    </category>
+
+    <category name="org.apache.commons">
+        <priority value="ERROR" />
+    </category>
+
+    <category name="org.springframework">
+        <priority value="ERROR" />
+    </category>
+
+	<!-- 
+    <category name="org.springframework.transaction">
+        <priority value="WARN" />
+    </category>
+	-->
+
+    <category name="org.apache.velocity">
+        <priority value="WARN" />
+    </category>
+
+    <category name="com.vmc.biz">
+        <priority value="WARN" />
+    </category>
+
+	
+    <category name="net.sf.ehcache">
+        <priority value="WARN" />
+    </category>
+
+    <category name="org.apache.myfaces">
+        <priority value="WARN" />
+    </category>
+
+    <category name="com.sun.facelets">
+        <priority value="WARN" />
+    </category>
+
+
+    <category name="org.hibernate.cache">
+        <priority value="WARN" />
+    </category>
+    
+    <!--                           -->
+    <!-- setup log4j's root logger -->
+    <!--                           -->
+    <root>
+        <level value="WARN" />
+        <appender-ref ref="CONSOLE"/>
+    </root>
+	
+    <category name="org.crank.crud.GenericDaoJpa">
+        <priority value="ERROR" />
+    </category>
+
+    <category name="org.crank.crud.jsf.support.EntityConverter">
+        <priority value="ERROR" />
+    </category>
+
+    <category name="org.crank.message.MessageUtils">
+        <priority value="ERROR"/>
+    </category>
+
+    <category name="org.crank.crud.controller.SelectManyController">
+        <priority value="ERROR"/>
+    </category>
+	
+	
+    <category name="org.crank.crud.controller.Paginator">
+        <priority value="ERROR"/>
+    </category>
+
+    <category name="org.crank.crud.controller.BulkUpdaterController">
+        <priority value="DEBUG"/>
+    </category>
+
+
+</log4j:configuration>

@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd"
+    version="1.2">
+  <!--
+  <lifecycle>
+		<phase-listener>org.crank.jsf.support.DebugPhaseListener</phase-listener>
+  </lifecycle>
+  -->
+    
+  <application>
+    <action-listener>org.crank.crud.jsf.support.JsfMessageActionListener</action-listener>
+    <variable-resolver>org.springframework.web.jsf.DelegatingVariableResolver</variable-resolver>
+    <message-bundle>messages</message-bundle>
+  </application>
+  
+  <!-- 
+  <component>
+    <component-type>org.crank.javax.faces.SelectOne</component-type>
+    <component-class>org.crank.javax.faces.component.UISelectOne</component-class>
+  </component>
+  <render-kit>
+      <renderer>
+      <component-family>javax.faces.SelectOne</component-family>
+      <renderer-type>org.crank.javax.faces.Listbox</renderer-type>
+      <renderer-class>
+			org.crank.javax.faces.component.ListboxRenderer
+  	  </renderer-class>
+    </renderer>
+  
+  </render-kit>
+   -->
+  
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>HOME</from-outcome>
+  		<to-view-id>/pages/Home.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+  
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>DEPARTMENTS</from-outcome>
+  		<to-view-id>/pages/crud/Department/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>EMPLOYEES</from-outcome>
+  		<to-view-id>/pages/crud/Employee/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>EMPLOYEE_RECS</from-outcome>
+  		<to-view-id>/pages/crud/EmployeeRec/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>INQUIRY</from-outcome>
+  		<to-view-id>/pages/crud/inquiry/listing.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>SKILLS</from-outcome>
+  		<to-view-id>/pages/crud/Skill/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>EMPLOYEE_FORM</from-outcome>
+  		<to-view-id>/pages/crud/Employee/Form.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+  
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>DEPARTMENT_FORM</from-outcome>
+  		<to-view-id>/pages/crud/Department/Form.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+  
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>SPECIALTY</from-outcome>
+  		<to-view-id>/pages/crud/Specialty/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+  
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>ROLES</from-outcome>
+  		<to-view-id>/pages/crud/Role/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  </navigation-rule>
+  
+  <navigation-rule>
+  	<from-view-id>/pages/crud/Employee/*</from-view-id>
+  	<navigation-case>
+  		<from-outcome>LISTING</from-outcome>
+  		<to-view-id>/pages/crud/Employee/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  	<navigation-case>
+  		<from-outcome>FORM</from-outcome>
+  		<to-view-id>/pages/crud/Employee/Form.xhtml</to-view-id>
+  	</navigation-case>  	
+  	<navigation-case>
+  		<from-outcome>EXPORT</from-outcome>
+  		<to-view-id>/pages/crud/Employee/ExportListing.xhtml</to-view-id>
+  	</navigation-case>  	
+  </navigation-rule>
+  
+  <navigation-rule>
+  	<from-view-id>/pages/crud/Department/*</from-view-id>
+  	<navigation-case>
+  		<from-outcome>LISTING</from-outcome>
+  		<to-view-id>/pages/crud/Department/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  	<navigation-case>
+  		<from-outcome>FORM</from-outcome>
+  		<to-view-id>/pages/crud/Department/Form.xhtml</to-view-id>
+  	</navigation-case>  	
+  	<navigation-case>
+  		<from-outcome>EXPORT</from-outcome>
+  		<to-view-id>/pages/crud/Department/ExportListing.xhtml</to-view-id>
+  	</navigation-case>  	
+  </navigation-rule>
+
+  <navigation-rule>
+  	<from-view-id>/pages/crud/Specialty/*</from-view-id>
+  	<navigation-case>
+  		<from-outcome>LISTING</from-outcome>
+  		<to-view-id>/pages/crud/Specialty/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  	<navigation-case>
+  		<from-outcome>FORM</from-outcome>
+  		<to-view-id>/pages/crud/Specialty/Form.xhtml</to-view-id>
+  	</navigation-case>  	
+  	<navigation-case>
+  		<from-outcome>EXPORT</from-outcome>
+  		<to-view-id>/pages/crud/Specialty/ExportListing.xhtml</to-view-id>
+  	</navigation-case>  	
+  </navigation-rule>
+
+  <navigation-rule>
+  	<from-view-id>/pages/crud/Role/*</from-view-id>
+  	<navigation-case>
+  		<from-outcome>LISTING</from-outcome>
+  		<to-view-id>/pages/crud/Role/Listing.xhtml</to-view-id>
+  	</navigation-case>
+  	<navigation-case>
+  		<from-outcome>FORM</from-outcome>
+  		<to-view-id>/pages/crud/Role/Form.xhtml</to-view-id>
+  	</navigation-case>  	
+  	<navigation-case>
+  		<from-outcome>EXPORT</from-outcome>
+  		<to-view-id>/pages/crud/Role/ExportListing.xhtml</to-view-id>
+  	</navigation-case>  	
+  </navigation-rule>
+  
+  <converter>
+  	<converter-for-class>org.crank.crud.model.inquiry.PetClinicInquiry</converter-for-class>
+  	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
+  </converter>
+  <converter>
+  	<converter-for-class>org.crank.crud.model.inquiry.Inquiry</converter-for-class>
+  	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
+  </converter>
+  <converter>
+  	<converter-for-class>org.crank.crud.model.Department</converter-for-class>
+  	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
+  </converter>
+  <converter>
+  	<converter-for-class>org.crank.crud.model.Category</converter-for-class>
+  	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
+  </converter>
+
+
+</faces-config>

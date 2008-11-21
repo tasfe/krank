@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:arc="http://www.arc-mind.com/jsf/core" 
+      xmlns:c="http://java.sun.com/jstl/core"
+	  xmlns:fn="http://java.sun.com/jsp/jstl/functions"   
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+	  xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	  xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	  xmlns:crank="http://www.googlecode.com/crank"	
+	  xmlns:crud="http://www.googlecode.com/crank/crud"
+	  xmlns:validation="http://code.google.com/p/krank/validation"
+      >
+
+<!--  	  xmlns:validation="http://code.google.com/p/krank/validation" -->
+  <ui:composition>
+
+  	<c:if test="empty bypassValidation">
+		<c:set var="bypassValidation" value="${false}" />
+	</c:if>
+	
+  	<c:if test="empty renderManyAsSingle">
+		<c:set var="renderManyAsSingle" value="${false}" />
+	</c:if>
+	
+  	<c:if test="empty disabled">
+		<c:set var="disabled" value="${true}" />
+	</c:if>
+	
+	<c:if test="empty useLabel">
+		<c:set var="useLabel" value="${true}" />
+	</c:if>
+	
+	<c:if test="empty type">
+		    <c:set var="type" value="${crud.entityClass}" />
+	</c:if>
+	
+	<c:if test="empty entity">
+		    <c:set var="entity" value="${crud.entity}" />
+	</c:if>
+	
+	<c:if test="${empty formLabelStyleClasses}">
+	    <c:set var="formLabelStyleClasses" value="fieldLabel" />
+	</c:if>
+
+	<c:if test="${empty formFieldStyleClasses}">
+	    <c:set var="formFieldStyleClasses" value="fieldField" />
+	</c:if>
+
+	<c:set var="suggest" value=""/>
+	<c:set var="forceInputText" value="${false}"/>
+	
+	<c:if test="${crud:contains(fieldName, ':')}">
+		<c:set var="suggestProps" value="${fn:split(fieldName, ':')}" />
+		<c:set var="fieldName" value="${suggestProps[0]}" />
+		<c:set var="suggest" value="${suggestProps[1]}" />
+		<c:set var="forceInputText" value="${true}"/>
+	</c:if>
+
+    <c:if test="${empty required}">
+        <c:set var="required" value="${crud:isRequired(type,fieldName)}" />
+    </c:if>
+	
+	<c:if test="${simpleType}">
+    <c:if test="${crud:isText(type,fieldName) or forceInputText}">
+		<c:choose>
+			<c:when test="${crud:isLargeText(type,fieldName)}">
+				<a4j:outputPanel ajaxRendered="true">
+			    <h:inputTextarea disabled="${disabled}"
+			                     value="#{entity[fieldName]}" 
+			                     required="${required}" 
+			                     styleClass="${formFieldStyleClasses}"
+			                     cols="50" rows="${crud:textSize(type,fieldName)/50}">
+			        <c:if test="${not bypassValidation}">
+			        	<validation:validateBasedOnMetaData formClass="${type}" fieldName="${fieldName}" parentObject="#{entity}"/>
+			        </c:if>
+					<c:if test="${crud:textSize(type,fieldName)>0}">
+						<f:validateLength maximum="${crud:textSize(type,fieldName)}" />
+					</c:if>
+				</h:inputTextarea>
+				</a4j:outputPanel>
+			</c:when>
+			<c:otherwise>
+
+				<c:choose>
+					<c:when test="${not empty suggest}">
+					<h:panelGroup>
+					   	<crank:autoComplete
+							suggestionboxProperty="name" />
+					</h:panelGroup>
+
+					</c:when>
+					<c:otherwise>
+						<a4j:outputPanel ajaxRendered="true">
+					   	<h:inputText disabled="${disabled}"
+					                 value="#{entity[fieldName]}" 
+					                 required="${required}" 
+					                 styleClass="${formFieldStyleClasses}">
+					        <c:if test="${not bypassValidation}">
+				        		<validation:validateBasedOnMetaData formClass="${type}" fieldName="${fieldName}" parentObject="#{entity}"/>
+				        	</c:if>							
+							<c:if test="${crud:textSize(type,fieldName)>0}">
+								<f:validateLength maximum="${crud:textSize(type,fieldName)}" />
+							</c:if>
+						</h:inputText>
+						</a4j:outputPanel>
+					</c:otherwise>
+				</c:choose>			
+			</c:otherwise>
+	   </c:choose>
+    </c:if>
+	</c:if>
+	
+	<c:if test="${simpleType}">
+	<!--  If the value binding is a boolean, display a
+           selectBooleanCheckbox field. -->
+    <c:if test="${crud:isBoolean(type,fieldName)}">
+       <a4j:outputPanel ajaxRendered="true">
+	   <h:selectBooleanCheckbox  disabled="${disabled}"
+						 value="#{entity[fieldName]}"
+						 onclick="${onclick}" 
+						 required="${required}" 
+						 styleClass="fieldSelectBooleanCheckbox">
+		</h:selectBooleanCheckbox>
+		</a4j:outputPanel>
+	</c:if>
+	</c:if>
+	
+	<c:if test="${simpleType}">
+    <!--  If the value binding is a date, 
+          display a t:inputDate field. -->
+    <c:if test="${crud:isDate(type,fieldName)}">
+    	<a4j:outputPanel ajaxRendered="true">
+		<t:calendar renderPopupButtonAsImage="true" 
+	   				 disabled="${disabled}"
+	                   renderAsPopup="true" value="#{entity[fieldName]}" 
+	                   required="${required}"
+	                   styleClass="${formFieldStyleClasses}">
+		        <c:if test="${not bypassValidation}">
+			        <validation:validateBasedOnMetaData formClass="${type}" fieldName="${fieldName}" parentObject="#{entity}"/>
+			    </c:if>	                   
+	        <ui:insert />
+		</t:calendar>
+		</a4j:outputPanel>
+	</c:if>
+	</c:if>
+	
+	<c:if test="${simpleType}">
+    <c:if test="${crud:isManyToOne(type,fieldName) and not forceInputText}">
+        <c:set var="propEntityName" value="${crud:getPropertyEntityName(type,fieldName)}" />
+        <a4j:outputPanel ajaxRendered="true">
+			<c:if test="${not renderManyAsSingle}">	        	        
+				<crud:select disabled="${disabled}" value="#{entity[fieldName]}">
+					<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
+					<f:converter converterId="" binding="${converters[propEntityName]}"/>
+				</crud:select>
+			</c:if>
+			<c:if test="${renderManyAsSingle}">	        	        
+				<h:inputText disabled="true" value="#{entity[fieldName]}">
+					<f:converter converterId="" binding="${converters[propEntityName]}"/>
+				</h:inputText>
+			</c:if>
+		</a4j:outputPanel>		
+    </c:if>
+	</c:if>
+	
+	<c:if test="${simpleType}">
+    <c:if test="${crud:isEnum(type,fieldName)}">
+        <c:set var="propEntityName" value="${crud:getPropertyEntityName(type,fieldName)}" />
+        <a4j:outputPanel ajaxRendered="true">
+        <h:selectOneMenu disabled="${disabled}" value="#{entity[fieldName]}">
+			<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
+		</h:selectOneMenu>
+		</a4j:outputPanel>
+    </c:if>
+	</c:if>
+	
+	<c:if test="${simpleType}">
+    <c:if test="${crud:isFile(type,fieldName)}">
+        <c:set var="mapKeyName" value="uploadFile_${fieldName}" />
+        <t:inputFileUpload 
+        	disabled="${disabled}" 
+            accept="image/*"
+  			required="${required}" 
+            value="${crud.dynamicProperties[mapKeyName]}"
+            storage="file"
+            maxlength="${crud:columnSize(type,fieldName)}"/>
+    </c:if>
+	</c:if>
+
+</ui:composition>
+
+</html>
+

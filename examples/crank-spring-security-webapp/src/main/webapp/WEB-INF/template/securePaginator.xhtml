@@ -1,0 +1,383 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:crank="http://www.googlecode.com/crank"
+
+        >
+
+<ui:composition>
+
+	#{paginator.init}
+
+	<c:if test="${empty addNewImg}">
+		<c:set var="addNewImg" value="/images/add-new${imgAdjust}.gif"/>
+	</c:if>
+	<c:if test="${empty applyFilterImg}">
+		<c:set var="applyFilterImg" value="/images/filter${imgAdjust}.gif"/>
+	</c:if>
+	<c:if test="${empty applyFilterDisabledImg}">
+		<c:set var="applyFilterDisabledImg" value="/images/filter-disabled${imgAdjust}.gif"/>
+	</c:if>
+	<c:if test="${empty clearFilterImg}">
+		<c:set var="clearFilterImg" value="/images/clear-filter${imgAdjust}.gif"/>
+	</c:if>
+	<c:if test="${empty clearFilterDisabledImg}">
+		<c:set var="clearFilterDisabledImg" value="/images/clear-filter-disabled${imgAdjust}.gif"/>
+	</c:if>
+	<c:if test="${empty clearSortsImg}">
+		<c:set var="clearSortsImg" value="/images/clear-sorts${imgAdjust}.gif"/>
+	</c:if>
+	<c:if test="${empty clearSortsDisabledImg}">
+		<c:set var="clearSortsDisabledImg" value="/images/clear-sorts-disabled${imgAdjust}.gif"/>
+	</c:if>
+	<c:if test="${empty resetImg}">
+		<c:set var="resetImg" value="/images/reset${imgAdjust}.gif"/>
+	</c:if>
+	<c:if test="${empty resetDisabledImg}">
+		<c:set var="resetDisabledImg" value="/images/reset-disabled${imgAdjust}.gif"/>
+	</c:if>
+	<c:if test="${empty exportImg}">
+		<c:set var="exportImg" value="/images/excel(tm)${imgAdjust}.gif"/>
+	</c:if>
+	<c:if test="${empty pageFirstImg}">
+		<c:set var="pageFirstImg" value="/images/page_first_btn.gif"/>
+	</c:if>
+	<c:if test="${empty pageFirstDisabledImg}">
+		<c:set var="pageFirstDisabledImg" value="/images/page_first_btn_disabled.gif"/>
+	</c:if>
+	<c:if test="${empty pageRewindImg}">
+		<c:set var="pageRewindImg" value="/images/page_rewind_btn.gif"/>
+	</c:if>
+	<c:if test="${empty pageRewindDisabledImg}">
+		<c:set var="pageRewindDisabledImg" value="/images/page_rewind_btn_disabled.gif"/>
+	</c:if>
+	<c:if test="${empty pagePreviousImg}">
+		<c:set var="pagePreviousImg" value="/images/page_previous_btn.gif"/>
+	</c:if>
+	<c:if test="${empty pagePreviousDisabledImg}">
+		<c:set var="pagePreviousDisabledImg" value="/images/page_previous_btn_disabled.gif"/>
+	</c:if>
+	<c:if test="${empty pageNextImg}">
+		<c:set var="pageNextImg" value="/images/page_next_btn.gif"/>
+	</c:if>
+	<c:if test="${empty pageNextDisabledImg}">
+		<c:set var="pageNextDisabledImg" value="/images/page_next_btn_disabled.gif"/>
+	</c:if>
+	<c:if test="${empty pageForwardImg}">
+		<c:set var="pageForwardImg" value="/images/page_forward_btn.gif"/>
+	</c:if>
+	<c:if test="${empty pageForwardDisabledImg}">
+		<c:set var="pageForwardDisabledImg" value="/images/page_forward_btn_disabled.gif"/>
+	</c:if>
+	<c:if test="${empty pageLastImg}">
+		<c:set var="pageLastImg" value="/images/page_last_btn.gif"/>
+	</c:if>
+	<c:if test="${empty pageLastDisabledImg}">
+		<c:set var="pageLastDisabledImg" value="/images/page_last_btn_disabled.gif"/>
+	</c:if>
+	
+	<c:if test="${empty ajax}">
+		<c:set var="ajax" value="${false}"/>
+	</c:if>
+	
+
+	<!-- DEFINE VARIABLES -->
+	<c:if test="${empty paginatorCommandButtonClass}">
+		<c:set var="paginatorCommandButtonClass" value="paginationGroupButton" />
+	</c:if>
+	<c:if test="${empty paginatorImageButtonClass}">
+		<c:set var="paginatorImageButtonClass" value="paginationImageButton" />
+	</c:if>
+	<c:if test="${empty paginatorCommandButtonDisabledClass}">
+		<c:set var="paginatorCommandButtonDisabledClass" value="paginationGroupButtonDisabled" />
+	</c:if>
+	<c:if test="${empty paginatorCommandLinkClass}">
+		<c:set var="paginatorCommandLinkClass" value="paginationPageNumberLink" />
+	</c:if>
+	<c:if test="${empty paginatorOutputTextClass}">
+		<c:set var="paginatorOutputTextClass" value="paginationPageNumberPage" />
+	</c:if>
+	<c:if test="${empty paginatorCommandLinkPlainClass}">
+		<c:set var="paginatorCommandLinkPlainClass" value="paginationPageNumberPlain" />
+	</c:if>
+
+	<c:if test="${empty pageTitle}">
+		<c:set var="pageTitle" value="Listing"/>
+	</c:if>
+	
+	<c:if test="${empty ajaxSingle}">
+		<c:set var="ajaxSingle" value="false"/>
+	</c:if>
+	
+	<c:if test="${empty disableExport}">
+		<c:set var="disableExport" value="false"/>
+	</c:if>
+	
+	<c:if test="${empty readOnly}">
+		<c:set var="readOnly" value="false"/>
+	</c:if>
+	<!-- By default, we want the export behavior to be tied to the readOnly flag.  
+	     Otherwise, it can be overridden. -->
+	<c:if test="${empty allowExport}">
+		<c:set var="allowExport" value="${not disableExport and not readOnly}" />
+	</c:if>
+	
+	<c:if test="${empty enableAdd}">
+		<c:if test="#{empty initParam['crank.listing.enableAdd']}">
+			<c:set var="enableAdd" value="${true}" />
+		</c:if>
+		<c:if test="#{not empty initParam['crank.listing.enableAdd']}">
+			<c:set var="enableAdd" value="#{initParam['crank.listing.enableAdd']}" />
+		</c:if>
+	</c:if>
+	
+	
+	<c:choose>
+		<c:when test="${not empty reRender}">
+			<c:set var="refreshPaginator" value="${reRender},paginator${id}" />
+		</c:when>
+		<c:otherwise>
+			<c:set var="refreshPaginator" value="paginator${id}" />
+		</c:otherwise>
+	</c:choose>
+	
+	
+	<c:if test="${empty debug}">
+			<c:if test="#{empty initParam['crank.debug']}">
+				<c:set var="debug" value="${false}" />
+			</c:if>
+			<c:if test="#{not empty initParam['crank.debug']}">
+				<c:set var="debug" value="#{initParam['crank.debug']}" />
+			</c:if>
+	</c:if>
+
+
+	<!-- END DEFINE VARIABLES -->
+
+	<c:if test="${debug}">
+		<table>
+			<tr><td>pageTitle</td>							<td>${pageTitle}</td></tr>
+			<tr><td>ajaxSingle</td>							<td>${ajaxSingle}</td></tr>
+			<tr><td>disableExport</td>						<td>${disableExport}</td></tr>
+			<tr><td>readOnly</td>							<td>${readOnly}</td></tr>
+			<tr><td>allowExport</td>						<td>${allowExport}</td></tr>
+			<tr><td>enableAdd</td>							<td>${enableAdd}</td></tr>
+			<tr><td>reRender</td>							<td>${reRender}</td></tr>
+			<tr><td>refreshPaginator</td>					<td>${refreshPaginator}</td></tr>
+		</table>
+	</c:if>
+	
+	<a4j:outputPanel ajaxRendered="true">
+	<a4j:region id="paginatorRegion${id}">
+	<h:panelGrid id="paginator${id}" columns="2">
+	
+		
+		<!-- TOOL BAR -->
+		<h:panelGroup style="text-align: left;">
+<acegijsf:authorize ifAllGranted="ROLE_SUPERVISOR">
+			<c:if test="${enableAdd}">
+				<crank:commandLink 
+					id="addNewLink${id}"
+					rendered="${not readOnly and enableAdd}"
+					entity="${crud}"
+					action="loadCreate"
+					ajax="${ajax}"
+					ajaxSingle="${ajaxSingle}"
+					toolTipText="Click to add a new record...">
+					
+						<h:graphicImage value="${addNewImg}" border="0" styleClass="${listingImageButtonClass}"/>
+				</crank:commandLink>
+			</c:if>
+</acegijsf:authorize>
+
+			<crank:commandLink 
+				id="clearFilters${id}"
+				entity="${paginator}"
+				action="disableFilters"
+				ajaxSingle="${ajaxSingle}"
+				rendered="#{paginator.filtering}"
+				toolTipText="Click to clear table filters"
+				reRender="${reRender}">
+					<h:graphicImage value="${clearFilterImg}" border="0" styleClass="${listingImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage rendered="#{not paginator.filtering}" value="${clearFilterDisabledImg}" border="0" styleClass="${listingImageButtonClass}"/>
+			
+			<crank:commandLink 
+				id="clearSortss${id}"
+				entity="${paginator}"
+				action="disableSorts"
+				ajaxSingle="${ajaxSingle}"
+				rendered="#{paginator.sorting}"
+				toolTipText="Click to clear table sorts"
+				reRender="${reRender}">
+					<h:graphicImage value="${clearSortsImg}" border="0" styleClass="${listingImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage rendered="#{not paginator.sorting}" value="${clearSortsDisabledImg}" border="0" styleClass="${listingImageButtonClass}"/>
+			
+			<crank:commandLink 
+				id="resetAll${id}"
+				entity="${paginator}"
+				action="clearAll"
+				ajaxSingle="${ajaxSingle}"
+				rendered="#{paginator.sorting or paginator.filtering}"
+				toolTipText="Click to reset all filters and sorts"
+				reRender="${reRender}">
+					<h:graphicImage value="${resetImg}" border="0" styleClass="${listingImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage rendered="#{(not paginator.sorting) and (not paginator.filtering)}" value="${resetDisabledImg}" border="0" styleClass="${listingImageButtonClass}"/>
+
+			<h:commandLink 
+				id="export${id}"
+				rendered="${allowExport}"
+				title="Click to preview and export the current viewable listing to Excel(tm)"
+				action="EXPORT">
+					<h:graphicImage value="${exportImg}" border="0" styleClass="${paginatorImageButtonClass}"/>
+			</h:commandLink>
+			
+		</h:panelGroup>
+
+		<!-- PAGINATOR -->
+		<h:panelGroup style="text-align: right;">
+			<crank:commandLink 
+				id="firstPage${id}"
+				entity="#{paginator}"
+				action="moveToStartPage"
+				ajaxSingle="${ajaxSingle}"
+				rendered="#{paginator.moveToStartPageEnabled}"
+				toolTipText="Go to first page"
+				reRender="${reRender}">
+					<h:graphicImage value="${pageFirstImg}" border="0" styleClass="${paginatorImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage value="${pageFirstDisabledImg}" border="0" rendered="#{not paginator.moveToStartPageEnabled}" styleClass="${paginatorImageButtonClass}"/>
+
+			<crank:commandLink 
+				id="rewindPages${id}"
+				entity="#{paginator}"
+				action="rewindPages"
+				ajaxSingle="${ajaxSingle}"
+				rendered="#{paginator.rewindPagesEnabled}"
+				toolTipText="Go to previous set of pages"
+				reRender="${reRender}" >
+					<h:graphicImage value="${pageRewindImg}" border="0" styleClass="${paginatorImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage value="${pageRewindDisabledImg}" border="0" rendered="#{not paginator.rewindPagesEnabled}" styleClass="${paginatorImageButtonClass}"/>
+
+			<crank:commandLink 
+				id="prevPage${id}"
+				entity="#{paginator}"
+				action="moveToPreviousPage"
+				ajaxSingle="${ajaxSingle}"
+				rendered="#{paginator.moveToPreviousPageEnabled}"
+				toolTipText="Previous page"
+				reRender="${reRender}" >
+					<h:graphicImage value="${pagePreviousImg}" border="0" styleClass="${paginatorImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage value="${pagePreviousDisabledImg}" border="0" rendered="#{not paginator.moveToPreviousPageEnabled}" styleClass="${paginatorImageButtonClass}"/>
+
+			<a4j:repeat 
+				value="#{paginator.pageNumberList}"
+				var="num">
+				<a4j:commandLink 
+					value="#{num}"
+					rendered="${not (num == paginator.currentPageNumber+1) }"
+				    styleClass="${paginatorCommandLinkClass}"
+					action="#{paginator.moveToPage}"
+					ajaxSingle="${ajaxSingle}"
+					reRender="${reRender}">
+					<f:param name="currentPage" value="#{num}" />
+				</a4j:commandLink>
+				<h:outputText
+					rendered="${(num == paginator.currentPageNumber+1) }"
+					styleClass="${paginatorOutputTextClass}"
+					value="#{num}" />
+			</a4j:repeat>
+
+			<h:outputText
+				id="lpDelim${id}"
+				rendered="#{paginator.showLastPageDelimiter}"
+				styleClass="${paginatorCommandLinkPlainClass}"
+				value="..." />
+			
+			<a4j:commandLink 
+				value="#{paginator.pageCount}"
+				rendered="#{paginator.showLastPageLink}"
+			    styleClass="${paginatorCommandLinkClass}"
+				action="#{paginator.moveToPage}"
+				ajaxSingle="${ajaxSingle}"
+				reRender="${reRender}">
+				<f:param name="currentPage" value="#{paginator.pageCount}" />
+			</a4j:commandLink>
+			
+			<crank:commandLink 
+				id="nextPage${id}"
+				entity="#{paginator}"
+				action="moveToNextPage"
+				ajaxSingle="${ajaxSingle}"
+				rendered="#{paginator.moveToNextPageEnabled}"
+				toolTipText="Next page"
+				reRender="${reRender}" >
+					<h:graphicImage value="${pageNextImg}" border="0" styleClass="${paginatorImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage value="${pageNextDisabledImg}" border="0" rendered="#{not paginator.moveToNextPageEnabled}" styleClass="${paginatorImageButtonClass}"/>
+
+			<crank:commandLink
+				id="fastFwdPages${id}"
+				entity="#{paginator}"
+				action="fastForwardPages"
+				ajaxSingle="${ajaxSingle}"
+				rendered="#{paginator.fastForwardPagesEnabled}"
+				toolTipText="Go to next set of pages"
+				reRender="${reRender}" >
+					<h:graphicImage value="${pageForwardImg}" border="0" styleClass="${paginatorImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage value="${pageForwardDisabledImg}" border="0" rendered="#{not paginator.fastForwardPagesEnabled}" styleClass="${paginatorImageButtonClass}"/>
+
+			<crank:commandLink
+				id="lastPage${id}"
+				entity="#{paginator}"
+				action="moveToEndPage"
+				ajaxSingle="${ajaxSingle}"
+				rendered="#{paginator.moveToEndPageEnabled}"
+				toolTipText="Go to last page"
+				reRender="${reRender}" >
+					<h:graphicImage value="${pageLastImg}" border="0" styleClass="${paginatorImageButtonClass}"/>
+			</crank:commandLink>
+			<h:graphicImage value="${pageLastDisabledImg}" border="0" rendered="#{not paginator.moveToEndPageEnabled}" styleClass="${paginatorImageButtonClass}"/>
+
+			<c:if test="${ paginator.allowAllRows }">
+				<h:selectOneMenu value="#{paginator.itemsPerPage}" styleClass="dropdownSmall" title="Click to select the number of items per page">
+					<f:selectItem itemLabel="10 rows" itemValue="10"/>
+					<f:selectItem itemLabel="20 rows" itemValue="20"/>
+					<f:selectItem itemLabel="50 rows" itemValue="50"/>
+					<f:selectItem itemLabel="100 rows" itemValue="100"/>
+					<f:selectItem itemLabel="All rows" itemValue="${paginator.maxItemsPerPage}"/>
+					<a4j:support action="#{paginator.reset}" event="onchange" ajaxSingle="true" reRender="${refreshPaginator}" /> 
+				</h:selectOneMenu>
+			</c:if>
+			<c:if test="${ not paginator.allowAllRows }">
+				<h:selectOneMenu value="#{paginator.itemsPerPage}" styleClass="dropdownSmall" title="Click to select the number of items per page">
+					<f:selectItem itemLabel="10 rows" itemValue="10"/>
+					<f:selectItem itemLabel="20 rows" itemValue="20"/>
+					<f:selectItem itemLabel="50 rows" itemValue="50"/>
+					<f:selectItem itemLabel="100 rows" itemValue="100"/>
+					<a4j:support action="#{paginator.reset}" event="onchange" ajaxSingle="true" reRender="${refreshPaginator}" /> 
+				</h:selectOneMenu>
+			</c:if>
+			
+			<a4j:status startText="Paginating..." stopText="" for="paginatorRegion${id}"
+					startStyleClass="statusStartStyleClass" stopStyleClass="statusStopStyleClass" />	
+			
+		</h:panelGroup>
+	</h:panelGrid>
+	</a4j:region>
+	
+	</a4j:outputPanel>
+</ui:composition>
+</html>

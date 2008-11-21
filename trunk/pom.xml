@@ -250,7 +250,7 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-<!--
+
 		<repository>
 			<id>maven2-repository.dev.java.net</id>
 			<name>Java.net Repository for Maven</name>
@@ -280,7 +280,6 @@
 			</snapshots>
 			<url>http://repository.jboss.com/maven2/</url>
 		</repository>
--->
 		<repository>
 			<id>spring.snaps</id>
 			<url>
@@ -293,14 +292,12 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-<!--
 		<repository>
 			<id>spring.amazon</id>
 			<url>
                 https://s3.amazonaws.com/maven.springframework.org/milestone
             </url>
 		</repository>
--->
 	</repositories>
 
 	<dependencyManagement>

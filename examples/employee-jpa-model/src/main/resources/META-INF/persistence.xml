@@ -20,6 +20,15 @@
         <class>org.crank.crud.model.Specialty</class>
         <class>org.crank.crud.model.StateBO</class>
         <class>org.crank.crud.model.Task</class>
+        <!-- Spring Security 2.0 Default Spec Tables
+         As defined by queries from
+         http://static.springframework.org/spring-security/site/apidocs/constant-values.html#org.springframework.security.userdetails.jdbc.JdbcDaoImpl.DEF_USERS_BY_USERNAME_QUERY
+        -->
+        <class>org.crank.crud.model.Users</class>
+        <class>org.crank.crud.model.Authorities</class>
+        <class>org.crank.crud.model.GroupAuthorities</class>
+        <class>org.crank.crud.model.Groups</class>
+        <class>org.crank.crud.model.GroupMembers</class>          
     </persistence-unit>
 
 </persistence>

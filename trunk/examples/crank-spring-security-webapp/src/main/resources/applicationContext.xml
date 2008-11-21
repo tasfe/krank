@@ -57,22 +57,5 @@
 
  <bean id="myUserDetailsService" class="org.springframework.security.userdetails.jdbc.JdbcDaoImpl">
     <property name="dataSource" ref="employeeDataSource"/>
-  </bean>
-
-<!--<bean id="jdbcDaoImpl" class="org.springframework.security.userdetails.jdbc.JdbcDaoImpl">-->
-      <!--<property name="dataSource" ref="employeeDataSource"/>-->
-   <!--</bean>-->
-
-<!--<bean id="daoAuthenticationProvider#0" class="org.springframework.security.providers.dao.DaoAuthenticationProvider">-->
-     <!--<property name="userDetailsService" ref="jdbcDaoImpl"/>-->
-   <!--</bean>-->
-
-    <!--<bean id="authenticationManager" class="org.springframework.security.providers.ProviderManager">-->
-      <!--<property name="providers">-->
-         <!--<list>-->
-             <!--<ref local="daoAuthenticationProvider"/>-->
-         <!--</list>-->
-      <!--</property>-->
-   <!--</bean>-->
-    
-    </beans>
+  </bean>  
+</beans>

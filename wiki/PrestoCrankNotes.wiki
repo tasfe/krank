@@ -28,3 +28,36 @@ The latest versions of faces jar files can be found on Sun's maven repo which ca
 BTW, Java.net's maven 2 repo only has JSF 2 not JSF 1.2 so don't go there.
 
 I figured before I go about hacking Presto with the same hacks I added to Crank to make its converter architecture work in the broken JSF 1.2 world, I bests see if it is still broken. It seems the latest version of jsf is now 1.2_10. Here goes...
+
+==== from pom.xml ====
+{{{
+       <dependency>
+             <groupId>javax.faces</groupId>
+             <artifactId>jsf-api</artifactId>
+             <version>1.2_04-p01</version>
+             <scope>provided</scope>
+       </dependency>
+       <dependency>
+             <groupId>javax.faces</groupId>
+             <artifactId>jsf-impl</artifactId>
+             <version>1.2_04-p01</version>
+             <scope>provided</scope>
+       </dependency>
+
+}}}
+
+==== to pom.xml ====
+{{{
+       <dependency>
+             <groupId>javax.faces</groupId>
+             <artifactId>jsf-api</artifactId>
+             <version>1.2_10</version>
+             <scope>provided</scope>
+       </dependency>
+       <dependency>
+             <groupId>javax.faces</groupId>
+             <artifactId>jsf-impl</artifactId>
+             <version>1.2_10</version>
+             <scope>provided</scope>
+       </dependency>
+}}}

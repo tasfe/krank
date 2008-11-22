@@ -12,7 +12,7 @@ In trying to get Presto to work with Crank libraries. I am attempting to update 
 I update the web app to use latest version of, Spring, Hibernate, JSF and Facelets. This caused all manner of class loading issues, which I got around with a bit of trouble shooting technique and goat's blood not to mention a few sharp jabs to my eye ball with a hot, sharp fork.
 
 = SpringApplication =
-Both Presto and Crank use a class called SpringApplication which is a Spring enabled, JSF application class implementation. This class is used to load converters and such that allow DI via Spring. The problem with this class is that in JSF 1.2, it uses the EL mechanism to load the converters and it by passes converters loaded with the Application object and somehow gets them right from faces-config, which of course is a bug that has not been fixed as of release 1.2.04.
+Both Presto and Crank use a class called SpringApplication which is a Spring enabled, JSF application class implementation. This class is used to load converters and such that allow DI via Spring. The problem with this class is that in JSF 1.2, it uses the EL mechanism to load the converters and it by passes converters loaded with the Application object and somehow gets them right from faces-config, which of course is a bug that has not been fixed as of release 1.2.04. I created an incredible hack for Crank to get around this problem, that I hope I don't have to recreate for Presto 2.
 
 The latest versions of faces jar files can be found on Sun's maven repo which can be found here for those playing the home version of family feud:
 
@@ -24,3 +24,7 @@ The latest versions of faces jar files can be found on Sun's maven repo which ca
 			<layout>legacy</layout>
 		</repository>
 }}}
+
+BTW, Java.net's maven 2 repo only has JSF 2 not JSF 1.2 so don't go there.
+
+I figured before I go about hacking Presto with the same hacks I added to Crank to make its converter architecture work in the broken JSF 1.2 world, I bests see if it is still broken. It seems the latest version of jsf is now 1.2_10. Here goes...

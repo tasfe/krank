@@ -1,0 +1,12 @@
+#summary Getting Presto to work with Crank libs
+
+= Introduction =
+
+Just some notes. Probably not worth reading for anyone not also working with Presto.
+
+
+= Details =
+
+In trying to get Presto to work with Crank libraries. I am attempting to update the Presto sample application which is extremely well done I might add and is a testament to Scott Fauerbach's attention to detail. 
+
+I update the web app to use latest version of, Spring, Hibernate, JSF and Facelets. This caused all manner of class loading issues, which I got around with a bit of trouble shooting technique and goat's blood not to mention a few sharp jabs to my eye ball with a hot, sharp fork.

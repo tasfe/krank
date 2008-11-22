@@ -135,3 +135,7 @@ I need to add the java.net repo to my list of repos in this pom.xml as follows:
 		</repository>
 	</repositories>
 }}}
+
+Ok... After upgrading to the latest and greatest. The Presto converter architecture works fine in JSF 1.1 and still breaks in JSF 1.2. I traced this down for Crank and came up with workaround. 
+
+The problems is actually in the h:selectOneMenu renderer implementation, it uses the EL library to look up the converter which then bypasses the custom Application object that I setup (SpringApplication) and uses the default Application object somewhere in the bowls of the EL Impl jar. I even wrote my own renderer that worked just like the previous one but it kept breaking at odd times. Then I came up with a hack, which I will use again with Presto 2. Essentially the SpringApplication.createConverter method does not get called with h:selectOneMenu. Now for the workaround (which I will need to reverse engineer from crank to recreate for Presto2).

@@ -96,3 +96,42 @@ I also have to add it to my jetty plugin as follows:
 }}}
 
 I find jetty makes it much easier to debug and test web apps with. Perhaps more on this later.
+
+Of course, I get an immediate failure:
+{{{
+  Alternatively, if you host your own repository you can deploy the file there: 
+      mvn deploy:deploy-file -DgroupId=javax.faces -DartifactId=jsf-impl -Dversion=1.2_10 -Dpackaging=jar -Dfile=/path/to/file -Durl=[url] -DrepositoryId=[id]
+
+  Path to dependency: 
+  	1) qcom.cas.presto:presto2-qa:war:08.01.00-SNAPSHOT
+  	2) javax.faces:jsf-impl:jar:1.2_10
+
+}}}
+
+I need to add the java.net repo to my list of repos in this pom.xml as follows:
+==== adding repos to pom.xml ====
+{{{
+	<repositories>
+		<repository>
+			<id>repo1.maven.org</id>
+			<name>Maven Repository</name>
+			<url>http://repo1.maven.org/maven2</url>
+		</repository>
+		<!--
+			repo where we get latest jsf and facelets 
+                        jar files comment out after
+			populating internal repo
+		-->
+		<repository>
+			<id>java.net</id>
+			<url>https://maven-repository.dev.java.net/repository</url>
+			<layout>legacy</layout>
+		</repository>
+		<!--  internal repo -->
+		<repository>
+			<id>cas</id>
+			<name>cas</name>
+			<url>http://vm-casdev/repo</url>
+		</repository>
+	</repositories>
+}}}

@@ -481,3 +481,20 @@ WebApplicationContextUtils.getWebApplicationContext(ServletContextUtils.context(
 }}}
 
 This gets the app context so we can look up the bean.
+
+In the dropdown.jspx we will create some new variables as follows: 
+
+==== dropdown.jspx ====
+{{{
+	<c:set var="type" value="#{managedBean.entityClass}"/>
+	<c:set var="classType" value="#{type.name}" />
+	<c:set var="classShortName" value="#{type.shortName}" />
+}}}
+
+Then we will use these variables to pass values to each h:selectOne in dropdown.xhtml as follows:
+==== dropdown.jspx ====
+{{{
+<f:attribute name="classType" value="${classType}"/>
+<f:attribute name="classShortName" value="${classShortName}"/>
+}}}
+Then it is just a matter of changing the dao to read these values.

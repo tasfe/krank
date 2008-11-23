@@ -965,3 +965,5 @@ Earlier, it seemed like the conversion was not working unless I included Crank a
 What kind of strange version hell am I in. I need to reread my copious notes.
 
 The presto2 sample app works with the crank hack for renderer taken out. Will it work with crank jsf support taken out (seemed like earlier it would not)...
+
+It works with our without crank-jsf-support jar file (earlier it seemed like it would only work with it). So now it works on submission, but not on redisplay. I still have the redisplay issue which does not exist with Crank sample app (although it did before I fixed it).

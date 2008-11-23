@@ -11,4 +11,4 @@ Both Presto and Crank use a class called SpringApplication, which is a Spring en
 
 This class is used to load converters and such that allow DI via Spring. The problem with this class is that in JSF 1.2, it uses the EL mechanism to load the converters and it by passes converters loaded with the Application object and somehow gets them right from faces-config, which of course is a bug that has not been fixed as of release 1.2.04. I created an incredible hack for Crank to get around this problem, that I hope I don't have to recreate for Presto 2.
 
-(To learn more about SpringApplication class read this write up at [http://opensource.atlassian.com/confluence/spring/display/JSF/Configuring+JSF+Validators,+Converters,+and+UIComponents+in+Spring to learn more about this class SpringApplication]. 
+([http://opensource.atlassian.com/confluence/spring/display/JSF/Configuring+JSF+Validators,+Converters,+and+UIComponents+in+Spring To learn more about this class SpringApplication go here]. 

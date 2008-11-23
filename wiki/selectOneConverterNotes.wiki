@@ -971,3 +971,11 @@ It works with our without crank-jsf-support jar file (earlier it seemed like it 
 The bottom line is that the menu renderer is passing a null to the equals method of the State object; therefore, nothing is equal, thus the selected state is no rendered as such.
 
 It seems locating the source code and debugging it is in order.
+
+I need to locate the source for JSF and debug the menu renderer and see why it is passing nulls:
+
+{{{
+mvn eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true
+}}}
+
+The above netted nothing.

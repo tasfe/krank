@@ -745,3 +745,69 @@ Opps... Now we have to register it in faces-config instead of the spring applica
     	<converter-class>qcom.cas.commons.faces.GenericEntityConverter</converter-class>
     </converter>
 }}}
+
+Ok... well now I got another converter error so now I have to register them all... 
+
+{{{
+    <converter>
+    	<converter-for-class>qcom.qa.model.State</converter-for-class>
+    	<converter-class>qcom.cas.commons.faces.GenericEntityConverter</converter-class>
+    </converter>
+
+
+    <converter>
+    	<converter-for-class>qcom.qa.model.Word</converter-for-class>
+    	<converter-class>qcom.cas.commons.faces.GenericEntityConverter</converter-class>
+    </converter>
+
+    <converter>
+    	<converter-for-class>qcom.qa.model.Filter</converter-for-class>
+    	<converter-class>qcom.cas.commons.faces.GenericEntityConverter</converter-class>
+    </converter>
+
+    <converter>
+    	<converter-for-class>qcom.qa.model.Country</converter-for-class>
+    	<converter-class>qcom.cas.commons.faces.GenericEntityConverter</converter-class>
+    </converter>
+
+    <converter>
+    	<converter-for-class>qcom.qa.model.Address</converter-for-class>
+    	<converter-class>qcom.cas.commons.faces.GenericEntityConverter</converter-class>
+    </converter>
+
+    <converter>
+    	<converter-for-class>qcom.qa.model.Person</converter-for-class>
+    	<converter-class>qcom.cas.commons.faces.GenericEntityConverter</converter-class>
+    </converter>
+
+    <converter>
+    	<converter-for-class>qcom.qa.model.Alpha</converter-for-class>
+    	<converter-class>qcom.cas.commons.faces.GenericEntityConverter</converter-class>
+    </converter>
+
+    <converter>
+    	<converter-for-class>qcom.qa.model.Beta</converter-for-class>
+    	<converter-class>qcom.cas.commons.faces.GenericEntityConverter</converter-class>
+    </converter>
+
+    <converter>
+    	<converter-for-class>qcom.qa.model.Delta</converter-for-class>
+    	<converter-class>qcom.cas.commons.faces.GenericEntityConverter</converter-class>
+    </converter>
+
+    <converter>
+    	<converter-for-class>qcom.qa.model.Gamma</converter-for-class>
+    	<converter-class>qcom.cas.commons.faces.GenericEntityConverter</converter-class>
+    </converter>
+
+    <converter>
+    	<converter-for-class>qcom.qa.model.FormTestAttribute</converter-for-class>
+    	<converter-class>qcom.cas.commons.faces.GenericEntityConverter</converter-class>
+    </converter>
+
+    <converter>
+    	<converter-for-class>qcom.qa.model.FormTest</converter-for-class>
+    	<converter-class>qcom.cas.commons.faces.GenericEntityConverter</converter-class>
+    </converter>
+
+}}}

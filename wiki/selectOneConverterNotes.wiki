@@ -498,3 +498,161 @@ Then we will use these variables to pass values to each h:selectOne in dropdown.
 <f:attribute name="classShortName" value="${classShortName}"/>
 }}}
 Then it is just a matter of changing the dao to read these values.
+
+On further investigation the generic entity converter is called GenericEntityConverter in Presto defined as follows:
+
+==== GenericEntityConverter.java ====
+{{{
+package qcom.cas.commons.faces;
+
+import java.io.Serializable;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
+
+import qcom.cas.commons.dao.DAOCrud;
+import qcom.cas.commons.model.ModelUtils;
+
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+
+
+/**
+ * Converts an integer string into some object.
+ * This version does not depend on the Entity interface.
+ *
+ * @author Rick Hightower
+ */
+public class GenericEntityConverter implements Converter {
+    /**
+     * DAO crud to look up Entity based on id.
+     */
+    private DAOCrud daoCrud;
+
+    /**
+     * Name of id property. Defaults to "id".
+     */
+    private String idPropertyName = null;
+
+    /**
+     * Class of id. Defaults to java.lang.Long.
+     */
+    private Class classTypeOfId = null;
+
+    /**
+     * Is the id primitive. Defaults to false.
+     */
+    private boolean primitive = false;
+
+
+    /**
+     * Converts the value into an entity.
+     * The type of the entity depends on the type that the daoCrud returns.
+     *
+     * @param facesContext current faces context
+     * @param component current component
+     * @param value current value submitted from user.
+     *
+     * @return An Entity
+     *
+     */
+    public Object getAsObject(final FacesContext facesContext, final UIComponent component, final String value) {
+        Serializable entityId = ModelUtils.getIdObject(value, getClassTypeOfId());
+        return daoCrud.read(entityId);
+    }
+
+    /**
+     * Converts the entity to a String.
+     *
+     * @param facesContext current faces context
+     * @param component current component
+     * @param value current value of the entity
+     *
+     * @return value converted to string.
+     *
+     */
+    public String getAsString(final FacesContext facesContext, final UIComponent component, final Object value) {
+        if (value != null) {
+            BeanWrapper bwValue = new BeanWrapperImpl(value);
+
+            if (value instanceof String) {
+                return value.toString();
+            }
+
+            Object object = bwValue.getPropertyValue(getIdPropertyName());
+            if (object != null) {
+                return object.toString();
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Exposed for subclasses.
+     *
+     * @return current DaoCrud exposed.
+     */
+    protected DAOCrud getDaoCrud() {
+        return daoCrud;
+    }
+
+    /**
+     * Exposed for Spring to do injection.
+     *
+     * @param aDaoCrud DAOCrud used to look up Entity.
+     */
+    public void setDaoCrud(final DAOCrud aDaoCrud) {
+        this.daoCrud = aDaoCrud;
+    }
+
+    /**
+     * Is the id primitive or an object wrapper?
+     * @return if the id is primitive.
+     */
+    public boolean isPrimitive() {
+        return primitive;
+    }
+
+    /**
+     * Is the id primitive or an object wrapper?
+     * @param aPrimitive set to this.
+     */
+    public void setPrimitive(final boolean aPrimitive) {
+        this.primitive = aPrimitive;
+    }
+    /**
+    *
+    * The name of the id property, defaults to "id".
+    * @return the id of the value.
+    */
+   public String getIdPropertyName() {
+       return idPropertyName == null ? daoCrud.getIdPropertyName() : idPropertyName;
+   }
+
+   /**
+    * @param aIdPropertyName idPropertyName
+    */
+   public void setIdPropertyName(final String aIdPropertyName) {
+        this.idPropertyName = aIdPropertyName;
+   }
+
+    /**
+     * What it the type of the id class, defaults to java.lang.Long.
+     * @return type of the id class.
+     */
+    public Class getClassTypeOfId() {
+        return classTypeOfId == null ? daoCrud.getClassTypeOfId() : classTypeOfId;
+    }
+
+    /**
+     * Class type of id.
+     * @param aClassTypeOfId Class type of id.
+     */
+    public void setClassTypeOfId(final Class aClassTypeOfId) {
+        classTypeOfId = aClassTypeOfId;
+    }
+}
+
+}}}
+
+This is the one we need to change. For now we will get it to work with/or without injection (although we know.. it is pretty much always without until they fix JSF).

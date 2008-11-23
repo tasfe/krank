@@ -979,3 +979,7 @@ mvn eclipse:eclipse -DdownloadSources=true -DdownloadJavadocs=true
 }}}
 
 The above netted nothing.
+
+When I run the app it says I am using 1.2_04-b10-p01.
+The source code for the builds seems to be here:
+https://maven-repository.dev.java.net/repository/javax.faces/java-sources/

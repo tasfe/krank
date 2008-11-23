@@ -12,3 +12,51 @@ Both Presto and Crank use a class called SpringApplication, which is a Spring en
 This class is used to load converters and such that allow DI via Spring. The problem with this class is that in JSF 1.2, it uses the EL mechanism to load the converters and it by passes converters loaded with the Application object and somehow gets them right from faces-config, which of course is a bug that has not been fixed as of release 1.2.04. I created an incredible hack for Crank to get around this problem, that I hope I don't have to recreate for Presto 2.
 
 ([http://opensource.atlassian.com/confluence/spring/display/JSF/Configuring+JSF+Validators,+Converters,+and+UIComponents+in+Spring To learn more about this class SpringApplication go here].) The problem with this approach is it does not work in JSF 1.2 at least for h:selectOneMenu. 
+
+The SpringApplication converter architecture works fine in JSF 1.1 but breaks in JSF 1.2. I traced this down for Crank about 18 months ago and came up with a workaround.
+
+The problems is actually in the h:selectOneMenu renderer implementation, it uses the EL library to look up the converter which then bypasses the custom Application object that I setup (SpringApplication) and uses the default Application object somewhere in the bowls of the EL Impl jar. I even wrote my own renderer that worked just like the previous one but it kept breaking at odd times. Then I came up with a hack, which I will use again with Presto 2 since it always works. Essentially the SpringApplication.createConverter method does not get called with h:selectOneMenu. Now for the workaround (which I will need to reverse engineer from crank to recreate for Presto2). I first have to remember the hack, which I will now reverse engineer from Crank. 
+
+Crank uses defines a tag called field.xhtml. The field.xhtml tag displays the correct field based on the type of the property. It figures out if a field is a manyToOne and draws a selectOneMenu tag by default as follows:
+
+==== field.xhtml ====
+{{{
+			<c:if test="${simpleType}">
+		    <c:if test="${crud:isManyToOne(type,fieldName) and not forceInputText}">
+		        <c:set var="propEntityName" value="${crud:getPropertyEntityName(type,fieldName)}" />
+		        <a4j:outputPanel ajaxRendered="true" rendered="${rendered}" > 
+		        <h:selectOneMenu id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}" 
+		        				 required="${not crud:isManyToOneOptional(type,fieldName)}"
+		        				 title="${title}" >
+		        		
+					<f:selectItems value="${selectItemGenerators[propEntityName].listOptional}" />        				 
+		        	<!--
+					<c:if test="${not crud:isManyToOneOptional(type,fieldName)}">
+						<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
+					</c:if>
+					<c:if test="${crud:isManyToOneOptional(type,fieldName)}">
+						<f:selectItems value="${selectItemGenerators[propEntityName].listOptional}" />
+					</c:if>
+					-->
+					<!-- <f:converter converterId="" binding="${converters[propEntityName]}"/>  -->
+					<f:attribute name="beanType" value="${propEntityName}"/>
+					<c:if test="${not crud:isManyToOneOptional(type,fieldName)}">
+						<f:attribute name="required_bean" value="${propEntityName}"/>
+					</c:if>
+					<ui:insert />
+				</h:selectOneMenu>
+		        <!--         
+				<crud:select id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}" required="${not crud:isManyToOneOptional(type,fieldName)}">
+					<c:if test="${not crud:isManyToOneOptional(type,fieldName)}">
+						<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
+					</c:if>
+					<c:if test="${crud:isManyToOneOptional(type,fieldName)}">
+						<f:selectItems value="${selectItemGenerators[propEntityName].listOptional}" />
+					</c:if>
+					<f:converter converterId="" binding="${converters[propEntityName]}"/>
+				</crud:select>
+				 -->
+				</a4j:outputPanel>		
+		    </c:if>
+			</c:if>
+}}}

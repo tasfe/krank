@@ -431,4 +431,6 @@ public class EntityConverter implements Converter {
 
 }}}
 
-The difference is we don't use lookups as they are not needed.
+The difference is we don't use lookups as they are not needed which is the crank would have been had JSF 1.2 worked like JSF 1.1 and we could use the SpringApplication object.
+
+So if we are going to upgrade Presto to use JSF 1.2, we need to change it not to use injection in the converter but to look up the dao.

@@ -891,3 +891,5 @@ It was calling my converter. Then I was still getting a converter error. I notic
 }}}
 
 This makes me wonder.... Maybe a fresh pair of eyes on this tomorrow.
+
+I changed Crank to latest version of jsf (build 10) and it broke my renderer so I changed back to the version build 2. I still get the converter error (changed the presto app as well). The next step involves a debugger and some break points.

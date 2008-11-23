@@ -30,33 +30,15 @@ Crank uses defines a tag called field.xhtml. The field.xhtml tag displays the co
 		        				 title="${title}" >
 		        		
 					<f:selectItems value="${selectItemGenerators[propEntityName].listOptional}" />        				 
-		        	<!--
-					<c:if test="${not crud:isManyToOneOptional(type,fieldName)}">
-						<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
-					</c:if>
-					<c:if test="${crud:isManyToOneOptional(type,fieldName)}">
-						<f:selectItems value="${selectItemGenerators[propEntityName].listOptional}" />
-					</c:if>
-					-->
-					<!-- <f:converter converterId="" binding="${converters[propEntityName]}"/>  -->
 					<f:attribute name="beanType" value="${propEntityName}"/>
 					<c:if test="${not crud:isManyToOneOptional(type,fieldName)}">
 						<f:attribute name="required_bean" value="${propEntityName}"/>
 					</c:if>
 					<ui:insert />
 				</h:selectOneMenu>
-		        <!--         
-				<crud:select id="${fieldId}" disabled="${disabled}" value="#{entity[fieldName]}" required="${not crud:isManyToOneOptional(type,fieldName)}">
-					<c:if test="${not crud:isManyToOneOptional(type,fieldName)}">
-						<f:selectItems value="${selectItemGenerators[propEntityName].list}" />
-					</c:if>
-					<c:if test="${crud:isManyToOneOptional(type,fieldName)}">
-						<f:selectItems value="${selectItemGenerators[propEntityName].listOptional}" />
-					</c:if>
-					<f:converter converterId="" binding="${converters[propEntityName]}"/>
-				</crud:select>
-				 -->
 				</a4j:outputPanel>		
 		    </c:if>
 			</c:if>
 }}}
+
+The propEntityName gets passed as a value to the component

@@ -911,4 +911,55 @@ I forgot to get the class of the property. I was just using the class of the par
 
 I need to do a crazy Ivan and try it one more time with JSF 1.2 w/o the crank patch to see if it works. I do this b/c of this error it is impossible to tell if 1.2_10 fixed things or not. I hope it does, if not I will downgrade for now and add a note to get Crank/Presto working with the lastest release of JSF in the future.
 
-The problem still exists. We will need the Crank patch to the renderer and for now we will need to downgrade to JSF 1.2_2 until I port the patch to JSF 1.2_10. 
+The problem still exists. We will need the Crank patch to the renderer and for now we will need to downgrade to JSF 1.2_4 until I port the patch to JSF 1.2_10. 
+
+Upon further investigation... Presto allows changing the data fine for states. The conversion happens as it should, but when we try to redisplay the form, it always says alabama is the state. We can even print out the state and get the right name just not the right name to show up in the drop down. I hacked the form as such to debug things and isolate them more:
+
+{{{
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:q="http://www.foo.com/cas"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:z="http://www.foo.com/jsf/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      >
+
+<ui:composition template="../listing2Template.jsp">
+    <ui:param name="subtitle" value="Listing 2 Form"/>
+    <ui:param name="subcrumb" value="Listing 2 Form"/>
+    <ui:define name="description">This is a form.</ui:define>
+    <ui:define name="content">
+        <q:form managedBean="#{Listing2CRUD}">
+
+            <q:fields
+                    fieldNames="description,someInt,someInteger,someDecimal,someDate,someBool"
+                    fieldRequireds="true,false,false,false,false,false"
+                    />
+            <!-- <q:dropdown fieldName="state" sortBy="name" entity="#{entity}" defaultLabel="Arizona"/> -->
+            ENTITY #{entity.state}
+            <h:selectOneMenu  id="state" value="#{entity.state}" styleClass="dropdown">
+                        <f:selectItems value="#{z:getSelectItems('stateDAOCrud', 'name', 'name')}"/>
+                        <f:attribute name="classType" value="qcom.qa.model.State"/>
+						<f:attribute name="classShortName" value="State"/>
+            </h:selectOneMenu>
+        </q:form>
+    </ui:define>
+</ui:composition>
+</html>
+}}}
+
+Notice I use the h:selectOne directly instead of relying on composition component. This gives me a better idea which branch I am working with.
+
+I went through the select item generators and converters for Crank (where this works) and Presto 2 where this does not work. I have not found a difference (yet). I even changed the Presto converter to do a lot more debugging.
+
+So I debugged this by putting break points in the State class's equals method and the converters convert methods. I noticed that the value that gets passed in is null. So I tried to put a break point on the MenuRenderer (the hacked version). This is when my world was shattered a bit. Turns out, it is not using the hacked MenuRederer as I thought it did. My world slowy starts to shatter and previous beliefs and suppositions start to crumble.... Pause... take a walk... Resume
+
+Ok. So just to make sure I am not going crazy I commented out the hack and reran the crank sample app, and it works without the hack. How is this possible? I was sure it was using the hack still. First I was sure that it was, and then I was sure that it was not.
+
+Earlier, it seemed like the conversion was not working unless I included Crank and its hack, but now it seems like this is impossible. Ok. So I will rerun, Presto sample app with and without including crank-jsf-support and note the difference. But first I will run it with the hack taken out.
+
+What kind of strange version hell am I in. I need to reread my copious notes.

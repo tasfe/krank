@@ -983,3 +983,15 @@ The above netted nothing.
 When I run the app it says I am using 1.2_04-b10-p01.
 The source code for the builds seems to be here:
 https://maven-repository.dev.java.net/repository/javax.faces/java-sources/
+
+Got the source code, did some debugging... traced the issue into the MenuRenderer in the renderOption method as follows:
+
+{{{
+    protected void renderOption(FacesContext context, UIComponent component,
+                                SelectItem curItem) throws IOException {
+           ...
+           type = valuesArray.getClass().getComponentType();
+}}}
+
+The type is qcom.qa.model.State_$$_javassist_2 instead of qcom.qa.model.State so JSF can't find the converter.
+

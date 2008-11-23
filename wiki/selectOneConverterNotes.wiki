@@ -893,3 +893,20 @@ It was calling my converter. Then I was still getting a converter error. I notic
 This makes me wonder.... Maybe a fresh pair of eyes on this tomorrow.
 
 I changed Crank to latest version of jsf (build 10) and it broke my renderer so I changed back to the version build 2. I still get the converter error (changed the presto app as well). The next step involves a debugger and some break points.
+
+After debugging... I finally was able to reproduce the error. First if Crank gets upgrade to release 10 of JSF it breaks as well. :(
+
+Second after downgrading Presto to JSF 1.2_2, it was still failing. (This is really an upgrade since it was using JSF 1.1).
+
+The missing mojo was in the dropdown.jspx
+
+{{{
+	<c:set var="type" value="#{z:getPropertyClass(fieldName,managedBean.entityClass)}"/>
+	<c:set var="classType" value="#{type.name}" />
+	<c:set var="classShortName" value="#{type.simpleName}" />
+
+}}}
+
+I forgot to get the class of the property. I was just using the class of the parent class. This was causing the converter of the parent not the child to get used, which of course did not work.
+
+I need to do a crazy Ivan and try it one more time with JSF 1.2 w/o the crank patch to see if it works. I do this b/c of this error it is impossible to tell if 1.2_10 fixed things or not. I hope it does, if not I will downgrade for now and add a note to get Crank/Presto working with the lastest release of JSF in the future.

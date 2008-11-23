@@ -656,3 +656,82 @@ public class GenericEntityConverter implements Converter {
 }}}
 
 This is the one we need to change. For now we will get it to work with/or without injection (although we know.. it is pretty much always without until they fix JSF).
+
+Here is the first shot of the lookup mehtod:
+
+==== GenericEntityConverter ====
+{{{
+    private DAOCrud daoCrud(FacesContext facesContext, UIComponent component) {
+    	if (daoCrud == null) {
+        	String classType = (String) component.getAttributes().get("classType");
+        	if (classType == null) {
+        		throw new RuntimeException("daoCrud was not set and classType is null");
+        	}
+        	ServletContext sc = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+        	ApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(sc);
+        	daoCrud = (DAOCrud) applicationContext.getBean(classType + "-DAO");
+        	if (daoCrud == null) {
+        		String classShortName = (String) component.getAttributes().get("classShortName");
+            	if (classShortName == null) {
+            		throw new RuntimeException("daoCrud was not set and classShortName is null");
+            	}
+        		classShortName = classShortName.substring(0, 1).toLowerCase() + classShortName.substring(1, classShortName.length());
+        		daoCrud = (DAOCrud) applicationContext.getBean(classShortName + "DAOCrud");
+        	}
+    	}
+    	if (daoCrud == null) {
+       		throw new RuntimeException("Could not find daoCrud");   		
+    	}
+    	return daoCrud;
+	}
+
+}}}
+
+Then we just call it at the start of the converter methods as follows:
+
+{{{
+    /**
+     * Converts the value into an entity.
+     * The type of the entity depends on the type that the daoCrud returns.
+     *
+     * @param facesContext current faces context
+     * @param component current component
+     * @param value current value submitted from user.
+     *
+     * @return An Entity
+     *
+     */
+    public Object getAsObject(final FacesContext facesContext, final UIComponent component, final String value) {
+        daoCrud(facesContext, component);
+        Serializable entityId = ModelUtils.getIdObject(value, getClassTypeOfId());        
+        return daoCrud.read(entityId);
+    }
+
+
+	/**
+     * Converts the entity to a String.
+     *
+     * @param facesContext current faces context
+     * @param component current component
+     * @param value current value of the entity
+     *
+     * @return value converted to string.
+     *
+     */
+    public String getAsString(final FacesContext facesContext, final UIComponent component, final Object value) {
+        daoCrud(facesContext, component);
+    	if (value != null) {
+            BeanWrapper bwValue = new BeanWrapperImpl(value);
+
+            if (value instanceof String) {
+                return value.toString();
+            }
+
+            Object object = bwValue.getPropertyValue(getIdPropertyName());
+            if (object != null) {
+                return object.toString();
+            }
+        }
+        return "";
+    }
+}}}

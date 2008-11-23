@@ -963,3 +963,5 @@ Ok. So just to make sure I am not going crazy I commented out the hack and reran
 Earlier, it seemed like the conversion was not working unless I included Crank and its hack, but now it seems like this is impossible. Ok. So I will rerun, Presto sample app with and without including crank-jsf-support and note the difference. But first I will run it with the hack taken out.
 
 What kind of strange version hell am I in. I need to reread my copious notes.
+
+The presto2 sample app works with the crank hack for renderer taken out. Will it work with crank jsf support taken out (seemed like earlier it would not)...

@@ -1022,3 +1022,29 @@ We could change the mapping in Hibernate so this is not proxied or we could add 
 }}}
 
 Not only is the above a horrible hack. It does not work.
+
+The fix was to get Hibernate to stop proxying the State object as follows:
+{{{
+    <class name="Filter" table="filter">
+        <id name="id" type="long" column="id">
+            <generator class="native" />
+        </id>
+        <many-to-one name="state" class="State" column="state_id" lazy="false"/>
+}}}
+
+The problem with this fix is that it relies on changing the mapping files to work. Another workaround would be to override the coerce method of the ExpressionFactory then overriding our getExpressionFactory() in our SpringApplication object. Then we could strip the cglib and others proxies like we did for JSF1.1.
+
+I also tried this:
+
+{{{
+{{{
+    <class name="Filter" table="filter">
+        <id name="id" type="long" column="id">
+            <generator class="native" />
+        </id>
+        <many-to-one name="state" class="State" column="state_id" lazy="noproxy"/>
+}}}
+
+And it did not work.
+
+}}}

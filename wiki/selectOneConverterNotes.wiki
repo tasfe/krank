@@ -995,3 +995,30 @@ Got the source code, did some debugging... traced the issue into the MenuRendere
 
 The type is qcom.qa.model.State_$$_javassist_2 instead of qcom.qa.model.State so JSF can't find the converter.
 
+It later looks up the converter using this call:
+
+{{{
+        try {
+            newValue = context.getApplication().getExpressionFactory().
+                 coerceToType(itemValue, type);
+        } catch (Exception e) {
+            // this should catch an ELException, but there is a bug
+            // in ExpressionFactory.coerceToType() in GF
+            newValue = null;
+        }
+
+}}}
+
+Since the type is unknown it fails and then winds up passing a null to the equals method of the State object. (Which btw really blows... thanks guys.... what the hell)...
+
+We could change the mapping in Hibernate so this is not proxied or we could add another entry for the converter as follows:
+
+==== faces-config.xml ====
+{{{
+    <converter>
+    	<converter-for-class>qcom.qa.model.State_$$_javassist_2</converter-for-class>
+    	<converter-class>qcom.cas.commons.faces.GenericEntityConverter</converter-class>
+    </converter>
+}}}
+
+Not only is the above a horrible hack. It does not work.

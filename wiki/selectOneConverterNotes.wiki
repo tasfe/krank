@@ -910,3 +910,5 @@ The missing mojo was in the dropdown.jspx
 I forgot to get the class of the property. I was just using the class of the parent class. This was causing the converter of the parent not the child to get used, which of course did not work.
 
 I need to do a crazy Ivan and try it one more time with JSF 1.2 w/o the crank patch to see if it works. I do this b/c of this error it is impossible to tell if 1.2_10 fixed things or not. I hope it does, if not I will downgrade for now and add a note to get Crank/Presto working with the lastest release of JSF in the future.
+
+The problem still exists. We will need the Crank patch to the renderer and for now we will need to downgrade to JSF 1.2_2 until I port the patch to JSF 1.2_10. 

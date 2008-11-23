@@ -41,4 +41,36 @@ Crank uses defines a tag called field.xhtml. The field.xhtml tag displays the co
 			</c:if>
 }}}
 
-The propEntityName gets passed as a value to the component
+The *propEntityName* gets passed as a value to the component with
+
+{{{
+ <f:attribute name="beanType" value="${propEntityName}"/>
+}}}
+
+The *propEntityName* gets defined earlier as follows:
+
+==== field.xhtml ====
+{{{
+<c:set var="propEntityName" value="${crud:getPropertyEntityName(type,fieldName)}" />
+}}}
+
+The getPropertyEntityName is defined as follows:
+
+==== CrudUtils.java ====
+{{{
+    public static String getPropertyEntityName(Class clazz, String propertyName) {
+        PropertyDescriptor descriptor = getPropertyDescriptor( clazz, propertyName);
+
+        AnnotationData data = (AnnotationData)MapUtils.convertListToMap( "name",
+                AnnotationUtils.getAnnotationDataForClass( descriptor.getPropertyType(), allowedPackages )).get( "entity" );
+        if (data != null) {
+            String entityName = (String) data.getValues().get( "name");
+            if (entityName != null && entityName.trim().length() > 0){
+                return (String) data.getValues().get( "name");
+            }
+        }
+        return descriptor.getPropertyType().getSimpleName();
+    }
+}}}
+
+This gets the annotation and if it can't get the annotation, it just returns the simpleName of the class which is the default entity name.

@@ -1,7 +1,15 @@
 <projectDescription>
   <name>security-webapp</name>
   <comment/>
-  <projects/>
+  <projects>
+    <project>crank-core</project>
+    <project>crank-crud</project>
+    <project>crank-jsf-support</project>
+    <project>crank-jsf-validation</project>
+    <project>crank-test-support</project>
+    <project>crank-validation</project>
+    <project>security-jpa-model</project>
+  </projects>
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>

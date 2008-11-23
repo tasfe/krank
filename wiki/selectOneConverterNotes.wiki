@@ -811,3 +811,83 @@ Ok... well now I got another converter error so now I have to register them all.
     </converter>
 
 }}}
+
+Okay... I was missing two more things:
+I got the name wrong on simpleName bit ( i thought it was short name
+
+==== dropdown.xhtml ====
+{{{
+
+	<c:set var="type" value="#{managedBean.entityClass}"/>
+	<c:set var="classType" value="#{type.name}" />
+	<c:set var="classShortName" value="#{type.simpleName}" />
+}}}
+
+The next mistake was not first checking to see if the App context has a bean before I ask for it as follows:
+
+{{{
+    private DAOCrud daoCrud(FacesContext facesContext, UIComponent component) {
+    	if (daoCrud == null) {
+        	String classType = (String) component.getAttributes().get("classType");
+        	if (classType == null) {
+        		throw new RuntimeException("daoCrud was not set and classType is null");
+        	}
+        	ServletContext sc = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+        	ApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(sc);
+        	if (applicationContext.containsBean(classType + "-DAO")) {
+        		daoCrud = (DAOCrud) applicationContext.getBean(classType + "-DAO");
+        	}
+        	if (daoCrud == null) {
+        		String classShortName = (String) component.getAttributes().get("classShortName");
+            	if (classShortName == null) {
+            		throw new RuntimeException("daoCrud was not set and classShortName is null");
+            	}
+        		classShortName = classShortName.substring(0, 1).toLowerCase() + classShortName.substring(1, classShortName.length());
+        		if (applicationContext.containsBean(classShortName + "DAOCrud")) {
+        			daoCrud = (DAOCrud) applicationContext.getBean(classShortName + "DAOCrud");
+        		}
+        	}
+    	}
+    	if (daoCrud == null) {
+       		throw new RuntimeException("Could not find daoCrud");   		
+    	}
+    	return daoCrud;
+	}
+}}}
+
+It was calling my converter. Then I was still getting a converter error. I noticed that Crank does have a custom renderer for select ones and such. So I included it in the pom.xml 
+
+
+==== pom.xml ====
+{{{
+ 		<dependency>
+				<groupId>org.crank</groupId>
+				<artifactId>crank-jsf-support</artifactId>
+				<version>1.0.3-SNAPSHOT</version>
+		</dependency>
+}}}
+
+==== faces-config.xml from crank-jsf-support =====
+{{{
+<?xml version="1.0"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd"
+    version="1.2">
+  <component>
+    <component-type>org.crank.javax.faces.SelectOne</component-type>
+    <component-class>org.crank.javax.faces.component.UISelectOne</component-class>
+  </component>
+  <render-kit>
+      <renderer>
+      <component-family>javax.faces.SelectOne</component-family>
+      <renderer-type>org.crank.javax.faces.Listbox</renderer-type>
+      <renderer-class>
+			org.crank.javax.faces.component.ListboxRenderer
+  	  </renderer-class>
+    </renderer>
+  </render-kit>
+</faces-config>
+}}}
+
+This makes me wonder.... Maybe a fresh pair of eyes on this tomorrow.

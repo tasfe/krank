@@ -735,3 +735,13 @@ Then we just call it at the start of the converter methods as follows:
         return "";
     }
 }}}
+
+Opps... Now we have to register it in faces-config instead of the spring application context.
+
+==== faces-config.xml ====
+{{{
+    <converter>
+    	<converter-for-class>qcom.qa.model.State</converter-for-class>
+    	<converter-class>qcom.cas.commons.faces.GenericEntityConverter</converter-class>
+    </converter>
+}}}

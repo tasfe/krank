@@ -1036,7 +1036,7 @@ The problem with this fix is that it relies on changing the mapping files to wor
 
 I also tried this:
 
-{{{
+
 {{{
     <class name="Filter" table="filter">
         <id name="id" type="long" column="id">
@@ -1046,5 +1046,3 @@ I also tried this:
 }}}
 
 And it did not work.
-
-}}}

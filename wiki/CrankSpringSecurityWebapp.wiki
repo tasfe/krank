@@ -98,7 +98,7 @@ So with that being said, let's examine and explain the changes.
 
 
 === web.xml additions === 
-A configuration file named "_applicationContext-security.xml_" was added to web.xml under the WEB-INF/ folder. It could have been added as a separate namespace configuration within the Spring Context configuration file (_applicationContext.xml_), but this is much cleaner.
+A configuration file named "_applicationContext-security.xml_" was added to web.xml under the WEB-INF/ folder. It could have been added as a separate namespace configuration within the Spring Context configuration file (_applicationContext.xml_).
 {{{
 <context-param>
  <param-name>contextConfigLocation</param-name>

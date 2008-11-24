@@ -206,7 +206,7 @@ Redirect tag added to all faces-config navigation rules
 }}}
 
 === New Tag Library added to support Custom Spring Security tags and EL functions ===
-file: \src\main\webapp\WEB-INF\spring-security.taglib.xml
+file: {{{\src\main\webapp\WEB-INF\spring-security.taglib.xml}}}
 {{{
 <?xml version="1.0"?>
 <!DOCTYPE facelet-taglib PUBLIC  "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
@@ -221,7 +221,7 @@ file: \src\main\webapp\WEB-INF\spring-security.taglib.xml
 
 file: {{{JsfCoreLibrary.java}}}
 
-Purpose: Registers the tagname "springSecurityAuthorize" under the name space 
+Purpose: Registers the tagname {{{<springSecurityAuthorize/>}}} under the name space 
 {{{http://www.crank.org/springsecurity/tags}}} with the java class  {{{SpringSecurityAuthorize.java}}}
 {{{
 package org.crank.tags;
@@ -264,7 +264,7 @@ public final class JsfCoreLibrary extends AbstractTagLibrary {
 }
 }}}
 
-=== Usage of newly registered tag {{{<securityAuthorize/>}}} ===
+=== Usage of newly registered tag {{{<springSecurityAuthorize/>}}} ===
 A new secureListing.xhtml had to be made which is a copy of listing.xhtml with the exception of some addtional logic checks for authenticated users.
 {{{
                        <!-- Only ROLE_SUPERVISOR can select rows -->

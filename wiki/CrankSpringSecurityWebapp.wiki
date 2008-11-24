@@ -5,11 +5,20 @@
 
 The Crank Spring Security Webapp is a mini-example application that utilizes Spring Security 2.x.x to enforce user logins to secured resources. Out of the box, Spring Security 2.x.x does not integrate at all with JSF, so a little code had to be written so that it would. By default if you use Spring Security's JDBC Authentication Provider, Spring assumes that you have certain table names and columns defined to do out of the box authentication with a database. You can define your own tables and authentication queries, but out of the box, Spring has nailed down a pretty good ERD for the way they have implemented the basic concepts of Security which are Users, Roles, Groups, etc... Spring Security has no concept of a User Management UI, so that will be something to be added in the near future. (Acegi lacked one as well)
 
-For a more detailed explanation of the internals of Spring Security 2 you can visit the following links:
-  * http://static.springframework.org/spring-security/site/ 
-  * http://www.parleys.com/display/PARLEYS/Using+Spring+Security+2
-  
+For a more detailed explanation of the internals of Spring Security 2 you can visit the following links :
+  # [http://static.springframework.org/spring-security/site/ Spring Security Documentation]
+  # [http://static.springsource.org/spring-security/site/reference/html/appendix-schema.html Spring Security Database Schema Explained]
+
+I highly recommend reading the links provided, it will save you a lot of headache. 
+ 
 
 
 = Details =
-More to Come Very Soon
+The crank-spring-security-webapp is a direct copy of the crank-crud-webapp example with the exception of a few changes:
+
+  * Custom Crank Spring Security tag library code (_Spring Security tag libraries do not work with Java Server Faces without a custom tag library and supporting classes_)
+  * modified .xhtml pages to include Crank Spring Security tag namespaces
+  * Spring Security application context configuration file.
+  * web.xml Spring Security Listeners
+  * pom.xml Spring Security library additions
+  * Additional employee-jpa-model classes added to support the assumed default Spring Security Database Schema

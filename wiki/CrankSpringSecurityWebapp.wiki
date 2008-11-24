@@ -205,11 +205,11 @@ Redirect tag added to all faces-config navigation rules
   </navigation-rule>
 }}}
 
-=== New Tag Library added to support Custom Spring Security tags and EL fucntions ===
+=== New Tag Library added to support Custom Spring Security tags and EL functions ===
+file: \src\main\webapp\WEB-INF\spring-security.taglib.xml
 {{{
 <?xml version="1.0"?>
-<!DOCTYPE facelet-taglib PUBLIC
-  "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
+<!DOCTYPE facelet-taglib PUBLIC  "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
   "facelet-taglib_1_0.dtd">
 
 <facelet-taglib>
@@ -217,4 +217,49 @@ Redirect tag added to all faces-config navigation rules
            org.crank.tags.JsfCoreLibrary
       </library-class>    
 </facelet-taglib>
+}}}
+
+file: JsfCoreLibrary.java
+
+Purpose: Registers the tagname "springSecurityAuthorize" under the name space 
+http://www.crank.org/springsecurity/tags with the java class  SpringSecurityAuthorize.java
+{{{
+package org.crank.tags;
+
+import com.sun.facelets.tag.AbstractTagLibrary;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+
+public final class JsfCoreLibrary extends AbstractTagLibrary {
+    /** Namespace used to import this library in Facelets pages  */
+    public static final String NAMESPACE = "http://www.crank.org/springsecurity/tags";
+
+    /**  Current instance of library. */
+    public static final JsfCoreLibrary INSTANCE = new JsfCoreLibrary();
+
+    /**
+     * Creates a new JsfCoreLibrary object.
+     * iterates through all the methods on the current class using reflection,
+     * It then adds all JsfCoreLibrary static methods using the inherited method addFunction().
+     */
+    public JsfCoreLibrary() {
+        super(NAMESPACE);
+        
+        //Register tag <yournamespace:springSecurityAuthorize/> in the J;sfCoreLibrary
+        this.addTagHandler("springSecurityAuthorize", SpringSecurityAuthorize.class);
+
+
+        try {
+            Method[] methods = SpringSecurityTagUtils.class.getMethods();
+
+            for (int i = 0; i < methods.length; i++) {
+                if (Modifier.isStatic(methods[i].getModifiers())) {
+                    this.addFunction(methods[i].getName(), methods[i]);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
 }}}

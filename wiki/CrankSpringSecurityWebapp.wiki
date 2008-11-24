@@ -132,19 +132,37 @@ A configuration file named "_applicationContext-security.xml_" was added to web.
         <s:concurrent-session-control max-sessions="1" exception-if-maximum-exceeded="true"/>
     </s:http>
 
-
-    <s:authentication-provider user-service-ref='myUserDetailsService'/>
-    <!--<s:authentication-provider>-->
-
-        <!--<s:jdbc-user-service data-source-ref="employeeDataSource"-->
-                             <!--authorities-by-username-query="select username,authority from users where username=?"/>-->
-        <!--<s:jdbc-user-service data-source-ref="employeeDataSource"/>-->
-                <!---->
-
-
-    <!--</s:authentication-provider>-->
-
-
+    <!-- myUserDetailsService is wired inside of applicationContext.xml -->
+   <s:authentication-provider user-service-ref='myUserDetailsService'/>
 
 </beans>
+}}}
+
+=== applicationContext.xml Modifications ===
+A data source is needed by the Spring Security AuthenticationProvider, however, one is already configured within the applicationContext.xml which is the 'employeeDataSource' below that already exists in most of the crank-crud examples:
+{{{
+ <bean id="employeeDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close" lazy-init="true">
+        <property name="driverClassName" value="${krank.jdbc.driver}" />
+        <property name="url" value="${krank.jdbc.url}" />
+        <property name="username" value="${krank.jdbc.user}" />
+        <property name="password" value="${krank.jdbc.password}" />
+        <property name="minIdle" value="5" />
+        <property name="maxIdle" value="15" />
+        <property name="initialSize" value="200" />
+        <property name="maxOpenPreparedStatements" value="100" />
+        <property name="maxWait" value="3000" />
+        <property name="timeBetweenEvictionRunsMillis" value="3600000" />
+    </bean>
+
+}}}
+
+
+Now the only modification need to applicationContext.xml is to wire the JdbcDaoImpl bean which the Spring Security AuthenticationProvider will use to authenticate users against the databased linked to the existing configured data source.
+
+{{{
+ <bean id="myUserDetailsService" class="org.springframework.security.userdetails.jdbc.JdbcDaoImpl">
+    <property name="dataSource" ref="employeeDataSource"/>
+ </bean>
 }}}

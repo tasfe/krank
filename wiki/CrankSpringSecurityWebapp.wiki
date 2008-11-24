@@ -18,6 +18,7 @@ The crank-spring-security-webapp is a direct copy of the crank-crud-webapp examp
   * modified .xhtml pages to include Crank Spring Security tag namespaces
   * Spring Security application context configuration file.
   * web.xml Spring Security Listeners
+  * faces-config.xml added <redirect/> to all targets
   * pom.xml Spring Security library additions
   * Additional employee-jpa-model classes added to support the assumed default Spring Security Database Schema
 
@@ -98,7 +99,7 @@ So with that being said, let's examine and explain the changes.
 === Spring Security Application Context Configuration ===
 A configuration file named "_applicationContext-security.xml_" was added to web.xml under the WEB-INF/ folder. It could have been added as a separate namespace configuration within the Spring Context configuration file, but this is much cleaner.
 
-  # web.xml addition
+  * web.xml additions
 {{{
 <context-param>
  <param-name>contextConfigLocation</param-name>
@@ -107,9 +108,35 @@ A configuration file named "_applicationContext-security.xml_" was added to web.
     /WEB-INF/applicationContext-security.xml <!-- ADDED FILE -->
   </param-value>
 </context-param>
+
+<!-- used to track session events (single user session) -->
+<listener>
+<listener-class>org.springframework.security.ui.session.HttpSessionEventPublisher</listener-class>
+</listener>
+
+<filter>
+    <filter-name>_filterChainProxy</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+</filter>
+ 
+<filter>
+   <filter-name>filterToBeanProxy</filter-name>
+   <filter-class>org.springframework.security.util.FilterToBeanProxy</filter-class>
+   <init-param>
+   <param-name>targetClass</param-name>
+   <param-value>org.springframework.security.util.FilterChainProxy</param-value>
+ </init-param>
+</filter>
+ 
+<filter-mapping>
+ <filter-name>filterToBeanProxy</filter-name>
+ <url-pattern>/*</url-pattern>
+ <dispatcher>FORWARD</dispatcher>
+ <dispatcher>REQUEST</dispatcher>
+</filter-mapping>  
 }}}
 
-  # applicationContext-security.xml added to WEB-INF/
+  * applicationContext-security.xml added to WEB-INF/
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -138,7 +165,7 @@ A configuration file named "_applicationContext-security.xml_" was added to web.
 </beans>
 }}}
 
-  # applicationContext.xml Modifications
+  * applicationContext.xml Modifications
 A data source is needed by the Spring Security [http://static.springsource.org/spring-security/site/reference/html/ns-config.html#ns-auth-providers AuthenticationProvider], however, one is already configured within the applicationContext.xml which is the 'employeeDataSource' below that already exists in most of the crank-crud examples:
 {{{
  <bean id="employeeDataSource"

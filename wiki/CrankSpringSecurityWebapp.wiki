@@ -5,7 +5,7 @@
 
 The Crank Spring Security Webapp is a mini-example application that utilizes Spring Security 2.x.x to enforce user logins to secured resources. Out of the box, Spring Security 2.x.x does not integrate at all with JSF, so a little code had to be written so that it would. By default if you use Spring Security's JDBC Authentication Provider, Spring assumes that you have certain table names and columns defined to do out of the box authentication with a database. You can define your own tables and authentication queries, but out of the box, Spring has nailed down a pretty good ERD for the way they have implemented the basic concepts of Security which are Users, Roles, Groups, etc... Spring Security has no concept of a User Management UI, so that will be something to be added in the near future. (Acegi lacked one as well)
 
-For a more deta0led explanation of the internals of Spring Security 2 you can visit the following links :
+For a more detailed explanation of the internals of Spring Security 2 you can visit the following links :
   # [http://static.springframework.org/spring-security/site/ Spring Security Documentation]
   # [http://static.springsource.org/spring-security/site/reference/html/appendix-schema.html Spring Security Database Schema Explained]
 
@@ -159,7 +159,7 @@ A data source is needed by the Spring Security AuthenticationProvider, however, 
 }}}
 
 
-Now the only modification need to applicationContext.xml is to wire the JdbcDaoImpl bean which the Spring Security AuthenticationProvider will use to authenticate users against the databased linked to the existing configured data source.
+Now the only modification needed to applicationContext.xml is to wire the [http://static.springsource.org/spring-security/site/reference/html/authentication-common-auth-services.html#jdbc-service JdbcDaoImpl] bean which the Spring Security [http://static.springsource.org/spring-security/site/reference/html/ns-config.html#ns-auth-providers AuthenticationProvider] will use to authenticate users against the databased linked to the existing configured data source.
 
 {{{
  <bean id="myUserDetailsService" class="org.springframework.security.userdetails.jdbc.JdbcDaoImpl">

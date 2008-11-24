@@ -25,7 +25,7 @@ So with that being said, let's examine and explain the changes.
 
 = Integrating Spring Security 2.0.4 and Crank 1.0.4 =
 === POM Additions ===
-  # Spring Security 2.0.4 currently only works with Spring JavaConfig Milestone 2
+  # Spring Security 2.0.4 currently only works with [http://www.springsource.org/javaconfig Spring JavaConfig Milestone 2]
 {{{
 <!-- start javaconfig -->
         <dependency>

@@ -18,7 +18,7 @@ The crank-spring-security-webapp is a direct copy of the crank-crud-webapp examp
   * modified .xhtml pages to include Crank Spring Security tag namespaces
   * Spring Security application context configuration file.
   * web.xml Spring Security Listeners
-  * faces-config.xml changes
+  * faces-config.xml navigation rule additions
   * pom.xml Spring Security library additions
   * Additional employee-jpa-model classes added to support the assumed default Spring Security Database Schema
 
@@ -192,4 +192,9 @@ Now the only modification needed to applicationContext.xml is to wire the [http:
  <bean id="myUserDetailsService" class="org.springframework.security.userdetails.jdbc.JdbcDaoImpl">
     <property name="dataSource" ref="employeeDataSource"/>
  </bean>
+}}}
+
+Redirect tag added to all faces-config navigation rules
+{{{
+   <redirect/>
 }}}

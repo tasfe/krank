@@ -196,5 +196,11 @@ Now the only modification needed to applicationContext.xml is to wire the [http:
 === faces-config.xml changes ===
 Redirect tag added to all faces-config navigation rules
 {{{
-   <redirect/>
+  <navigation-rule>
+  	<navigation-case>
+  		<from-outcome>USERS</from-outcome>
+  		<to-view-id>/pages/crud/Users/Listing.xhtml</to-view-id>
+        <redirect/>
+      </navigation-case>
+  </navigation-rule>
 }}}

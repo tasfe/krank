@@ -1,4 +1,4 @@
-#summary Crank Spring Security Webapp is a direct copy of the crank-crud-webapp in the 'examples/' folder , and it has been modified to integrate JSF/Facelets with Spring Security 2.0.4
+#summary _(Unfinished as of 11/23/2008 9:07 PM PST)_ Crank Spring Security Webapp is a direct copy of the crank-crud-webapp in the 'examples/' folder , and it has been modified to integrate JSF/Facelets with Spring Security 2.0.4
 #labels examples,springsecurity
 
 = Introduction =

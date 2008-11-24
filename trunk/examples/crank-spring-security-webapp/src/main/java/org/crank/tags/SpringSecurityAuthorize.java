@@ -4,21 +4,12 @@ import com.sun.facelets.tag.TagHandler;
 import com.sun.facelets.tag.TagAttribute;
 import com.sun.facelets.tag.TagConfig;
 import com.sun.facelets.FaceletContext;
-import com.sun.facelets.FaceletException;
-
 import javax.faces.component.UIComponent;
 import javax.faces.FacesException;
 import javax.el.ELException;
 import java.io.IOException;
 import java.util.*;
-import javax.el.ELContext;
-import javax.servlet.jsp.tagext.Tag;
 
-import org.springframework.security.Authentication;
-import org.springframework.security.GrantedAuthorityImpl;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.util.StringUtils;
 
 //import org.apache.log4j.Logger;
 

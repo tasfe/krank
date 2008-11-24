@@ -85,8 +85,8 @@ So with that being said, let's examine and explain the changes.
         </dependency>
         <!-- end javaconfig-->
 }}}
+  # Custom Crank Spring Security Tag Dependency
 {{{
-# Custom Crank Spring Security Tag Dependency
    <dependency>
      <groupId>javax.el</groupId>
      <artifactId>el-api</artifactId>

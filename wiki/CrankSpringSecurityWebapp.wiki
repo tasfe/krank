@@ -263,3 +263,46 @@ public final class JsfCoreLibrary extends AbstractTagLibrary {
     }
 }
 }}}
+
+=== Usage of newly registered tag {{{<securityAuthorize/>}}}
+A new secureListing.xhtml had to be made which is a copy of listing.xhtml with the exception of some addtional logic checks for authenticated users.
+
+{{{
+                       <!-- Only ROLE_SUPERVISOR can select rows -->
+                        <s:springSecurityAuthorize ifAnyGranted="ROLE_SUPERVISOR">
+                        <h:column>
+                            <crank:commandLink id="selectAll${id}"
+                                               onclick="toggleAllCheckBoxesGrouped('${parentForm}','${selectedRowsGroupId}',true);"
+                                               toolTipText="Click to select all rows"
+                                               immediate="${immediate}"
+                                    >
+
+                                <h:graphicImage id="selectAll${id}Img" value="${selectAllImg}" border="0"
+                                                styleClass="${listingImageButtonClass}"/>
+                            </crank:commandLink>
+                            <crank:commandLink id="selectNone${id}"
+                                               onclick="toggleAllCheckBoxesGrouped('${parentForm}','${selectedRowsGroupId}',false);"
+                                               toolTipText="Click to un-select all rows"
+                                               immediate="${immediate}"
+                                    >
+                                <h:graphicImage id="selectNone${id}Img" value="${selectNoneImg}" border="0"
+                                                styleClass="${listingImageButtonClass}"/>
+                            </crank:commandLink>
+                            <crank:commandLink id="disableSelected${id}"
+                                               rendered="${enableDelete}"
+                                               entity="${crud}"
+                                               action="deleteSelected"
+                                               onclick="if (!confirm('Are you sure you want to delete all selected items?')) return false"
+                                               toolTipText="Click to delete selected rows"
+                                               reRender="${reRender},dataTable${id}"
+                                               ajax="${false}"
+                                               immediate="${immediate}"
+                                    >
+                                <h:graphicImage id="disableSelected${id}Img" value="${delAllImg}" border="0"
+                                                styleClass="${listingImageButtonClass}"/>
+                            </crank:commandLink>
+                        </h:column>
+                        </s:springSecurityAuthorize>
+}}}
+{{{
+}}}

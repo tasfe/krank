@@ -24,7 +24,8 @@ The crank-spring-security-webapp is a direct copy of the crank-crud-webapp examp
 So with that being said, let's examine and explain the changes.
 
 = Integrating Spring Security 2.0.4 and Crank 1.0.4 =
-=== POM Changes ===
+=== POM Additions ===
+  * Spring Security 2.0.4 currently only works with Spring JavaConfig Milestone 2
 {{{
 <!-- start javaconfig -->
         <dependency>

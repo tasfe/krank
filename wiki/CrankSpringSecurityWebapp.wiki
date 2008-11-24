@@ -27,6 +27,37 @@ The crank-spring-security-webapp is a direct copy of the crank-crud-webapp examp
 So with that being said, let's examine and explain the changes.
 
 = Integrating Spring Security 2.0.4 and Crank 1.0.4 =
+=== Default Database Schema ===
+The following SQL can be used to create the default database schema that Spring Security assumes when using the JDBC Authentication.
+{{{
+CREATE TABLE `users` (
+`username` varchar(255) NOT NULL,
+`password` varchar(255) NOT NULL,
+`enabled` tinyint(1) NOT NULL,
+PRIMARY KEY  (`username`)
+);
+
+CREATE TABLE `groups` (
+`id` int(11) NOT NULL default ‘0′,
+`group_name` varchar(255) default NULL,
+PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `group_members` (
+`group_id` int(11) NOT NULL default ‘0′,
+`username` varchar(255) default NULL,
+PRIMARY KEY  (`group_id`, `username`)
+);
+
+CREATE TABLE `group_authorities` (
+`group_id` int(11) NOT NULL default ‘0′,
+`authority` varchar(255) NOT NULL default ”,
+PRIMARY KEY  (`group_id`,`authority`)
+);
+}}}
+
+In crank Hibernate / JPA is being used so all I had to do was create the Entity classes with the correct Annotations. I added these to the 'employee-jpa-model' project under the 'examples' folder which is also used in crank-crud-webapp.
+
 === POM Additions ===
   # Spring Security 2.0.4 Core Libraries
 {{{

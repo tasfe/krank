@@ -11,9 +11,7 @@ For a more detailed explanation of the internals of Spring Security 2 you can vi
 
 I highly recommend reading the links provided, it will save you a lot of headache. 
  
-
-
-= Details =
+= Brief =
 The crank-spring-security-webapp is a direct copy of the crank-crud-webapp example with the exception of a few changes:
 
   * Custom Crank Spring Security tag library code (_Spring Security tag libraries do not work with Java Server Faces without a custom tag library and supporting classes_)
@@ -22,3 +20,7 @@ The crank-spring-security-webapp is a direct copy of the crank-crud-webapp examp
   * web.xml Spring Security Listeners
   * pom.xml Spring Security library additions
   * Additional employee-jpa-model classes added to support the assumed default Spring Security Database Schema
+
+So with that being said, let's examine and explain the changes.
+
+= Integrating Spring Security 2.x.x and Crank 1.0.x=

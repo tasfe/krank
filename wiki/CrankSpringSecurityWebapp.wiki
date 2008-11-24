@@ -219,10 +219,10 @@ file: \src\main\webapp\WEB-INF\spring-security.taglib.xml
 </facelet-taglib>
 }}}
 
-file: JsfCoreLibrary.java
+file: {{{JsfCoreLibrary.java}}}
 
 Purpose: Registers the tagname "springSecurityAuthorize" under the name space 
-http://www.crank.org/springsecurity/tags with the java class  SpringSecurityAuthorize.java
+{{{http://www.crank.org/springsecurity/tags}}} with the java class  {{{SpringSecurityAuthorize.java}}}
 {{{
 package org.crank.tags;
 

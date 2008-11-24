@@ -98,7 +98,7 @@ So with that being said, let's examine and explain the changes.
 === Spring Security Application Context Configuration ===
 A configuration file named "_applicationContext-security.xml_" was added to web.xml under the WEB-INF/ folder. It could have been added as a separate namespace configuration within the Spring Context configuration file, but this is much cleaner.
 
-  *web.xml addition
+  # web.xml addition
 {{{
 <context-param>
  <param-name>contextConfigLocation</param-name>
@@ -109,7 +109,7 @@ A configuration file named "_applicationContext-security.xml_" was added to web.
 </context-param>
 }}}
 
-  *applicationContext-security.xml added to WEB-INF/
+  # applicationContext-security.xml added to WEB-INF/
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -138,7 +138,7 @@ A configuration file named "_applicationContext-security.xml_" was added to web.
 </beans>
 }}}
 
-=== applicationContext.xml Modifications ===
+  # applicationContext.xml Modifications
 A data source is needed by the Spring Security [http://static.springsource.org/spring-security/site/reference/html/ns-config.html#ns-auth-providers AuthenticationProvider], however, one is already configured within the applicationContext.xml which is the 'employeeDataSource' below that already exists in most of the crank-crud examples:
 {{{
  <bean id="employeeDataSource"

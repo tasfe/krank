@@ -264,12 +264,12 @@ public final class JsfCoreLibrary extends AbstractTagLibrary {
 }
 }}}
 
-=== Usage of newly registered tag {{{<securityAuthorize/>}}}
+=== Usage of newly registered tag {{{<securityAuthorize/>}}} ===
 A new secureListing.xhtml had to be made which is a copy of listing.xhtml with the exception of some addtional logic checks for authenticated users.
-
 {{{
                        <!-- Only ROLE_SUPERVISOR can select rows -->
                         <s:springSecurityAuthorize ifAnyGranted="ROLE_SUPERVISOR">
+
                         <h:column>
                             <crank:commandLink id="selectAll${id}"
                                                onclick="toggleAllCheckBoxesGrouped('${parentForm}','${selectedRowsGroupId}',true);"
@@ -302,7 +302,6 @@ A new secureListing.xhtml had to be made which is a copy of listing.xhtml with t
                                                 styleClass="${listingImageButtonClass}"/>
                             </crank:commandLink>
                         </h:column>
-                        </s:springSecurityAuthorize>
-}}}
-{{{
+
+</s:springSecurityAuthorize>
 }}}

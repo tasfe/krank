@@ -104,7 +104,7 @@ A configuration file named "_applicationContextSecurity.xml_" was added to web.x
  <param-name>contextConfigLocation</param-name>
   <param-value>
     classpath:/applicationContext.xml
-    /WEB-INF/applicationContext-security.xml
+    /WEB-INF/applicationContext-security.xml <!-- ADDED FILE -->
   </param-value>
 </context-param>
 }}}

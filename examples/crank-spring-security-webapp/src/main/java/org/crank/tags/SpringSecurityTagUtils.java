@@ -1,8 +1,6 @@
 package org.crank.tags;
 
-import java.util.*;
-
-import javax.faces.context.FacesContext;
+import java.util.*;                            
 /**
  * Created by IntelliJ IDEA.
  * User: reggiedigital

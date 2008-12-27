@@ -220,7 +220,7 @@ Notice it iterates through the *args* and checks to see if the argument passed (
 this.metaClass.hasProperty(this, propertyName)
 }}}
 
-The *copyPropsFromArgs* method parses the arguments and sets them into *CodeGenMain* using *this[propertyName]=value* as follows:
+The *copyPropsFromArgs* method parses the arguments and sets them into *CodeGenMain* using *this\[propertyName\]=value* as follows:
 {{{
 	public void copyPropsFromArgs(String[] args) {
 		actions = []
@@ -244,7 +244,7 @@ The *copyPropsFromArgs* method parses the arguments and sets them into *CodeGenM
 
 }}}
 
-*CodeGenMain* writes to properties using the dynamic properties using *this[key] = configProperties[key]* and *configProperties[key] = this[key]* as follows:
+*CodeGenMain* writes to properties using the dynamic properties using *this\[key\] = configProperties\[key\]* and *configProperties\[key\] = this\[key\]* as follows:
 
 {{{
 	private void readProperties() {

@@ -12,9 +12,16 @@ I have poured through the Groovy pragmatic books in hopes to fully utilize the G
 
 One area where I have chosen to be less Groovy is in making my methods and closures for the most part strongly typed. I have bad memories of really large Jython/JPython projects that I worked on getting out of hand with regards to typing issues. I like the self documenting nature of declaring methods that take typed arguments. It also helps the IDE give me code completion. So I unapologetically use types in many cases where a more "groovy" programmer would not.
 
-= Details =
+This is a very earlier copy of this and essentially works well enough to reverse engineer a JPA object model from a database table. I plan on adding Maven Plugin support and a Swing based GUI. Also I plan on adding features like adding classes and relationships from the command line and Swing GUI (even if they do not exist in the database yet).
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+This code will one day be the basis of code generation support for the Crank and Presto projects.
+
+I have utilized some of the following Groovy language features:
+
+# Dynamic property access
+# XML writing via builder support
+# XML reading via GPath support
+# Custom closure creating for IoC for doing code cleanup
+# AOP style method decoration for logging via Groovy metaClass, expando support
+
+I would like to start with a brief overview of the classes involved and then discuss some of the Groovy language features that made this project a joy to write.

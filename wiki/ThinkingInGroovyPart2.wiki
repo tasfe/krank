@@ -385,6 +385,42 @@ With the above Category class now the String object has the above methods added 
 
 }}}
 
+=== AOP Groovy style ===
+Groovy has support for providing AOP style support. We can write code to intercept method calls and debug them. Thus when we put the tool in *debug* mode, we want to log all method calls to all collaborators objects. To do this we define a logging closure as follows:
+
+{{{
+	Closure logClosure = {String methodName, methodArgs->
+		def validMethod = delegate.metaClass.getMetaMethod(methodName, methodArgs)
+		if (validMethod==null) {
+			return delegate.metaClass.invokeMissingMethod(delegate, methodName, methodArgs)
+		}  else if (validMethod.name=="println") {
+			return  validMethod.invoke(delegate, methodArgs)
+		}
+		System.out.println "Running ${methodName}(${methodArgs})"
+		def result = validMethod.invoke(delegate, methodArgs)
+		System.out.println "Completed ${methodName}(${methodArgs})"
+		result
+	}
+
+}}}
+
+
+Then we weave in the closure in the *configureCollaborators* method as follows:
+
+{{{
+	private boolean configureCollaborators() {
+		boolean invalidArgument = false
+		
+		if (debug) {
+			DataBaseMetaDataReader.metaClass.invokeMethod = logClosure
+			JavaModelGenerator.metaClass.invokeMethod = logClosure
+			CodeGenerator.metaClass.invokeMethod = logClosure			
+		}
+       ...
+
+}}}
+
+=== Complete CodeGenMain ===
 Here is the complete *CodeGenMain* class for reference (I am looking for tips on how to make the code more Groovy): 
 
 {{{
@@ -706,4 +742,4 @@ public class CodeGenMain{
 
 }}}
 
-In 315 short lines of code we process the arguments and read/write configuration properties to the properties file. We also document how to use the command line utility using Groovy here docs.
+In 315 short lines of code we process the arguments and read/write configuration properties to the properties file. We also document how to use the command line utility using Groovy here docs. I think the code is easy to read and grok. Let me know if you agree.

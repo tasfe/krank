@@ -35,12 +35,12 @@ There are a series of model object to represent Java classes, properties and rel
 Here are the model objects for database tables and Java classes.
 
 || Class Name || Purpose ||
-|      Table       |    Represents data about a tables in a database       | 
-|      Key       |      Represents data about keys in a table (imported and exported)      | 
-|      Column       |    Represents data about columns in a table       | 
-|      JavaClass       |   Represents data about a Java class and how it is mapped to a Table       | 
-|      JavaProperty       |   Represents data about a Java property and how it is mapped to a database column        | 
-|      Relationship       |     Represents data about how Java classes are related      | 
+||      Table       ||    Represents data about a tables in a database       || 
+||      Key       ||      Represents data about keys in a table (imported and exported)      || 
+||      Column       ||    Represents data about columns in a table       || 
+||      JavaClass       ||   Represents data about a Java class and how it is mapped to a Table       || 
+||      JavaProperty       ||   Represents data about a Java property and how it is mapped to a database column        || 
+||      Relationship       ||     Represents data about how Java classes are related      || 
 
 
 

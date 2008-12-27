@@ -20,7 +20,7 @@ class JdbcUtils {
 		}
 	}
 	
-	def execute(callme) {
+	def execute(Closure callme) {
 		Class.forName(driver)
 		try {
 			connection = DriverManager.getConnection (url,userName,password)
@@ -31,7 +31,7 @@ class JdbcUtils {
 		}
 	}
 	
-	def iterate(ResultSet resultSet, callme) {
+	def iterate(ResultSet resultSet, Closure callme) {
 		try {
 			while (resultSet.next()) {
 				callme(resultSet)

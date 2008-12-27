@@ -20,7 +20,7 @@ class DataBaseMetaDataReader {
     JdbcUtils jdbcUtils
     /* The current connection */
     private Connection connection
-    boolean debug = true
+    boolean debug
 
 
 
@@ -96,7 +96,8 @@ class DataBaseMetaDataReader {
 
 
 
-    /** Process the database pulling out tables and columns whilst creating JavaClasses and Bean properties. */
+    /** Process the database pulling out tables and columns whilst creating 
+     * JavaClasses and Bean properties. */
     def processDB(){
         jdbcUtils.execute {Connection c ->
             if (debug) println "Processing the database"

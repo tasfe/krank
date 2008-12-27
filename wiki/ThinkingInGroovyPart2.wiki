@@ -705,3 +705,5 @@ public class CodeGenMain{
 }
 
 }}}
+
+In 315 short lines of code we process the arguments and read/write configuration properties to the properties file. We also document how to use the command line utility using Groovy here docs.

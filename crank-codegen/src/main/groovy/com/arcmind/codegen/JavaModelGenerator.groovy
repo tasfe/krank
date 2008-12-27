@@ -6,9 +6,9 @@ import java.sql.*
 
 
 
-/**
- * @author richardhightower
- *
+/** Takes the table hierarchy produced from DataBaseMetaDataReader or read from an XML file 
+ *  and generates a hierarchy of JavaClass, JavaProperty and Relationship model objects.
+ *  @author richardhightower
  */
 public class JavaModelGenerator{
     /** List of Java classes calculated from tables. */

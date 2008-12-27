@@ -1,6 +1,9 @@
 package com.arcmind.codegen
 import groovy.text.SimpleTemplateEngine
 
+/**
+ * Generates .java files from JavaClass models objects. 
+ */
 class CodeGenerator {
     List<JavaClass> classes
     /** The target output dir. Defaults to ./target */

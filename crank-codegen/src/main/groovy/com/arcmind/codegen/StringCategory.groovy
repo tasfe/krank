@@ -1,13 +1,9 @@
-/**
- * 
- */
 package com.arcmind.codegen
 
 
 
-/**
- * @author richardhightower
- *
+/** Adds methods to the String class that are important for code generation.
+ *  @author richardhightower
  */
 public class StringCategory{
 

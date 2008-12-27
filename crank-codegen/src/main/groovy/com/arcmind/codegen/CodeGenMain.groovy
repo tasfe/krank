@@ -1,13 +1,12 @@
-/**
- * 
- */
 package com.arcmind.codegen
 
 
 
 /**
+ * The main entry point into the command line version of the codegen application. 
+ * Processes command line arguments and reads properties file settings. 
+ * Configures the other classes and performs injection of collaborators.
  * @author richardhightower
- *
  */
 public class CodeGenMain{
 	String url
@@ -27,11 +26,11 @@ public class CodeGenMain{
 	Properties configProperties
 	JdbcUtils jdbcUtils
 	DataBaseMetaDataReader reader
-    JavaModelGenerator modelGen
+	JavaModelGenerator modelGen
 	CodeGenerator codeGen
 	XMLPersister persister
 	List collaborators 
-
+	
 	Closure logClosure = {String methodName, methodArgs->
 		def validMethod = delegate.metaClass.getMetaMethod(methodName, methodArgs)
 		if (validMethod==null) {
@@ -45,10 +44,10 @@ public class CodeGenMain{
 		result
 	}
 	
-
+	
 	
 	public void run() {
-
+		
 		if (actions.contains("all")) {
 			actions << "reverse" 
 			actions << "generate"
@@ -59,7 +58,7 @@ public class CodeGenMain{
 		if (actions.contains("help") || actions.empty) {
 			help()
 		}
-
+		
 		if (actions.contains("saveProps")) {
 			writeProperties()
 		}
@@ -68,11 +67,11 @@ public class CodeGenMain{
 		if (actions.contains("reverse")) {
 			if (debug) println "Reverse engineering the database tables"
 			/* Process the database tables */
-	        reader.jdbcUtils = jdbcUtils        
-	        reader.processDB()			
- 	        /* Convert the tables into JavaClasses. */
-	        modelGen.tables = reader.tables
-	        modelGen.convertTablesToJavaClasses()
+			reader.jdbcUtils = jdbcUtils        
+			reader.processDB()			
+			/* Convert the tables into JavaClasses. */
+			modelGen.tables = reader.tables
+			modelGen.convertTablesToJavaClasses()
 		} else if (actions.contains("read")) {
 			if (debug) println "Reading XML file"
 			persister.read()
@@ -82,64 +81,64 @@ public class CodeGenMain{
 		
 		if (actions.contains("generate")) {
 			if (debug) println "Generating Java classes"
-	        /* Output the generated classes. */
-	        codeGen.classes = modelGen.classes
-	        codeGen.writeClassFiles()			
+			/* Output the generated classes. */
+			codeGen.classes = modelGen.classes
+			codeGen.writeClassFiles()			
 		}
 		
 		if (actions.contains("write")) {
 			if (debug) println "Writing XML file containing table and classes model"
-	        /* Write out xml file. */
-	        persister.classes = modelGen.classes
-	        persister.tables = reader.tables
-	        persister.persist()			
+			/* Write out xml file. */
+			persister.classes = modelGen.classes
+			persister.tables = reader.tables
+			persister.persist()			
 		}
 		
 		if (debug) println "Success!"
 	}
-
-    /** This is the main entry point for this program. */
-    public static void main (String [] args) {
-    	use(StringCategory) { 
-        	CodeGenMain codeGenMain = new CodeGenMain()
-        	if (codeGenMain.processArgs(args)) {
-        		codeGenMain.run()
-        	}
-    	}
-    }
-    
-    /* Parse the command line arguments. */
+	
+	/** This is the main entry point for this program. */
+	public static void main (String [] args) {
+		use(StringCategory) { 
+			CodeGenMain codeGenMain = new CodeGenMain()
+			if (codeGenMain.processArgs(args)) {
+				codeGenMain.run()
+			}
+		}
+	}
+	
+	/* Parse the command line arguments. */
 	public boolean processArgs (String [] args) {
 		boolean invalidArgument = false
-
-        String propertyName = null
-        String value = null
+		
+		String propertyName = null
+		String value = null
 		/* First pass make sure they passed valid arguments. */
 		for (arg in args) {
-				if (arg.contains("=")) {
-					def command = arg.split("=")
-					propertyName = command[0]
-					value = command[1]
-					if (!this.metaClass.hasProperty(this, propertyName)) {
-						invalidArgument = true
-						println "Invalid command line argument ${arg}"
-					}
-
+			if (arg.contains("=")) {
+				def command = arg.split("=")
+				propertyName = command[0]
+				value = command[1]
+				if (!this.metaClass.hasProperty(this, propertyName)) {
+					invalidArgument = true
+					println "Invalid command line argument ${arg}"
 				}
+				
+			}
 		}
 		
 		/* If there are errors do not proceed. */
 		if (invalidArgument) {
-            println "Problems with command line arguments"
-            return false;
-        }
+			println "Problems with command line arguments"
+			return false;
+		}
 		
 		/* Read properties from the command line and the properties file. */
 		copyPropsFromArgs(args)
 		appConfigDirFile = appConfigDir == null ? new File("./codegen") : new File(appConfigDir)
 		readProperties()
 		copyPropsFromArgs(args) //let the command line args overide the properties file
-
+		
 		invalidArgument = configureCollaborators()
 		
 		if (invalidArgument) {
@@ -148,12 +147,12 @@ public class CodeGenMain{
 		}
 		
 		return true
-
+		
 	}
-    
-    private boolean configureCollaborators() {
-    	boolean invalidArgument = false
-    	
+	
+	private boolean configureCollaborators() {
+		boolean invalidArgument = false
+		
 		if (debug) {
 			DataBaseMetaDataReader.metaClass.invokeMethod = logClosure
 			JavaModelGenerator.metaClass.invokeMethod = logClosure
@@ -165,7 +164,7 @@ public class CodeGenMain{
 		reader = new DataBaseMetaDataReader()
 		persister = new XMLPersister()
 		modelGen = new JavaModelGenerator()
-
+		
 		collaborators = [jdbcUtils, reader, modelGen, codeGen, persister]
 		
 		/* Configure related classes. */
@@ -173,7 +172,7 @@ public class CodeGenMain{
 		jdbcUtils.userName = userName
 		jdbcUtils.driver = driver
 		jdbcUtils.password = password == null ? "" : password
-
+		
 		/* Collaborator debug configuration. */		
 		for (collaborator in collaborators) {
 			collaborator.debug = debug == null ? false : Boolean.valueOf(debug)			
@@ -201,58 +200,56 @@ public class CodeGenMain{
 		if (!persister.outputDir.isDirectory()) {
 			persister.outputDir.mkdirs()
 		}
-        persister.fileName = xmlFileName == null ? "codegen.xml" : xmlFileName
-        		
-        return invalidArgument
-
-    }
-    
-	private void readProperties() {
-			configProperties = new Properties()
-			File propFile = calculatePropFile()
-			if (propFile.exists()) {
-				if (debug) println "Found properties file ${propFile}, reading it into application arguments" 
-				configProperties.load(new StringReader(propFile.text))
-				for (key in configProperties.keySet()) {
-					if (configProperties[key]!=null) {
-						if (debug) println "overiding values not set: ${key}=${configProperties[key]}"
-						this[key] = configProperties[key]
-					}
-				}
-			} else {
-				if (debug) println "Properties file not found, so writng new properties file based on arguments passed"
-				writeProperties()
-			}
+		persister.fileName = xmlFileName == null ? "codegen.xml" : xmlFileName
+		
+		return invalidArgument
+		
 	}
-
+	
+	private void readProperties() {
+		configProperties = new Properties()
+		File propFile = calculatePropFile()
+		if (propFile.exists()) {
+			if (debug) println "Found properties file ${propFile}, reading it into application arguments" 
+			configProperties.load(new StringReader(propFile.text))
+			for (key in configProperties.keySet()) {
+				if (configProperties[key]!=null) {
+					if (debug) println "overiding values not set: ${key}=${configProperties[key]}"
+					this[key] = configProperties[key]
+				}
+			}
+		} else {
+			if (debug) println "Properties file not found, so writng new properties file based on arguments passed"
+			writeProperties()
+		}
+	}
+	
 	private File calculatePropFile () {
 		propertiesFile==null ? new File(appConfigDirFile,"config.properties") : new File(propertiesFile) 
 	}
 	
 	private void writeProperties() {
-			configProperties = new Properties()
-			File propFile = calculatePropFile()
-			for (key in this.properties.keySet()) {
-				
-				Object value = this[key]
-				if (value!=null) {
-					if (value instanceof String) {
-						if (debug ) println "Setting values into properties file ${key} = ${value}"
-						configProperties[key] = value
-					}
+		configProperties = new Properties()
+		File propFile = calculatePropFile()
+		for (key in this.properties.keySet()) {
+			
+			Object value = this[key]
+			if (value!=null) {
+				if (value instanceof String) {
+					if (debug ) println "Setting values into properties file ${key} = ${value}"
+					configProperties[key] = value
 				}
 			}
-			propFile.parentFile.mkdirs()
-			
-			propFile.newOutputStream().withStream{stream ->
-				configProperties.store(stream, "prop file")
-			}
+		}
+		propFile.parentFile.mkdirs()
+		
+		propFile.newOutputStream().withStream{stream -> configProperties.store(stream, "prop file") }
 	}
 	
 	public void copyPropsFromArgs(String[] args) {
 		actions = []
 		for (String arg : args) {
-				if (arg.contains("=")) { 
+			if (arg.contains("=")) { 
 				def command = arg.split("=")
 				String propertyName = command[0]
 				String value = command[1]
@@ -268,11 +265,11 @@ public class CodeGenMain{
 			}
 		}
 	}
-   
+	
 	public void help () {
 		
 		
-	println """
+		println """
 	codeGen is used to generate a JPA Java model from a relational database.
 	Here are the command line arguments that codeGen takes.
 
@@ -298,7 +295,7 @@ public class CodeGenMain{
 	debug			Puts the app in debug mode
 
 	Command line parameters take precedence over what is stored in the config.properties file.
-	All command line arguments can be stored in the properties file.
+	All command line arguments can be stored in the properties file using the saveProps action.
 
 	Actions denote what codeGen should do. They do not get passed a parameter.
 

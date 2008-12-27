@@ -1,4 +1,5 @@
 package com.arcmind.codegen
+/** Represents data about a Java property and how it is mapped to a database column. */
 class JavaProperty {
     JavaClass javaClass
     JavaClass parentClass

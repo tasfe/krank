@@ -1,13 +1,11 @@
-/**
- * 
- */
 package com.arcmind.codegen
+
 import groovy.xml.MarkupBuilder
 
 
-/**
- * @author richardhightower
- *
+/** Reads and writes editable XML files. This allows the end user to override what we guessed in 
+ *  the generation process.
+ *  @author richardhightower
  */
 public class XMLPersister{
 

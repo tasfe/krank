@@ -1,6 +1,6 @@
 package com.arcmind.codegen
 
-
+/** Represents data about a Java class and how it is mapped to a Table. */
 class JavaClass {
 
     String name

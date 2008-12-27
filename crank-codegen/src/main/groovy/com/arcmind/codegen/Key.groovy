@@ -1,13 +1,9 @@
-/**
- * 
- */
 package com.arcmind.codegen
 
 
 
-/**
- * @author richardhightower
- *
+/** Represents data about keys in a table (imported and exported)
+ * @author richardhightower 
  */
 public class Key{
 	Column primaryKey = new Column()
@@ -19,7 +15,7 @@ public class Key{
 	short deferrability
 	boolean imported
 	
-    String toString() {
-        "Key(primaryKey=${primaryKey} \n     foriegnKey=${foriegnKey})"
-    }
+	String toString() {
+		"Key(primaryKey=${primaryKey} \n     foriegnKey=${foriegnKey})"
+	}
 }

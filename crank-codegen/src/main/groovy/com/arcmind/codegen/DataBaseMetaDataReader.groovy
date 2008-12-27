@@ -2,7 +2,10 @@ package com.arcmind.codegen
 import java.sql.*
 
 /**
-* Reads database parameters.
+* Used to read database metadata and create a hierarchy of Table, Column and Key model objects. 
+* The database metadata is read from connection.metaData.getTables, connection.metaData.getColumns, 
+* connection.metaData.getPrimaryKeys, connection.metaData.getExportedKeys and 
+* connection.metaData.getImportedKeys see Java API docs for JDBC Connection for more detail.
 */
 class DataBaseMetaDataReader {
     /** List of tables read from database. **/

@@ -1,14 +1,8 @@
-/**
- * 
- */
 package com.arcmind.codegen
 
 
-
-/**
- * @author richardhightower
- *
- */
+/** Represents data about how Java classes are related      
+ * @author richardhightower */
 public class Relationship{
 	String name
 	RelationshipType type

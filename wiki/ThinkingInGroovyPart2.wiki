@@ -18,11 +18,11 @@ This code will one day be the basis of code generation support for the Crank and
 
 I have utilized some of the following Groovy language features:
 
-# Dynamic property access
-# XML writing via builder support
-# XML reading via GPath support
-# Custom closure creating for IoC for doing code cleanup
-# AOP style method decoration for logging via Groovy metaClass, expando support
+ # Dynamic property access
+ # XML writing via builder support
+ # XML reading via GPath support
+ # Custom closure creating for IoC for doing code cleanup
+ # AOP style method decoration for logging via Groovy metaClass, expando support
 
 ==Classes in the codegen project==
 

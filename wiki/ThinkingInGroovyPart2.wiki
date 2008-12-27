@@ -1252,7 +1252,7 @@ class CodeGenerator {
     /** The target output dir. Defaults to ./target */
     File outputDir = new File("./target")
     boolean debug
-    String textTemplate = '''
+    String textTemplate = """
 <% import com.arcmind.codegen.RelationshipType; %>
 
 package ${bean.packageName};
@@ -1331,7 +1331,7 @@ public class ${bean.name} implements Serializable {
     }
    <% } %>
 }
-'''
+"""
 
     boolean needsColumnImport(JavaClass bean) {
          for (JavaProperty property : bean.properties) {
@@ -1694,8 +1694,6 @@ I've written this same project four different ways: Jython, JPython, Java and no
 
 Groovy makes working with XML very easy. It makes working with String, collections and such extremely easy.
 
-Some caveats: the tool support of Groovy is pretty weak. You best bet is to use the IDE support from IntelliJ. 
-
-I will report back once we add the maven and Swing support.
+Some caveats: the tool support of Groovy is pretty weak. You best bet is to use the IDE support from IntelliJ. I will report back once we add the maven and Swing support.
 
 Feedback welcome.

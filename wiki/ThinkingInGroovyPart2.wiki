@@ -151,3 +151,9 @@ public enum RelationshipType{
 }
 
 }}}
+
+There is nothing too special about these classes. They are considered POGOs (Plain old Groovy objects). If you don't specify private, protected etc. on a field, it becomes a Java property. (You can't see the getter and setter but they are there). Groovy allows you to use strongly typed properties and I prefer them as they help me document and use the classes that I write. I don't think it makes them less Groovy. 
+
+Notice that the *toString* methods all use GStrings which makes defining *toString* methods a breeze. The GStrings work a bit like JSPs and EL. Notice that you don't need a return statement. The last line in a method is the return statement by default and the "return" statement is optional.
+
+The RelationshipType was defined in Groovy but it was causing the maven compiler to puke so I redefined it in Java (renamed the RelationshipType.groovy to RelationshipType.java) and the Groovy maven plugin could handle it. Groovy comes with a joint compiler that can compile both Java classes and Groovy classes.

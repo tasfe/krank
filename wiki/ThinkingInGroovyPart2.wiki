@@ -22,7 +22,8 @@ I have utilized some of the following Groovy language features:
  # XML writing via builder support
  # XML reading via GPath support
  # Custom closure creating for IoC for doing code cleanup
- # AOP style method decoration for logging via Groovy metaClass, expando support
+ # AOP style method decoration for logging via Groovy metaClass, and expando support
+ # Category class for adding methods to another class
 
 ==Classes in the codegen project==
 
@@ -48,7 +49,9 @@ Here are the model objects for database tables and Java classes.
 
 || Class Name || Purpose ||
 || CodeGenMain           ||   The main entry point into the command line version of the codegen application. Processes command line arguments and reads properties file used to configure application. Configure the other classes and performs injection of collaborators.      || 
-||  JdbcUtils          ||  Utility class for working with low-level JDBC connections and ResultSets.       || 
-||            ||         || 
-||            ||         ||  
-||            ||         || 
+||  JdbcUtils          ||  Utility class for working with low-level JDBC connections and ResultSets. This class is used a lot by the DataBaseMetaDataReader class.      || 
+||  DataBaseMetaDataReader          ||   Used to read database metadata and create a hierarchy of Table, Column and Key model objects. The database metadata is read from connection.metaData.getTables, connection.metaData.getColumns, connection.metaData.getPrimaryKeys, connection.metaData.getExportedKeys and connection.metaData.getImportedKeys see Java API docs for JDBC Connection for more detail.      || 
+||    JavaModelGenerator        ||   Takes the table hierarchy produced from DataBaseMetaDataReader or read from an XML file and generates a hierarchy of JavaClass, JavaProperty and Relationship model objects.     ||  
+||    XMLPersister        ||    Reads and writes editable XML files. This allows the end user to override what we guessed in the generation process.     || 
+||    CodeGenerator       || Generates *.java files from a JavaClasses models objects. ||
+||    StringCategory      || Adds methods to the String class that are important for code generation. ||

@@ -55,3 +55,9 @@ Here are the model objects for database tables and Java classes.
 ||    XMLPersister        ||    Reads and writes editable XML files. This allows the end user to override what we guessed in the generation process.     || 
 ||    CodeGenerator       || Generates *.java files from a JavaClasses models objects. ||
 ||    StringCategory      || Adds methods to the String class that are important for code generation. ||
+
+Let's cover the model objects as they are the least interesting and all of the other classes work with them:
+
+{{{
+
+}}}

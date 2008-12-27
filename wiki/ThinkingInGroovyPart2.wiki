@@ -742,4 +742,681 @@ public class CodeGenMain{
 
 }}}
 
-In 315 short lines of code we process the arguments and read/write configuration properties to the properties file. We also document how to use the command line utility using Groovy here docs. I think the code is easy to read and grok. Let me know if you agree.
+In 315 short lines of code we process the arguments, read/write configuration properties to the properties file, and run the code based on the actions and properties configured. We also document how to use the command line utility using Groovy here docs. I think the code is easy to read and grok. Let me know if you agree.
+
+== JdbcUtils and DataBaseMetaDataReader == 
+I thought about using Groovy's GSQL but did not know how to access the database metadata from GSQL. I figured there was a built-in way to use closures with *ResultSet* but could not find it. If someone can point to a more groovy way to get database metadata, let me know.  Colin Taylor posted an example using *GroovyResultSetProxy* which looked promising but I did not grok it yet. In the mean time I wrote my own support by defining and using my own closures as follows:
+
+==== JdbcUtils.groovy ====
+{{{
+package com.arcmind.codegen
+import java.sql.*;
+/** Utility class for working with low-level JDBC connections and ResultSets. */
+class JdbcUtils {
+	String url
+	String driver
+	String userName
+	String password
+	Connection connection
+	boolean debug
+	
+	def executeScript(String sql) {
+		execute {Connection con ->
+			Statement statement = con.createStatement();
+			try {
+				statement.execute(sql);
+			} finally {
+				statement?.close();
+			}
+		}
+	}
+	
+	def execute(Closure callme) {
+		Class.forName(driver)
+		try {
+			connection = DriverManager.getConnection (url,userName,password)
+			callme(connection)
+		} finally {
+			connection?.close()
+			connection=null
+		}
+	}
+	
+	def iterate(ResultSet resultSet, Closure callme) {
+		try {
+			while (resultSet.next()) {
+				callme(resultSet)
+			}
+		} finally {
+			resultSet?.close()
+		}
+		
+	}
+}
+
+}}}
+
+Notice that *JdbcUtils* uses closures in two instances in the *execute* method and the *iterate* method. The *execute* method creates a database connection and then passes the connection to the closure so that the client code does not have to worry about connection allocation or connection clean up. Similarly the *iterate* method takes a *ResultSet* and closure and calls the closure after each iteration of the ResultSet and then cleans up after the ResultSet afterwards. Note that *executeScript*, *execute* and *iterate* all close the underlying resource, namely, the *statement*, the *connection* and the *resultSet*. Notice that it uses the Groovy language feature to safely call a method on an object that may be null, i.e., `statement?.close()`,  `connection?.close()` and `resultSet?.close()`.
+
+The *DataBaseMetaDataReader* class uses the *JdbcUtils*' *iterate* method and its *execute* method as follows:
+
+==== DataBaseMetaDataReader.groovy ====
+{{{
+class DataBaseMetaDataReader {
+    /** List of tables read from database. **/
+    List <Table> tables = []
+    /** Catalog for the database connection, default is null. */
+    String catalog
+    /** Schema for the database connection, default is null. */
+    String schema
+    /** Tables types that we will reverse, the default is just tables (no views) */
+    String[] tableTypes = ["TABLE"]
+    /** Utility class for managing database connection. */
+    JdbcUtils jdbcUtils
+    /* The current connection */
+    private Connection connection
+    ...
+
+    /**
+    * Connect to the database and read the database meta-data for a list of tables. 
+    */
+    def processTables() {
+        if(debug) println "DataBaseMetaDataReader: Processing Tables "
+        jdbcUtils.iterate(connection.metaData.getTables (catalog, schema, null, tableTypes),
+            { ResultSet resultSet ->
+                String tableName = resultSet.getString ("TABLE_NAME")
+                if (debug) println "DataBaseMetaDataReader: processTables() tableName=${tableName}"
+                tables << new Table(name:tableName)
+            }
+        )
+        if(debug) println "DataBaseMetaDataReader: Done Processing Tables " + tables
+    }
+
+   ...
+   ...
+   /** Process the database pulling out tables and columns whilst creating 
+     * JavaClasses and Bean properties. */
+    def processDB(){
+        jdbcUtils.execute {Connection c ->
+            if (debug) println "Processing the database"
+            connection = c
+         	processTables()
+         	processPrimaryKeys()
+         	processColumns()
+         	processKeys()
+        }
+    }
+
+}}}
+
+There is also a test called *DatabaseReverseXMLTest* that uses *JdbcUtils* as follows:
+
+{{{
+/**
+ * 
+ */
+package com.arcmind.codegen
+
+import junit.framework.TestCase
+
+
+/**
+ * @author richardhightower
+ *
+ */
+public class DatabaseReverseXMLTest extends TestCase{
+
+    static JdbcUtils jdbcUtils = new JdbcUtils(url:"jdbc:hsqldb:file:/db-codeGen/testdb",
+            userName:"sa", password:"", driver:"org.hsqldb.jdbcDriver")
+    DataBaseMetaDataReader reader = new DataBaseMetaDataReader()
+    JavaModelGenerator modelGen = new JavaModelGenerator()
+    CodeGenerator codeGen = new CodeGenerator()
+    XMLPersister persister = new XMLPersister()
+
+    static {
+    	try {
+	    	File dbDir = new File("/db-codeGen")
+	    	dbDir.eachFile {File file ->
+	    		file.delete()
+	    	}
+    	} catch(ex) {
+    		
+    	}
+    	jdbcUtils.executeScript(sqlDDL)
+    }
+	
+	static String sqlDDL = '''
+DROP TABLE EMPLOYEE IF EXISTS;
+DROP TABLE Department IF EXISTS;
+
+CREATE TABLE Department (
+  ID INTEGER IDENTITY,
+  name VARCHAR(30),
+  PRIMARY KEY (id)
+);
+CREATE TABLE EMPLOYEE (
+  EMP_ID INTEGER IDENTITY,
+  FK_DEPARTMENT_ID INTEGER NULL,  
+  firstName VARCHAR(30),
+  LAST_NAME VARCHAR(30),
+  PRIMARY KEY (EMP_ID),
+  FOREIGN KEY (FK_DEPARTMENT_ID) REFERENCES Department(ID)  
+);
+''';
+
+	public void setUp () {
+	}
+	
+	public void testTest() {
+		use(StringCategory) { 
+			reader.jdbcUtils = jdbcUtils
+	        reader.processDB()
+	        
+	        modelGen.tables = reader.tables 
+	        modelGen.packageName="org.crank.codegentest"
+	        modelGen.convertTablesToJavaClasses()
+	        
+	        codeGen.classes = modelGen.classes
+	        codeGen.writeClassFiles()
+	 
+	        persister.tables = reader.tables
+	        persister.classes = modelGen.classes
+	        persister.persist()
+	        persister.read()
+	        persister.fileName = "codeGenTest.xml"
+	        persister.persist()
+	        
+	        assertEquals(new File(persister.outputDir, "codeGen.xml").text, new File(persister.outputDir, "codeGenTest.xml").text)
+		}
+	}
+}
+
+}}}
+
+Notice that *DatabaseReverseXMLTest* uses Groovy here-docs to define SQL DDL for the test in the test class.
+
+Here is the complete listing for *DataBaseMetaDataReader*, which is used to read database metadata and create a hierarchy of *Table*, *Column* and *Key* model objects as follows:
+
+==== DataBaseMetaDataReader.groovy complete listing====
+{{{
+package com.arcmind.codegen
+import java.sql.*
+
+/**
+* Used to read database metadata and create a hierarchy of Table, Column and Key model objects. 
+* The database metadata is read from connection.metaData.getTables, connection.metaData.getColumns, 
+* connection.metaData.getPrimaryKeys, connection.metaData.getExportedKeys and 
+* connection.metaData.getImportedKeys see Java API docs for JDBC Connection for more detail.
+*/
+class DataBaseMetaDataReader {
+    /** List of tables read from database. **/
+    List <Table> tables = []
+    /** Catalog for the database connection, default is null. */
+    String catalog
+    /** Schema for the database connection, default is null. */
+    String schema
+    /** Tables types that we will reverse, the default is just tables (no views) */
+    String[] tableTypes = ["TABLE"]
+    /** Utility class for managing database connection. */
+    JdbcUtils jdbcUtils
+    /* The current connection */
+    private Connection connection
+    boolean debug
+
+
+
+    /**
+    * Connect to the database and read the database meta-data for a list of tables. 
+    */
+    def processTables() {
+        if(debug) println "DataBaseMetaDataReader: Processing Tables "
+        jdbcUtils.iterate(connection.metaData.getTables (catalog, schema, null, tableTypes),
+            { ResultSet resultSet ->
+                String tableName = resultSet.getString ("TABLE_NAME")
+                if (debug) println "DataBaseMetaDataReader: processTables() tableName=${tableName}"
+                tables << new Table(name:tableName)
+            }
+        )
+        if(debug) println "DataBaseMetaDataReader: Done Processing Tables " + tables
+    }
+
+    /**
+    *  Process list of columns from the list of tables. Add the columns to the table object.
+    */
+    def processColumns() {
+        tables.each {Table table ->
+            jdbcUtils.iterate connection.metaData.getColumns(catalog, schema, table.name, null),
+               { ResultSet resultSet ->
+                  Column column = new Column()
+                  column.name = resultSet.getString ("COLUMN_NAME")
+                  column.typeName = resultSet.getString ("TYPE_NAME")
+                  column.type = resultSet.getInt ("DATA_TYPE")
+                  column.nullable = resultSet.getString ("IS_NULLABLE") == "YES" ? true : false
+                  if (table.primaryKeys.contains(column.name)) {
+                            	 column.primaryKey = true
+                  }
+                  table.columns << column
+                             column.table = table
+                }
+        }
+    }
+    
+    /**
+     * Find the primary keys for each table.
+     */
+    def processPrimaryKeys() {
+        tables.each {Table table ->
+           jdbcUtils.iterate connection.metaData.getPrimaryKeys(catalog, schema, table.name), 
+             { ResultSet resultSet -> table.primaryKeys << resultSet.getString ("COLUMN_NAME")}
+        }
+    }
+    
+    
+    /**
+     * Process import keys and export keys
+     */
+    def processKeys() {
+        tables.each {Table table ->
+            processKeys(table, connection.metaData.&getExportedKeys, table.exportedKeys, false)
+            processKeys(table, connection.metaData.&getImportedKeys, table.importedKeys, true)
+        }
+    }
+
+	def processKeys(Table table, getKeys, List<Key> keyList, boolean imported) {
+        jdbcUtils.iterate getKeys(catalog, schema, table.name),
+                { ResultSet resultSet ->
+        		  Key key = new Key()
+        		  key.imported = imported
+        		  key.foriegnKey.name = resultSet.getString ("FKCOLUMN_NAME")
+        		  key.foriegnKey.table = tables.find{it.name==resultSet.getString ("FKTABLE_NAME")}
+        		  key.primaryKey.name = resultSet.getString ("PKCOLUMN_NAME")
+        		  key.primaryKey.table = tables.find{it.name==resultSet.getString ("PKTABLE_NAME")} 
+        		  keyList << key
+                }
+	}
+
+
+
+    /** Process the database pulling out tables and columns whilst creating 
+     * JavaClasses and Bean properties. */
+    def processDB(){
+        jdbcUtils.execute {Connection c ->
+            if (debug) println "Processing the database"
+            connection = c
+         	processTables()
+         	processPrimaryKeys()
+         	processColumns()
+         	processKeys()
+        }
+    }
+
+}
+}}}
+
+
+As you can see thedatabase metadata is read from connection.metaData.getTables, connection.metaData.getColumns, connection.metaData.getPrimaryKeys, connection.metaData.getExportedKeys and connection.metaData.getImportedKeys. The connection is retrieved by using *JdbcUtils*' *execute* method and the iteration through the metadata is done through *JdbcUtils*' *iterate* method.
+
+
+== JavaModelGenerator  ==
+Takes the table hierarchy produced from *DataBaseMetaDataReader* or read from an XML file and generates a hierarchy of *JavaClass*, *JavaProperty* and *Relationship* model objects. It uses the functions from the *StringCategory* class described earlier. It also uses the Groovy switch statement that works with Strings. It uses collection methods added by the GDK and does some String processing with GDK methods as well.
+
+Here is the JavaModelGenerator as follows:
+
+==== JavaModelGenerator.groovy ====
+
+{{{
+import java.sql.*
+
+
+
+/** Takes the table hierarchy produced from DataBaseMetaDataReader or read from an XML file 
+ *  and generates a hierarchy of JavaClass, JavaProperty and Relationship model objects.
+ *  @author richardhightower
+ */
+public class JavaModelGenerator{
+    /** List of Java classes calculated from tables. */
+    List <JavaClass> classes = []
+    /** Table names to process. */
+    Set <String> tableNames = []    
+    /** Map of tables to Java classes */
+    HashMap <String, JavaClass> tableToJavaClassMap = [:]
+    /** Map of Java classes to tables */
+    HashMap <String,Table> javaClassToTableMap = [:]
+    /** Tables */
+    List<Table> tables
+    /** The name of the packageName that we will be using. */
+    String packageName
+    boolean debug
+
+	
+    /**
+    *   Convert the columns to Java properties.
+    */
+    def convertColumnsToJavaProperties(JavaClass javaClass, Table table){
+          javaClass.properties = table.columns.collect {Column column ->
+
+               String propertyName = generateName(column.name).unCap()
+               JavaProperty property = new JavaProperty(name:propertyName, column:column)
+               javaClass.columnNameToPropertyMap[column.name]=property
+               property.javaClass = convertColumnToJavaClass (column)
+               property
+          }
+          JavaProperty idProperty = javaClass.properties.find{JavaProperty javaProperty -> javaProperty.column.primaryKey==true}
+          javaClass.properties.remove(idProperty)
+          javaClass.id = idProperty
+    }
+
+    /** Convert the column type to the equivalent Java class/type.
+    */
+    JavaClass convertColumnToJavaClass(Column column) {
+            switch (column.type) {
+                case [Types.BINARY, Types.VARBINARY, Types.LONGVARBINARY]:
+                    return new JavaClass(name:"byte[]", packageName:"java.lang")
+                case [Types.VARCHAR, Types.CHAR, Types.LONGNVARCHAR, Types.CLOB, Types.LONGVARCHAR]:
+                    return new JavaClass(name:"String", packageName:"java.lang")
+                case [Types.FLOAT, Types.DOUBLE]:
+                    return column.nullable ?
+                        new JavaClass(name:"Double", packageName:"java.lang") :
+                        new JavaClass(name:"double", primitive:true)
+                case Types.REAL:
+                    return column.nullable ?
+                        new JavaClass(name:"Float", packageName:"java.lang") :
+                        new JavaClass(name:"float", primitive:true)
+                case Types.BIGINT:
+                    return column.nullable || column.primaryKey ?
+                        new JavaClass(name:"Long", packageName:"java.lang") :
+                        new JavaClass(name:"long", primitive:true)
+                case Types.SMALLINT:
+                    return column.nullable ?
+                        new JavaClass(name:"Short", packageName:"java.lang") :
+                        new JavaClass(name:"short", primitive:true)
+                case Types.TINYINT:
+                    return column.nullable ?
+                        new JavaClass(name:"Byte", packageName:"java.lang") :
+                        new JavaClass(name:"byte", primitive:true)
+                case Types.BIT:
+                    return column.nullable ?
+                        new JavaClass(name:"Boolean", packageName:"java.lang") :
+                        new JavaClass(name:"boolean", primitive:true)
+                case [Types.NUMERIC, Types.DECIMAL]:
+                    return new JavaClass(name:"BigDecimal", packageName:"java.math")
+                case [Types.DATE, Types.TIME, Types.TIMESTAMP]:
+                    return new JavaClass(name:"Date", packageName:"java.util")
+                case [Types.INTEGER] :
+                    return column.nullable || column.primaryKey ?
+                        new JavaClass(name:"Integer", packageName:"java.lang") :
+                        new JavaClass(name:"int", primitive:true)
+                default:
+                    println "Unable to map type for column " + column
+                    return new JavaClass(name:"Object", packageName:"java.lang")                    
+            }
+    }
+
+    String generateName(dbName) {
+    	String name
+        if (dbName.contains("_")) {
+        	name = dbName.split("_").collect{ String namePart -> namePart.capAndLower() }.join()
+        } else {
+        	if (dbName.isAllUppers()) {
+        		name = dbName.capAndLower()
+        	} else {
+        		name = dbName.cap()
+        	}
+        }
+    	name
+    }
+    
+    /**
+     *  Convert the Database tables into Java classes.
+     */
+     def convertTablesToJavaClasses(){
+         tables.each{Table table ->
+            String className = generateName(table.name)
+            if (!tableNames.empty && !tableNames.contains(table.name)) {
+            	return;
+            }
+            JavaClass javaClass = new JavaClass(name:className, packageName:packageName, table:table)
+            classes << javaClass
+            javaClassToTableMap[javaClass.name]=table
+            tableToJavaClassMap[table.name]=javaClass
+            convertColumnsToJavaProperties(javaClass, table)
+            
+         }
+         classes.each{JavaClass javaClass ->
+         	convertKeysToRelationships(javaClass)
+         }
+     }
+     
+     def convertKeysToRelationships(JavaClass javaClass) {
+     	/* Note: Exported keys are fkeys in other tables that are pointing to this table. */
+     	javaClass.table.exportedKeys.each { Key key ->
+     		JavaClass relatedClass = this.tableToJavaClassMap[key.foriegnKey.table.name]
+     		if (relatedClass == null) {
+                return
+            }
+     		String relationshipName = relatedClass.name.unCap()
+            relationshipName = relationshipName.endsWith('s') ? relationshipName + "es" : relationshipName + "s"
+     		javaClass.relationships << 
+     			new Relationship(name:relationshipName, relatedClass:relatedClass, key:key, type:RelationshipType.ONE_TO_MANY)
+
+     	}
+     	/* Note: Imported keys are the keys that correlate to columns in this Classes table. 
+     	 * Imported keys list the foriegn keys in this table
+     	 * */
+     	 javaClass.table.importedKeys.each { Key key ->
+ 			JavaClass relatedClass = this.tableToJavaClassMap[key.primaryKey.table.name]
+     		if (relatedClass == null) {
+                return
+            }
+ 			String relationshipName = key.foriegnKey.name
+
+            relationshipName = relationshipName - "_ID"
+            relationshipName = relationshipName - "FK_"
+            relationshipName = generateName(relationshipName).unCap()
+            if (relationshipName.endsWith("Id")) {
+                relationshipName = relationshipName - "Id"
+            }
+ 			javaClass.relationships << 
+ 				new Relationship(name:relationshipName, relatedClass:relatedClass, key:key, type:RelationshipType.MANY_TO_ONE)
+ 			javaClass.properties.remove(javaClass.columnNameToPropertyMap[key.foriegnKey.name])
+     	}
+     }
+
+	
+	
+}
+
+}}}
+
+
+
+== CodeGenerator  ==
+The *CodeGenerator* generates .java files from *JavaClass* models objects. The *CodeGenerator* uses *GString* and *GPath* support to use a here-doc as a code generation template. With *SimpleTemplateEngine* you can do similar scripting that you could do in JSP as demonstrated in the *textTemplate* property below:
+
+Here is the *CodeGenerator* as follows:
+
+==== CodeGenerator.groovy ====
+
+{{{
+
+import groovy.text.SimpleTemplateEngine
+
+/**
+ * Generates .java files from JavaClass models objects. 
+ */
+class CodeGenerator {
+    List<JavaClass> classes
+    /** The target output dir. Defaults to ./target */
+    File outputDir = new File("./target")
+    boolean debug
+    String textTemplate = '''
+<% import com.arcmind.codegen.RelationshipType; %>
+
+package ${bean.packageName};
+
+import java.io.Serializable;
+import javax.persistence.Entity;
+
+<% imports.each { imp-> %>import ${imp};
+<% } %>
+
+@Entity <% if (!bean.namesMatch) { %> @Table('${bean.table.name}') <% } %>
+public class ${bean.name} implements Serializable {
+    /** ID */
+    @Id @Column ('${bean.id.column.name.toUpperCase()}') @GeneratedValue( strategy = GenerationType.AUTO )
+    private ${bean.id.javaClass.name} id;
+
+    /* ------- Relationships ------ */
+   <% bean.relationships.each {r -> 
+        if (r.type == RelationshipType.ONE_TO_MANY) {
+   %>
+    @OneToMany(cascade = CascadeType.ALL) @JoinColumn('${r.key.foriegnKey.name}')
+    private Set <${r.relatedClass.name}> ${r.name};
+   <% } else if (r.type == RelationshipType.MANY_TO_ONE) { %>
+    @ManyToOne (cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    private ${r.relatedClass.name} ${r.name};
+   <%}} %>
+
+    /** Properties's fields */
+   <% bean.properties.each { property-> %>
+    <% if (!property.namesMatch) {%>@Column('${property.column.name.toUpperCase()}')<% } %>
+    private ${property.javaClass.name} ${property.name.unCap()};
+   <% } %>
+
+    public ${bean.name} () {
+
+    }
+
+    public void setId(${bean.id.javaClass.name} id) {
+    	this.id = id;
+    }
+    public ${bean.id.javaClass.name} getId() {
+    	return id;
+    }
+
+   <% bean.relationships.each { r->
+        if (r.type == RelationshipType.ONE_TO_MANY) { %>
+
+    public Set<${r.relatedClass.name}> get${r.name.cap()}() {
+        return this.${r.name.unCap()};
+    }
+
+    public void set${r.name.cap()}(Set<${r.relatedClass.name}> ${r.name.unCap()}} ) {
+        this.${r.name.unCap()} = ${r.name.unCap()};
+    }
+
+    <% } else if (r.type == RelationshipType.MANY_TO_ONE) { %>
+
+    public ${r.relatedClass.name} get${r.name.cap()}() {
+        return this.${r.name.unCap()};
+    }
+
+    public void set${r.name.cap()}(${r.relatedClass.name} ${r.name.unCap()}} ) {
+        this.${r.name.unCap()} = ${r.name.unCap()};
+    }
+
+    <% }} %>
+
+
+   <% bean.properties.each { property-> %>
+    public ${property.javaClass.name} get${property.name.cap()}() {
+        return this.${property.name.unCap()};
+    }
+
+    public void set${property.name.cap()}(${property.javaClass.name} ${property.name.unCap()}} ) {
+        this.${property.name.unCap()} = ${property.name.unCap()};
+    }
+   <% } %>
+}
+'''
+
+    boolean needsColumnImport(JavaClass bean) {
+         for (JavaProperty property : bean.properties) {
+             //If they don't match, then you need a column
+             if (!property.namesMatch || !property.column.nullable) {
+                 return true
+             }
+         }
+         return false
+    }
+
+    Set<String> calculateImportsFromBean(JavaClass bean) {
+    	
+    	
+    	 
+         List<String> imports = bean.properties.collect { JavaProperty property ->
+              if (!property.javaClass.primitive && !property.javaClass.packageName.startsWith("java.lang")) {
+                return "${property.javaClass.packageName}.${property.javaClass.name}"
+              } else {
+                  return null;
+              }
+         }
+         
+         imports.add("javax.persistence.GeneratedValue")
+ 		 imports.add("javax.persistence.GenerationType")
+ 		 imports.add("javax.persistence.Id")
+         
+         bean.relationships.each {Relationship relationship ->
+         	if (relationship.type == RelationshipType.ONE_TO_MANY) {
+         		imports.add("javax.persistence.OneToMany") 
+         		imports.add("javax.persistence.JoinColumn")
+         		imports.add("javax.persistence.CascadeType")
+         	} else if (relationship.type == RelationshipType.MANY_TO_ONE) {
+         		imports.add("javax.persistence.ManyToOne")
+         		imports.add("javax.persistence.CascadeType")
+         	}
+         }
+         
+         Set<String> impSet = new HashSet<String> (imports)
+         impSet.remove (null)
+         if (needsColumnImport(bean)) {
+            impSet.add("javax.persistence.Column")
+         }
+         impSet
+    }
+
+    def writeClassFiles() {
+        for (JavaClass bean in classes) {
+            def binding = ["bean":bean, "imports":calculateImportsFromBean(bean)]
+            def engine = new SimpleTemplateEngine()
+            def template = engine.createTemplate(textTemplate).make(binding)
+            File outputFileDir = new File(outputDir, bean.packageName.replace('.','/'))
+            outputFileDir.mkdirs()
+            File javaFile = new File (outputFileDir, bean.name + ".java")
+            javaFile.newWriter().withWriter{BufferedWriter writer->
+            	writer.write(template.toString())
+            }
+        }
+}
+}}}
+
+Notice that the *writeClassFiles* method uses the *SimpleTemplateEngine* to process the template against the JavaClass model objects to generate the Java classes. The writeClasses could have written the files out like this:
+
+{{{
+            FileWriter fw = null
+            try {
+                fw = new FileWriter(javaFile)
+                fw.write(template.toString())
+            } finally {
+                fw.close()
+            }
+
+}}}
+
+Since we are using Groovy, we can output the file with 1/3 of the lines of code as follows:
+
+{{{
+            javaFile.newWriter().withWriter{BufferedWriter writer->
+            	writer.write(template.toString())
+            }
+
+}}}
+
+We could even shorten further as follows:
+{{{
+            javaFile.newWriter().withWriter{ it.write(template.toString())}
+
+}}}
+
+I prefer the stronger typed version so don't use the it default argument much. Perhaps I will grow out of this for simple cases. Hmmm....
+

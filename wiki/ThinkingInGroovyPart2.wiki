@@ -53,11 +53,104 @@ Here are the model objects for database tables and Java classes.
 ||  DataBaseMetaDataReader          ||   Used to read database metadata and create a hierarchy of Table, Column and Key model objects. The database metadata is read from connection.metaData.getTables, connection.metaData.getColumns, connection.metaData.getPrimaryKeys, connection.metaData.getExportedKeys and connection.metaData.getImportedKeys see Java API docs for JDBC Connection for more detail.      || 
 ||    JavaModelGenerator        ||   Takes the table hierarchy produced from DataBaseMetaDataReader or read from an XML file and generates a hierarchy of JavaClass, JavaProperty and Relationship model objects.     ||  
 ||    XMLPersister        ||    Reads and writes editable XML files. This allows the end user to override what we guessed in the generation process.     || 
-||    CodeGenerator       || Generates *.java files from a JavaClasses models objects. ||
+||    CodeGenerator       || Generates *.java files from JavaClass models objects. ||
 ||    StringCategory      || Adds methods to the String class that are important for code generation. ||
 
 Let's cover the model objects as they are the least interesting and all of the other classes work with them:
 
 {{{
+class Table {
+	String name    
+	List <Column> columns = []
+	Set <String> primaryKeys = []
+	List <Key> exportedKeys = []
+	List <Key> importedKeys = []
+	public String toString() {
+		"Table (name=${name}, columns=${columns}, primaryKeys=${primaryKeys} )"
+	}
+}
+
+/** Represents data about keys in a table (imported and exported)
+ * @author richardhightower 
+ */
+public class Key{
+	Column primaryKey = new Column()
+	Column foriegnKey = new Column()
+	short updateRule
+	short deleteRule
+	String fkName
+	String pkName
+	short deferrability
+	boolean imported
+	
+	String toString() {
+		"Key(primaryKey=${primaryKey} \n     foriegnKey=${foriegnKey})"
+	}
+}
+
+class Column {
+	String name
+	int type
+	String typeName
+	boolean nullable=true
+	Table table
+	boolean primaryKey
+	
+	public String toString() {
+		"Column( name=${name}, table.name=${table?.name})"
+	}
+	
+}
+
+class JavaClass {
+
+    String name
+    String packageName
+    boolean primitive
+    JavaProperty id
+    List<JavaProperty> properties = []
+    List<Relationship> relationships = []
+    HashMap<String, JavaProperty> columnNameToPropertyMap = [:]
+    Table table
+
+    public boolean isNamesMatch() {
+        return name == table.name;
+    }
+    
+    String toString() {
+        "JavaClass name=${name} packageName=${packageName} primitive=${primitive} properties=${properties}"
+    }
+    
+    
+
+}
+
+class JavaProperty {
+    JavaClass javaClass
+    JavaClass parentClass
+    String name
+    Column column
+    public boolean isNamesMatch() {
+        return name == column.name;
+    }
+    String toString() {
+        "JavaProperty(name=${name} javaClass.name=${javaClass.name})"
+    }
+}
+
+public class Relationship{
+	String name
+	RelationshipType type
+	Key key
+	JavaClass relatedClass
+	
+	public String toString() {
+		"Relationship(name=${name}, cardinality=${cardinality}, \n key=%{key})"
+	}
+}
+
+public enum RelationshipType{
+	ONE_TO_ONE, ONE_TO_MANY, MANY_TO_MANY, MANY_TO_ONE, JOINED_SUBCLASS_CHILD, JOINED_SUBCLASS_PARENT;
+}
 
 }}}

@@ -1,0 +1,20 @@
+#summary Working on a CodeGenerator in Groovy
+
+= Introduction =
+
+You may recall [http://code.google.com/p/krank/wiki/ThinkingInGroovy ThinkingInGroovy] where I shared some experience playing around with Groovy. Well I recently got some funding to work on the code generator again. I dusted off the prototype that I wrote before and start hacking on it again.
+
+This is my fourth code generator. The first code generator that I wrote was at Intel and it was done in JPython. Then a few years later I was at eBlox and wrote a code generator in Jython. Then whilst working at a contract for a big mobile telecom company, I wrote a code generator in Java as a Maven Mojo. (The templates were Velocity.)
+
+So why Groovy.... Well, I really like Groovy. Groovy has what seems to be the best of Python and Java rolled up into a language and syntax that I love. Groovy is what I wished Jython could have been. Note this is a matter of opinion and I am not trying to start a flame war with the Python folks. I still love Python and love programming with it. I just prefer Groovy.
+
+I have poured through the Groovy pragmatic books in hopes to fully utilize the Groovy language and I am doing this write up to see how close I have come to writing "Groovy code".
+
+One area where I have chosen to be less Groovy is in making my methods and closures for the most part strongly typed. I have bad memories of really large Jython/JPython projects that I worked on getting out of hand with regards to typing issues. I like the self documenting nature of declaring methods that take typed arguments. It also helps the IDE give me code completion. So I unapologetically use types in many cases where a more "groovy" programmer would not.
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages

@@ -142,13 +142,17 @@ public class ${bean.name} implements Serializable {
             def template = engine.createTemplate(textTemplate).make(binding)
             File outputFileDir = new File(outputDir, bean.packageName.replace('.','/'))
             outputFileDir.mkdirs()
-            FileWriter fw = null
-            try {
-                fw = new FileWriter(new File (outputFileDir, bean.name + ".java"))
-                fw.write(template.toString())
-            } finally {
-                fw.close()
+            File javaFile = new File (outputFileDir, bean.name + ".java")
+            javaFile.newWriter().withWriter{BufferedWriter writer->
+            	writer.write(template.toString())
             }
+//            FileWriter fw = null
+//            try {
+//                fw = new FileWriter(javaFile)
+//                fw.write(template.toString())
+//            } finally {
+//                fw.close()
+//            }
         }
     }
 

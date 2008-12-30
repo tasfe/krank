@@ -129,33 +129,42 @@ public class JavaModelGenerator{
          	convertKeysToRelationships(javaClass)
          }
      }
-     
+     def processExportedKey(Key key, JavaClass javaClass) {
+  		Key theKey = key
+ 		RelationshipType type = null
+ 		JavaClass relatedClass = this.tableToJavaClassMap[key.foriegnKey.table.name]
+ 		if (relatedClass == null) {
+ 			/* If the related class is not found, then this may be a ManyToManyRelationship */
+ 			Table joinTable = key.foriegnKey.table
+ 			if (joinTable.columns.size()==2){
+ 				Column otherColumn = joinTable.columns.find{it.name != key.foriegnKey.name}
+ 				theKey = joinTable.importedKeys.find{it.foriegnKey.name == otherColumn.name}
+ 				relatedClass = this.tableToJavaClassMap[theKey.primaryKey.table.name]
+ 				type = RelationshipType.MANY_TO_MANY
+ 			} else {
+ 				return	
+ 			}
+        } else {
+        	type = RelationshipType.ONE_TO_MANY
+        }
+ 		String relationshipName = relatedClass.name.unCap()
+        relationshipName = relationshipName.endsWith('s') ? relationshipName + "es" : relationshipName + "s"
+ 		javaClass.relationships << 
+ 			new Relationship(name:relationshipName, relatedClass:relatedClass, key:theKey, type:type)
+    	 
+     }
      def convertKeysToRelationships(JavaClass javaClass) {
      	/* Note: Exported keys are fkeys in other tables that are pointing to this table. */
      	javaClass.table.exportedKeys.each { Key key ->
-     	
-     		Key theKey = key
-     		RelationshipType type = null
-     		JavaClass relatedClass = this.tableToJavaClassMap[key.foriegnKey.table.name]
-     		if (relatedClass == null) {
-     			/* If the related class is not found, then this may be a ManyToManyRelationship */
-     			Table joinTable = key.foriegnKey.table
-     			if (joinTable.columns.size()==2){
-     				Column otherColumn = joinTable.columns.find{it.name != key.foriegnKey.name}
-     				theKey = joinTable.importedKeys.find{it.foriegnKey.name == otherColumn.name}
-     				relatedClass = this.tableToJavaClassMap[theKey.primaryKey.table.name]
-     				type = RelationshipType.MANY_TO_MANY
-     			} else {
-     				return	
-     			}
-            } else {
-            	type = RelationshipType.ONE_TO_MANY
-            }
-     		String relationshipName = relatedClass.name.unCap()
-            relationshipName = relationshipName.endsWith('s') ? relationshipName + "es" : relationshipName + "s"
-     		javaClass.relationships << 
-     			new Relationship(name:relationshipName, relatedClass:relatedClass, key:theKey, type:type)
-
+     		try {
+     			processExportedKey(key, javaClass)
+     		} catch (Exception ex) {
+     			 println "UNABLE TO PROCESS KEY ${ex.message}"
+     			 ByteArrayOutputStream bos = new ByteArrayOutputStream()
+     			 PrintStream stream = new PrintStream(bos)
+     			 ex.printStackTrace(stream)
+     			 println bos.toString()
+     		}
      	}
      	/* Note: Imported keys are the keys that correlate to columns in this Classes table. 
      	 * Imported keys list the foriegn keys in this table
@@ -163,7 +172,6 @@ public class JavaModelGenerator{
      	 javaClass.table.importedKeys.each { Key key ->
  			JavaClass relatedClass = this.tableToJavaClassMap[key.primaryKey.table.name]
      		if (relatedClass == null) {
-     			println "WEIRD IMPORTED KEY ${key} for ${javaClass}"
      			return
             }
  			String relationshipName = key.foriegnKey.name

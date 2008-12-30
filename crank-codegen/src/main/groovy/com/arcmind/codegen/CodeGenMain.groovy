@@ -20,20 +20,16 @@ public class CodeGenMain{
 	String xmlFileName
 	String propertiesFile
 	String debug
-	File appConfigDirFile
+	File appConfigDirFile = new File("./codegen")
 	List <String> actions = []
 	Set <String> availableActions = ["reverse", "write", "read", "generate", "all", "help"]
-	Properties configProperties
+	Properties configProperties 
 	JdbcUtils jdbcUtils
 	DataBaseMetaDataReader reader
 	JavaModelGenerator modelGen
 	CodeGenerator codeGen
 	XMLPersister persister
 	List collaborators 
-	
-	Closure printlnClosure = {String message ->
-			System.out.println ("ALL YOUR BASES ARE BELONG TO US " + message)
-	}
 	Closure logClosure = {String methodName, methodArgs->
 		def validMethod = delegate.metaClass.getMetaMethod(methodName, methodArgs)
 		if (validMethod==null) {
@@ -48,14 +44,11 @@ public class CodeGenMain{
 	}
 	
 	
-	
+
 	public void run() {
 		
 		if (actions.contains("all")) {
-			actions << "reverse" 
-			actions << "generate"
-			actions << "write"
-			actions << "saveProps"
+			all()
 		}
 		
 		if (actions.contains("help") || actions.empty) {
@@ -68,36 +61,59 @@ public class CodeGenMain{
 		
 		/* Read the model from the database or the XML file. */
 		if (actions.contains("reverse")) {
-			if (debug) println "Reverse engineering the database tables"
-			/* Process the database tables */
-			reader.jdbcUtils = jdbcUtils        
-			reader.processDB()			
-			/* Convert the tables into JavaClasses. */
-			modelGen.tables = reader.tables
-			modelGen.convertTablesToJavaClasses()
+			reverseDB()
 		} else if (actions.contains("read")) {
-			if (debug) println "Reading XML file"
-			persister.read()
-			reader.tables = persister.tables
-			modelGen.classes = persister.classes
+			readXML()
 		}
 		
 		if (actions.contains("generate")) {
-			if (debug) println "Generating Java classes"
-			/* Output the generated classes. */
-			codeGen.classes = modelGen.classes
-			codeGen.writeClassFiles()			
+			generateJavaClasses()
 		}
 		
 		if (actions.contains("write")) {
-			if (debug) println "Writing XML file containing table and classes model"
-			/* Write out xml file. */
-			persister.classes = modelGen.classes
-			persister.tables = reader.tables
-			persister.persist()			
+			writeXML()
 		}
 		
 		if (debug) println "Success!"
+	}
+	
+	def all () {
+		actions << "reverse" 
+		actions << "generate"
+		actions << "write"
+		actions << "saveProps"
+	}
+	
+	public void reverseDB() {
+		if (debug) println "Reverse engineering the database tables"
+		/* Process the database tables */
+		reader.jdbcUtils = jdbcUtils        
+		reader.processDB()			
+		/* Convert the tables into JavaClasses. */
+		modelGen.tables = reader.tables
+		modelGen.convertTablesToJavaClasses()		
+	}
+
+	def readXML() {
+		if (debug) println "Reading XML file"
+		persister.read()
+		reader.tables = persister.tables
+		modelGen.classes = persister.classes
+	}
+	
+	def generateJavaClasses() {
+		if (debug) println "Generating Java classes"
+		/* Output the generated classes. */
+		codeGen.classes = modelGen.classes
+		codeGen.writeClassFiles()			
+	}
+	
+	def writeXML() {
+		if (debug) println "Writing XML file containing table and classes model"
+		/* Write out xml file. */
+		persister.classes = modelGen.classes
+		persister.tables = reader.tables
+		persister.persist()			
 	}
 	
 	/** This is the main entry point for this program. */
@@ -140,7 +156,7 @@ public class CodeGenMain{
 		copyPropsFromArgs(args)
 		appConfigDirFile = appConfigDir == null ? new File("./codegen") : new File(appConfigDir)
 		readProperties()
-		copyPropsFromArgs(args) //let the command line args overide the properties file
+		copyPropsFromArgs(args) //let the command line args override the properties file
 		
 		invalidArgument = configureCollaborators()
 		
@@ -153,7 +169,7 @@ public class CodeGenMain{
 		
 	}
 	
-	private boolean configureCollaborators() {
+	public boolean configureCollaborators() {
 		boolean invalidArgument = false
 		
 		if (debug) {
@@ -228,7 +244,7 @@ public class CodeGenMain{
 	}
 	
 	private File calculatePropFile () {
-		propertiesFile==null ? new File(appConfigDirFile,"config.properties") : new File(propertiesFile) 
+		propertiesFile==null ? new File((File) this.appConfigDirFile,"config.properties") : new File(propertiesFile) 
 	}
 	
 	private void writeProperties() {

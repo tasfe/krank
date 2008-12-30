@@ -31,9 +31,10 @@ public class DatabaseReverseXMLTest extends TestCase{
     	jdbcUtils.executeScript(sqlDDL)
     }
 	
-	static String sqlDDL = '''
+	static String sqlDDL = """
 DROP TABLE EMPLOYEE IF EXISTS;
 DROP TABLE Department IF EXISTS;
+DROP TABLE ROLE IF EXISTS;
 
 CREATE TABLE Department (
   ID INTEGER IDENTITY,
@@ -48,7 +49,21 @@ CREATE TABLE EMPLOYEE (
   PRIMARY KEY (EMP_ID),
   FOREIGN KEY (FK_DEPARTMENT_ID) REFERENCES Department(ID)  
 );
-''';
+
+CREATE TABLE ROLE (
+		ROLE_ID INTEGER IDENTITY,
+		NAME VARCHAR(30),
+		PRIMARY KEY (ROLE_ID)
+		
+);
+CREATE TABLE ROLE_EMPLOYEE (
+		FK_ROLE_ID INTEGER,
+		FK_EMP_ID INTEGER,
+		
+		FOREIGN KEY (FK_ROLE_ID) REFERENCES ROLE(ROLE_ID), 
+		FOREIGN KEY (FK_EMP_ID) REFERENCES EMPLOYEE(EMP_ID)  
+);
+""";
 
 	public void setUp () {
 	}

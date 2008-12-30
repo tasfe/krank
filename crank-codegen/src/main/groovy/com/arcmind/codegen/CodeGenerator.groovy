@@ -9,6 +9,7 @@ class CodeGenerator {
     /** The target output dir. Defaults to ./target */
     File outputDir = new File("./target")
     boolean debug
+    SimpleTemplateEngine engine = new SimpleTemplateEngine()
     String textTemplate = '''
 <% import com.arcmind.codegen.RelationshipType; %>
 
@@ -28,14 +29,17 @@ public class ${bean.name} implements Serializable {
 
     /* ------- Relationships ------ */
    <% bean.relationships.each {r -> 
-        if (r.type == RelationshipType.ONE_TO_MANY) {
+   if (r.type == RelationshipType.ONE_TO_MANY) {
    %>
     @OneToMany(cascade = CascadeType.ALL) @JoinColumn('${r.key.foriegnKey.name}')
     private Set <${r.relatedClass.name}> ${r.name};
    <% } else if (r.type == RelationshipType.MANY_TO_ONE) { %>
     @ManyToOne (cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     private ${r.relatedClass.name} ${r.name};
-   <%}} %>
+   <%} else if (r.type == RelationshipType.MANY_TO_MANY) {%>
+    @ManyToMany @JoinColumn('${r.key.foriegnKey.name}') @JoinTable('${r.key.foriegnKey.table.name}')
+    private Set <${r.relatedClass.name}> ${r.name};
+   <% }} %>
 
     /** Properties's fields */
    <% bean.properties.each { property-> %>
@@ -65,7 +69,7 @@ public class ${bean.name} implements Serializable {
         this.${r.name.unCap()} = ${r.name.unCap()};
     }
 
-    <% } else if (r.type == RelationshipType.MANY_TO_ONE) { %>
+    <% } else if (r.type == RelationshipType.MANY_TO_ONE || r.type == RelationshipType.MANY_TO_MANY) { %>
 
     public ${r.relatedClass.name} get${r.name.cap()}() {
         return this.${r.name.unCap()};
@@ -135,24 +139,18 @@ public class ${bean.name} implements Serializable {
          impSet
     }
 
+    
+    
     def writeClassFiles() {
         for (JavaClass bean in classes) {
-            def binding = ["bean":bean, "imports":calculateImportsFromBean(bean)]
-            def engine = new SimpleTemplateEngine()
-            def template = engine.createTemplate(textTemplate).make(binding)
+            def binding = ["bean":bean, "imports":calculateImportsFromBean(bean)]        
+            String templateOutput = engine.createTemplate(textTemplate).make(binding).toString()
             File outputFileDir = new File(outputDir, bean.packageName.replace('.','/'))
             outputFileDir.mkdirs()
             File javaFile = new File (outputFileDir, bean.name + ".java")
             javaFile.newWriter().withWriter{BufferedWriter writer->
-            	writer.write(template.toString())
+            	writer.write(templateOutput)
             }
-//            FileWriter fw = null
-//            try {
-//                fw = new FileWriter(javaFile)
-//                fw.write(template.toString())
-//            } finally {
-//                fw.close()
-//            }
         }
     }
 

@@ -31,6 +31,9 @@ public class CodeGenMain{
 	XMLPersister persister
 	List collaborators 
 	
+	Closure printlnClosure = {String message ->
+			System.out.println ("ALL YOUR BASES ARE BELONG TO US " + message)
+	}
 	Closure logClosure = {String methodName, methodArgs->
 		def validMethod = delegate.metaClass.getMetaMethod(methodName, methodArgs)
 		if (validMethod==null) {

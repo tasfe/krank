@@ -29,7 +29,7 @@ public class JavaModelGenerator{
     /**
     *   Convert the columns to Java properties.
     */
-    def convertColumnsToJavaProperties(JavaClass javaClass, Table table){
+    boolean convertColumnsToJavaProperties(JavaClass javaClass, Table table){
           javaClass.properties = table.columns.collect {Column column ->
 
                String propertyName = generateName(column.name).unCap()
@@ -38,9 +38,14 @@ public class JavaModelGenerator{
                property.javaClass = convertColumnToJavaClass (column)
                property
           }
-          JavaProperty idProperty = javaClass.properties.find{JavaProperty javaProperty -> javaProperty.column.primaryKey==true}
-          javaClass.properties.remove(idProperty)
-          javaClass.id = idProperty
+          List<JavaProperty> idProps = javaClass.properties.findAll{JavaProperty javaProperty -> javaProperty.column.primaryKey==true}
+          if (idProps.size() == 1) {
+        	  javaClass.id = idProps[0]
+        	  javaClass.properties.remove(javaClass.id)
+        	  return true
+          } else {
+        	  return false
+          }
     }
 
     /** Convert the column type to the equivalent Java class/type.
@@ -113,10 +118,11 @@ public class JavaModelGenerator{
             	return;
             }
             JavaClass javaClass = new JavaClass(name:className, packageName:packageName, table:table)
-            classes << javaClass
-            javaClassToTableMap[javaClass.name]=table
-            tableToJavaClassMap[table.name]=javaClass
-            convertColumnsToJavaProperties(javaClass, table)
+            if (convertColumnsToJavaProperties(javaClass, table)) {
+                javaClassToTableMap[javaClass.name]=table
+                tableToJavaClassMap[table.name]=javaClass
+            	classes << javaClass
+            }
             
          }
          classes.each{JavaClass javaClass ->
@@ -127,14 +133,28 @@ public class JavaModelGenerator{
      def convertKeysToRelationships(JavaClass javaClass) {
      	/* Note: Exported keys are fkeys in other tables that are pointing to this table. */
      	javaClass.table.exportedKeys.each { Key key ->
+     	
+     		Key theKey = key
+     		RelationshipType type = null
      		JavaClass relatedClass = this.tableToJavaClassMap[key.foriegnKey.table.name]
      		if (relatedClass == null) {
-                return
+     			/* If the related class is not found, then this may be a ManyToManyRelationship */
+     			Table joinTable = key.foriegnKey.table
+     			if (joinTable.columns.size()==2){
+     				Column otherColumn = joinTable.columns.find{it.name != key.foriegnKey.name}
+     				theKey = joinTable.importedKeys.find{it.foriegnKey.name == otherColumn.name}
+     				relatedClass = this.tableToJavaClassMap[theKey.primaryKey.table.name]
+     				type = RelationshipType.MANY_TO_MANY
+     			} else {
+     				return	
+     			}
+            } else {
+            	type = RelationshipType.ONE_TO_MANY
             }
      		String relationshipName = relatedClass.name.unCap()
             relationshipName = relationshipName.endsWith('s') ? relationshipName + "es" : relationshipName + "s"
      		javaClass.relationships << 
-     			new Relationship(name:relationshipName, relatedClass:relatedClass, key:key, type:RelationshipType.ONE_TO_MANY)
+     			new Relationship(name:relationshipName, relatedClass:relatedClass, key:theKey, type:type)
 
      	}
      	/* Note: Imported keys are the keys that correlate to columns in this Classes table. 
@@ -143,7 +163,8 @@ public class JavaModelGenerator{
      	 javaClass.table.importedKeys.each { Key key ->
  			JavaClass relatedClass = this.tableToJavaClassMap[key.primaryKey.table.name]
      		if (relatedClass == null) {
-                return
+     			println "WEIRD IMPORTED KEY ${key} for ${javaClass}"
+     			return
             }
  			String relationshipName = key.foriegnKey.name
 

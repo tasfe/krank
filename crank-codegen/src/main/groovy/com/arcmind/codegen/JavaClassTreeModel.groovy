@@ -35,7 +35,7 @@ public class JavaClassTreeModel implements TreeModel{
 	List<JavaClassHolder> javaClassHolders = []
 	
     private Vector<TreeModelListener> treeModelListeners =
-        new Vector<TreeModelListener>();
+    new Vector<TreeModelListener>();
 
     /**
      * The only event raised by this model is TreeStructureChanged with the
@@ -117,7 +117,7 @@ public class JavaClassTreeModel implements TreeModel{
      * Returns true if node is a leaf.
      */
     public boolean isLeaf(Object node) {
-    	 node instanceof JavaProperty || node instanceof Relationship
+        node instanceof JavaProperty || node instanceof Relationship
     }
 
     /**
@@ -133,7 +133,7 @@ public class JavaClassTreeModel implements TreeModel{
      */
     public void valueForPathChanged(TreePath path, Object newValue) {
         System.out.println("*** valueForPathChanged : "
-                           + path + " --> " + newValue);
+            + path + " --> " + newValue);
     }
 
 

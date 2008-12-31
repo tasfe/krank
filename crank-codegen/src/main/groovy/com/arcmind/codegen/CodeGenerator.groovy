@@ -95,32 +95,32 @@ public class ${bean.name} implements Serializable {
 '''
 
     boolean needsColumnImport(JavaClass bean) {
-         for (JavaProperty property : bean.properties) {
-             //If they don't match, then you need a column
-             if (!property.namesMatch || !property.column.nullable) {
-                 return true
-             }
-         }
-         return false
+        for (JavaProperty property : bean.properties) {
+            //If they don't match, then you need a column
+            if (!property.namesMatch || !property.column.nullable) {
+                return true
+            }
+        }
+        return false
     }
 
     Set<String> calculateImportsFromBean(JavaClass bean) {
     	
     	
     	 
-         List<String> imports = bean.properties.collect { JavaProperty property ->
-              if (!property.javaClass.primitive && !property.javaClass.packageName.startsWith("java.lang")) {
+        List<String> imports = bean.properties.collect { JavaProperty property ->
+            if (!property.javaClass.primitive && !property.javaClass.packageName.startsWith("java.lang")) {
                 return "${property.javaClass.packageName}.${property.javaClass.name}"
-              } else {
-                  return null;
-              }
-         }
+            } else {
+                return null;
+            }
+        }
          
-         imports.add("javax.persistence.GeneratedValue")
- 		 imports.add("javax.persistence.GenerationType")
- 		 imports.add("javax.persistence.Id")
+        imports.add("javax.persistence.GeneratedValue")
+        imports.add("javax.persistence.GenerationType")
+        imports.add("javax.persistence.Id")
          
-         bean.relationships.each {Relationship relationship ->
+        bean.relationships.each {Relationship relationship ->
          	if (relationship.type == RelationshipType.ONE_TO_MANY) {
          		imports.add("javax.persistence.OneToMany")
          		imports.add("javax.persistence.JoinColumn")
@@ -129,14 +129,14 @@ public class ${bean.name} implements Serializable {
          		imports.add("javax.persistence.ManyToOne")
          		imports.add("javax.persistence.CascadeType")
          	}
-         }
+        }
          
-         Set<String> impSet = new HashSet<String> (imports)
-         impSet.remove (null)
-         if (needsColumnImport(bean)) {
+        Set<String> impSet = new HashSet<String> (imports)
+        impSet.remove (null)
+        if (needsColumnImport(bean)) {
             impSet.add("javax.persistence.Column")
-         }
-         impSet
+        }
+        impSet
     }
 
     

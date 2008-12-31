@@ -35,7 +35,7 @@ public class DBTableTreeModel implements TreeModel{
 	List<TableHolder> tableHolders = []
 	
     private Vector<TreeModelListener> treeModelListeners =
-        new Vector<TreeModelListener>();
+    new Vector<TreeModelListener>();
 
     /**
      * The only event raised by this model is TreeStructureChanged with the
@@ -118,7 +118,7 @@ public class DBTableTreeModel implements TreeModel{
      * Returns true if node is a leaf.
      */
     public boolean isLeaf(Object node) {
-    	 node instanceof Column || node instanceof String
+        node instanceof Column || node instanceof String
     }
 
     /**
@@ -134,7 +134,7 @@ public class DBTableTreeModel implements TreeModel{
      */
     public void valueForPathChanged(TreePath path, Object newValue) {
         System.out.println("*** valueForPathChanged : "
-                           + path + " --> " + newValue);
+            + path + " --> " + newValue);
     }
 
 

@@ -2,11 +2,11 @@ package com.arcmind.codegen
 import java.sql.*
 
 /**
-* Used to read database metadata and create a hierarchy of Table, Column and Key model objects. 
-* The database metadata is read from connection.metaData.getTables, connection.metaData.getColumns, 
-* connection.metaData.getPrimaryKeys, connection.metaData.getExportedKeys and 
-* connection.metaData.getImportedKeys see Java API docs for JDBC Connection for more detail.
-*/
+ * Used to read database metadata and create a hierarchy of Table, Column and Key model objects.
+ * The database metadata is read from connection.metaData.getTables, connection.metaData.getColumns,
+ * connection.metaData.getPrimaryKeys, connection.metaData.getExportedKeys and
+ * connection.metaData.getImportedKeys see Java API docs for JDBC Connection for more detail.
+ */
 class DataBaseMetaDataReader {
     /** List of tables read from database. **/
     List <Table> tables = []
@@ -25,8 +25,8 @@ class DataBaseMetaDataReader {
 
 
     /**
-    * Connect to the database and read the database meta-data for a list of tables. 
-    */
+     * Connect to the database and read the database meta-data for a list of tables.
+     */
     def processTables() {
         if(debug) println "DataBaseMetaDataReader: Processing Tables "
         jdbcUtils.iterate(connection.metaData.getTables (catalog, schema, null, tableTypes),
@@ -40,23 +40,23 @@ class DataBaseMetaDataReader {
     }
 
     /**
-    *  Process list of columns from the list of tables. Add the columns to the table object.
-    */
+     *  Process list of columns from the list of tables. Add the columns to the table object.
+     */
     def processColumns() {
         tables.each {Table table ->
             jdbcUtils.iterate connection.metaData.getColumns(catalog, schema, table.name, null),
-               { ResultSet resultSet ->
-                  Column column = new Column()
-                  column.name = resultSet.getString ("COLUMN_NAME")
-                  column.typeName = resultSet.getString ("TYPE_NAME")
-                  column.type = resultSet.getInt ("DATA_TYPE")
-                  column.nullable = resultSet.getString ("IS_NULLABLE") == "YES" ? true : false
-                  if (table.primaryKeys.contains(column.name)) {
-                            	 column.primaryKey = true
-                  }
-                  table.columns << column
-                             column.table = table
+            { ResultSet resultSet ->
+                Column column = new Column()
+                column.name = resultSet.getString ("COLUMN_NAME")
+                column.typeName = resultSet.getString ("TYPE_NAME")
+                column.type = resultSet.getInt ("DATA_TYPE")
+                column.nullable = resultSet.getString ("IS_NULLABLE") == "YES" ? true : false
+                if (table.primaryKeys.contains(column.name)) {
+                    column.primaryKey = true
                 }
+                table.columns << column
+                column.table = table
+            }
         }
     }
     
@@ -65,8 +65,8 @@ class DataBaseMetaDataReader {
      */
     def processPrimaryKeys() {
         tables.each {Table table ->
-           jdbcUtils.iterate connection.metaData.getPrimaryKeys(catalog, schema, table.name), 
-             { ResultSet resultSet -> table.primaryKeys << resultSet.getString ("COLUMN_NAME")}
+            jdbcUtils.iterate connection.metaData.getPrimaryKeys(catalog, schema, table.name),
+            { ResultSet resultSet -> table.primaryKeys << resultSet.getString ("COLUMN_NAME")}
         }
     }
     
@@ -83,15 +83,15 @@ class DataBaseMetaDataReader {
 
 	def processKeys(Table table, getKeys, List<Key> keyList, boolean imported) {
         jdbcUtils.iterate getKeys(catalog, schema, table.name),
-                { ResultSet resultSet ->
-        		  Key key = new Key()
-        		  key.imported = imported
-        		  key.foriegnKey.name = resultSet.getString ("FKCOLUMN_NAME")
-        		  key.foriegnKey.table = tables.find{it.name==resultSet.getString ("FKTABLE_NAME")}
-        		  key.primaryKey.name = resultSet.getString ("PKCOLUMN_NAME")
-        		  key.primaryKey.table = tables.find{it.name==resultSet.getString ("PKTABLE_NAME")} 
-        		  keyList << key
-                }
+        { ResultSet resultSet ->
+            Key key = new Key()
+            key.imported = imported
+            key.foriegnKey.name = resultSet.getString ("FKCOLUMN_NAME")
+            key.foriegnKey.table = tables.find{it.name==resultSet.getString ("FKTABLE_NAME")}
+            key.primaryKey.name = resultSet.getString ("PKCOLUMN_NAME")
+            key.primaryKey.table = tables.find{it.name==resultSet.getString ("PKTABLE_NAME")}
+            keyList << key
+        }
 	}
 
 

@@ -21,66 +21,66 @@ public class XMLPersister{
 		List <JavaClass> _classes = classes 
 		BufferedWriter bWriter = new File (outputDir, fileName).newWriter()
 		bWriter.withWriter {writer ->
-		def xmlDocument = new MarkupBuilder(writer)
-		xmlDocument.codeGen(){
+            def xmlDocument = new MarkupBuilder(writer)
+            xmlDocument.codeGen(){
 
 				classes {
 					_classes.each {JavaClass c -> c.with {
-						if (debug) println "Writing class ${name}"
+                            if (debug) println "Writing class ${name}"
 						'class'(name: name, packageName: packageName, tableName: table.name) {
-							/* Write the id for the Java class. */
+                                /* Write the id for the Java class. */
 							'id'(name: id.name, column: id.column.name, className: id.javaClass.name, 
 									packageName: id.javaClass.packageName, primitive: id.javaClass.primitive)
-							/* Write out the properties for the Java class. */
-							properties { c.properties.each {JavaProperty p -> p.with {
-								property (name: p.name, column: column.name, className: javaClass.name, 
-										packageName: javaClass.packageName, primitive: javaClass.primitive)
-							}}}//properties
-							/* Write out the relationships for the Java class. */
-							relationships { c.relationships.each {Relationship r -> r.with {
-								relationship (name: r.name, type: type.toString()) {
+                                /* Write out the properties for the Java class. */
+                                properties { c.properties.each {JavaProperty p -> p.with {
+                                            property (name: p.name, column: column.name, className: javaClass.name,
+                                                packageName: javaClass.packageName, primitive: javaClass.primitive)
+                                        }}}//properties
+                                /* Write out the relationships for the Java class. */
+                                relationships { c.relationships.each {Relationship r -> r.with {
+                                            relationship (name: r.name, type: type.toString()) {
 									'relatedClass' (name: relatedClass.name, packageName: relatedClass.packageName)
-									key?.with {
+                                                key?.with {
 										'key'(primaryKeyColumn: primaryKey.name,
-										 primaryKeyTable: primaryKey.table.name,
-										 foriegnKeyColumn: foriegnKey.name,
-										 foriegnKeyTable: foriegnKey.table.name,
-										 imported: imported)
-									}//key.with
-								}//relationship
-							}}}//relationships
-						}//'class'
-					}}//classes.each
+                                                        primaryKeyTable: primaryKey.table.name,
+                                                        foriegnKeyColumn: foriegnKey.name,
+                                                        foriegnKeyTable: foriegnKey.table.name,
+                                                        imported: imported)
+                                                }//key.with
+                                            }//relationship
+                                        }}}//relationships
+                            }//'class'
+                        }}//classes.each
 				}//classes
 
                 tables {
 					_tables.each {Table t ->
-					  if (debug) println "Writing table ${t.name}"
-					  table(name: t.name) {
-						primaryKeys {
-							t.primaryKeys.each{String pk ->
-								primaryKey(name:pk)
-							}//primaryKeys.each
-						}//primaryKeys
-						columns { t.columns.each { Column c -> c.with {
-							column (name: name, type: type, typeName: typeName, nullable: nullable, primaryKey: primaryKey) 
-						}/*columns.each*/ }}
-						exportedKeys {t.exportedKeys.each { Key k -> k.with {
-						key(primaryKeyColumn: primaryKey.name, 
-							primaryKeyTable: primaryKey.table.name,
-							foriegnKeyColumn: foriegnKey.name,
-							foriegnKeyTable: foriegnKey.table.name)
-						}}}//exportedKeys
-						importedKeys {t.importedKeys.each { Key k -> k.with {
-						key(primaryKeyColumn: primaryKey.name, 
-							primaryKeyTable: primaryKey.table.name,
-							foriegnKeyColumn: foriegnKey.name,
-							foriegnKeyTable: foriegnKey.table.name)
-						}}}//importedKeys
-					  }//table	
+                        if (debug) println "Writing table ${t.name}"
+                        table(name: t.name) {
+                            primaryKeys {
+                                t.primaryKeys.each{String pk ->
+                                    primaryKey(name:pk)
+                                }//primaryKeys.each
+                            }//primaryKeys
+                            columns { t.columns.each { Column c -> c.with {
+                                        column (name: name, type: type, typeName: typeName, nullable: nullable, primaryKey: primaryKey)
+                                    }/*columns.each*/ }}
+                            exportedKeys {t.exportedKeys.each { Key k -> k.with {
+                                        key(primaryKeyColumn: primaryKey.name,
+                                            primaryKeyTable: primaryKey.table.name,
+                                            foriegnKeyColumn: foriegnKey.name,
+                                            foriegnKeyTable: foriegnKey.table.name)
+                                    }}}//exportedKeys
+                            importedKeys {t.importedKeys.each { Key k -> k.with {
+                                        key(primaryKeyColumn: primaryKey.name,
+                                            primaryKeyTable: primaryKey.table.name,
+                                            foriegnKeyColumn: foriegnKey.name,
+                                            foriegnKeyTable: foriegnKey.table.name)
+                                    }}}//importedKeys
+                        }//table
 					}//tables.each
 				}//tables
-        }//codeGen
+            }//codeGen
 		}//withWriter
 	}//persist
 	
@@ -109,9 +109,9 @@ public class XMLPersister{
 			}//primaryKeys
 			tbl.columns.column.each { c ->
 				table.columns << new Column(table: table, name: c.@name, 
-						type: Integer.valueOf(c.@type.toString()), typeName: c.@typeName,
-						nullable: Boolean.valueOf(c.@nullable.toString()), 
-						primaryKey: Boolean.valueOf(c.@primaryKey.toString()))
+                    type: Integer.valueOf(c.@type.toString()), typeName: c.@typeName,
+                    nullable: Boolean.valueOf(c.@nullable.toString()),
+                    primaryKey: Boolean.valueOf(c.@primaryKey.toString()))
 			}//columns
 			tbl.exportedKeys.key.each {k ->
 				Key key = new Key(imported:false)
@@ -145,13 +145,13 @@ public class XMLPersister{
 			/* Read the id. */
 			clz.id = new JavaProperty(name: cls.id.@name)
 			clz.id.javaClass = new JavaClass(name: cls.id.@className, packageName: cls.id.@packageName, 
-					primitive: Boolean.valueOf(cls.id.@primitive.toString()))
+                primitive: Boolean.valueOf(cls.id.@primitive.toString()))
 			clz.id.column = clz.table.columns.find{it.name==cls.id.@column.toString()}
 			/* Read the properties. */
 			cls.properties.property.each { prop ->
 				JavaProperty jp = new JavaProperty(name: prop.@name)
 				JavaClass jc = new JavaClass(name: prop.@className, packageName: prop.@packageName, 
-						primitive: Boolean.valueOf(prop.@primitive.toString()))
+                    primitive: Boolean.valueOf(prop.@primitive.toString()))
 				jp.javaClass = jc
 				jp.column = clz.table.columns.find{it.name==prop.@column.toString()}
 				clz.properties << jp
@@ -161,32 +161,32 @@ public class XMLPersister{
 		if (debug) println "Reading relationships from classes"
 		/** Read the relationships from the XML document. */
 		codeGen.classes.'class'.each {cls ->
-		cls.relationships.relationship.each { rel ->
-			/* Create the relationship. */
-			Relationship relationship = new Relationship(name: rel.@name, type: Enum.valueOf(RelationshipType.class, 
-											rel.@type.toString()))
-			/* Lookup the actual class object based on the class element. */
-			JavaClass clz = classMap[cls.@name.toString()]
-			clz.relationships << relationship
+            cls.relationships.relationship.each { rel ->
+                /* Create the relationship. */
+                Relationship relationship = new Relationship(name: rel.@name, type: Enum.valueOf(RelationshipType.class,
+                        rel.@type.toString()))
+                /* Lookup the actual class object based on the class element. */
+                JavaClass clz = classMap[cls.@name.toString()]
+                clz.relationships << relationship
 			
-			/* Create the related class based on the relationhip element. */
-			relationship.relatedClass = new JavaClass(name: rel.relatedClass.@name, 
+                /* Create the related class based on the relationhip element. */
+                relationship.relatedClass = new JavaClass(name: rel.relatedClass.@name,
 					packageName: rel.relatedClass.@packageName)
 			
-			/* Pull out the information that we need to look up the correct tables and columns. */
-			String primaryKeyTable = rel.key.@primaryKeyTable.toString()
-			String primaryKeyColumn = rel.key.@primaryKeyColumn.toString()
-			boolean imported = Boolean.valueOf(rel.key.@imported.toString())
-			String foriegnKeyTable = rel.key.@foriegnKeyTable.toString()
-			String foriegnKeyCoumn = rel.key.@foriegnKeyColumn.toString()
+                /* Pull out the information that we need to look up the correct tables and columns. */
+                String primaryKeyTable = rel.key.@primaryKeyTable.toString()
+                String primaryKeyColumn = rel.key.@primaryKeyColumn.toString()
+                boolean imported = Boolean.valueOf(rel.key.@imported.toString())
+                String foriegnKeyTable = rel.key.@foriegnKeyTable.toString()
+                String foriegnKeyCoumn = rel.key.@foriegnKeyColumn.toString()
 			
-			/* Lookup the keys based on looking up the table and the right key from the right source. */
-			if (!imported) {
-				relationship.key = tableMap[primaryKeyTable].exportedKeys.find{it.primaryKey.name==primaryKeyColumn}
-			} else if (imported) {
-				relationship.key = tableMap[foriegnKeyTable].importedKeys.find{it.foriegnKey.name==foriegnKeyCoumn}
-			}
-		}//relationships
+                /* Lookup the keys based on looking up the table and the right key from the right source. */
+                if (!imported) {
+                    relationship.key = tableMap[primaryKeyTable].exportedKeys.find{it.primaryKey.name==primaryKeyColumn}
+                } else if (imported) {
+                    relationship.key = tableMap[foriegnKeyTable].importedKeys.find{it.foriegnKey.name==foriegnKeyCoumn}
+                }
+            }//relationships
 		}//classes
 	}//readClasses
 }

@@ -1696,9 +1696,6 @@ Here is a first shot at a GUI using the Groovy SwingBuilder:
 
 ==== GeneratorSwingApp.groovy ====
 {{{
-/**
- * 
- */
 package com.arcmind.codegen
 
 import javax.swing.*
@@ -1808,6 +1805,477 @@ public class GeneratorSwingApp{
 }
 
 }}}
+==== Took another swing at the Groovy App ====
+I added two tree models, two trees, some scroll panels, a split pane, a tool bar, etc.
+It is starting to look like a real app. Oh Joy!
+
+The problem I have with GUIs is they are never done. It always seems like you could tweak them to make them look better.
+
+It looks a lot more done, although there is still a lot of work to do...
+
+Here are the two tree models and helper classes (look more like Java than Groovy)
+==== JavaClassTreeModel and friends ====
+{{{
+package com.arcmind.codegen
+
+class ListHolder {
+	List list
+	String name
+	public String toString() {
+		name
+	}
+}
+
+/**
+ * 
+ */
+package com.arcmind.codegen
+import javax.swing.event.TreeModelEvent
+import javax.swing.event.TreeModelListener
+import javax.swing.tree.TreeModel
+import javax.swing.tree.TreePath
+
+
+class JavaClassHolder {
+	JavaClass javaClass
+	ListHolder properties
+	ListHolder relationships
+	List<ListHolder> lists
+
+	void setJavaClass (JavaClass javaClass) {
+		this.javaClass = javaClass
+		properties = new ListHolder(name: "Properties", list: javaClass.properties)
+		relationships = new ListHolder(name: "Relationships", list: javaClass.relationships)
+		lists = [properties, relationships]
+	}
+	public String toString() {
+		javaClass.name
+	}
+}
+
+
+
+/**
+ * @author richardhightower
+ *
+ */
+public class JavaClassTreeModel implements TreeModel{
+	List<JavaClassHolder> javaClassHolders = []
+	
+    private Vector<TreeModelListener> treeModelListeners =
+    new Vector<TreeModelListener>();
+
+    /**
+     * The only event raised by this model is TreeStructureChanged with the
+     * root as path, i.e. the whole tree has changed.
+     */
+    protected void setClasses(List<JavaClass> classes) {
+    	javaClassHolders.clear()
+    	for (JavaClass javaClass : classes) {
+    		JavaClassHolder holder = new JavaClassHolder(javaClass:javaClass)
+    		javaClassHolders << holder
+    	}
+        TreeModelEvent e = new TreeModelEvent(this, [this] as Object[]);
+        for (TreeModelListener tml : treeModelListeners) {
+            tml.treeStructureChanged(e);
+        }
+    }
+
+	
+    /**
+     * Adds a listener for the TreeModelEvent posted after the tree changes.
+     */
+    public void addTreeModelListener(TreeModelListener l) {
+        treeModelListeners.addElement(l);
+    }
+
+    /**
+     * Returns the child of parent at index index in the parent's child array.
+     */
+    public Object getChild(Object parent, int index) {
+    	if (parent instanceof JavaClassTreeModel) {
+    		return javaClassHolders[index]
+    	} else if (parent instanceof JavaClassHolder) {
+    		JavaClassHolder javaClass = (JavaClassHolder)parent;
+    		return javaClass.lists[index]
+    	} else if (parent instanceof ListHolder) {
+    		ListHolder listHolder = (ListHolder) parent
+    		return listHolder.list[index]
+    	}
+    }
+    
+    /**
+     * Returns the number of children of parent.
+     */
+    public int getChildCount(Object parent) {
+    	if (parent instanceof JavaClassTreeModel) {
+    		return javaClassHolders==null ? 0 : javaClassHolders.size()
+    	} else if (parent instanceof JavaClassHolder) {
+    		JavaClassHolder javaClass = (JavaClassHolder) parent;
+    		return javaClass.lists.size()
+    	} else if (parent instanceof ListHolder) {
+    		ListHolder listHolder = (ListHolder) parent
+    		return listHolder.list == null ? 0 : listHolder.list.size()
+    	} 
+    }
+
+    /**
+     * Returns the index of child in parent.
+     */
+    public int getIndexOfChild(Object parent, Object child) {
+    	if (parent instanceof JavaClassTreeModel) {
+    		return javaClassHolders.indexOf(child)
+    	} else if (parent instanceof JavaClassHolder) {
+    		JavaClassHolder javaClass = (JavaClassHolder) parent;
+    		return javaClass.lists.indexOf(child)
+    	}  else if (parent instanceof ListHolder) {
+    		ListHolder listHolder = (ListHolder) parent
+    		return listHolder.list.indexOf(child)
+    	}
+    }
+    
+    /**
+     * Returns the root of the tree.
+     */
+    public Object getRoot() {
+        return this;
+    }
+    
+    /**
+     * Returns true if node is a leaf.
+     */
+    public boolean isLeaf(Object node) {
+        node instanceof JavaProperty || node instanceof Relationship
+    }
+
+    /**
+     * Removes a listener previously added with addTreeModelListener().
+     */
+    public void removeTreeModelListener(TreeModelListener l) {
+        treeModelListeners.removeElement(l);
+    }
+    
+    /**
+     * Messaged when the user has altered the value for the item
+     * identified by path to newValue.  Not used by this model.
+     */
+    public void valueForPathChanged(TreePath path, Object newValue) {
+        System.out.println("*** valueForPathChanged : "
+            + path + " --> " + newValue);
+    }
+
+
+    public String toString() {
+    	return "classes";
+    }
+}
+
+}}}
+
+==== DBTableTreeModel and friends ====
+{{{
+/**
+ * 
+ */
+package com.arcmind.codegen
+import javax.swing.event.TreeModelEvent
+import javax.swing.event.TreeModelListener
+import javax.swing.tree.TreeModel
+import javax.swing.tree.TreePath
+
+
+class TableHolder {
+	Table table
+	ListHolder primaryKeys
+	ListHolder columns
+	List<ListHolder> lists
+
+	void setTable (Table table) {
+		this.table = table
+		primaryKeys = new ListHolder(name: "Primary Keys", list: table.primaryKeys)
+		columns = new ListHolder(name: "Columns", list: table.columns)
+		lists = [primaryKeys, columns]
+	}
+	public String toString() {
+		table.name
+	}
+}
+
+
+
+/**
+ * @author richardhightower
+ *
+ */
+public class DBTableTreeModel implements TreeModel{
+	List<TableHolder> tableHolders = []
+	
+    private Vector<TreeModelListener> treeModelListeners =
+    new Vector<TreeModelListener>();
+
+    /**
+     * The only event raised by this model is TreeStructureChanged with the
+     * root as path, i.e. the whole tree has changed.
+     */
+    protected void setTables(List<Table> tables) {
+    	tableHolders.clear()
+    	for (Table table : tables) {
+    		TableHolder holder = new TableHolder(table:table)
+    		tableHolders << holder
+    	}
+        int len = treeModelListeners.size();
+        TreeModelEvent e = new TreeModelEvent(this, [this] as Object[]);
+        for (TreeModelListener tml : treeModelListeners) {
+            tml.treeStructureChanged(e);
+        }
+    }
+
+	
+    /**
+     * Adds a listener for the TreeModelEvent posted after the tree changes.
+     */
+    public void addTreeModelListener(TreeModelListener l) {
+        treeModelListeners.addElement(l);
+    }
+
+    /**
+     * Returns the child of parent at index index in the parent's child array.
+     */
+    public Object getChild(Object parent, int index) {
+    	if (parent instanceof DBTableTreeModel) {
+    		return tableHolders[index]
+    	} else if (parent instanceof TableHolder) {
+    		TableHolder table = (TableHolder)parent;
+    		return table.lists[index]
+    	} else if (parent instanceof ListHolder) {
+    		ListHolder listHolder = (ListHolder) parent
+    		return listHolder.list[index]
+    	}
+    }
+    
+    /**
+     * Returns the number of children of parent.
+     */
+    public int getChildCount(Object parent) {
+    	if (parent instanceof DBTableTreeModel) {
+    		return tableHolders==null ? 0 : tableHolders.size()
+    	} else if (parent instanceof TableHolder) {
+    		TableHolder table = (TableHolder) parent;
+    		return table.lists.size()
+    	} else if (parent instanceof ListHolder) {
+    		ListHolder listHolder = (ListHolder) parent
+    		return listHolder.list == null ? 0 : listHolder.list.size()
+    	} 
+    }
+
+    /**
+     * Returns the index of child in parent.
+     */
+    public int getIndexOfChild(Object parent, Object child) {
+    	if (parent instanceof DBTableTreeModel) {
+    		return tableHolders.indexOf(child)
+    	} else if (parent instanceof TableHolder) {
+    		TableHolder table = (TableHolder) parent;
+    		return table.lists.indexOf(child)
+    	}  else if (parent instanceof ListHolder) {
+    		ListHolder listHolder = (ListHolder) parent
+    		return listHolder.list.indexOf(child)
+    	}
+    }
+    
+    /**
+     * Returns the root of the tree.
+     */
+    public Object getRoot() {
+        return this;
+    }
+    
+    /**
+     * Returns true if node is a leaf.
+     */
+    public boolean isLeaf(Object node) {
+        node instanceof Column || node instanceof String
+    }
+
+    /**
+     * Removes a listener previously added with addTreeModelListener().
+     */
+    public void removeTreeModelListener(TreeModelListener l) {
+        treeModelListeners.removeElement(l);
+    }
+    
+    /**
+     * Messaged when the user has altered the value for the item
+     * identified by path to newValue.  Not used by this model.
+     */
+    public void valueForPathChanged(TreePath path, Object newValue) {
+        System.out.println("*** valueForPathChanged : "
+            + path + " --> " + newValue);
+    }
+
+
+    public String toString() {
+    	return "tables";
+    }
+}
+
+}}}
+
+The *TableHolder*, *JavaClassHolder* and *ListHolder* are used to adapt the model hierarchy to more of a true tree hierarchy needed by JTree.
+
+Here is the updated GeneratorSwingApp with Scrollbars, ScrollPanes, ToolBars, Actions and tons of other fun.
+
+==== GeneratorSwingApp.groovy ====
+
+{{{
+/**
+ * 
+ */
+package com.arcmind.codegen
+
+import javax.swing.*
+import groovy.swing.SwingBuilder
+import java.awt.BorderLayout
+
+
+/**
+ * @author richardhightower
+ *
+ */
+public class GeneratorSwingApp{
+
+	JFrame mainFrame
+	CodeGenMain main 
+	SwingBuilder swing = new SwingBuilder()
+	JLabel status
+	Action viewConsole
+	Action hideConsole
+	JTextArea console
+	List<Action> viewActions
+	List<Action> mainActions
+	List<Action> fileActions
+	JTabbedPane treeTabPane
+	JTabbedPane mainTabPane
+	JScrollPane consolePane
+	DBTableTreeModel tableTreeModel = new DBTableTreeModel()
+	JavaClassTreeModel classTreeModel = new JavaClassTreeModel()
+	
+	boolean debug = true
+	
+	def println(String message) {
+		console.append(message + "\n")
+	}
+	
+	Closure printlnClosure = { String message ->
+		console.append(message + "\n")
+	}
+
+	public void exit() {
+		System.exit(0)
+	}
+	
+	public void showConsole() {
+		println "Show console"
+		hideConsole.enabled=true
+		viewConsole.enabled=false
+		mainTabPane.addTab("Console", consolePane)
+	}
+	
+	public void closeConsole() {
+		println "Close console"
+		viewConsole.enabled=true
+		hideConsole.enabled=false
+		mainTabPane.remove(consolePane)
+	}
+	
+	public void reverseDB() {
+		use(StringCategory){
+			main.reverseDB()
+		}
+		tableTreeModel.setTables(main.reader.tables)
+		classTreeModel.setClasses(main.modelGen.classes)
+	}
+		
+	public GeneratorSwingApp() {
+
+
+		mainFrame=
+        swing.frame(title:'CodeGen Code Generator', size:[1000,1000], defaultCloseOperation:JFrame.EXIT_ON_CLOSE,  show:true) {
+            fileActions = actions() {
+                action(name: "Exit", mnemonic: 'X', closure: { exit() })
+            }
+            mainActions = actions() {
+                action(name: "Reverse DB", mnemonic: 'R', closure: { reverseDB() })
+                action(name: "Generate Java", mnemonic: 'G', closure: {use(StringCategory){main.generateJavaClasses() }})
+                action(name: "Write XML", mnemonic: 'W', closure: {use(StringCategory) {main.writeXML() }})
+                action(name: "Read XML", mnemonic: 'C', closure: {use(StringCategory) {main.readXML() }})
+                action(name: "Save Properties", mnemonic: 'S', closure: {use(StringCategory){main.writeProperties()}})
+                action(name: "Modify Properties", mnemonic: 'o', closure: {  })
+            }
+            viewActions = actions () {
+                viewConsole = action(name: "View Console", mnemonic: 'V', closure: { showConsole() })
+                hideConsole = action(name: "Hide Console", mnemonic: 'H', closure: { closeConsole() })
+            }
+            menuBar() {
+                menu(text: "File", mnemonic: 'F') {
+                    fileActions.each {menuItem(it)}
+                }
+                menu (text: "Main", mnemonic: 'M') {
+                    mainActions.each {menuItem(it)}
+                }
+                menu (text: "Window") {
+                    viewActions.each {menuItem(it)}
+                }
+            }
+			  
+            toolBar (constraints: BorderLayout.PAGE_START) {
+                fileActions.each {button(it)}
+                mainActions.each {button(it)}
+                viewActions.each {button(it)}
+            }
+			  
+            status = label(text:"Welcome to CodeGen",
+                constraints: BorderLayout.NORTH)
+
+			  
+            splitPane() {
+                treeTabPane = tabbedPane(constraints: BorderLayout.WEST, preferredSize:[300,300]) {
+                    scrollPane(title:"Tables", tabMnemonic: "T") { tree(model: tableTreeModel) }
+                    scrollPane(title:"Classes", tabMnemonic: "C") { tree(model: classTreeModel) }
+                }
+                mainTabPane = tabbedPane(constraints: BorderLayout.CENTER) {
+                    consolePane = scrollPane (title:"Console", tabMnemonic: "C") {
+                        console = textArea()
+                    }
+                }
+            }
+		      
+			  
+
+
+		}
+		
+		CodeGenMain.metaClass.println = printlnClosure
+		main = new CodeGenMain()
+		main.readProperties()
+		main.configureCollaborators()
+		
+		hideConsole.enabled=false
+		mainTabPane.remove(consolePane)
+		
+	}
+	
+	public static void main (String [] args) {
+		GeneratorSwingApp app = new GeneratorSwingApp()
+	}
+	
+	
+}
+
+}}}
+
+What amazes me is how much this does and how small it is. Groovy indeed. 
+
 === Conclusions ==
 I've written this same project four different ways: Jython, JPython, Java and now Groovy. The Groovy version was the most pleasant. Groovy hits a sweet spot with Java compatibility and Python like language features. I really enjoy programming in Groovy. 
 

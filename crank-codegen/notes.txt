@@ -1,0 +1,60 @@
+Left side of GUI is a tabbed panlel.
+
+Tab 1 = Tables
+Tab 2 = Classes
+
+Classes are initially empty and panel is initially hidden.
+
+The file menu allows users to save model objects, and read model objects. 
+It also allows end users to change the settings file.
+There is a file menu with the following options:
+
+File -> 
+	Read Settings File
+	Set Settings Dir
+	Set Output Dir
+	Save Model
+	Read Model
+
+
+In the main menu there is a generate classes. There is a generate menu item. 
+The generate menu item pops up a dialog box which asks for which tables should be used for generation.
+There is a checkbox for all tables.
+
+There is an main menu there is the following:
+Main ->
+	Generate
+	Modify Settings
+	View Console
+	
+The modify Settings allows end users to edit the settings.
+It allows them to type in the JDBC URL, Driver Name, and such.
+It also allows them to setup 
+	String tableNames
+	String packageName
+	String outputDir
+	String appConfigDir
+	String xmlFileName
+	String propertiesFile
+	String debug (boolean)
+
+FUTURE: Allow them to select the location of the JDBC driver jar file,
+ which it will then load on the classpath.
+
+ Replace println of CodeGenMain and collaborators to print to StringWriter that can be displayed 
+ in the Console of the app.
+ 
+ View Console shows the Console as a Tabbed Panel in the middle of the screen. There are two tabs in the
+ middle of the GUI. One tab is for editing (JavaClass, JavaProperty, Relationship).
+ 
+ JavaClass you can change the name of the class, and the packageName. In this release, 
+ you cannot change the Table info. You cannot add new properties in this release.
+ 
+ JavaProperty you can change the name of the property. In this release, you cannot change the Column.
+ 
+ Relationship you can change the name of the relationship and the relationship type. Many to Many 
+ will be validated and may not be allowed. (Need to add Many to Many detection in JavaModelGenerator.)
+ The main point of the Relationship editing is to distinguish between OneToMany/ManyToOne and OneToOne 
+ relationships.
+ 
+ (enabled ManyToMany generation. It took a bit longer than I expected.... they always do...)

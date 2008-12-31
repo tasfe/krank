@@ -10,6 +10,6 @@ public class Relationship{
 	JavaClass relatedClass
 	
 	public String toString() {
-		"Relationship(name=${name}, cardinality=${cardinality}, \n key=%{key})"
+		"Relationship(name=${name}, type=${type}, \n key=${key})"
 	}
 }

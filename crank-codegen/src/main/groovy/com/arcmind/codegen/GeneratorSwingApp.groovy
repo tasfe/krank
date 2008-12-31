@@ -15,7 +15,7 @@ import java.awt.BorderLayout
 public class GeneratorSwingApp{
 
 	JFrame mainFrame
-	CodeGenMain main = new CodeGenMain()
+	CodeGenMain main 
 	SwingBuilder swing = new SwingBuilder()
 	JLabel status
 	Action viewConsole
@@ -24,6 +24,11 @@ public class GeneratorSwingApp{
 	List<Action> viewActions
 	List<Action> mainActions
 	List<Action> fileActions
+	JTabbedPane treeTabPane
+	JTabbedPane mainTabPane
+	JScrollPane consolePane
+	DBTableTreeModel tableTreeModel = new DBTableTreeModel()
+	JavaClassTreeModel classTreeModel = new JavaClassTreeModel()
 	
 	boolean debug = true
 	
@@ -43,31 +48,34 @@ public class GeneratorSwingApp{
 		println "Show console"
 		hideConsole.enabled=true
 		viewConsole.enabled=false
-		console.show()
-		console.setSize(500, 500)
-		
+		mainTabPane.addTab("Console", consolePane)
 	}
 	
 	public void closeConsole() {
 		println "Close console"
 		viewConsole.enabled=true
 		hideConsole.enabled=false
-		console.hide()
-		mainFrame.invalidate()
-		mainFrame.repaint()
+		mainTabPane.remove(consolePane)
+	}
+	
+	public void reverseDB() {
+		use(StringCategory){
+			main.reverseDB()
+		}
+		tableTreeModel.setTables(main.reader.tables)
+		classTreeModel.setClasses(main.modelGen.classes)
 	}
 		
 	public GeneratorSwingApp() {
-		main.readProperties()
-		main.configureCollaborators()
+
 
 		mainFrame=
-			  swing.frame(title:'CodeGen Code Generator', size:[300,300], defaultCloseOperation:JFrame.EXIT_ON_CLOSE,  show:true) {
+			  swing.frame(title:'CodeGen Code Generator', size:[1000,1000], defaultCloseOperation:JFrame.EXIT_ON_CLOSE,  show:true) {
 			  fileActions = actions() {
 				  action(name: "Exit", mnemonic: 'X', closure: { exit() })
 			  }
 			  mainActions = actions() {
-				   action(name: "Reverse DB", mnemonic: 'R', closure: {use(StringCategory){main.reverseDB()}})
+				   action(name: "Reverse DB", mnemonic: 'R', closure: { reverseDB() })
 				   action(name: "Generate Java", mnemonic: 'G', closure: {use(StringCategory){main.generateJavaClasses() }})
 			       action(name: "Write XML", mnemonic: 'W', closure: {use(StringCategory) {main.writeXML() }})
 			       action(name: "Read XML", mnemonic: 'C', closure: {use(StringCategory) {main.readXML() }})
@@ -89,16 +97,41 @@ public class GeneratorSwingApp{
 				    	viewActions.each {menuItem(it)}
 				    }
 			  }
-
+			  
+			  toolBar (constraints: BorderLayout.PAGE_START) {
+				  fileActions.each {button(it)}
+				  mainActions.each {button(it)}
+				  viewActions.each {button(it)}
+			  }
 			  
 			  status = label(text:"Welcome to CodeGen",
-		                      constraints: BorderLayout.NORTH)
-		      console = textArea(constraints: BorderLayout.CENTER, size:[500, 500])
+                      constraints: BorderLayout.NORTH)
+
+			  
+			  splitPane() {			  
+				  treeTabPane = tabbedPane(constraints: BorderLayout.WEST, preferredSize:[300,300]) {
+					  scrollPane(title:"Tables", tabMnemonic: "T") { tree(model: tableTreeModel) }
+					  scrollPane(title:"Classes", tabMnemonic: "C") { tree(model: classTreeModel) }
+				  }
+			      mainTabPane = tabbedPane(constraints: BorderLayout.CENTER) {
+					  consolePane = scrollPane (title:"Console", tabMnemonic: "C") {
+						  console = textArea()
+					  }
+				  }
+			  }
+		      
+			  
+
+
 		}
 		
+		CodeGenMain.metaClass.println = printlnClosure
+		main = new CodeGenMain()
+		main.readProperties()
+		main.configureCollaborators()
+		
 		hideConsole.enabled=false
-		console.hide()
-		console.append("Welcome to CodeGen... Let's get crack-ah-lackin!")
+		mainTabPane.remove(consolePane)
 		
 	}
 	

@@ -30,6 +30,10 @@ public class CodeGenMain{
 	CodeGenerator codeGen
 	XMLPersister persister
 	List collaborators 
+	
+	Closure printlnClosure = {String message ->
+			println (message)
+	}
 	Closure logClosure = {String methodName, methodArgs->
 		def validMethod = delegate.metaClass.getMetaMethod(methodName, methodArgs)
 		if (validMethod==null) {
@@ -175,7 +179,13 @@ public class CodeGenMain{
 		if (debug) {
 			DataBaseMetaDataReader.metaClass.invokeMethod = logClosure
 			JavaModelGenerator.metaClass.invokeMethod = logClosure
-			CodeGenerator.metaClass.invokeMethod = logClosure			
+			CodeGenerator.metaClass.invokeMethod = logClosure	
+			
+			JdbcUtils.metaClass.println = printlnClosure
+			DataBaseMetaDataReader.metaClass.println = printlnClosure
+			JavaModelGenerator.metaClass.println = printlnClosure
+			CodeGenerator.metaClass.println = printlnClosure
+			XMLPersister.metaClass.println = printlnClosure
 		}
 		
 		jdbcUtils = new JdbcUtils()

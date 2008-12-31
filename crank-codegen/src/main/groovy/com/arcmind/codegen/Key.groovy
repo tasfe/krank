@@ -16,6 +16,6 @@ public class Key{
 	boolean imported
 	
 	String toString() {
-		"Key(primaryKey=${primaryKey} \n     foriegnKey=${foriegnKey})"
+		"Key(primaryKey=${primaryKey}       foriegnKey=${foriegnKey})"
 	}
 }

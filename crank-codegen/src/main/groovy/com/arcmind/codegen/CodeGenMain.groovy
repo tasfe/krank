@@ -41,9 +41,9 @@ public class CodeGenMain{
 		}  else if (validMethod.name=="println") {
 			return  validMethod.invoke(delegate, methodArgs)
 		}
-		System.out.println "Running ${methodName}(${methodArgs})"
+		println "Running ${methodName}(${methodArgs})"
 		def result = validMethod.invoke(delegate, methodArgs)
-		System.out.println "Completed ${methodName}(${methodArgs})"
+		println "Completed ${methodName}(${methodArgs})"
 		result
 	}
 	

@@ -32,7 +32,7 @@ public class CodeGenMain{
 	List collaborators 
 	
 	Closure printlnClosure = {String message ->
-			println (message)
+        println (message)
 	}
 	Closure logClosure = {String methodName, methodArgs->
 		def validMethod = delegate.metaClass.getMetaMethod(methodName, methodArgs)

@@ -9,6 +9,6 @@ class JavaProperty {
         return name == column.name;
     }
     String toString() {
-        "JavaProperty(name=${name} javaClass.name=${javaClass.name})"
+        "${name} ${javaClass.name} column=${column?.name}"
     }
 }

@@ -24,7 +24,7 @@ public class JavaModelGenerator{
     /** The name of the packageName that we will be using. */
     String packageName
     boolean debug
-
+    boolean trace
 	
     /**
      *   Convert the columns to Java properties.

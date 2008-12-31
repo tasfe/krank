@@ -52,8 +52,7 @@ public class JavaClassTreeModel implements TreeModel{
             tml.treeStructureChanged(e);
         }
     }
-
-	
+    
     /**
      * Adds a listener for the TreeModelEvent posted after the tree changes.
      */

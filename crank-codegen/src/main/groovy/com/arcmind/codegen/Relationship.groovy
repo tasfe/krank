@@ -10,6 +10,6 @@ public class Relationship{
 	JavaClass relatedClass
 	
 	public String toString() {
-		"${name} ${type} ${relatedClass?.name}"
+		"${name} ${type} ${relatedClass?.name} ${key}"
 	}
 }

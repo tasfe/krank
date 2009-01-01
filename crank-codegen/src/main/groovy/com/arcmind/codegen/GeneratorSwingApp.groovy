@@ -38,9 +38,11 @@ public class GeneratorSwingApp{
 	JPanel classPane
 	JPanel propertyPane
 	JPanel relationshipPane
+	JPanel codeGenMainPane
 	ClassEditSupport classEditSupport
 	JavaPropertyEditSupport propertyEditSupport
 	RelationshipEditSupport relationshipEditSupport
+	CodeGenMainEditSupport codeGenMainEditSupport
 
 	boolean debug = true
 
@@ -78,16 +80,29 @@ public class GeneratorSwingApp{
 	public void reverseDB() {
 		main.reader.tables=[]
 		main.modelGen.classes=[]
-
 		use(StringCategory){
 			main.reverseDB()
 		}
-
 		tableTreeModel.setTables(main.reader.tables)
 		classTreeModel.setClasses(main.modelGen.classes)
-
 	}
 
+	public void readXML() {
+		main.reader.tables=[]
+		main.modelGen.classes=[]
+		use(StringCategory) {
+			main.readXML()
+		}
+		tableTreeModel.setTables(main.reader.tables)
+		classTreeModel.setClasses(main.modelGen.classes)
+	}
+
+	def modifyProperties () {
+		mainTabPane.addTab("Modify Properties", codeGenMainPane)
+		mainTabPane.setSelectedComponent(codeGenMainPane)
+		codeGenMainEditSupport.populateForm(main)
+		main.configureCollaborators()
+	}
 	def selecteProperty(JavaProperty property) {
 		mainTabPane.addTab("Property", propertyPane)
 		mainTabPane.setSelectedComponent(propertyPane)
@@ -148,6 +163,7 @@ public class GeneratorSwingApp{
 		classEditSupport = new ClassEditSupport(classTreeModel:classTreeModel)
 		propertyEditSupport = new JavaPropertyEditSupport(classTreeModel:classTreeModel)
 		relationshipEditSupport = new RelationshipEditSupport(classTreeModel:classTreeModel)
+		codeGenMainEditSupport = new CodeGenMainEditSupport()
 
 		buildGUI ()
 
@@ -163,6 +179,7 @@ public class GeneratorSwingApp{
 		mainTabPane.remove(relationshipPane)
 		mainTabPane.remove(classPane)
 		mainTabPane.remove(propertyPane)
+		mainTabPane.remove(codeGenMainPane)
 
 
 	}
@@ -181,7 +198,7 @@ public class GeneratorSwingApp{
                 action(name: "Exit", mnemonic: 'X', closure: { exit() })
             }
 
-            Closure handleGenerateJavaAction = {
+            Closure handleReverseDB = {
                 doOutside { //Runs in a seperate thread
                     edt {setStatus "Reverse engineering database please standby..."}
                     reverseDB()
@@ -189,13 +206,29 @@ public class GeneratorSwingApp{
                 }
             }
 
+            Closure handleWriteXML = {
+            	doOutside {
+            		edt {setStatus "Writing XML file out ${main.persister.fileName}"}
+            		main.writeXML()
+            		edt {setStatus "Done writing XML file out ${main.persister.fileName}"}
+            	}
+            }
+
+            Closure handleReadXML = {
+                doOutside {
+                    edt {setStatus "Reading XML file in ${main.persister.fileName}"}
+                    readXML()
+                    edt {setStatus "Done reading XML file in ${main.persister.fileName}"}
+                }
+            }
+
             mainActions = actions() {
-                action(name: "Reverse DB", mnemonic: 'R', closure: handleGenerateJavaAction)
+                action(name: "Reverse DB", mnemonic: 'R', closure: handleReverseDB)
                 action(name: "Generate Java", mnemonic: 'G', closure: {use(StringCategory){main.generateJavaClasses() }})
-                action(name: "Write XML", mnemonic: 'W', closure: {use(StringCategory) {main.writeXML() }})
-                action(name: "Read XML", mnemonic: 'e', closure: {use(StringCategory) {main.readXML() }})
+                action(name: "Write XML", mnemonic: 'W', closure: handleWriteXML)
+                action(name: "Read XML", mnemonic: 'e', closure: handleReadXML)
                 action(name: "Save Properties", mnemonic: 'S', closure: {use(StringCategory){main.writeProperties()}})
-                action(name: "Modify Properties", mnemonic: 'o', closure: {  })
+                action(name: "Modify Properties", mnemonic: 'o', closure: { modifyProperties() })
             }
             viewActions = actions () {
                 viewConsole = action(name: "View Console", mnemonic: 'V', closure: { showConsole() })
@@ -273,7 +306,7 @@ public class GeneratorSwingApp{
                                 button(text:"Apply", actionPerformed: {propertyEditSupport.updateObject(this.currentProperty)})
                             }
                         }//panel
-                    }
+                    }//propertyPane
                     relationshipPane = panel (title:"Relationship", tabMnemonic: "R") {
                         flowLayout(alignment:FlowLayout.LEFT)
                         panel{
@@ -297,30 +330,108 @@ public class GeneratorSwingApp{
                                 button(text:"Apply", actionPerformed: {relationshipEditSupport.updateObject(this.currentRelationship)})
                             }
                         }//panel
-
-                    }
-
-                }
-            }
-
-
-
-
-        }
-
-	}
-
+                    }//relationshipPane
+                    codeGenMainPane = panel (title:"Modify Properties", tabMnemonic: "M") {
+                        flowLayout(alignment:FlowLayout.LEFT)
+                        panel{
+                            boxLayout(axis:BoxLayout.Y_AXIS)
+                            label("Modify Properties")
+                            label("", preferredSize:[20,20])
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("JDBC URL", preferredSize:[100,20])
+                                codeGenMainEditSupport.url = textField(preferredSize:[500,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("JDBC Driver", preferredSize:[100,20])
+                                codeGenMainEditSupport.driver = textField(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("JDBC Driver", preferredSize:[100,20])
+                                codeGenMainEditSupport.driver = textField(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("DB User Name", preferredSize:[100,20])
+                                codeGenMainEditSupport.userName = textField(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("DB Password", preferredSize:[100,20])
+                                codeGenMainEditSupport.password = textField(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("Table Names", preferredSize:[100,20])
+                                codeGenMainEditSupport.tableNames = textField(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("Package Name", preferredSize:[100,20])
+                                codeGenMainEditSupport.packageName = textField(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("Output dir", preferredSize:[100,20])
+                                codeGenMainEditSupport.outputDir = textField(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("Config dir", preferredSize:[100,20])
+                                codeGenMainEditSupport.appConfigDir = textField(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("XML File", preferredSize:[100,20])
+                                codeGenMainEditSupport.xmlFileName = textField(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("Properties File", preferredSize:[100,20])
+                                codeGenMainEditSupport.propertiesFile = textField(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("Debug mode", preferredSize:[100,20])
+                                codeGenMainEditSupport.debug = checkBox(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                button(text:"Apply", actionPerformed: {codeGenMainEditSupport.updateObject(this.main)})
+                                button(text:"Save", actionPerformed: {codeGenMainEditSupport.updateObject(this.main); main.writeProperties()})
+                            }
+                        }//panel
+                    }//codeGenMainPane
+                }//mainTabPane
+            }//splitPane
+        }//frame
+	}//buildGUI()
 }
 
 class ClassEditSupport {
 	JTextField packageName
 	JTextField className
 	JavaClassTreeModel classTreeModel
+	GeneratorSwingApp app
 	def updateObject (JavaClass cls) {
-		println "update object was ${cls}"
+		app.println "update object was ${cls}"
 		cls.packageName = packageName.text
 		cls.name = className.text
-		println "update object now ${cls}"
+		app.println "update object now ${cls}"
+		classTreeModel.nodeChanged(cls)
 	}
 	def populateForm (JavaClass cls) {
 		packageName.text = cls.packageName
@@ -331,10 +442,12 @@ class ClassEditSupport {
 class JavaPropertyEditSupport {
 	JTextField propertyName
 	JavaClassTreeModel classTreeModel
+	GeneratorSwingApp app
 	def updateObject (JavaProperty prp) {
-		println "update object was ${prp}"
+		app.println "update object was ${prp}"
 		prp.name = propertyName.text
-		println "update object now ${prp}"
+		app.println "update object now ${prp}"
+		classTreeModel.nodeChanged(prp)
 	}
 	def populateForm (JavaProperty prp) {
 		propertyName.text = prp.name
@@ -346,15 +459,66 @@ class RelationshipEditSupport {
 	JTextField relationshipName
 	JComboBox type
 	JavaClassTreeModel classTreeModel
+	GeneratorSwingApp app
 	def updateObject (Relationship rel) {
-		println "update object was ${rel}"
+		app.println "update object was ${rel}"
 		rel.name = relationshipName.text
 		rel.type = (RelationshipType) type.selectedItem
-		println "update object now ${rel}"
+		app.println "update object now ${rel}"
+		classTreeModel.nodeChanged(rel)
 	}
 	def populateForm (Relationship rel) {
 		relationshipName.text = rel.name
 		type.selectedItem = rel.type
 	}
+}
+
+class CodeGenMainEditSupport {
+	JTextField url
+	JTextField userName
+	JTextField password
+	JTextField driver
+	JTextField tableNames
+	JTextField packageName
+	JTextField outputDir
+	JTextField appConfigDir
+	JTextField xmlFileName
+	JTextField propertiesFile
+	JCheckBox debug
+	def updateObject (CodeGenMain main) {
+		main.url = url.text
+		main.userName = userName.text
+		main.password = password.text
+		main.driver = driver.text
+		main.tableNames = tableNames.text
+		main.packageName = packageName.text
+		main.outputDir = outputDir.text
+		main.appConfigDir = appConfigDir.text
+		main.xmlFileName = xmlFileName.text
+		main.propertiesFile = propertiesFile.text
+		if (debug.selected) {
+			main.debug = "true"
+		} else {
+			main.debug = null
+		}
+	}
+	def populateForm (CodeGenMain main) {
+		url.text = main.url
+		userName.text = main.userName
+		password.text = main.password
+		driver.text = main.driver
+		tableNames.text = main.tableNames
+		packageName.text = main.packageName
+		outputDir.text = main.outputDir
+		appConfigDir.text = main.appConfigDir
+		xmlFileName.text =  main.xmlFileName
+		propertiesFile.text = main.propertiesFile
+		if (debug == null) {
+			debug.selected=false
+		} else {
+			debug.selected=true
+		}
+	}
+
 }
 

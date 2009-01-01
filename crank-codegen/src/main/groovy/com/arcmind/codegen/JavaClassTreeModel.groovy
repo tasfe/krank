@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.arcmind.codegen
 import javax.swing.event.TreeModelEvent
@@ -33,7 +33,7 @@ class JavaClassHolder {
  */
 public class JavaClassTreeModel implements TreeModel{
 	List<JavaClassHolder> javaClassHolders = []
-	
+
     private Vector<TreeModelListener> treeModelListeners =
     new Vector<TreeModelListener>();
 
@@ -47,12 +47,19 @@ public class JavaClassTreeModel implements TreeModel{
     		JavaClassHolder holder = new JavaClassHolder(javaClass:javaClass)
     		javaClassHolders << holder
     	}
-        TreeModelEvent e = new TreeModelEvent(this, [this] as Object[]);
+        TreeModelEvent event = new TreeModelEvent(this, [this] as Object[]);
         for (TreeModelListener tml : treeModelListeners) {
-            tml.treeStructureChanged(e);
+            tml.treeStructureChanged(event)
         }
     }
-    
+
+    public void nodeChanged(Object nodeUpdated) {
+        TreeModelEvent event = new TreeModelEvent(this, [nodeUpdated] as Object[]);
+        for (TreeModelListener tml : treeModelListeners) {
+            tml.treeNodesChanged(event)
+        }
+    }
+
     /**
      * Adds a listener for the TreeModelEvent posted after the tree changes.
      */
@@ -74,7 +81,7 @@ public class JavaClassTreeModel implements TreeModel{
     		return listHolder.list[index]
     	}
     }
-    
+
     /**
      * Returns the number of children of parent.
      */
@@ -87,7 +94,7 @@ public class JavaClassTreeModel implements TreeModel{
     	} else if (parent instanceof ListHolder) {
     		ListHolder listHolder = (ListHolder) parent
     		return listHolder.list == null ? 0 : listHolder.list.size()
-    	} 
+    	}
     }
 
     /**
@@ -104,14 +111,14 @@ public class JavaClassTreeModel implements TreeModel{
     		return listHolder.list.indexOf(child)
     	}
     }
-    
+
     /**
      * Returns the root of the tree.
      */
     public Object getRoot() {
         return this;
     }
-    
+
     /**
      * Returns true if node is a leaf.
      */
@@ -125,7 +132,7 @@ public class JavaClassTreeModel implements TreeModel{
     public void removeTreeModelListener(TreeModelListener l) {
         treeModelListeners.removeElement(l);
     }
-    
+
     /**
      * Messaged when the user has altered the value for the item
      * identified by path to newValue.  Not used by this model.

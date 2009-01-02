@@ -116,26 +116,28 @@ public class ${bean.name} implements Serializable {
             }
         }
          
-        imports.add("javax.persistence.GeneratedValue")
-        imports.add("javax.persistence.GenerationType")
-        imports.add("javax.persistence.Id")
+        imports << "javax.persistence.GeneratedValue"
+        imports << "javax.persistence.GenerationType"
+        imports << "javax.persistence.Id"
          
         bean.relationships.each {Relationship relationship ->
          	if (relationship.type == RelationshipType.ONE_TO_MANY) {
-         		imports.add("javax.persistence.OneToMany")
-         		imports.add("javax.persistence.JoinColumn")
-         		imports.add("javax.persistence.CascadeType")
+         		imports << "javax.persistence.OneToMany"
+         		imports << "javax.persistence.JoinColumn"
+         		imports << "javax.persistence.CascadeType"
          	} else if (relationship.type == RelationshipType.MANY_TO_ONE) {
-         		imports.add("javax.persistence.ManyToOne")
-         		imports.add("javax.persistence.CascadeType")
-         	}
+         		imports << "javax.persistence.ManyToOne"
+         		imports << "javax.persistence.CascadeType"
+         	}	
+        }
+        
+        if (needsColumnImport(bean)) {
+            imports << "javax.persistence.Column"
         }
          
         Set<String> impSet = new HashSet<String> (imports)
         impSet.remove (null)
-        if (needsColumnImport(bean)) {
-            impSet.add("javax.persistence.Column")
-        }
+        if (debug) println "Calculated imports for ${bean.name}, ${imports}"
         impSet
     }
 
@@ -143,11 +145,14 @@ public class ${bean.name} implements Serializable {
     
     def writeClassFiles() {
         for (JavaClass bean in classes) {
+        	if (debug) println "Writing ${bean.name} class file"
             def binding = ["bean":bean, "imports":calculateImportsFromBean(bean)]        
             String templateOutput = engine.createTemplate(textTemplate).make(binding).toString()
             File outputFileDir = new File(outputDir, bean.packageName.replace('.','/'))
+        	if (debug) println "Outputting ${bean.name} to ${outputFileDir}"
             outputFileDir.mkdirs()
             File javaFile = new File (outputFileDir, bean.name + ".java")
+        	if(debug) println "Java file ${javaFile}"
             javaFile.newWriter().withWriter{BufferedWriter writer->
             	writer.write(templateOutput)
             }

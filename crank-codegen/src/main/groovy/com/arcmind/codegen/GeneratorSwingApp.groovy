@@ -124,6 +124,22 @@ public class GeneratorSwingApp{
 		relationshipEditSupport.populateForm(relationship)
 	}
 
+	public void treeTableSelected(TreeSelectionEvent event) {
+		setStatus ""
+		mainTabPane.addTab("Modify Properties", codeGenMainPane)
+		mainTabPane.selectedComponent = codeGenMainPane
+		codeGenMainEditSupport.populateForm(main)
+		main.configureCollaborators()
+		
+		String tableName = event.path.lastPathComponent.table.name
+		List list = main.tableNames.split(',')
+		list = list - tableName
+		list = list - ""
+		list << tableName
+		main.tableNames=list.join(',')
+		codeGenMainEditSupport.tableNames.text = main.tableNames
+	}
+
 	public void treeClassSelected(TreeSelectionEvent event) {
 		setStatus ""
 
@@ -222,9 +238,19 @@ public class GeneratorSwingApp{
                 }
             }
 
+            Closure handleGenerateJavaClasses = {
+                    doOutside {
+                        edt {setStatus "Writing Java class files to ${main.codeGen.outputDir}"}
+                        use(StringCategory) {
+                        	main.generateJavaClasses()
+                        }
+                        edt {setStatus "Done writing Java class files to ${main.codeGen.outputDir}"}
+                    }
+            }
+
             mainActions = actions() {
                 action(name: "Reverse DB", mnemonic: 'R', closure: handleReverseDB)
-                action(name: "Generate Java", mnemonic: 'G', closure: {use(StringCategory){main.generateJavaClasses() }})
+                action(name: "Generate Java", mnemonic: 'G', closure: handleGenerateJavaClasses)
                 action(name: "Write XML", mnemonic: 'W', closure: handleWriteXML)
                 action(name: "Read XML", mnemonic: 'e', closure: handleReadXML)
                 action(name: "Save Properties", mnemonic: 'S', closure: {use(StringCategory){main.writeProperties()}})
@@ -258,7 +284,9 @@ public class GeneratorSwingApp{
 
             splitPane(constraints: BorderLayout.CENTER) {
                 treeTabPane = tabbedPane(constraints: BorderLayout.WEST, preferredSize:[300,300]) {
-                    scrollPane(title:"Tables", tabMnemonic: "T") { tree(model: tableTreeModel) }
+                    scrollPane(title:"Tables", tabMnemonic: "T") { 
+                    	tree(model: tableTreeModel, valueChanged: {treeTableSelected(it)}) 
+                    }
                     scrollPane(title:"Classes", tabMnemonic: "C") {
                         tree(model: classTreeModel, valueChanged: {treeClassSelected(it)})
                     }
@@ -351,12 +379,6 @@ public class GeneratorSwingApp{
                             }
                             panel {
                                 boxLayout(axis:BoxLayout.X_AXIS)
-                                label("JDBC Driver", preferredSize:[100,20])
-                                codeGenMainEditSupport.driver = textField(preferredSize:[200,20])
-                                label(preferredSize:[100,20])
-                            }
-                            panel {
-                                boxLayout(axis:BoxLayout.X_AXIS)
                                 label("DB User Name", preferredSize:[100,20])
                                 codeGenMainEditSupport.userName = textField(preferredSize:[200,20])
                                 label(preferredSize:[100,20])
@@ -412,6 +434,8 @@ public class GeneratorSwingApp{
                             panel {
                                 button(text:"Apply", actionPerformed: {codeGenMainEditSupport.updateObject(this.main)})
                                 button(text:"Save", actionPerformed: {codeGenMainEditSupport.updateObject(this.main); main.writeProperties()})
+                                button(text:"Clear Tables", actionPerformed: {main.tableNames="";codeGenMainEditSupport.tableNames.text=""})
+                                button(text:"Close", actionPerformed: {mainTabPane.remove(codeGenMainPane)})
                             }
                         }//panel
                     }//codeGenMainPane
@@ -501,6 +525,7 @@ class CodeGenMainEditSupport {
 		} else {
 			main.debug = null
 		}
+		main.configureCollaborators()
 	}
 	def populateForm (CodeGenMain main) {
 		url.text = main.url

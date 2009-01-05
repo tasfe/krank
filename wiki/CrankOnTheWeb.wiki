@@ -1,4 +1,6 @@
-#Crank webapplication 1-2-3
+#summary The most complete and up to date Crank Tutorial:  webapplication 1-2-3
+
+==== author Walter Bogaardt====
 = Introduction =
 We can all look at the Crank web application example and create a web application using crank. Another is take the blank project and start building using that as our template to start our new crank project. Still to the novice developer jumping into a web application and seeing something we need to know what we are doing. 
 

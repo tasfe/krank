@@ -14,7 +14,7 @@ public class DatabaseReverseXMLTest extends TestCase{
 
     static JdbcUtils jdbcUtils = new JdbcUtils(url:"jdbc:hsqldb:file:/db-codeGen/testdb",
             userName:"sa", password:"", driver:"org.hsqldb.jdbcDriver")
-    DataBaseMetaDataReader reader = new DataBaseMetaDataReader()
+    DataBaseMetaDataReader reader = new DataBaseMetaDataReader(debug:true)
     JavaModelGenerator modelGen = new JavaModelGenerator()
     CodeGenerator codeGen = new CodeGenerator()
     XMLPersister persister = new XMLPersister()

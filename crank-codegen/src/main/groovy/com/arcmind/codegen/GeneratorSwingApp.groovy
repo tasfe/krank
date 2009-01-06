@@ -123,7 +123,6 @@ public class GeneratorSwingApp{
 		currentRelationship = relationship
 		relationshipEditSupport.populateForm(relationship)
 	}
-
 	public void treeTableSelected(TreeSelectionEvent event) {
 		setStatus ""
 		mainTabPane.addTab("Modify Properties", codeGenMainPane)
@@ -369,7 +368,7 @@ public class GeneratorSwingApp{
                             panel {
                                 boxLayout(axis:BoxLayout.X_AXIS)
                                 label("bidirectional", preferredSize:[100,20])
-                                relationshipEditSupport.ignore = checkBox(preferredSize:[200,20])
+                                relationshipEditSupport.bidirectional = checkBox(preferredSize:[200,20])
                                 label("do both sides reference each other",preferredSize:[100,20])
                             }
                             panel {

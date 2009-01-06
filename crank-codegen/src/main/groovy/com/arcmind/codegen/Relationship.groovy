@@ -5,6 +5,7 @@ package com.arcmind.codegen
  * @author richardhightower */
 public class Relationship{
 	String name
+	String singularName
 	RelationshipType type
 	Key key
 	JavaClass owner

@@ -30,7 +30,21 @@ public class StringCategory{
             return self
         }
 	}
-	
+
+	public static String plural(String self) {
+		return self.endsWith('s') ? self + "es" : self + "s"
+	}
+
+	public static String singular(String self) {
+		if (self.endsWith("es")) {
+			return self[0..-3]
+		} else if (self.endsWith("s")) {
+			return self[0..-2]
+		} else {
+			return self
+		}
+	}
+
 	public static boolean isAllUppers(String self) {
 
 		boolean notAllUpper = false

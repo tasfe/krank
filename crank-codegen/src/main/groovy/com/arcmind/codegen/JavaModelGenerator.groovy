@@ -85,9 +85,13 @@ public class JavaModelGenerator{
             case [Types.DATE, Types.TIME, Types.TIMESTAMP]:
             return new JavaClass(name:"Date", packageName:"java.util")
             case [Types.INTEGER] :
-            return column.nullable || column.primaryKey ?
-            new JavaClass(name:"Integer", packageName:"java.lang") :
-            new JavaClass(name:"int", primitive:true)
+            	if (column.primaryKey) {
+            		return new JavaClass(name:"Long", packageName:"java.lang") 
+            	} else {
+                    return column.nullable || column.primaryKey ?
+                            new JavaClass(name:"Integer", packageName:"java.lang") :
+                            new JavaClass(name:"int", primitive:true)            		
+            	}
             default:
             println "Unable to map type for column " + column
             return new JavaClass(name:"Object", packageName:"java.lang")
@@ -168,10 +172,10 @@ public class JavaModelGenerator{
         } else {
         	type = RelationshipType.ONE_TO_MANY
         }
- 		String relationshipName = relatedClass.name.unCap()
-        relationshipName = relationshipName.endsWith('s') ? relationshipName + "es" : relationshipName + "s"
+ 		String relationshipNameSingular = relatedClass.name.unCap()
+        String relationshipName = relationshipNameSingular.endsWith('s') ? relationshipNameSingular + "es" : relationshipNameSingular + "s"
  		javaClass.relationships << 
-        new Relationship(name:relationshipName, relatedClass:relatedClass, key:theKey, type:type, owner:javaClass)
+        new Relationship(name:relationshipName, singularName: relationshipNameSingular, relatedClass:relatedClass, key:theKey, type:type, owner:javaClass)
     	 
     }
     def convertKeysToRelationships(JavaClass javaClass) {

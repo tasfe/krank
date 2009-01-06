@@ -38,7 +38,7 @@ public class XMLPersister{
                                         }}}//properties
                                 /* Write out the relationships for the Java class. */
                                 relationships { c.relationships.each {Relationship r -> r.with {
-                                            relationship (name: r.name, type: type.toString()) {
+                                            relationship (name: r.name, type: type.toString(), singularName: singularName, bidirectional: bidirectional, ignore: ignore) {
 									'relatedClass' (name: relatedClass.name, packageName: relatedClass.packageName)
                                                 key?.with {
 										'key'(primaryKeyColumn: primaryKey.name,
@@ -169,8 +169,11 @@ public class XMLPersister{
 		codeGen.classes.'class'.each {cls ->
             cls.relationships.relationship.each { rel ->
                 /* Create the relationship. */
-                Relationship relationship = new Relationship(name: rel.@name, type: Enum.valueOf(RelationshipType.class,
-                        rel.@type.toString()))
+                Relationship relationship = new Relationship(name: rel.@name, 
+                								type: Enum.valueOf(RelationshipType.class, rel.@type.toString()), 
+                								singularName: rel.@singularName, 
+                								bidirectional: Boolean.valueOf(rel.@bidirectional.toString()),
+                								ignore: Boolean.valueOf(rel.@ignore.toString()))
                 /* Lookup the actual class object based on the class element. */
                 JavaClass clz = classMap[cls.@name.toString()]
                 clz.relationships << relationship

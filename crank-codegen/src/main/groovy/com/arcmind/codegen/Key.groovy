@@ -8,11 +8,6 @@ package com.arcmind.codegen
 public class Key{
 	Column primaryKey = new Column()
 	Column foriegnKey = new Column()
-	short updateRule
-	short deleteRule
-	String fkName
-	String pkName
-	short deferrability
 	boolean imported
 	
 	String toString() {

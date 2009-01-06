@@ -355,6 +355,24 @@ public class GeneratorSwingApp{
                                 label(preferredSize:[100,20])
                             }
                             panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("Singular Name", preferredSize:[100,20])
+                                relationshipEditSupport.singularName = textField(preferredSize:[200,20])
+                                label("Only needed for XToMany", preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("ignore", preferredSize:[100,20])
+                                relationshipEditSupport.ignore = checkBox(preferredSize:[200,20])
+                                label("if true not processesd",preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("bidirectional", preferredSize:[100,20])
+                                relationshipEditSupport.ignore = checkBox(preferredSize:[200,20])
+                                label("do both sides reference each other",preferredSize:[100,20])
+                            }
+                            panel {
                                 button(text:"Apply", actionPerformed: {relationshipEditSupport.updateObject(this.currentRelationship)})
                             }
                         }//panel
@@ -481,19 +499,31 @@ class JavaPropertyEditSupport {
 
 class RelationshipEditSupport {
 	JTextField relationshipName
+	JTextField singularName
 	JComboBox type
 	JavaClassTreeModel classTreeModel
+	JCheckBox ignore
+	JCheckBox bidirectional
+	
+	
 	GeneratorSwingApp app
+	
 	def updateObject (Relationship rel) {
 		app.println "update object was ${rel}"
 		rel.name = relationshipName.text
 		rel.type = (RelationshipType) type.selectedItem
+		rel.singularName = singularName.text
+		rel.ignore = ignore.selected
+		rel.bidirectional = bidirectional.selected
 		app.println "update object now ${rel}"
 		classTreeModel.nodeChanged(rel)
 	}
 	def populateForm (Relationship rel) {
 		relationshipName.text = rel.name
 		type.selectedItem = rel.type
+		singularName.text = rel.singularName
+		bidirectional.selected = rel.bidirectional
+		ignore.selected = rel.ignore
 	}
 }
 

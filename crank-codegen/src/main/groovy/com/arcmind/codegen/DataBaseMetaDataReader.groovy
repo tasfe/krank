@@ -44,10 +44,12 @@ class DataBaseMetaDataReader {
      */
     def processColumns() {
         tables.each {Table table ->
+        	if (debug) println "reading table ${table.name} for columns"
             jdbcUtils.iterate connection.metaData.getColumns(catalog, schema, table.name, null),
             { ResultSet resultSet ->
                 Column column = new Column()
                 column.name = resultSet.getString ("COLUMN_NAME")
+                if (debug) println "COLUMN NAME = ${column.name} ==================================="
                 column.typeName = resultSet.getString ("TYPE_NAME")
                 column.type = resultSet.getInt ("DATA_TYPE")
                 column.nullable = resultSet.getString ("IS_NULLABLE") == "YES" ? true : false
@@ -57,6 +59,7 @@ class DataBaseMetaDataReader {
                 table.columns << column
                 column.table = table
             }
+        	if (debug) "\n"
         }
     }
     
@@ -82,6 +85,7 @@ class DataBaseMetaDataReader {
     }
 
 	def processKeys(Table table, getKeys, List<Key> keyList, boolean imported) {
+		if (debug) println "processing keys for table ${table.name} imported=${imported}"
         jdbcUtils.iterate getKeys(catalog, schema, table.name),
         { ResultSet resultSet ->
             Key key = new Key()
@@ -90,8 +94,10 @@ class DataBaseMetaDataReader {
             key.foriegnKey.table = tables.find{it.name==resultSet.getString ("FKTABLE_NAME")}
             key.primaryKey.name = resultSet.getString ("PKCOLUMN_NAME")
             key.primaryKey.table = tables.find{it.name==resultSet.getString ("PKTABLE_NAME")}
+            if (debug) println "${key}"
             keyList << key
         }
+		if (debug) println "\n"
 	}
 
 

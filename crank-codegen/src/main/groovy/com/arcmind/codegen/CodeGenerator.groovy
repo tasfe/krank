@@ -21,8 +21,9 @@ public class ${bean.name} implements Serializable {
     private ${bean.id.javaClass.name} id;
 
     /* ------- Relationships ------ */
-   <% 
-   bean.relationships.each {r -> 
+   <%
+   for (r in bean.relationships) {
+	    if (r.ignore) continue
    		if (r.type == RelationshipType.ONE_TO_MANY && r.bidirectional==false) {
    %>
     @OneToMany(cascade = CascadeType.ALL) @JoinColumn(name="${r.key.foriegnKey.name}")

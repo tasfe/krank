@@ -158,6 +158,12 @@ public class XMLPersister{
 			}
 		}
 		
+		readRelationships(classMap, tableMap, codeGen)
+		
+	}//readClasses
+	
+	
+	void readRelationships(Map<String,JavaClass> classMap, Map<String,Table> tableMap, codeGen) {
 		if (debug) println "Reading relationships from classes"
 		/** Read the relationships from the XML document. */
 		codeGen.classes.'class'.each {cls ->
@@ -168,10 +174,13 @@ public class XMLPersister{
                 /* Lookup the actual class object based on the class element. */
                 JavaClass clz = classMap[cls.@name.toString()]
                 clz.relationships << relationship
+                relationship.owner = clz
 			
                 /* Create the related class based on the relationhip element. */
-                relationship.relatedClass = new JavaClass(name: rel.relatedClass.@name,
-					packageName: rel.relatedClass.@packageName)
+                relationship.relatedClass = classMap[rel.relatedClass.@name.toString()]
+                if (relationship.relatedClass==null) {	
+                	relationship.relatedClass = new JavaClass(name: rel.relatedClass.@name, packageName: rel.relatedClass.@packageName)
+                }
 			
                 /* Pull out the information that we need to look up the correct tables and columns. */
                 String primaryKeyTable = rel.key.@primaryKeyTable.toString()
@@ -188,5 +197,5 @@ public class XMLPersister{
                 }
             }//relationships
 		}//classes
-	}//readClasses
+	}//readRelationships
 }

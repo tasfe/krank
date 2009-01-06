@@ -16,9 +16,9 @@ public class JavaModelGenerator{
     /** Table names to process. */
     Set <String> tableNames = []    
     /** Map of tables to Java classes */
-    HashMap <String, JavaClass> tableToJavaClassMap = [:]
+    Map <String, JavaClass> tableToJavaClassMap = [:]
     /** Map of Java classes to tables */
-    HashMap <String,Table> javaClassToTableMap = [:]
+    Map <String,Table> javaClassToTableMap = [:]
     /** Tables */
     List<Table> tables
     /** The name of the packageName that we will be using. */
@@ -109,6 +109,7 @@ public class JavaModelGenerator{
     }
     
     /**
+     *  This is the main entry point into this class.
      *  Convert the Database tables into Java classes.
      */
     def convertTablesToJavaClasses(){
@@ -128,6 +129,26 @@ public class JavaModelGenerator{
         classes.each{JavaClass javaClass ->
          	convertKeysToRelationships(javaClass)
         }
+        marryRelationships()
+    }
+    
+    /*
+     * This method finds the other side of the relationship.
+     */
+    def marryRelationships() {
+        classes.each{JavaClass javaClass ->
+     		javaClass.relationships.each { Relationship  r1 ->
+     			if (r1.otherSide==null) {
+     				r1.otherSide = r1.relatedClass.relationships.find{Relationship r2 -> r2.owner==r1.relatedClass && r2.key.foriegnKey.name == r1.key.foriegnKey.name}
+     				if (r1.otherSide==null) {
+     					r1.bidirectional = false
+     				} else {
+     					r1.bidirectional = true
+     				}
+     			}
+     		}
+        }
+    	
     }
     def processExportedKey(Key key, JavaClass javaClass) {
   		Key theKey = key
@@ -150,7 +171,7 @@ public class JavaModelGenerator{
  		String relationshipName = relatedClass.name.unCap()
         relationshipName = relationshipName.endsWith('s') ? relationshipName + "es" : relationshipName + "s"
  		javaClass.relationships << 
-        new Relationship(name:relationshipName, relatedClass:relatedClass, key:theKey, type:type)
+        new Relationship(name:relationshipName, relatedClass:relatedClass, key:theKey, type:type, owner:javaClass)
     	 
     }
     def convertKeysToRelationships(JavaClass javaClass) {
@@ -159,18 +180,25 @@ public class JavaModelGenerator{
      		try {
      			processExportedKey(key, javaClass)
      		} catch (Exception ex) {
-                println "UNABLE TO PROCESS KEY ${ex.message}"
-                ByteArrayOutputStream bos = new ByteArrayOutputStream()
-                PrintStream stream = new PrintStream(bos)
-                ex.printStackTrace(stream)
-                println bos.toString()
+     			if (trace) {
+	                println "UNABLE TO PROCESS KEY ${ex.message}"
+	                ByteArrayOutputStream bos = new ByteArrayOutputStream()
+	                PrintStream stream = new PrintStream(bos)
+	                ex.printStackTrace(stream)
+	                println bos.toString()
+     			}
      		}
      	}
      	/* Note: Imported keys are the keys that correlate to columns in this Classes table. 
      	 * Imported keys list the foriegn keys in this table
      	 * */
         javaClass.table.importedKeys.each { Key key ->
- 			JavaClass relatedClass = this.tableToJavaClassMap[key.primaryKey.table.name]
+        	processImportedKey(key, javaClass)
+     	}
+    }
+    
+    def processImportedKey(key, javaClass) {
+			JavaClass relatedClass = this.tableToJavaClassMap[key.primaryKey.table.name]
      		if (relatedClass == null) {
      			return
             }
@@ -183,9 +211,9 @@ public class JavaModelGenerator{
                 relationshipName = relationshipName - "Id"
             }
  			javaClass.relationships << 
-            new Relationship(name:relationshipName, relatedClass:relatedClass, key:key, type:RelationshipType.MANY_TO_ONE)
+            new Relationship(name:relationshipName, relatedClass:relatedClass, key:key, type:RelationshipType.MANY_TO_ONE, owner:javaClass)
  			javaClass.properties.remove(javaClass.columnNameToPropertyMap[key.foriegnKey.name])
-     	}
+    	
     }
 
 	

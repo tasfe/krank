@@ -10,7 +10,13 @@ class CodeGenerator {
     File outputDir = new File("./target")
     boolean debug
     SimpleTemplateEngine engine = new SimpleTemplateEngine()
-    String textTemplate = '''
+    String readPopulatedTemplate = '''
+		@NamedQuery(name = "${bean.name}.readPopulated", query = "SELECT DISTINCT ${bean.name.unCap()} FROM ${bean.name} ${bean.name.unCap()} "
+				+ " LEFT JOIN FETCH ${bean.name.unCap()}.${relationship.name.unCap()}"
+				+ " WHERE ${bean.name.unCap()}.id=?1")
+
+'''
+    String javaClassTemplate = '''
 <% import com.arcmind.codegen.RelationshipType; %>
 
 package ${bean.packageName};
@@ -21,29 +27,33 @@ import javax.persistence.Entity;
 <% imports.each { imp-> %>import ${imp};
 <% } %>
 
-@Entity <% if (!bean.namesMatch) { %> @Table('${bean.table.name}') <% } %>
+${queries}
+@Entity <% if (!bean.namesMatch) { %> @Table(name="${bean.table.name}") <% } %>
 public class ${bean.name} implements Serializable {
     /** ID */
-    @Id @Column ('${bean.id.column.name.toUpperCase()}') @GeneratedValue( strategy = GenerationType.AUTO )
+    @Id @Column (name="${bean.id.column.name.toUpperCase()}") @GeneratedValue( strategy = GenerationType.AUTO )
     private ${bean.id.javaClass.name} id;
 
     /* ------- Relationships ------ */
    <% bean.relationships.each {r -> 
-   if (r.type == RelationshipType.ONE_TO_MANY) {
+   if (r.type == RelationshipType.ONE_TO_MANY && r.bidirectional==false) {
    %>
-    @OneToMany(cascade = CascadeType.ALL) @JoinColumn('${r.key.foriegnKey.name}')
+    @OneToMany(cascade = CascadeType.ALL) @JoinColumn(name="${r.key.foriegnKey.name}")
+    private Set <${r.relatedClass.name}> ${r.name};
+   <% } else if (r.type == RelationshipType.ONE_TO_MANY && r.bidirectional==true) { %>
+    @OneToMany(mappedBy="${r.otherSide.name}", cascade = CascadeType.ALL))
     private Set <${r.relatedClass.name}> ${r.name};
    <% } else if (r.type == RelationshipType.MANY_TO_ONE) { %>
-    @ManyToOne (cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @ManyToOne (cascade = {CascadeType.REFRESH, CascadeType.MERGE}) @JoinColumn(name="${r.key.foriegnKey.name}")
     private ${r.relatedClass.name} ${r.name};
    <%} else if (r.type == RelationshipType.MANY_TO_MANY) {%>
-    @ManyToMany @JoinColumn('${r.key.foriegnKey.name}') @JoinTable('${r.key.foriegnKey.table.name}')
+    @ManyToMany @JoinColumn(name="${r.key.foriegnKey.name}") @JoinTable(name="${r.key.foriegnKey.table.name}")
     private Set <${r.relatedClass.name}> ${r.name};
    <% }} %>
 
     /** Properties's fields */
    <% bean.properties.each { property-> %>
-    <% if (!property.namesMatch) {%>@Column('${property.column.name.toUpperCase()}')<% } %>
+    <% if (!property.namesMatch) {%>@Column(name="${property.column.name.toUpperCase()}")<% } %>
     private ${property.javaClass.name} ${property.name.unCap()};
    <% } %>
 
@@ -65,7 +75,7 @@ public class ${bean.name} implements Serializable {
         return this.${r.name.unCap()};
     }
 
-    public void set${r.name.cap()}(Set<${r.relatedClass.name}> ${r.name.unCap()}} ) {
+    public void set${r.name.cap()}(Set<${r.relatedClass.name}> ${r.name.unCap()} ) {
         this.${r.name.unCap()} = ${r.name.unCap()};
     }
 
@@ -142,12 +152,16 @@ public class ${bean.name} implements Serializable {
     }
 
     
+    String createQueriesString(JavaClass bean) {
+    	"HAPPY DAY"
+    }
     
     def writeClassFiles() {
         for (JavaClass bean in classes) {
+        	
         	if (debug) println "Writing ${bean.name} class file"
-            def binding = ["bean":bean, "imports":calculateImportsFromBean(bean)]        
-            String templateOutput = engine.createTemplate(textTemplate).make(binding).toString()
+            def binding = ["bean":bean, "imports":calculateImportsFromBean(bean), "queries": createQueriesString(bean)]        
+            String templateOutput = engine.createTemplate(javaClassTemplate).make(binding).toString()
             File outputFileDir = new File(outputDir, bean.packageName.replace('.','/'))
         	if (debug) println "Outputting ${bean.name} to ${outputFileDir}"
             outputFileDir.mkdirs()

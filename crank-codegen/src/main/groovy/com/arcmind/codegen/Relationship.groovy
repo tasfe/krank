@@ -7,7 +7,11 @@ public class Relationship{
 	String name
 	RelationshipType type
 	Key key
+	JavaClass owner
 	JavaClass relatedClass
+	boolean bidirectional=true
+	boolean ignore=false
+	Relationship otherSide
 	
 	public String toString() {
 		"${name} ${type} ${relatedClass?.name} ${key}"

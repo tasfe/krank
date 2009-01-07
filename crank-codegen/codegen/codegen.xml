@@ -1,0 +1,102 @@
+<codeGen>
+  <classes>
+    <class name='Department' packageName='org.crank.examples.employeetask' tableName='DEPARTMENT'>
+      <id name='id' column='ID' className='Long' packageName='java.lang' primitive='false' />
+      <properties>
+        <property name='name' column='name' className='String' packageName='java.lang' primitive='false' />
+      </properties>
+      <relationships>
+        <relationship name='employees' type='ONE_TO_MANY' singularName='employee' bidirectional='true' ignore='false'>
+          <relatedClass name='Employee' packageName='org.crank.examples.employeetask' />
+          <key primaryKeyColumn='ID' primaryKeyTable='DEPARTMENT' foriegnKeyColumn='FK_DEPARTMENT_ID' foriegnKeyTable='EMPLOYEE' imported='false' />
+        </relationship>
+      </relationships>
+    </class>
+    <class name='Employee' packageName='org.crank.examples.employeetask' tableName='EMPLOYEE'>
+      <id name='empId' column='EMP_ID' className='Long' packageName='java.lang' primitive='false' />
+      <properties>
+        <property name='firstName' column='firstName' className='String' packageName='java.lang' primitive='false' />
+        <property name='lastName' column='LAST_NAME' className='String' packageName='java.lang' primitive='false' />
+      </properties>
+      <relationships>
+        <relationship name='roles' type='MANY_TO_MANY' singularName='role' bidirectional='false' ignore='false'>
+          <relatedClass name='Role' packageName='org.crank.examples.employeetask' />
+          <key primaryKeyColumn='ROLE_ID' primaryKeyTable='ROLE' foriegnKeyColumn='FK_ROLE_ID' foriegnKeyTable='ROLE_EMPLOYEE' imported='true' />
+        </relationship>
+        <relationship name='department' type='MANY_TO_ONE' singularName='' bidirectional='true' ignore='false'>
+          <relatedClass name='Department' packageName='org.crank.examples.employeetask' />
+          <key primaryKeyColumn='ID' primaryKeyTable='DEPARTMENT' foriegnKeyColumn='FK_DEPARTMENT_ID' foriegnKeyTable='EMPLOYEE' imported='true' />
+        </relationship>
+      </relationships>
+    </class>
+    <class name='Role' packageName='org.crank.examples.employeetask' tableName='ROLE'>
+      <id name='roleId' column='ROLE_ID' className='Long' packageName='java.lang' primitive='false' />
+      <properties>
+        <property name='name' column='NAME' className='String' packageName='java.lang' primitive='false' />
+      </properties>
+      <relationships>
+        <relationship name='employees' type='MANY_TO_MANY' singularName='employee' bidirectional='false' ignore='false'>
+          <relatedClass name='Employee' packageName='org.crank.examples.employeetask' />
+          <key primaryKeyColumn='EMP_ID' primaryKeyTable='EMPLOYEE' foriegnKeyColumn='FK_EMP_ID' foriegnKeyTable='ROLE_EMPLOYEE' imported='true' />
+        </relationship>
+      </relationships>
+    </class>
+  </classes>
+  <tables>
+    <table name='DEPARTMENT'>
+      <primaryKeys>
+        <primaryKey name='ID' />
+      </primaryKeys>
+      <columns>
+        <column name='ID' type='4' typeName='int' nullable='false' primaryKey='true' />
+        <column name='name' type='12' typeName='varchar' nullable='true' primaryKey='false' />
+      </columns>
+      <exportedKeys>
+        <key primaryKeyColumn='ID' primaryKeyTable='DEPARTMENT' foriegnKeyColumn='FK_DEPARTMENT_ID' foriegnKeyTable='EMPLOYEE' />
+      </exportedKeys>
+      <importedKeys />
+    </table>
+    <table name='EMPLOYEE'>
+      <primaryKeys>
+        <primaryKey name='EMP_ID' />
+      </primaryKeys>
+      <columns>
+        <column name='EMP_ID' type='4' typeName='int' nullable='false' primaryKey='true' />
+        <column name='FK_DEPARTMENT_ID' type='4' typeName='int' nullable='true' primaryKey='false' />
+        <column name='firstName' type='12' typeName='varchar' nullable='true' primaryKey='false' />
+        <column name='LAST_NAME' type='12' typeName='varchar' nullable='true' primaryKey='false' />
+      </columns>
+      <exportedKeys>
+        <key primaryKeyColumn='EMP_ID' primaryKeyTable='EMPLOYEE' foriegnKeyColumn='FK_EMP_ID' foriegnKeyTable='ROLE_EMPLOYEE' />
+      </exportedKeys>
+      <importedKeys>
+        <key primaryKeyColumn='ID' primaryKeyTable='DEPARTMENT' foriegnKeyColumn='FK_DEPARTMENT_ID' foriegnKeyTable='EMPLOYEE' />
+      </importedKeys>
+    </table>
+    <table name='ROLE'>
+      <primaryKeys>
+        <primaryKey name='ROLE_ID' />
+      </primaryKeys>
+      <columns>
+        <column name='ROLE_ID' type='4' typeName='int' nullable='false' primaryKey='true' />
+        <column name='NAME' type='12' typeName='varchar' nullable='true' primaryKey='false' />
+      </columns>
+      <exportedKeys>
+        <key primaryKeyColumn='ROLE_ID' primaryKeyTable='ROLE' foriegnKeyColumn='FK_ROLE_ID' foriegnKeyTable='ROLE_EMPLOYEE' />
+      </exportedKeys>
+      <importedKeys />
+    </table>
+    <table name='ROLE_EMPLOYEE'>
+      <primaryKeys />
+      <columns>
+        <column name='FK_ROLE_ID' type='4' typeName='int' nullable='true' primaryKey='false' />
+        <column name='FK_EMP_ID' type='4' typeName='int' nullable='true' primaryKey='false' />
+      </columns>
+      <exportedKeys />
+      <importedKeys>
+        <key primaryKeyColumn='ROLE_ID' primaryKeyTable='ROLE' foriegnKeyColumn='FK_ROLE_ID' foriegnKeyTable='ROLE_EMPLOYEE' />
+        <key primaryKeyColumn='EMP_ID' primaryKeyTable='EMPLOYEE' foriegnKeyColumn='FK_EMP_ID' foriegnKeyTable='ROLE_EMPLOYEE' />
+      </importedKeys>
+    </table>
+  </tables>
+</codeGen>

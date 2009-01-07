@@ -17,7 +17,8 @@ class CodeGenerator {
 %>${queries}
 public class ${bean.name} implements Serializable {
     /** ID */
-    @Id @Column (name="${bean.id.column.name.toUpperCase()}") @GeneratedValue( strategy = GenerationType.AUTO )
+    @Id <% if (!bean.id.namesMatch) { %>@Column(name="${bean.id.column.name.toUpperCase()}")<% } %> 
+    @GeneratedValue( strategy = GenerationType.AUTO )
     private ${bean.id.javaClass.name} id;
 
     /* ------- Relationships ------ */
@@ -41,7 +42,7 @@ public class ${bean.name} implements Serializable {
     } else if (r.type == RelationshipType.MANY_TO_MANY) {
    %>
     @ManyToMany @JoinColumn(name="${r.key.foriegnKey.name}") @JoinTable(name="${r.key.foriegnKey.table.name}")
-    private Set <${r.relatedClass.name}> ${r.name};
+    private Set <${r.relatedClass.name}> ${r.name} = new HashSet<${r.relatedClass.name}>();
    <% }//else if
     }//end iterate through beans %>
 
@@ -66,7 +67,7 @@ public class ${bean.name} implements Serializable {
    /* Iterate through the relationships */
    bean.relationships.each { r->
    		/* If the relationship is a OneToMany; generate  the getter, setter and add/remove methods. */
-        if (r.type == RelationshipType.ONE_TO_MANY) { %>
+        if (r.type == RelationshipType.ONE_TO_MANY || r.type == RelationshipType.MANY_TO_MANY) { %>
 
     public Set<${r.relatedClass.name}> get${r.name.cap()}() {
         return this.${r.name.unCap()};
@@ -92,13 +93,13 @@ public class ${bean.name} implements Serializable {
     }
  
 
-    <% } else if (r.type == RelationshipType.MANY_TO_ONE || r.type == RelationshipType.MANY_TO_MANY) { %>
+    <% } else if (r.type == RelationshipType.MANY_TO_ONE) { %>
 
     public ${r.relatedClass.name} get${r.name.cap()}() {
         return this.${r.name.unCap()};
     }
 
-    public void set${r.name.cap()}(${r.relatedClass.name} ${r.name.unCap()}} ) {
+    public void set${r.name.cap()}(${r.relatedClass.name} ${r.name.unCap()}) {
         this.${r.name.unCap()} = ${r.name.unCap()};
     }
 
@@ -124,6 +125,9 @@ public class ${bean.name} implements Serializable {
                 return true
             }
         }
+        if (!bean.id.namesMatch || !bean.id.column.nullable) {
+            return true
+        }
         return false
     }
 
@@ -147,17 +151,23 @@ public class ${bean.name} implements Serializable {
          
         bean.relationships.each {Relationship relationship ->
          	if (relationship.type == RelationshipType.ONE_TO_MANY) {
-         		imports << "javax.persistence.OneToMany"
-         		if (relationship.bidirectional == false) {
-         			imports << "javax.persistence.JoinColumn"
-         		}
-         		imports << "javax.persistence.CascadeType"
          		imports << "java.util.Set"
          		imports << "java.util.HashSet"
+         		imports << "javax.persistence.CascadeType"
+         		imports << "javax.persistence.OneToMany"
+             	if (relationship.bidirectional == false) {
+             			imports << "javax.persistence.JoinColumn"
+             	}
          	} else if (relationship.type == RelationshipType.MANY_TO_ONE) {
          		imports << "javax.persistence.ManyToOne"
          		imports << "javax.persistence.CascadeType"
-         	}	
+         	} else if (relationship.type == RelationshipType.MANY_TO_MANY) {
+         		imports << "java.util.Set"
+         		imports << "java.util.HashSet"
+     			imports << "javax.persistence.JoinTable"
+     			imports << "javax.persistence.ManyToMany"
+     			imports << "javax.persistence.JoinColumn"
+         	}
         }
         
         if (bean.relationships.size()>0) {
@@ -198,7 +208,7 @@ public class ${bean.name} implements Serializable {
 	    	relationships << engine.createTemplate(readPopulatedRelationshipTemplate).make(["bean":bean, "relationship":relationship]).toString()		
     	}
     	
-    	String relationshipsStr = relationships.join(",\n")
+    	String relationshipsStr = relationships.join("\n")
     	
     	String query = engine.createTemplate(readPopulatedTemplate).make(["bean":bean, "relationships":relationshipsStr]).toString()
     	return query

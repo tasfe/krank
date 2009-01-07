@@ -344,32 +344,36 @@ public class GeneratorSwingApp{
                                 boxLayout(axis:BoxLayout.X_AXIS)
                                 label("Name", preferredSize:[100,20])
                                 relationshipEditSupport.relationshipName = textField(preferredSize:[200,20])
-                                label(preferredSize:[100,20])
+                                label(preferredSize:[300,20])
                             }
                             panel {
                                 boxLayout(axis:BoxLayout.X_AXIS)
                                 label("Type", preferredSize:[100,20])
                                 DefaultComboBoxModel model = new DefaultComboBoxModel([RelationshipType.ONE_TO_ONE, RelationshipType.ONE_TO_MANY, RelationshipType.MANY_TO_MANY, RelationshipType.MANY_TO_ONE] as Object[])
                                 relationshipEditSupport.type = comboBox(model:model)
-                                label(preferredSize:[100,20])
+                                label(preferredSize:[300,20])
                             }
                             panel {
                                 boxLayout(axis:BoxLayout.X_AXIS)
                                 label("Singular Name", preferredSize:[100,20])
                                 relationshipEditSupport.singularName = textField(preferredSize:[200,20])
-                                label("Only needed for XToMany", preferredSize:[100,20])
+                                label("Only needed for XToMany", preferredSize:[300,20])
                             }
                             panel {
                                 boxLayout(axis:BoxLayout.X_AXIS)
-                                label("ignore", preferredSize:[100,20])
-                                relationshipEditSupport.ignore = checkBox(preferredSize:[200,20])
-                                label("if true not processesd",preferredSize:[100,20])
+                                label("Ignore", preferredSize:[100,20])
+                                panel (preferredSize:[200,26]) {
+                                	relationshipEditSupport.ignore = checkBox()
+                                }
+                                label("If true not processesd",preferredSize:[300,20])
                             }
                             panel {
                                 boxLayout(axis:BoxLayout.X_AXIS)
-                                label("bidirectional", preferredSize:[100,20])
-                                relationshipEditSupport.bidirectional = checkBox(preferredSize:[200,20])
-                                label("do both sides reference each other",preferredSize:[100,20])
+                                label("Bidirectional", preferredSize:[100,20])
+                                panel (preferredSize:[200,26]) {
+                                	relationshipEditSupport.bidirectional = checkBox()
+                                }
+                                label("Do both sides reference each other",preferredSize:[300,20])
                             }
                             panel {
                                 button(text:"Apply", actionPerformed: {relationshipEditSupport.updateObject(this.currentRelationship)})

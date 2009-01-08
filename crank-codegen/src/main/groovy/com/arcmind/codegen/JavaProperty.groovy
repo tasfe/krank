@@ -5,8 +5,13 @@ class JavaProperty {
     JavaClass parentClass
     String name
     Column column
+    Integer size
+    
     public boolean isNamesMatch() {
         return name == column.name;
+    }
+    public Integer getSize() {
+    	size==null ? column.size : size
     }
     String toString() {
         "${name} ${javaClass.name} column=${column?.name}"

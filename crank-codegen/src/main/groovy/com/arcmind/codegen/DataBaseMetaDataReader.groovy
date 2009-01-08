@@ -53,6 +53,9 @@ class DataBaseMetaDataReader {
                 column.typeName = resultSet.getString ("TYPE_NAME")
                 column.type = resultSet.getInt ("DATA_TYPE")
                 column.nullable = resultSet.getString ("IS_NULLABLE") == "YES" ? true : false
+                if (column.type in [Types.VARCHAR, Types.CHAR]) {
+                	column.size = resultSet.getInt("COLUMN_SIZE")
+                }
                 if (table.primaryKeys.contains(column.name)) {
                     column.primaryKey = true
                 }

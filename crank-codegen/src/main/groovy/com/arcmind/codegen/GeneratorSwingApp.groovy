@@ -331,6 +331,12 @@ public class GeneratorSwingApp{
                                 label(preferredSize:[100,20])
                             }
                             panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("Size", preferredSize:[100,20])
+                                propertyEditSupport.size = textField(preferredSize:[25,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
                                 button(text:"Apply", actionPerformed: {propertyEditSupport.updateObject(this.currentProperty)})
                             }
                         }//panel
@@ -487,16 +493,23 @@ class ClassEditSupport {
 
 class JavaPropertyEditSupport {
 	JTextField propertyName
+	JTextField size
 	JavaClassTreeModel classTreeModel
 	GeneratorSwingApp app
 	def updateObject (JavaProperty prp) {
 		app.println "update object was ${prp}"
 		prp.name = propertyName.text
+		try {
+			prp.size = Integer.parseInt(size.text)
+		} catch (Exception ex) {
+			prp.size = null
+		}
 		app.println "update object now ${prp}"
 		classTreeModel.nodeChanged(prp)
 	}
 	def populateForm (JavaProperty prp) {
 		propertyName.text = prp.name
+		size.text = prp.size.toString()
 	}
 }
 

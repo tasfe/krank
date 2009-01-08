@@ -50,11 +50,16 @@ public class ${bean.name} implements Serializable {
    <% }//else if
     }//end iterate through beans %>
 
-    /** Properties's fields */
-   <% bean.properties.each { property-> %>
-    <% if (!property.namesMatch) {%>@Column(name="${property.column.name.toUpperCase()}")<% } %>
+    /* Properties's fields */
+  <% /* -----------------------------------------------------------  PROPERTY FIELD GENERATION  -------------------*/ 
+    bean.properties.each { property-> %>
+  <% if (!property.namesMatch && !property.column.nullable) { //names don't match and field is required %>
+    @Column(name="${property.column.name.toUpperCase()}", nullable=false, length=${property.size==null ? 35 : property.size}) <% } else if (!property.namesMatch && property.column.nullable) { %>
+    @Column(name="${property.column.name.toUpperCase()}", length=${property.size==null ? 35 : property.size}) <% } else if (property.namesMatch && !property.column.nullable) { %>
+    @Column(nullable=false, length=${property.size==null ? 35 : property.size}) <% } else if (property.size!=null) { %>
+    @Column(length=${property.size}) <% } //end of else if %>
     private ${property.javaClass.name} ${property.name.unCap()};
-   <% } %>
+  <% }//end of iterate %>  
 
     public ${bean.name} () {
 
@@ -143,7 +148,7 @@ public class ${bean.name} implements Serializable {
     boolean needsColumnImport(JavaClass bean) {
         for (JavaProperty property : bean.properties) {
             //If they don't match, then you need a column
-            if (!property.namesMatch || !property.column.nullable) {
+            if (!property.namesMatch || !property.column.nullable || property.size != null) {
                 return true
             }
         }

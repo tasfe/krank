@@ -97,6 +97,37 @@ function toggleAllCheckBoxes(FormName, CheckValue) {
 			objCheckBoxes[i].checked = CheckValue;
 }
 
+function toggleAllCheckBoxesGrouped(FormName, GroupId, CheckValue) {
+	if(!document.forms[FormName])
+		return;
+
+	var oInp = document.forms[FormName].getElementsByTagName('input');
+	var objCheckBoxes = new Array();
+	var j=0;
+	for(var i=0;i<oInp.length;i++){
+		if(oInp[i].getAttribute('type')=='checkbox'){
+			if(oInp[i].getAttribute('id') != null){
+				if(oInp[i].getAttribute('id').indexOf(GroupId) > -1){
+					objCheckBoxes[j] = oInp[i];
+					j++;
+				}
+			}
+		}
+	}	
+	
+	if(!objCheckBoxes)
+		return;
+		
+	var countCheckBoxes = objCheckBoxes.length;
+	
+	if(!countCheckBoxes)
+		objCheckBoxes.checked = CheckValue;
+	else
+		// set the check value for all check boxes!
+		for(var i = 0; i < countCheckBoxes; i++)
+			objCheckBoxes[i].checked = CheckValue;
+}
+
 function setExclusiveGroup(FormName, Caller, GroupId, ExclusiveValue) {
 	if(!document.forms[FormName])
 		return;

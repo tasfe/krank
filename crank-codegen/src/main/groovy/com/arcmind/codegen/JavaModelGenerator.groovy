@@ -143,7 +143,11 @@ public class JavaModelGenerator{
         classes.each{JavaClass javaClass ->
      		javaClass.relationships.each { Relationship  r1 ->
      			if (r1.otherSide==null) {
-     				r1.otherSide = r1.relatedClass.relationships.find{Relationship r2 -> r2.owner==r1.relatedClass && r2.key.foriegnKey.name == r1.key.foriegnKey.name}
+     				if (r1.type == RelationshipType.MANY_TO_MANY) {
+     					r1.otherSide = r1.relatedClass.relationships.find{Relationship r2 -> r2.owner==r1.relatedClass && r2.key.foriegnKey.table.name == r1.key.foriegnKey.table.name}
+     				} else {
+     					r1.otherSide = r1.relatedClass.relationships.find{Relationship r2 -> r2.owner==r1.relatedClass && r2.key.foriegnKey.name == r1.key.foriegnKey.name}
+     				}
      				if (r1.otherSide==null) {
      					r1.bidirectional = false
      				} else {

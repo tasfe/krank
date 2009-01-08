@@ -41,7 +41,11 @@ public class ${bean.name} implements Serializable {
    <%
     } else if (r.type == RelationshipType.MANY_TO_MANY) {
    %>
-    @ManyToMany @JoinColumn(name="${r.key.foriegnKey.name}") @JoinTable(name="${r.key.foriegnKey.table.name}")
+    
+    @ManyToMany 
+    @JoinTable(name="${r.key.foriegnKey.table.name}",
+    		joinColumns=@JoinColumn(name="${r.otherSide.key.foriegnKey.name}"),
+    		inverseJoinColumns=@JoinColumn(name="${r.key.foriegnKey.name}"))	
     private Set <${r.relatedClass.name}> ${r.name} = new HashSet<${r.relatedClass.name}>();
    <% }//else if
     }//end iterate through beans %>
@@ -83,12 +87,12 @@ public class ${bean.name} implements Serializable {
 
     %>
     public void add${r.singularName.cap()}(${r.relatedClass.name} ${relatedInstance}) {
-    	<% if (r.bidirectional==true) {    %>${relatedInstance}.set${propertyName}(this);<%     } %>
+    	<% if (r.bidirectional==true && r.type!=RelationshipType.MANY_TO_MANY) {    %>${relatedInstance}.set${propertyName}(this);<%     } %>
     	${r.name}.add(${relatedInstance});
     }
 
     public void remove${r.singularName.cap()}(${r.relatedClass.name} ${relatedInstance}) {
-    	<% if (r.bidirectional==true) {    %>${relatedInstance}.set${propertyName}(null);<%     } %>
+    	<% if (r.bidirectional==true && r.type!=RelationshipType.MANY_TO_MANY) {    %>${relatedInstance}.set${propertyName}(null);<%     } %>
     	${r.name}.remove(${relatedInstance});
     }
  
@@ -115,9 +119,27 @@ public class ${bean.name} implements Serializable {
         this.${property.name.unCap()} = ${property.name.unCap()};
     }
    <% } %>
+
+    public boolean equals(Object other) {
+    	if (other==null) {
+    		return false;
+    	}
+    	${bean.name} other${bean.name} = (${bean.name}) other;
+    	if (other${bean.name}.id==null && this.id==null) {
+    		return other${bean.name}.hashCode() == this.hashCode();
+    	} else if (this.id == null) {
+    		return false;
+    	} else {
+    		return this.id.equals(other${bean.name}.id);
+    	}
+    }
+    
+    public int hashCode() {
+    	return id == null ? super.hashCode() : id.hashCode();
+    }
+
 }
 '''
-
     boolean needsColumnImport(JavaClass bean) {
         for (JavaProperty property : bean.properties) {
             //If they don't match, then you need a column

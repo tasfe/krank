@@ -240,6 +240,7 @@ public class GeneratorSwingApp{
             Closure handleGenerateJavaClasses = {
                     doOutside {
                         edt {setStatus "Writing Java class files to ${main.codeGen.outputDir}"}
+                        
                         use(StringCategory) {
                         	main.generateJavaClasses()
                         }

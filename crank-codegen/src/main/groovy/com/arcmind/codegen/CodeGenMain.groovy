@@ -109,6 +109,7 @@ public class CodeGenMain{
 		if (debug) println "Generating Java classes"
 		/* Output the generated classes. */
 		codeGen.classes = modelGen.classes
+		if (debug) println "Generating Java classes for ${codeGen.classes}"
 		codeGen.writeClassFiles()
 	}
 

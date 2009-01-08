@@ -81,4 +81,23 @@ public class Department implements Serializable {
         this.name = name;
     }
    
+
+    public boolean equals(Object other) {
+    	if (other==null) {
+    		return false;
+    	}
+    	Department otherDepartment = (Department) other;
+    	if (otherDepartment.id==null && this.id==null) {
+    		return otherDepartment.hashCode() == this.hashCode();
+    	} else if (this.id == null) {
+    		return false;
+    	} else {
+    		return this.id.equals(otherDepartment.id);
+    	}
+    }
+    
+    public int hashCode() {
+    	return id == null ? super.hashCode() : id.hashCode();
+    }
+
 }

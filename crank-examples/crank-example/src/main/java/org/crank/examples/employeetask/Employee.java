@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @Entity  @Table(name="EMPLOYEE") 
 @NamedQueries( {
 		@NamedQuery(name = "Employee.readPopulated", query = "SELECT DISTINCT employee FROM Employee employee "
-				//				+ " LEFT JOIN FETCH employee.roles"
+								+ " LEFT JOIN FETCH employee.roles"
 				+ " LEFT JOIN FETCH employee.department"
 				+ " WHERE employee.id=?1")
 		})
@@ -31,7 +31,11 @@ public class Employee implements Serializable {
 
     /* ------- Relationships ------ */
    
-    @ManyToMany @JoinColumn(name="FK_ROLE_ID") @JoinTable(name="ROLE_EMPLOYEE")
+    
+    @ManyToMany 
+    @JoinTable(name="ROLE_EMPLOYEE",
+    		joinColumns=@JoinColumn(name="FK_EMP_ID"),
+    		inverseJoinColumns=@JoinColumn(name="FK_ROLE_ID"))	
     private Set <Role> roles = new HashSet<Role>();
    
     @ManyToOne (cascade = {CascadeType.REFRESH, CascadeType.MERGE}) @JoinColumn(name="FK_DEPARTMENT_ID")
@@ -109,4 +113,23 @@ public class Employee implements Serializable {
         this.lastName = lastName;
     }
    
+
+    public boolean equals(Object other) {
+    	if (other==null) {
+    		return false;
+    	}
+    	Employee otherEmployee = (Employee) other;
+    	if (otherEmployee.id==null && this.id==null) {
+    		return otherEmployee.hashCode() == this.hashCode();
+    	} else if (this.id == null) {
+    		return false;
+    	} else {
+    		return this.id.equals(otherEmployee.id);
+    	}
+    }
+    
+    public int hashCode() {
+    	return id == null ? super.hashCode() : id.hashCode();
+    }
+
 }

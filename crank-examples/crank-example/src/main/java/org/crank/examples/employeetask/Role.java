@@ -28,7 +28,11 @@ public class Role implements Serializable {
 
     /* ------- Relationships ------ */
    
-    @ManyToMany @JoinColumn(name="FK_EMP_ID") @JoinTable(name="ROLE_EMPLOYEE")
+    
+    @ManyToMany 
+    @JoinTable(name="ROLE_EMPLOYEE",
+    		joinColumns=@JoinColumn(name="FK_ROLE_ID"),
+    		inverseJoinColumns=@JoinColumn(name="FK_EMP_ID"))	
     private Set <Employee> employees = new HashSet<Employee>();
    
 
@@ -82,4 +86,23 @@ public class Role implements Serializable {
         this.name = name;
     }
    
+
+    public boolean equals(Object other) {
+    	if (other==null) {
+    		return false;
+    	}
+    	Role otherRole = (Role) other;
+    	if (otherRole.id==null && this.id==null) {
+    		return otherRole.hashCode() == this.hashCode();
+    	} else if (this.id == null) {
+    		return false;
+    	} else {
+    		return this.id.equals(otherRole.id);
+    	}
+    }
+    
+    public int hashCode() {
+    	return id == null ? super.hashCode() : id.hashCode();
+    }
+
 }

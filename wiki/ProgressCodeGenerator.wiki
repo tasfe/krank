@@ -413,12 +413,12 @@ xForm.xhtml and xListing.xhtml (modify an existing one?)
 
 Here are some minor tasks that I need to do as well:
 
-# Reset button does not work (it does work in crank-crud-webapp so it should be an easy fix)
-# Adjust column lengths (does not read value from db and store it and use it in generation)
-# Make pom standalone (don't extend crank pom)
-# Move ExcelControllerBean into crank-jsf-support project
-# Create Archetype off of this example, blank project and todo
-# Remove profiles out of pom.xml
-# Need a way to define Enums in codegen and use them instead of int or string (where it makes sense)
+ # Reset button does not work (it does work in crank-crud-webapp so it should be an easy fix)
+ # Adjust column lengths (does not read value from db and store it and use it in generation)
+ # Make pom standalone (don't extend crank pom)
+ # Move ExcelControllerBean into crank-jsf-support project
+ # Create Archetype off of this example, blank project and todo
+ # Remove profiles out of pom.xml
+ # Need a way to define Enums in codegen and use them instead of int or string (where it makes sense)
 
 I am considering getting rid of excel export as default operation and making it optional.

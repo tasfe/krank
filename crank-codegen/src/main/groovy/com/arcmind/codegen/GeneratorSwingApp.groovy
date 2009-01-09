@@ -10,7 +10,6 @@ import java.awt.GridLayout
 import java.awt.FlowLayout
 import javax.swing.event.TreeSelectionEvent
 
-
 /**
  * @author richardhightower
  *
@@ -36,14 +35,17 @@ public class GeneratorSwingApp{
 	JavaClass currentClass
 	JavaProperty currentProperty
 	Relationship currentRelationship
+	JDBCSettings currentSettings
 	JPanel classPane
 	JPanel propertyPane
 	JPanel relationshipPane
 	JPanel codeGenMainPane
+	JPanel settingsPane
 	ClassEditSupport classEditSupport
 	JavaPropertyEditSupport propertyEditSupport
 	RelationshipEditSupport relationshipEditSupport
 	CodeGenMainEditSupport codeGenMainEditSupport
+	SettingsEditSupport settingsEditSupport;
 
 	boolean debug = true
 
@@ -158,6 +160,13 @@ password: ${password.text}, driver: ${drv}"""
 		}
 	}
 	
+	def selectDataSource(JDBCSettings settings) {
+		mainTabPane.addTab("JDBC Settings", settingsPane)
+		mainTabPane.setSelectedComponent(settingsPane)
+		currentSettings = settings
+		settingsEditSupport.populateForm(settings)		
+	}
+	
 	public void treeTableSelected(TreeSelectionEvent event) {
 		setStatus ""
 		mainTabPane.addTab("Modify Properties", codeGenMainPane)
@@ -203,65 +212,14 @@ password: ${password.text}, driver: ${drv}"""
 		}
 	}
 	
-	public void treeSettingsSelected(TreeSelectionEvent event) {
+	//todo
+	def treeSettingsSelected(TreeSelectionEvent event) {
 		setStatus ""
-		//todo
 		
-		/* Select the new item. */
 		Object selectedItem = event.path.lastPathComponent
 		
 		if (selectedItem instanceof SettingsHolder) {
-			
-			modifyProperties()
-			
-			SettingsHolder sh = (SettingsHolder)selectedItem;
-			
-			main.jdbcUtils.url = sh.settings.url
-			main.jdbcUtils.userName = sh.settings.userName
-			main.jdbcUtils.driver = sh.settings.driver
-			main.jdbcUtils.password = sh.settings.password
-			
-			codeGenMainEditSupport.url.text = sh.settings.url
-			codeGenMainEditSupport.userName.text = sh.settings.userName
-			codeGenMainEditSupport.driver.text = sh.settings.driver
-			codeGenMainEditSupport.password.text = sh.settings.password
-			
-					
-//			JLabel labelUrl = new JLabel("URL");
-//			JLabel labelUserName = new JLabel("Username:");
-//			JLabel labelPassword = new JLabel("Password:");
-//			JLabel labelDriver = new JLabel("Driver:");
-//			JTextField url = new JTextField();
-//			JTextField userName = new JTextField();
-//			JTextField password = new JTextField();
-//			
-//			SettingsHolder sh = (SettingsHolder)selectedItem;
-//			url.text = sh.settings.url
-//			userName.text = sh.settings.userName
-//			password.text = sh.settings.password 
-//			
-//			Object[] ob=[new JLabel("You MUST fill all fields!"),labelUrl,url,labelUserName,userName,
-//			             labelPassword, password, labelDriver]
-//			String drv = JOptionPane.showInputDialog(ob, sh.settings.driver);
-//			
-//			if (debug) {
-//				printlnClosure """Data source added: url:${url.text},username:${userName.text}, 
-//	password: ${password.text}, driver: ${drv}"""
-//			}
-//			
-//			if (drv) {
-//			
-//				main.dataSourceReader.settings << 
-//				new JDBCSettings(
-//						url: url.text,
-//						userName: userName.text,
-//						password: password.text,
-//						driver: drv)
-//				
-//				main.writeDataSourceXML()
-//				updateJDBCTree()
-//			}
-			
+			selectDataSource(selectedItem.settings)
 		}
 	}	
 
@@ -276,6 +234,7 @@ password: ${password.text}, driver: ${drv}"""
 		propertyEditSupport = new JavaPropertyEditSupport(classTreeModel:classTreeModel)
 		relationshipEditSupport = new RelationshipEditSupport(classTreeModel:classTreeModel)
 		codeGenMainEditSupport = new CodeGenMainEditSupport()
+		settingsEditSupport = new SettingsEditSupport()
 
 		buildGUI ()
 
@@ -288,8 +247,6 @@ password: ${password.text}, driver: ${drv}"""
 		
 		// Update DataSources Tree
 		updateJDBCTree()
-		
-		
 
 		/* Initilize Console and mainTabPane. */
 		hideConsole.enabled=false
@@ -298,7 +255,6 @@ password: ${password.text}, driver: ${drv}"""
 		mainTabPane.remove(classPane)
 		mainTabPane.remove(propertyPane)
 		mainTabPane.remove(codeGenMainPane)
-
 
 	}
 	private updateJDBCTree() {
@@ -386,8 +342,6 @@ password: ${password.text}, driver: ${drv}"""
                 viewActions.each {button(it)}
                 status = label(text:"  Welcome to CodeGen")
             }
-
-
 
             splitPane(constraints: BorderLayout.CENTER) {
                 treeTabPane = tabbedPane(constraints: BorderLayout.WEST, preferredSize:[300,300]) {
@@ -577,6 +531,44 @@ password: ${password.text}, driver: ${drv}"""
                             }
                         }//panel
                     }//codeGenMainPane
+                    
+                    settingsPane = panel (title:"JDBC Settings", tabMnemonic: "J") {
+                        flowLayout(alignment:FlowLayout.LEFT)
+                        panel{
+                            boxLayout(axis:BoxLayout.Y_AXIS)
+                            label("Edit JDBC Settings")
+                            label("", preferredSize:[20,20])
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("JDBC URL", preferredSize:[100,20])
+                                settingsEditSupport.url = textField(preferredSize:[500,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("DB User Name", preferredSize:[100,20])
+                                settingsEditSupport.userName = textField(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("DB Password", preferredSize:[100,20])
+                                settingsEditSupport.password = textField(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("JDBC Driver", preferredSize:[100,20])
+                                settingsEditSupport.driver = textField(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                button(text:"Save", actionPerformed: {settingsEditSupport.updateObject(this.currentSettings); main.writeDataSourceXML(); updateJDBCTree()})
+                                button(text:"Close", actionPerformed: {mainTabPane.remove(settingsPane)})
+                            }
+                        }//panel
+                    }//settingsPane
+                    
                 }//mainTabPane
             }//splitPane
         }//frame
@@ -704,3 +696,23 @@ class CodeGenMainEditSupport {
 
 }
 
+class SettingsEditSupport {
+	JTextField url
+	JTextField userName
+	JTextField password
+	JTextField driver
+	
+	def updateObject (JDBCSettings settings) {
+		settings.url = url.text
+		settings.userName = userName.text
+		settings.password = password.text
+		settings.driver = driver.text
+	}
+	
+	def populateForm (JDBCSettings settings) {
+		url.text = settings.url
+		userName.text = settings.userName
+		password.text = settings.password
+		driver.text = settings.driver		
+	}
+}

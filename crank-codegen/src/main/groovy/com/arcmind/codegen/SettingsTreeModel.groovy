@@ -68,15 +68,6 @@ public class SettingsTreeModel implements TreeModel{
     public Object getChild(Object parent, int index) {
     	assert settingsHolders
     	settingsHolders[index]
-//    	if (parent instanceof JavaClassTreeModel) {
-//    		return javaClassHolders[index]
-//    	} else if (parent instanceof JavaClassHolder) {
-//    		JavaClassHolder javaClass = (JavaClassHolder)parent;
-//    		return javaClass.lists[index]
-//    	} else if (parent instanceof ListHolder) {
-//    		ListHolder listHolder = (ListHolder) parent
-//    		return listHolder.list[index]
-//    	}
     }
 
     /**
@@ -86,14 +77,6 @@ public class SettingsTreeModel implements TreeModel{
     	if (parent instanceof SettingsTreeModel) {
     		return settingsHolders==null ? 0 : settingsHolders.size()
     	}
-    				
-//    	} else if (parent instanceof JavaClassHolder) {
-//    		JavaClassHolder javaClass = (JavaClassHolder) parent;
-//    		return javaClass.lists.size()
-//    	} else if (parent instanceof ListHolder) {
-//    		ListHolder listHolder = (ListHolder) parent
-//    		return listHolder.list == null ? 0 : listHolder.list.size()
-//    	}
     }
 
     /**
@@ -101,15 +84,6 @@ public class SettingsTreeModel implements TreeModel{
      */
     public int getIndexOfChild(Object parent, Object child) {
     	settingsHolders.indexOf(child)
-//    	if (parent instanceof JavaClassTreeModel) {
-//    		return javaClassHolders.indexOf(child)
-//    	} else if (parent instanceof JavaClassHolder) {
-//    		JavaClassHolder javaClass = (JavaClassHolder) parent;
-//    		return javaClass.lists.indexOf(child)
-//    	}  else if (parent instanceof ListHolder) {
-//    		ListHolder listHolder = (ListHolder) parent
-//    		return listHolder.list.indexOf(child)
-//    	}
     }
 
     /**

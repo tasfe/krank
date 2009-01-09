@@ -205,7 +205,64 @@ password: ${password.text}, driver: ${drv}"""
 	
 	public void treeSettingsSelected(TreeSelectionEvent event) {
 		setStatus ""
-		// todo
+		//todo
+		
+		/* Select the new item. */
+		Object selectedItem = event.path.lastPathComponent
+		
+		if (selectedItem instanceof SettingsHolder) {
+			
+			modifyProperties()
+			
+			SettingsHolder sh = (SettingsHolder)selectedItem;
+			
+			main.jdbcUtils.url = sh.settings.url
+			main.jdbcUtils.userName = sh.settings.userName
+			main.jdbcUtils.driver = sh.settings.driver
+			main.jdbcUtils.password = sh.settings.password
+			
+			codeGenMainEditSupport.url.text = sh.settings.url
+			codeGenMainEditSupport.userName.text = sh.settings.userName
+			codeGenMainEditSupport.driver.text = sh.settings.driver
+			codeGenMainEditSupport.password.text = sh.settings.password
+			
+					
+//			JLabel labelUrl = new JLabel("URL");
+//			JLabel labelUserName = new JLabel("Username:");
+//			JLabel labelPassword = new JLabel("Password:");
+//			JLabel labelDriver = new JLabel("Driver:");
+//			JTextField url = new JTextField();
+//			JTextField userName = new JTextField();
+//			JTextField password = new JTextField();
+//			
+//			SettingsHolder sh = (SettingsHolder)selectedItem;
+//			url.text = sh.settings.url
+//			userName.text = sh.settings.userName
+//			password.text = sh.settings.password 
+//			
+//			Object[] ob=[new JLabel("You MUST fill all fields!"),labelUrl,url,labelUserName,userName,
+//			             labelPassword, password, labelDriver]
+//			String drv = JOptionPane.showInputDialog(ob, sh.settings.driver);
+//			
+//			if (debug) {
+//				printlnClosure """Data source added: url:${url.text},username:${userName.text}, 
+//	password: ${password.text}, driver: ${drv}"""
+//			}
+//			
+//			if (drv) {
+//			
+//				main.dataSourceReader.settings << 
+//				new JDBCSettings(
+//						url: url.text,
+//						userName: userName.text,
+//						password: password.text,
+//						driver: drv)
+//				
+//				main.writeDataSourceXML()
+//				updateJDBCTree()
+//			}
+			
+		}
 	}	
 
 	def setStatus(String msg){

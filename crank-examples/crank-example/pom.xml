@@ -3,7 +3,7 @@
 	<inceptionYear>1/4/2009</inceptionYear>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>crank-examples</groupId>
-	<artifactId>crank-example</artifactId>
+	<artifactId>crank-example-part2</artifactId>
 	<name>Crank :: Crud :: Master Example project</name>
 	<version>1.0.4-SNAPSHOT</version>
 	<packaging>war</packaging>

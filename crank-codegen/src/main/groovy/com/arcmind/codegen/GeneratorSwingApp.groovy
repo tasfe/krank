@@ -32,6 +32,7 @@ public class GeneratorSwingApp{
 	JScrollPane consolePane
 	DBTableTreeModel tableTreeModel = new DBTableTreeModel()
 	JavaClassTreeModel classTreeModel = new JavaClassTreeModel()
+	SettingsTreeModel settingsTreeModel = new SettingsTreeModel()
 	JavaClass currentClass
 	JavaProperty currentProperty
 	Relationship currentRelationship
@@ -123,6 +124,40 @@ public class GeneratorSwingApp{
 		currentRelationship = relationship
 		relationshipEditSupport.populateForm(relationship)
 	}
+	
+	def addDataSource() {
+		//todo
+		JLabel labelUrl = new JLabel("URL");
+		JLabel labelUserName = new JLabel("Username:");
+		JLabel labelPassword = new JLabel("Password:");
+		JLabel labelDriver = new JLabel("Driver:");
+		JTextField url = new JTextField();
+		JTextField userName = new JTextField();
+		JTextField password = new JTextField();
+		
+		Object[] ob=[new JLabel("You MUST fill all fields!"),labelUrl,url,labelUserName,userName,
+		             labelPassword, password, labelDriver]
+		String drv = JOptionPane.showInputDialog(ob);
+		
+		if (debug) {
+			printlnClosure """Data source added: url:${url.text},username:${userName.text}, 
+password: ${password.text}, driver: ${drv}"""
+		}
+		
+		if (drv) {
+		
+			main.dataSourceReader.settings << 
+			new JDBCSettings(
+					url: url.text,
+					userName: userName.text,
+					password: password.text,
+					driver: drv)
+			
+			main.writeDataSourceXML()
+			updateJDBCTree()
+		}
+	}
+	
 	public void treeTableSelected(TreeSelectionEvent event) {
 		setStatus ""
 		mainTabPane.addTab("Modify Properties", codeGenMainPane)
@@ -167,6 +202,11 @@ public class GeneratorSwingApp{
 			println "You selected ${selectedItem} of type ${selectedItem.class.name}"
 		}
 	}
+	
+	public void treeSettingsSelected(TreeSelectionEvent event) {
+		setStatus ""
+		// todo
+	}	
 
 	def setStatus(String msg){
 		status.setText("  " + msg)
@@ -187,6 +227,12 @@ public class GeneratorSwingApp{
 		main = new CodeGenMain()
 		main.readProperties()
 		main.configureCollaborators()
+		main.initDataSource()
+		
+		// Update DataSources Tree
+		updateJDBCTree()
+		
+		
 
 		/* Initilize Console and mainTabPane. */
 		hideConsole.enabled=false
@@ -197,6 +243,9 @@ public class GeneratorSwingApp{
 		mainTabPane.remove(codeGenMainPane)
 
 
+	}
+	private updateJDBCTree() {
+		settingsTreeModel.setSettings(main.dataSourceReader.settings)
 	}
 
 	public static void main (String [] args) {
@@ -255,6 +304,7 @@ public class GeneratorSwingApp{
                 action(name: "Read XML", mnemonic: 'e', closure: handleReadXML)
                 action(name: "Save Properties", mnemonic: 'S', closure: {use(StringCategory){main.writeProperties()}})
                 action(name: "Modify Properties", mnemonic: 'o', closure: { modifyProperties() })
+                action(name: "Add New Data Source", mnemonic: 'D', closure: { addDataSource() })
             }
             viewActions = actions () {
                 viewConsole = action(name: "View Console", mnemonic: 'V', closure: { showConsole() })
@@ -289,7 +339,10 @@ public class GeneratorSwingApp{
                     }
                     scrollPane(title:"Classes", tabMnemonic: "C") {
                         tree(model: classTreeModel, valueChanged: {treeClassSelected(it)})
-                    }
+                    }                    
+                    scrollPane(title:"JDBC Settings", tabMnemonic: "J") {
+                        tree(model: settingsTreeModel, valueChanged: {treeSettingsSelected(it)})
+                    }                    
                 }
                 mainTabPane = tabbedPane(constraints: BorderLayout.CENTER) {
                     consolePane = scrollPane (title:"Console", tabMnemonic: "C") {

@@ -18,6 +18,7 @@ public class CodeGenMain{
 	String outputDir
 	String appConfigDir
 	String xmlFileName
+	String xmlDataSourceFileName
 	String propertiesFile
 	String debug
 	File appConfigDirFile = new File("./codegen")
@@ -26,9 +27,11 @@ public class CodeGenMain{
 	Properties configProperties
 	JdbcUtils jdbcUtils
 	DataBaseMetaDataReader reader
+	DataSourceReader dataSourceReader
 	JavaModelGenerator modelGen
 	CodeGenerator codeGen
 	XMLPersister persister
+	XMLDataSourcePersister dataSourcePersister
 	List collaborators
 
 	Closure printlnClosure = {String message ->
@@ -104,6 +107,13 @@ public class CodeGenMain{
 		reader.tables = persister.tables
 		modelGen.classes = persister.classes
 	}
+	
+	def readDataSourceXML() {
+		if (debug) println "Reading XML file with datasources"
+		dataSourcePersister.read()
+		//todo!
+		dataSourceReader.settings = dataSourcePersister.jdbcSettings
+	}
 
 	def generateJavaClasses() {
 		if (debug) println "Generating Java classes"
@@ -119,6 +129,13 @@ public class CodeGenMain{
 		persister.classes = modelGen.classes
 		persister.tables = reader.tables
 		persister.persist()
+	}
+	
+	def writeDataSourceXML() {
+		if (debug) println "Writing XML file containing data sources"
+		// todo
+		dataSourcePersister.jdbcSettings = dataSourceReader.settings
+		dataSourcePersister.persist()
 	}
 
 	/** This is the main entry point for this program. */
@@ -171,7 +188,6 @@ public class CodeGenMain{
 		}
 
 		return true
-
 	}
 
 	public boolean configureCollaborators() {
@@ -184,18 +200,22 @@ public class CodeGenMain{
 
 			JdbcUtils.metaClass.println = printlnClosure
 			DataBaseMetaDataReader.metaClass.println = printlnClosure
+			DataSourceReader.metaClass.println = printlnClosure
 			JavaModelGenerator.metaClass.println = printlnClosure
 			CodeGenerator.metaClass.println = printlnClosure
 			XMLPersister.metaClass.println = printlnClosure
+			XMLDataSourcePersister.metaClass.println = printlnClosure			
 		}
 
 		jdbcUtils = new JdbcUtils()
 		codeGen = new CodeGenerator()
 		reader = new DataBaseMetaDataReader()
+		dataSourceReader = new DataSourceReader()
 		persister = new XMLPersister()
+		dataSourcePersister = new XMLDataSourcePersister()
 		modelGen = new JavaModelGenerator()
 
-		collaborators = [jdbcUtils, reader, modelGen, codeGen, persister]
+		collaborators = [jdbcUtils, reader, modelGen, codeGen, persister, dataSourcePersister]
 
 		/* Configure related classes. */
 		jdbcUtils.url = url
@@ -232,8 +252,22 @@ public class CodeGenMain{
 		}
 		persister.fileName = xmlFileName == null || "".equals(xmlFileName) ? "codegen.xml" : xmlFileName
 
+		dataSourcePersister.outputDir = appConfigDirFile
+		if (!dataSourcePersister.outputDir.isDirectory()) {
+			dataSourcePersister.outputDir.mkdirs()
+		}
+		dataSourcePersister.fileName = xmlDataSourceFileName == null || "".equals(xmlDataSourceFileName) ? "dataSource.xml" : xmlDataSourceFileName
+				
 		return invalidArgument
-
+	}
+	
+	public void initDataSource() {
+		File dataSourceFile = calculateDataSourceFile()
+		if (dataSourceFile.exists()) {
+			readDataSourceXML();
+		} else {
+			writeDataSourceXML();
+		}
 	}
 
 	private void readProperties() {
@@ -241,15 +275,19 @@ public class CodeGenMain{
 		File propFile = calculatePropFile()
 		if (propFile.exists()) {
 			if (debug) println "Found properties file ${propFile}, reading it into application arguments"
-			configProperties.load(new StringReader(propFile.text))
+			
+			//configProperties.load(new StringReader(propFile.text))
+			FileInputStream fis = new java.io.FileInputStream(propFile)
+			configProperties.load(fis);
+			
 			for (key in configProperties.keySet()) {
 				if (configProperties[key]!=null) {
-					if (debug) println "overiding values not set: ${key}=${configProperties[key]}"
+					if (debug) println "overriding values not set: ${key}=${configProperties[key]}"
 					this[key] = configProperties[key]
 				}
 			}
 		} else {
-			if (debug) println "Properties file not found, so writng new properties file based on arguments passed"
+			if (debug) println "Properties file not found, so writing new properties file based on arguments passed"
 			writeProperties()
 		}
 	}
@@ -258,6 +296,11 @@ public class CodeGenMain{
 		propertiesFile==null || "".equals(propertiesFile) ? new File((File) this.appConfigDirFile,"config.properties") : new File(propertiesFile)
 	}
 
+	private File calculateDataSourceFile () {
+		xmlDataSourceFileName == null || "".equals(xmlDataSourceFileName) ? 
+				new File((File) this.appConfigDirFile,"dataSource.xml") : new File(xmlDataSourceFileName)
+	}
+	
 	private void writeProperties() {
 		configProperties = new Properties()
 		File propFile = calculatePropFile()
@@ -322,6 +365,7 @@ public class CodeGenMain{
 	packageName		Package name of clases that will be generated
 	outputDir		The output directory of the classes
 	xmlFileName		XML file that contains the reversed model
+	xmlDataSourceFileName		XML file that contains datasources
 	debug			Puts the app in debug mode
 
 	Command line parameters take precedence over what is stored in the config.properties file.
@@ -332,6 +376,7 @@ public class CodeGenMain{
 	reverse			Processes the database into table and classes model
 	write			Write the database and classes model into an xml file
 	read			Read the XML table and classes model back into memory
+	datasource		Read the XML datasources back into memory
 	generate		Generate Java classes based on the table and classes model
 	all 			Does all of the above
 	help			Prints this message

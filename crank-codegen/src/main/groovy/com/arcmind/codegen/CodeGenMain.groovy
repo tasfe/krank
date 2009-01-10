@@ -109,7 +109,7 @@ public class CodeGenMain{
 	}
 	
 	def readDataSourceXML() {
-		if (debug) println "Reading XML file with datasources"
+		if (debug) println "Reading XML file with datasources from ${dataSourcePersister.fileName}"
 		dataSourcePersister.read()
 		//todo!
 		dataSourceReader.settings = dataSourcePersister.jdbcSettings
@@ -132,9 +132,8 @@ public class CodeGenMain{
 	}
 	
 	def writeDataSourceXML() {
-		if (debug) println "Writing XML file containing data sources"
-		// todo
 		dataSourcePersister.jdbcSettings = dataSourceReader.settings
+		if (debug) println "Writing XML file containing data sources: ${dataSourcePersister.jdbcSettings}"
 		dataSourcePersister.persist()
 	}
 
@@ -257,7 +256,8 @@ public class CodeGenMain{
 			dataSourcePersister.outputDir.mkdirs()
 		}
 		dataSourcePersister.fileName = xmlDataSourceFileName == null || "".equals(xmlDataSourceFileName) ? "dataSource.xml" : xmlDataSourceFileName
-				
+		initDataSource()
+		
 		return invalidArgument
 	}
 	
@@ -297,8 +297,9 @@ public class CodeGenMain{
 	}
 
 	private File calculateDataSourceFile () {
-		xmlDataSourceFileName == null || "".equals(xmlDataSourceFileName) ? 
-				new File((File) this.appConfigDirFile,"dataSource.xml") : new File(xmlDataSourceFileName)
+		(xmlDataSourceFileName == null || "".equals(xmlDataSourceFileName)) ? 
+				(new File((File) this.appConfigDirFile,"dataSource.xml")) :
+				(new File((File) this.appConfigDirFile,xmlDataSourceFileName))
 	}
 	
 	private void writeProperties() {

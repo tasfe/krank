@@ -167,6 +167,13 @@ password: ${password.text}, driver: ${drv}"""
 		settingsEditSupport.populateForm(settings)		
 	}
 	
+	def useTheseSettings() {
+		main.url = currentSettings.url
+		main.userName = currentSettings.userName
+		main.password = currentSettings.password
+		main.driver = currentSettings.driver
+	}
+	
 	public void treeTableSelected(TreeSelectionEvent event) {
 		setStatus ""
 		mainTabPane.addTab("Modify Properties", codeGenMainPane)
@@ -212,7 +219,6 @@ password: ${password.text}, driver: ${drv}"""
 		}
 	}
 	
-	//todo
 	def treeSettingsSelected(TreeSelectionEvent event) {
 		setStatus ""
 		
@@ -234,6 +240,7 @@ password: ${password.text}, driver: ${drv}"""
 		propertyEditSupport = new JavaPropertyEditSupport(classTreeModel:classTreeModel)
 		relationshipEditSupport = new RelationshipEditSupport(classTreeModel:classTreeModel)
 		codeGenMainEditSupport = new CodeGenMainEditSupport()
+		codeGenMainEditSupport.app = this;
 		settingsEditSupport = new SettingsEditSupport()
 
 		buildGUI ()
@@ -243,7 +250,6 @@ password: ${password.text}, driver: ${drv}"""
 		main = new CodeGenMain()
 		main.readProperties()
 		main.configureCollaborators()
-		main.initDataSource()
 		
 		// Update DataSources Tree
 		updateJDBCTree()
@@ -255,6 +261,7 @@ password: ${password.text}, driver: ${drv}"""
 		mainTabPane.remove(classPane)
 		mainTabPane.remove(propertyPane)
 		mainTabPane.remove(codeGenMainPane)
+		mainTabPane.remove(settingsPane)
 
 	}
 	private updateJDBCTree() {
@@ -513,6 +520,12 @@ password: ${password.text}, driver: ${drv}"""
                             }
                             panel {
                                 boxLayout(axis:BoxLayout.X_AXIS)
+                                label("XML DataSource File", preferredSize:[100,20])
+                                codeGenMainEditSupport.xmlDataSourceFileName = textField(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }                            
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
                                 label("Properties File", preferredSize:[100,20])
                                 codeGenMainEditSupport.propertiesFile = textField(preferredSize:[200,20])
                                 label(preferredSize:[100,20])
@@ -565,6 +578,8 @@ password: ${password.text}, driver: ${drv}"""
                             panel {
                                 button(text:"Save", actionPerformed: {settingsEditSupport.updateObject(this.currentSettings); main.writeDataSourceXML(); updateJDBCTree()})
                                 button(text:"Close", actionPerformed: {mainTabPane.remove(settingsPane)})
+                                label(preferredSize:[100,20])
+                                button(text:"Use", actionPerformed: {settingsEditSupport.updateObject(this.currentSettings);main.writeDataSourceXML(); updateJDBCTree();useTheseSettings()})
                             }
                         }//panel
                     }//settingsPane
@@ -656,8 +671,12 @@ class CodeGenMainEditSupport {
 	JTextField outputDir
 	JTextField appConfigDir
 	JTextField xmlFileName
+	JTextField xmlDataSourceFileName
 	JTextField propertiesFile
 	JCheckBox debug
+	
+	GeneratorSwingApp app
+	
 	def updateObject (CodeGenMain main) {
 		main.url = url.text
 		main.userName = userName.text
@@ -668,6 +687,7 @@ class CodeGenMainEditSupport {
 		main.outputDir = outputDir.text
 		main.appConfigDir = appConfigDir.text
 		main.xmlFileName = xmlFileName.text
+		main.xmlDataSourceFileName = xmlDataSourceFileName.text
 		main.propertiesFile = propertiesFile.text
 		if (debug.selected) {
 			main.debug = "true"
@@ -675,6 +695,7 @@ class CodeGenMainEditSupport {
 			main.debug = null
 		}
 		main.configureCollaborators()
+		app.updateJDBCTree()
 	}
 	def populateForm (CodeGenMain main) {
 		url.text = main.url
@@ -686,6 +707,7 @@ class CodeGenMainEditSupport {
 		outputDir.text = main.outputDir
 		appConfigDir.text = main.appConfigDir
 		xmlFileName.text =  main.xmlFileName
+		xmlDataSourceFileName.text = main.xmlDataSourceFileName
 		propertiesFile.text = main.propertiesFile
 		if (debug == null) {
 			debug.selected=false
@@ -702,11 +724,15 @@ class SettingsEditSupport {
 	JTextField password
 	JTextField driver
 	
+	GeneratorSwingApp app
+	
 	def updateObject (JDBCSettings settings) {
+		app.println "update object was ${settings}"
 		settings.url = url.text
 		settings.userName = userName.text
 		settings.password = password.text
 		settings.driver = driver.text
+		app.println "update object now ${settings}"
 	}
 	
 	def populateForm (JDBCSettings settings) {

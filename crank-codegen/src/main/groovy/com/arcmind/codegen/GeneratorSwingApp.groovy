@@ -128,7 +128,6 @@ public class GeneratorSwingApp{
 	}
 	
 	def addDataSource() {
-		//todo
 		JLabel labelUrl = new JLabel("URL");
 		JLabel labelUserName = new JLabel("Username:");
 		JLabel labelPassword = new JLabel("Password:");
@@ -137,7 +136,8 @@ public class GeneratorSwingApp{
 		JTextField userName = new JTextField();
 		JTextField password = new JTextField();
 		
-		Object[] ob=[new JLabel("You MUST fill all fields!"),labelUrl,url,labelUserName,userName,
+		Object[] ob=[new JLabel("You MUST fill all fields!"),
+		             labelUrl,url,labelUserName,userName,
 		             labelPassword, password, labelDriver]
 		String drv = JOptionPane.showInputDialog(ob);
 		
@@ -147,16 +147,14 @@ password: ${password.text}, driver: ${drv}"""
 		}
 		
 		if (drv) {
-		
 			main.dataSourceReader.settings << 
 			new JDBCSettings(
 					url: url.text,
 					userName: userName.text,
 					password: password.text,
 					driver: drv)
-			
 			main.writeDataSourceXML()
-			updateJDBCTree()
+			updateJDBCTree(main.dataSourceReader.settings)
 		}
 	}
 	
@@ -168,10 +166,26 @@ password: ${password.text}, driver: ${drv}"""
 	}
 	
 	def useTheseSettings() {
+		settingsEditSupport.updateObject(this.currentSettings); 
+		main.writeDataSourceXML(); 
+		updateJDBCTree(main.dataSourceReader.settings)
+		
+		mainTabPane.remove(settingsPane)
+		
 		main.url = currentSettings.url
 		main.userName = currentSettings.userName
 		main.password = currentSettings.password
 		main.driver = currentSettings.driver
+		
+		modifyProperties()
+		
+		updateJDBCTree(main.dataSourceReader.settings)
+	}
+	
+	def saveTheseSettings() {
+		settingsEditSupport.updateObject(this.currentSettings); 
+		main.writeDataSourceXML();
+		updateJDBCTree(main.dataSourceReader.settings)
 	}
 	
 	public void treeTableSelected(TreeSelectionEvent event) {
@@ -221,9 +235,7 @@ password: ${password.text}, driver: ${drv}"""
 	
 	def treeSettingsSelected(TreeSelectionEvent event) {
 		setStatus ""
-		
 		Object selectedItem = event.path.lastPathComponent
-		
 		if (selectedItem instanceof SettingsHolder) {
 			selectDataSource(selectedItem.settings)
 		}
@@ -252,7 +264,7 @@ password: ${password.text}, driver: ${drv}"""
 		main.configureCollaborators()
 		
 		// Update DataSources Tree
-		updateJDBCTree()
+		updateJDBCTree(main.dataSourceReader.settings)
 
 		/* Initilize Console and mainTabPane. */
 		hideConsole.enabled=false
@@ -264,8 +276,9 @@ password: ${password.text}, driver: ${drv}"""
 		mainTabPane.remove(settingsPane)
 
 	}
-	private updateJDBCTree() {
-		settingsTreeModel.setSettings(main.dataSourceReader.settings)
+	private updateJDBCTree(param) {
+		settingsTreeModel = new SettingsTreeModel()
+		settingsTreeModel.setSettings(param)
 	}
 
 	public static void main (String [] args) {
@@ -576,10 +589,10 @@ password: ${password.text}, driver: ${drv}"""
                                 label(preferredSize:[100,20])
                             }
                             panel {
-                                button(text:"Save", actionPerformed: {settingsEditSupport.updateObject(this.currentSettings); main.writeDataSourceXML(); updateJDBCTree()})
+                                button(text:"Save", actionPerformed: {saveTheseSettings()})
                                 button(text:"Close", actionPerformed: {mainTabPane.remove(settingsPane)})
                                 label(preferredSize:[100,20])
-                                button(text:"Use", actionPerformed: {settingsEditSupport.updateObject(this.currentSettings);main.writeDataSourceXML(); updateJDBCTree();useTheseSettings()})
+                                button(text:"Use", actionPerformed: {useTheseSettings()})
                             }
                         }//panel
                     }//settingsPane
@@ -695,7 +708,7 @@ class CodeGenMainEditSupport {
 			main.debug = null
 		}
 		main.configureCollaborators()
-		app.updateJDBCTree()
+		app.updateJDBCTree(main.dataSourceReader.settings)
 	}
 	def populateForm (CodeGenMain main) {
 		url.text = main.url

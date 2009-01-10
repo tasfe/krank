@@ -183,7 +183,7 @@ password: ${password.text}, driver: ${drv}"""
 	}
 	
 	def saveTheseSettings() {
-		settingsEditSupport.updateObject(this.currentSettings); 
+		settingsEditSupport.updateObject(currentSettings);
 		main.writeDataSourceXML();
 		updateJDBCTree(main.dataSourceReader.settings)
 	}
@@ -277,7 +277,6 @@ password: ${password.text}, driver: ${drv}"""
 
 	}
 	private updateJDBCTree(param) {
-		settingsTreeModel = new SettingsTreeModel()
 		settingsTreeModel.setSettings(param)
 	}
 

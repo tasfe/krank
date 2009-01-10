@@ -269,7 +269,7 @@ public class CodeGenMain{
 			writeDataSourceXML();
 		}
 	}
-
+	
 	private void readProperties() {
 		configProperties = new Properties()
 		File propFile = calculatePropFile()

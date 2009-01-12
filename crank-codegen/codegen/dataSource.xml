@@ -1,0 +1,4 @@
+<jdbcSettings>
+  <datasource url='jdbc:mysql://localhost:3306/presto2' userName='presto2' password='presto2' driver='com.mysql.jdbc.Driver' />
+  <datasource url='jdbc:mysql://localhost:3306/crank' userName='crank' password='crank' driver='com.mysql.jdbc.Driver' />
+</jdbcSettings>

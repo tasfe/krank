@@ -29,7 +29,7 @@ public class CodeGenMain{
 	DataBaseMetaDataReader reader
 	DataSourceReader dataSourceReader
 	JavaModelGenerator modelGen
-	CodeGenerator codeGen
+	JPACodeGenerator codeGen
 	XMLPersister persister
 	XMLDataSourcePersister dataSourcePersister
 	List collaborators
@@ -195,19 +195,19 @@ public class CodeGenMain{
 		if (debug) {
 			DataBaseMetaDataReader.metaClass.invokeMethod = logClosure
 			JavaModelGenerator.metaClass.invokeMethod = logClosure
-			CodeGenerator.metaClass.invokeMethod = logClosure
+			JPACodeGenerator.metaClass.invokeMethod = logClosure
 
 			JdbcUtils.metaClass.println = printlnClosure
 			DataBaseMetaDataReader.metaClass.println = printlnClosure
 			DataSourceReader.metaClass.println = printlnClosure
 			JavaModelGenerator.metaClass.println = printlnClosure
-			CodeGenerator.metaClass.println = printlnClosure
+			JPACodeGenerator.metaClass.println = printlnClosure
 			XMLPersister.metaClass.println = printlnClosure
 			XMLDataSourcePersister.metaClass.println = printlnClosure			
 		}
 
 		jdbcUtils = new JdbcUtils()
-		codeGen = new CodeGenerator()
+		codeGen = new JPACodeGenerator()
 		reader = new DataBaseMetaDataReader()
 		dataSourceReader = new DataSourceReader()
 		persister = new XMLPersister()

@@ -8,6 +8,7 @@ import groovy.swing.SwingBuilder
 import java.awt.BorderLayout
 import java.awt.GridLayout
 import java.awt.FlowLayout
+import java.awt.Cursor
 import javax.swing.event.TreeSelectionEvent
 
 /**
@@ -22,6 +23,8 @@ public class GeneratorSwingApp{
 	JLabel status
 	Action viewConsole
 	Action hideConsole
+	boolean isViewConsole
+	boolean isHideConsole	
 	JTextArea console
 	List<Action> viewActions
 	List<Action> mainActions
@@ -45,7 +48,7 @@ public class GeneratorSwingApp{
 	JavaPropertyEditSupport propertyEditSupport
 	RelationshipEditSupport relationshipEditSupport
 	CodeGenMainEditSupport codeGenMainEditSupport
-	SettingsEditSupport settingsEditSupport;
+	SettingsEditSupport settingsEditSupport
 
 	boolean debug = true
 
@@ -294,11 +297,15 @@ password: ${password.text}, driver: ${drv}"""
                 action(name: "Exit", mnemonic: 'X', closure: { exit() })
             }
 
-            Closure handleReverseDB = {
-                doOutside { //Runs in a seperate thread
+            Closure handleReverseDB = {            	
+                doOutside { //Runs in a seperate thread                	
                     edt {setStatus "Reverse engineering database please standby..."}
+                    enableMenuBar(false)
+                    modifyCursor(false)
                     reverseDB()
                     edt {setStatus "Done reverse engineering database." }
+                    enableMenuBar(true)
+                    modifyCursor(true)
                 }
             }
 
@@ -600,6 +607,27 @@ password: ${password.text}, driver: ${drv}"""
             }//splitPane
         }//frame
 	}//buildGUI()
+	
+	private void enableMenuBar(trueOrFalse) {
+		if (trueOrFalse == false) { //Save state
+			isViewConsole = viewConsole.enabled
+			isHideConsole = hideConsole.enabled
+		}
+		// Enable/disable ALL items
+	 	viewActions.each({it.enabled = trueOrFalse})
+		mainActions.each({it.enabled = trueOrFalse})
+		fileActions.each({it.enabled = trueOrFalse})
+		if (trueOrFalse == true) { // Restore state
+			viewConsole.enabled = isViewConsole 
+			hideConsole.enabled = isHideConsole 
+		}
+	}	
+	private modifyCursor(trueOrFalse) {
+		trueOrFalse ? mainFrame.getContentPane().setCursor(
+				Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) :
+				mainFrame.getContentPane().setCursor(
+						Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR))					
+	}
 }
 
 class ClassEditSupport {

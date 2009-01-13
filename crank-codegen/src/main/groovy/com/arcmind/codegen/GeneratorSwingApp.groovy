@@ -10,7 +10,6 @@ import java.awt.GridLayout
 import java.awt.FlowLayout
 import java.awt.Cursor
 import javax.swing.event.TreeSelectionEvent
-import sun.*
 
 /**
  * @author richardhightower
@@ -647,9 +646,8 @@ password: ${password.text}, driver: ${drv}"""
 	
 	private setPropFromFileDialog() {
 		JFileChooser fc = new JFileChooser(main.calculatePropFile())
-		ExampleFileFilter filter = new ExampleFileFilter();
+		CodeGenFileFilter filter = new CodeGenFileFilter(description:"Properties File")
 	    filter.addExtension("properties");
-	    filter.setDescription("Properties File");
 	    fc.setFileFilter(filter)
 		
         int returnVal = fc.showSaveDialog(mainFrame);
@@ -663,9 +661,8 @@ password: ${password.text}, driver: ${drv}"""
 	
 	private setXmlFromFileDialog() {
 		JFileChooser fc = new JFileChooser(main.calculatePropFile())
-		ExampleFileFilter filter = new ExampleFileFilter();
-	    filter.addExtension("xml");
-	    filter.setDescription("XML File");
+		CodeGenFileFilter filter = new CodeGenFileFilter(description:"XML File")
+	    filter.addExtension("xml")
 	    fc.setFileFilter(filter)
 		
         int returnVal = fc.showSaveDialog(mainFrame);

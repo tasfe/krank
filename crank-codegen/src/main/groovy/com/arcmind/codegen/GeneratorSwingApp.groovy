@@ -328,11 +328,14 @@ password: ${password.text}, driver: ${drv}"""
             Closure handleGenerateJavaClasses = {
                     doOutside {
                         edt {setStatus "Writing Java class files to ${main.codeGen.outputDir}"}
-                        
+                        enableMenuBar(false)
+                        modifyCursor(false)
                         use(StringCategory) {
                         	main.generateJavaClasses()
                         }
                         edt {setStatus "Done writing Java class files to ${main.codeGen.outputDir}"}
+                        enableMenuBar(true)
+                        modifyCursor(true)
                     }
             }
 

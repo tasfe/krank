@@ -20,6 +20,9 @@ public class CodeGenMain{
 	String xmlFileName
 	String xmlDataSourceFileName
 	String propertiesFile
+	boolean wasNotSetPropFile
+	boolean wasNotSetXmlFile
+	boolean wasNotSetXmlDataSourceFile //todo
 	String debug
 	File appConfigDirFile = new File("./codegen")
 	List <String> actions = []
@@ -254,6 +257,7 @@ public class CodeGenMain{
 		if (!persister.outputDir.isDirectory()) {
 			persister.outputDir.mkdirs()
 		}
+		wasNotSetXmlFile = (xmlFileName == null || "".equals(xmlFileName))
 		persister.fileName = xmlFileName == null || "".equals(xmlFileName) ? "codegen.xml" : xmlFileName
 
 		dataSourcePersister.outputDir = appConfigDirFile
@@ -298,6 +302,7 @@ public class CodeGenMain{
 	}
 
 	private File calculatePropFile () {
+		wasNotSetPropFile = (propertiesFile==null || "".equals(propertiesFile))
 		propertiesFile==null || "".equals(propertiesFile) ? new File((File) this.appConfigDirFile,"config.properties") : new File(propertiesFile)
 	}
 

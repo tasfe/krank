@@ -10,6 +10,7 @@ import java.awt.GridLayout
 import java.awt.FlowLayout
 import java.awt.Cursor
 import javax.swing.event.TreeSelectionEvent
+import sun.*
 
 /**
  * @author richardhightower
@@ -310,11 +311,23 @@ password: ${password.text}, driver: ${drv}"""
             }
 
             Closure handleWriteXML = {
+           		if (main.wasNotSetXmlFile) {
+           			setXmlFromFileDialog()
+           		}
             	doOutside {
             		edt {setStatus "Writing XML file out ${main.persister.fileName}"}
             		main.writeXML()
             		edt {setStatus "Done writing XML file out ${main.persister.fileName}"}
             	}
+            }
+            
+            Closure handleWriteProperties = {
+            		if (main.wasNotSetPropFile) {
+            			setPropFromFileDialog()
+            		}
+            		use(StringCategory){
+            			main.writeProperties()
+            		}
             }
 
             Closure handleReadXML = {
@@ -344,7 +357,7 @@ password: ${password.text}, driver: ${drv}"""
                 action(name: "Generate Java", mnemonic: 'G', closure: handleGenerateJavaClasses)
                 action(name: "Write XML", mnemonic: 'W', closure: handleWriteXML)
                 action(name: "Read XML", mnemonic: 'e', closure: handleReadXML)
-                action(name: "Save Properties", mnemonic: 'S', closure: {use(StringCategory){main.writeProperties()}})
+                action(name: "Save Properties", mnemonic: 'S', closure: handleWriteProperties)
                 action(name: "Modify Properties", mnemonic: 'o', closure: { modifyProperties() })
                 action(name: "Add New Data Source", mnemonic: 'D', closure: { addDataSource() })
             }
@@ -631,7 +644,43 @@ password: ${password.text}, driver: ${drv}"""
 				mainFrame.getContentPane().setCursor(
 						Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR))					
 	}
+	
+	private setPropFromFileDialog() {
+		JFileChooser fc = new JFileChooser(main.calculatePropFile())
+		ExampleFileFilter filter = new ExampleFileFilter();
+	    filter.addExtension("properties");
+	    filter.setDescription("Properties File");
+	    fc.setFileFilter(filter)
+		
+        int returnVal = fc.showSaveDialog(mainFrame);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            main.propertiesFile = fc.getSelectedFile().getAbsolutePath()
+            main.wasNotSetPropFile = false
+        }
+	}
+	
+	private setXmlFromFileDialog() {
+		JFileChooser fc = new JFileChooser(main.calculatePropFile())
+		ExampleFileFilter filter = new ExampleFileFilter();
+	    filter.addExtension("xml");
+	    filter.setDescription("XML File");
+	    fc.setFileFilter(filter)
+		
+        int returnVal = fc.showSaveDialog(mainFrame);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            main.xmlFileName = file.getName()
+            main.persister.fileName = main.xmlFileName
+            main.persister.outputDir = file.getParentFile()
+            main.wasNotSetXmlFile = false
+        }
+	}	
 }
+
+ 
 
 class ClassEditSupport {
 	JTextField packageName

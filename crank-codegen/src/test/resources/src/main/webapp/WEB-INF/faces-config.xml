@@ -40,32 +40,28 @@
   </navigation-rule>
   
   <navigation-rule>
-
-
-
-
     <!-- Main Page Links (codegen) -->
     <navigation-case>
          <from-outcome>FOOS</from-outcome>
          <to-view-id>/pages/crud/fooListing.xhtml</to-view-id>
      </navigation-case>
+
     <navigation-case>
          <from-outcome>BARS</from-outcome>
          <to-view-id>/pages/crud/barListing.xhtml</to-view-id>
      </navigation-case>
+
     <navigation-case>
          <from-outcome>BAZS</from-outcome>
          <to-view-id>/pages/crud/bazListing.xhtml</to-view-id>
      </navigation-case>
-    <!-- End of Main Page Links (codegen) -->
-   </navigation-rule>
+  <!-- End of Main Page Links (codegen)  -->
+</navigation-rule>
 
 
 
-
-
-    <!-- Navigation goals for CRUD -->
-  <navigation-rule>
+    <!-- Navigation goals for CRUD -->  
+<navigation-rule>
   	<from-view-id>/pages/crud/fooListing.xhtml</from-view-id>
   	<navigation-case>
   		<from-outcome>FORM</from-outcome>
@@ -79,7 +75,8 @@
   		<to-view-id>/pages/crud/fooListing.xhtml</to-view-id>
   	</navigation-case>
   </navigation-rule>
-	  <navigation-rule>
+	  
+<navigation-rule>
   	<from-view-id>/pages/crud/barListing.xhtml</from-view-id>
   	<navigation-case>
   		<from-outcome>FORM</from-outcome>
@@ -93,7 +90,8 @@
   		<to-view-id>/pages/crud/barListing.xhtml</to-view-id>
   	</navigation-case>
   </navigation-rule>
-	  <navigation-rule>
+	  
+<navigation-rule>
   	<from-view-id>/pages/crud/bazListing.xhtml</from-view-id>
   	<navigation-case>
   		<from-outcome>FORM</from-outcome>
@@ -108,12 +106,25 @@
   	</navigation-case>
   </navigation-rule>
 	  <!-- End Navigation goals for CRUD  -->
-	  
-	    
+
+
+
+    <!-- Crud Converters -->
   <converter>
-  	<converter-for-class>org.crank.examples.employeetask.Department</converter-for-class>
+  	<converter-for-class>com.foo.Foo</converter-for-class>
   	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
   </converter>
-  
 
-</faces-config>
+  <converter>
+  	<converter-for-class>com.foo.Bar</converter-for-class>
+  	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
+  </converter>
+
+  <converter>
+  	<converter-for-class>com.foo.Baz</converter-for-class>
+  	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
+  </converter>
+  <!-- End Crud Converters  -->
+  
+  
+  </faces-config>

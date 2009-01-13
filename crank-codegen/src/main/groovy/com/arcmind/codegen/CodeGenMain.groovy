@@ -23,7 +23,7 @@ public class CodeGenMain{
 	String debug
 	File appConfigDirFile = new File("./codegen")
 	List <String> actions = []
-	Set <String> availableActions = ["reverse", "write", "read", "generate", "all", "help"]
+	Set <String> availableActions = ["reverse", "write", "read", "generate", "all", "help", "datasource"]
 	Properties configProperties
 	JdbcUtils jdbcUtils
 	DataBaseMetaDataReader reader
@@ -72,6 +72,10 @@ public class CodeGenMain{
 		} else if (actions.contains("read")) {
 			readXML()
 		}
+		
+		if (actions.contains("datasource")) {
+			readDataSourceXML()
+		}
 
 		if (actions.contains("generate")) {
 			generateJavaClasses()
@@ -89,6 +93,7 @@ public class CodeGenMain{
 		actions << "generate"
 		actions << "write"
 		actions << "saveProps"
+		actions << "datasource"
 	}
 
 	public void reverseDB() {
@@ -362,7 +367,7 @@ public class CodeGenMain{
 	driver			Driver name for JDBC connection
 	tableNames		List of tables names to process
 
-	Code Generataion Parameters
+	Code Generation Parameters
 	packageName		Package name of clases that will be generated
 	outputDir		The output directory of the classes
 	xmlFileName		XML file that contains the reversed model

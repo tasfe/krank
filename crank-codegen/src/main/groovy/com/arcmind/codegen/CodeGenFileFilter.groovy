@@ -16,10 +16,10 @@ public class CodeGenFileFilter  extends javax.swing.filechooser.FileFilter {
 	private static String TYPE_UNKNOWN = "Type Unknown";
 	private static String HIDDEN_FILE = "Hidden File";
 	
-	private Map filters = [:]
-	private String description
-	private String fullDescription
-	private boolean useExtensionsInDescription = true
+	Map filters = [:]
+    String description
+	String fullDescription
+	boolean useExtensionsInDescription = true
 	
 	
 	public void addExtension(String extension) {

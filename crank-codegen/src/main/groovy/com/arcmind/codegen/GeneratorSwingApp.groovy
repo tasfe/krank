@@ -294,22 +294,7 @@ password: ${password.text}, driver: ${drv}"""
 	def buildGUI() {
 		mainFrame=
         swing.frame(title:'CodeGen Code Generator', size:[1200,1000], defaultCloseOperation:JFrame.EXIT_ON_CLOSE,  show:true) {
-            fileActions = actions() {
-                action(name: "Exit", mnemonic: 'X', closure: { exit() })
-            }
-
-            Closure handleReverseDB = {            	
-                doOutside { //Runs in a seperate thread                	
-                    edt {setStatus "Reverse engineering database please standby..."}
-                    enableMenuBar(false)
-                    modifyCursor(false)
-                    reverseDB()
-                    edt {setStatus "Done reverse engineering database." }
-                    enableMenuBar(true)
-                    modifyCursor(true)
-                }
-            }
-
+			
             Closure handleWriteXML = {
            		if (main.wasNotSetXmlFile) {
            			setXmlFromFileDialog()
@@ -336,6 +321,24 @@ password: ${password.text}, driver: ${drv}"""
                     readXML()
                     edt {setStatus "Done reading XML file in ${main.persister.fileName}"}
                 }
+            }			
+            fileActions = actions() {
+                action(name: "Exit", mnemonic: 'X', closure: { exit() })
+                action(name: "Write XML", mnemonic: 'W', closure: handleWriteXML)
+                action(name: "Read XML", mnemonic: 'e', closure: handleReadXML)
+                action(name: "Save Properties", mnemonic: 'S', closure: handleWriteProperties)
+            }
+
+            Closure handleReverseDB = {            	
+                doOutside { //Runs in a seperate thread                	
+                    edt {setStatus "Reverse engineering database please standby..."}
+                    enableMenuBar(false)
+                    modifyCursor(false)
+                    reverseDB()
+                    edt {setStatus "Done reverse engineering database." }
+                    enableMenuBar(true)
+                    modifyCursor(true)
+                }
             }
 
             Closure handleGenerateJavaClasses = {
@@ -355,9 +358,6 @@ password: ${password.text}, driver: ${drv}"""
             mainActions = actions() {
                 action(name: "Reverse DB", mnemonic: 'R', closure: handleReverseDB)
                 action(name: "Generate Java", mnemonic: 'G', closure: handleGenerateJavaClasses)
-                action(name: "Write XML", mnemonic: 'W', closure: handleWriteXML)
-                action(name: "Read XML", mnemonic: 'e', closure: handleReadXML)
-                action(name: "Save Properties", mnemonic: 'S', closure: handleWriteProperties)
                 action(name: "Modify Properties", mnemonic: 'o', closure: { modifyProperties() })
                 action(name: "Add New Data Source", mnemonic: 'D', closure: { addDataSource() })
             }

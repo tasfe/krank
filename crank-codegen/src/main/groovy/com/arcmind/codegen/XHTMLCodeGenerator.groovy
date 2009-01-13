@@ -7,255 +7,121 @@ import groovy.text.SimpleTemplateEngine
 class XHTMLCodeGenerator {
     List<JavaClass> classes
     /** The target output dir. Defaults to ./target */
-    File outputDir = new File("./target")
+    File outputDir = new File("./target/src/main/webapp")
     boolean debug
     SimpleTemplateEngine engine = new SimpleTemplateEngine()
-    String javaClassTemplate = '''<% import com.arcmind.codegen.RelationshipType; %>package ${bean.packageName};
-<% imports.each { imp-> %>import ${imp};
-<% } %>
-@Entity <% if (!bean.namesMatch) { %> @Table(name="${bean.table.name}") <% } 
-%>${queries}
-public class ${bean.name} implements Serializable {
-    /** ID */
-    @Id <% if (!bean.id.namesMatch) { %>@Column(name="${bean.id.column.name.toUpperCase()}")<% } %> 
-    @GeneratedValue( strategy = GenerationType.AUTO )
-    private ${bean.id.javaClass.name} id;
-
-    /* ------- Relationships ------ */
-   <%
-   for (r in bean.relationships) {
-	    if (r.ignore) continue
-   		if (r.type == RelationshipType.ONE_TO_MANY && r.bidirectional==false) {
-   %>
-    @OneToMany(cascade = CascadeType.ALL) @JoinColumn(name="${r.key.foriegnKey.name}")
-    private Set<${r.relatedClass.name}> ${r.name} = new HashSet<${r.relatedClass.name}>();
-   <% } else if (r.type == RelationshipType.ONE_TO_MANY && r.bidirectional==true) { 
-    %>
-    @OneToMany(mappedBy="${r.otherSide.name}", cascade = CascadeType.ALL)
-    private Set<${r.relatedClass.name}> ${r.name} = new HashSet<${r.relatedClass.name}>();
-   <% 
-    } else if (r.type == RelationshipType.MANY_TO_ONE) { 
-   %>
-    @ManyToOne (cascade = {CascadeType.REFRESH, CascadeType.MERGE}) @JoinColumn(name="${r.key.foriegnKey.name}")
-    private ${r.relatedClass.name} ${r.name};
-   <%
-    } else if (r.type == RelationshipType.MANY_TO_MANY) {
-   %>
     
-    @ManyToMany 
-    @JoinTable(name="${r.key.foriegnKey.table.name}",
-    		joinColumns=@JoinColumn(name="${r.otherSide.key.foriegnKey.name}"),
-    		inverseJoinColumns=@JoinColumn(name="${r.key.foriegnKey.name}"))	
-    private Set <${r.relatedClass.name}> ${r.name} = new HashSet<${r.relatedClass.name}>();
-   <% }//else if
-    }//end iterate through beans %>
-
-    /* Properties's fields */
-  <% /* -----------------------------------------------------------  PROPERTY FIELD GENERATION  -------------------*/ 
-    bean.properties.each { property-> %>
-  <% if (!property.namesMatch && !property.column.nullable) { //names don't match and field is required %>
-    @Column(name="${property.column.name.toUpperCase()}", nullable=false, length=${property.size==null ? 35 : property.size}) <% } else if (!property.namesMatch && property.column.nullable) { %>
-    @Column(name="${property.column.name.toUpperCase()}", length=${property.size==null ? 35 : property.size}) <% } else if (property.namesMatch && !property.column.nullable) { %>
-    @Column(nullable=false, length=${property.size==null ? 35 : property.size}) <% } else if (property.size!=null) { %>
-    @Column(length=${property.size}) <% } //end of else if %>
-    private ${property.javaClass.name} ${property.name.unCap()};
-  <% }//end of iterate %>  
-
-    public ${bean.name} () {
-
-    }
-
-    public void setId(${bean.id.javaClass.name} id) {
-    	this.id = id;
-    }
-    public ${bean.id.javaClass.name} getId() {
-    	return id;
-    }
-
-   <%
-   /* Iterate through the relationships */
-   bean.relationships.each { r->
-   		/* If the relationship is a OneToMany; generate  the getter, setter and add/remove methods. */
-        if (r.type == RelationshipType.ONE_TO_MANY || r.type == RelationshipType.MANY_TO_MANY) { %>
-
-    public Set<${r.relatedClass.name}> get${r.name.cap()}() {
-        return this.${r.name.unCap()};
-    }
-
-    public void set${r.name.cap()}(Set<${r.relatedClass.name}> ${r.name.unCap()} ) {
-        this.${r.name.unCap()} = ${r.name.unCap()};
-    }
-    <% 
-
-    String relatedInstance =  r.singularName.unCap(); 
-    String propertyName = r.otherSide?.name?.cap();
-
-    %>
-    public void add${r.singularName.cap()}(${r.relatedClass.name} ${relatedInstance}) {
-    	<% if (r.bidirectional==true && r.type!=RelationshipType.MANY_TO_MANY) {    %>${relatedInstance}.set${propertyName}(this);<%     } %>
-    	${r.name}.add(${relatedInstance});
-    }
-
-    public void remove${r.singularName.cap()}(${r.relatedClass.name} ${relatedInstance}) {
-    	<% if (r.bidirectional==true && r.type!=RelationshipType.MANY_TO_MANY) {    %>${relatedInstance}.set${propertyName}(null);<%     } %>
-    	${r.name}.remove(${relatedInstance});
-    }
- 
-
-    <% } else if (r.type == RelationshipType.MANY_TO_ONE) { %>
-
-    public ${r.relatedClass.name} get${r.name.cap()}() {
-        return this.${r.name.unCap()};
-    }
-
-    public void set${r.name.cap()}(${r.relatedClass.name} ${r.name.unCap()}) {
-        this.${r.name.unCap()} = ${r.name.unCap()};
-    }
-
-    <% }} %>
-
-
-   <% bean.properties.each { property-> %>
-    public ${property.javaClass.name} get${property.name.cap()}() {
-        return this.${property.name.unCap()};
-    }
-
-    public void set${property.name.cap()}(${property.javaClass.name} ${property.name.unCap()}) {
-        this.${property.name.unCap()} = ${property.name.unCap()};
-    }
-   <% } %>
-
-    public boolean equals(Object other) {
-    	if (other==null) {
-    		return false;
-    	}
-    	${bean.name} other${bean.name} = (${bean.name}) other;
-    	if (other${bean.name}.id==null && this.id==null) {
-    		return other${bean.name}.hashCode() == this.hashCode();
-    	} else if (this.id == null) {
-    		return false;
-    	} else {
-    		return this.id.equals(other${bean.name}.id);
-    	}
-    }
-    
-    public int hashCode() {
-    	return id == null ? super.hashCode() : id.hashCode();
-    }
-
-}
+    String oneToManyTemplate = '''
+					<crank:detailListing
+						detailController="#{${bean.name.unCap()}Crud.controller.children.${relationship.name}}" 
+						propertyNames="firstName,lastName"
+						parentForm="${bean.name.unCap()}Form"/>
 '''
-    boolean needsColumnImport(JavaClass bean) {
-        for (JavaProperty property : bean.properties) {
-            //If they don't match, then you need a column
-            if (!property.namesMatch || !property.column.nullable || property.size != null) {
-                return true
-            }
-        }
-        if (!bean.id.namesMatch || !bean.id.column.nullable) {
-            return true
-        }
-        return false
-    }
+    String listingTemplate = '''
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:crank="http://www.googlecode.com/crank">
+<ui:composition template="/templates/layout.xhtml">
+	<ui:define name="content">
+		<crank:crudBreadCrumb crud="#{cruds.${bean.name.unCap()}.controller}" />
+		<a4j:form id="${bean.name.unCap()}ListForm">
+			<crank:listing propertyNames="${propertyNames}" parentForm="${bean.name.unCap()}ListForm" jsfCrudAdapter="#{cruds.${bean.name.unCap()}}"  />
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>
+'''
+    String formTemplate = '''
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:crank="http://www.googlecode.com/crank">
+<ui:composition template="/templates/layout.xhtml">
+	<ui:define name="content">
+		<crank:crudBreadCrumb crud="#{${bean.name.unCap()}Crud.controller}" />
+		<c:choose>
+			<c:when test='#{${bean.name.unCap()}.controller.state == "ADD"}'>
+				<h:outputText value="Create Department" styleClass="pageTitle" />
+			</c:when>
+			<c:otherwise>
+				<h:outputText
+					value="Edit Department #{${bean.name.unCap()}Crud.controller.entity.name}"
+					styleClass="pageTitle" />
+			</c:otherwise>
+		</c:choose>
+		<a4j:form id="departmentForm">
+			<rich:messages errorClass="pageErrorMessage" />
+			<crank:form parentForm="departmentForm"
+				crud="#{${bean.name.unCap()}Crud.controller}" propertyNames="${propertyNames}">
+				${formBody}
+			</crank:form>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>
+'''
 
-    Set<String> calculateImportsFromBean(JavaClass bean) {
-    	
-    	
-    	 
-        List<String> imports = bean.properties.collect { JavaProperty property ->
-            if (!property.javaClass.primitive && !property.javaClass.packageName.startsWith("java.lang")) {
-                return "${property.javaClass.packageName}.${property.javaClass.name}"
-            } else {
-                return null;
-            }
-        }
-        
-        imports << "java.io.Serializable"
-        imports << "javax.persistence.Entity"
-        imports << "javax.persistence.GeneratedValue"
-        imports << "javax.persistence.GenerationType"
-        imports << "javax.persistence.Id"
-         
-        bean.relationships.each {Relationship relationship ->
-         	if (relationship.type == RelationshipType.ONE_TO_MANY) {
-         		imports << "java.util.Set"
-         		imports << "java.util.HashSet"
-         		imports << "javax.persistence.CascadeType"
-         		imports << "javax.persistence.OneToMany"
-             	if (relationship.bidirectional == false) {
-             			imports << "javax.persistence.JoinColumn"
-             	}
-         	} else if (relationship.type == RelationshipType.MANY_TO_ONE) {
-         		imports << "javax.persistence.ManyToOne"
-         		imports << "javax.persistence.CascadeType"
-         	} else if (relationship.type == RelationshipType.MANY_TO_MANY) {
-         		imports << "java.util.Set"
-         		imports << "java.util.HashSet"
-     			imports << "javax.persistence.JoinTable"
-     			imports << "javax.persistence.ManyToMany"
-     			imports << "javax.persistence.JoinColumn"
-         	}
-        }
-        
-        if (bean.relationships.size()>0) {
-        	imports << "javax.persistence.NamedQueries" 
-        	imports << "javax.persistence.NamedQuery"
-        }
-        
-        if (needsColumnImport(bean)) {
-            imports << "javax.persistence.Column"
-        }
-        
-        if (!bean.namesMatch) {
-        	imports << "javax.persistence.Table"
-        }
-         
-        Set<String> impSet = new HashSet<String> (imports)
-        impSet.remove (null)
-        impSet = new TreeSet(impSet)
-        if (debug) println "Calculated imports for ${bean.name}, ${imports}"
-        impSet
-    }
-
-    String readPopulatedTemplate = '''
-@NamedQueries( {
-		@NamedQuery(name = "${bean.name}.readPopulated", query = "SELECT DISTINCT ${bean.name.unCap()} FROM ${bean.name} ${bean.name.unCap()} "
-				${relationships}
-				+ " WHERE ${bean.name.unCap()}.id=?1")
-		})'''
-
-    String readPopulatedRelationshipTemplate = 
-'''				+ " LEFT JOIN FETCH ${bean.name.unCap()}.${relationship.name.unCap()}"'''
-
-    String createQueriesString(JavaClass bean) {
-
-    	
-    	List<String> relationships = []
-    	bean.relationships.each {Relationship relationship -> 
-	    	relationships << engine.createTemplate(readPopulatedRelationshipTemplate).make(["bean":bean, "relationship":relationship]).toString()		
-    	}
-    	
-    	String relationshipsStr = relationships.join("\n")
-    	
-    	String query = engine.createTemplate(readPopulatedTemplate).make(["bean":bean, "relationships":relationshipsStr]).toString()
-    	return query
-    }
-    
-    def writeClassFiles() {
+	def doProcess(String fileNameSuffix, String template) {
         for (JavaClass bean in classes) {
         	
-        	if (debug) println "Writing ${bean.name} class file"
-            def binding = ["bean":bean, "imports":calculateImportsFromBean(bean), "queries": createQueriesString(bean)]        
-            String templateOutput = engine.createTemplate(javaClassTemplate).make(binding).toString()
-            File outputFileDir = new File(outputDir, bean.packageName.replace('.','/'))
-        	if (debug) println "Outputting ${bean.name} to ${outputFileDir}"
-            outputFileDir.mkdirs()
-            File javaFile = new File (outputFileDir, bean.name + ".java")
-        	if(debug) println "Java file ${javaFile}"
-            javaFile.newWriter().withWriter{BufferedWriter writer->
+        	if (debug) println "Writing ${bean.name} listing xhtml"
+            def binding = [bean:bean, formBody:generateBody(bean), propertyNames:generatePropertyNames(bean)]        
+            String templateOutput = engine.createTemplate(template).make(binding).toString()
+            outputDir.mkdirs()
+            File listingFile = new File (outputDir, bean.name.unCap() + fileNameSuffix)
+        	listingFile.newWriter().withWriter{BufferedWriter writer->
             	writer.write(templateOutput)
             }
         }
+	
+	}
+	def process() {
+		doProcess("Listing.xhtml", listingTemplate)
+		doProcess("Form.xhtml", formTemplate)
     }
 
+	String generatePropertyNames(JavaClass bean) {
+		List<String> builder = []
+		bean.relationships.each{Relationship relationship ->
+			switch (relationship.type) {
+				case[RelationshipType.MANY_TO_ONE, RelationshipType.ONE_TO_ONE]:
+					builder << relationship.name
+			}
+		}
+		
+		bean.properties.each {JavaProperty jp ->
+			switch (jp.javaClass) {
+				case [new JavaClass("String","java.lang"), new JavaClass("Integer","java.lang"), 
+                new JavaClass("Long","java.lang"), new JavaClass("Byte", "java.lang"), 
+                new JavaClass("Date", "java.util")]:
+				builder << jp.name
+			}
+			if (jp.javaClass.primitive) {
+				builder << jp.name
+			}
+		}
+		
+		builder.join(",")
+	}
+	
+	String generateBody(JavaClass bean) {
+		StringBuilder builder = new StringBuilder()
+		bean.relationships.each {Relationship relationship ->
+			if (relationship.type == RelationshipType.ONE_TO_MANY) {
+				builder << engine.createTemplate(oneToManyTemplate).make([bean:bean, relationship:relationship]).toString()
+			}
+		}
+		builder.toString()
+	}
 }

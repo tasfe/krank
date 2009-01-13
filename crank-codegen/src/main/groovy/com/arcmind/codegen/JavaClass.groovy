@@ -12,6 +12,13 @@ class JavaClass {
     HashMap<String, JavaProperty> columnNameToPropertyMap = [:]
     Table table
 
+    public JavaClass() {
+    	
+    }
+    public JavaClass(String name, String packageName) {
+    	this.name = name
+    	this.packageName = packageName
+    }
     public boolean isNamesMatch() {
         return name == table.name;
     }
@@ -20,6 +27,14 @@ class JavaClass {
         "JavaClass name=${name} packageName=${packageName} primitive=${primitive} properties=${properties}"
     }
     
+    boolean equals(Object other) {	
+    	println "equal? ${other} ${this}"
+    	other.name == this.name && other.packageName == this.packageName
+    }
+    
+    int hashCode() {
+    	"${name}.${packageName}".hashCode()
+    }
     
 
 }

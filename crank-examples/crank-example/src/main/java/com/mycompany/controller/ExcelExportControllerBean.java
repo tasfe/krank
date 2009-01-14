@@ -1,4 +1,4 @@
-package org.crank.controller;
+package com.mycompany.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;

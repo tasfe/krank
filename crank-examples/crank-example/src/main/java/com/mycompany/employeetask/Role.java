@@ -1,44 +1,49 @@
-package org.crank.examples.employeetask;
+package com.mycompany.employeetask;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-@Entity  @Table(name="DEPARTMENT") 
+@Entity  @Table(name="ROLE") 
 @NamedQueries( {
-		@NamedQuery(name = "Department.readPopulated", query = "SELECT DISTINCT department FROM Department department "
-								+ " LEFT JOIN FETCH department.employees"
-				+ " WHERE department.id=?1")
+		@NamedQuery(name = "Role.readPopulated", query = "SELECT DISTINCT role FROM Role role "
+								+ " LEFT JOIN FETCH role.employees"
+				+ " WHERE role.id=?1")
 		})
-public class Department implements Serializable {
+public class Role implements Serializable {
     /** ID */
-    @Id @Column(name="ID") 
+    @Id @Column(name="ROLE_ID") 
     @GeneratedValue( strategy = GenerationType.AUTO )
     private Long id;
 
     /* ------- Relationships ------ */
    
-    @OneToMany(mappedBy="department", cascade = CascadeType.ALL)
-    private Set<Employee> employees = new HashSet<Employee>();
+    
+    @ManyToMany 
+    @JoinTable(name="ROLE_EMPLOYEE",
+    		joinColumns=@JoinColumn(name="FK_ROLE_ID"),
+    		inverseJoinColumns=@JoinColumn(name="FK_EMP_ID"))	
+    private Set <Employee> employees = new HashSet<Employee>();
    
 
     /* Properties's fields */
   
   
-    @Column(length=25) 
+    @Column(name="NAME", nullable=false, length=30) 
     private String name;
     
 
-    public Department () {
+    public Role () {
 
     }
 
@@ -60,12 +65,12 @@ public class Department implements Serializable {
     }
     
     public void addEmployee(Employee employee) {
-    	employee.setDepartment(this);
+    	
     	employees.add(employee);
     }
 
     public void removeEmployee(Employee employee) {
-    	employee.setDepartment(null);
+    	
     	employees.remove(employee);
     }
  
@@ -87,13 +92,13 @@ public class Department implements Serializable {
     	if (other==null) {
     		return false;
     	}
-    	Department otherDepartment = (Department) other;
-    	if (otherDepartment.id==null && this.id==null) {
-    		return otherDepartment.hashCode() == this.hashCode();
+    	Role otherRole = (Role) other;
+    	if (otherRole.id==null && this.id==null) {
+    		return otherRole.hashCode() == this.hashCode();
     	} else if (this.id == null) {
     		return false;
     	} else {
-    		return this.id.equals(otherDepartment.id);
+    		return this.id.equals(otherRole.id);
     	}
     }
     

@@ -1,4 +1,4 @@
-package org.crank.examples.employeetask;
+package com.mycompany.employeetask;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;

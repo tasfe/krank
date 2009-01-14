@@ -52,9 +52,13 @@
   		<from-outcome>ROLES</from-outcome>
   		<to-view-id>/pages/crud/roleListing.xhtml</to-view-id>
   	</navigation-case>
+  	<!-- Main Page Links (codegen) -->
+  	<!-- End of Main Page Links (codegen) -->
   </navigation-rule>
  
   
+  <!-- Navigation goals for CRUD -->
+  <!-- End Navigation goals for CRUD  -->
   <navigation-rule>
   	<from-view-id>/pages/crud/departmentListing.xhtml</from-view-id>
   	<navigation-case>
@@ -118,7 +122,7 @@
   </navigation-rule>
   
   <converter>
-  	<converter-for-class>org.crank.examples.employeetask.Department</converter-for-class>
+  	<converter-for-class>com.mycompany.employeetask.Department</converter-for-class>
   	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
   </converter>
   

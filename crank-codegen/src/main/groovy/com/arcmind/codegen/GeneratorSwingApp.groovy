@@ -49,6 +49,8 @@ public class GeneratorSwingApp{
 	RelationshipEditSupport relationshipEditSupport
 	CodeGenMainEditSupport codeGenMainEditSupport
 	SettingsEditSupport settingsEditSupport
+	String backupPropertiesFile
+	XMLPersister backupXMLPersister
 
 	boolean debug = true
 
@@ -296,7 +298,7 @@ password: ${password.text}, driver: ${drv}"""
 			
             Closure handleWriteXML = {
            		if (main.wasNotSetXmlFile) {
-           			setXmlFromFileDialog()
+           			setXmlFromFileDialog(true)
            		}
             	doOutside {
             		edt {setStatus "Writing XML file out ${main.persister.fileName}"}
@@ -305,14 +307,37 @@ password: ${password.text}, driver: ${drv}"""
             	}
             }
             
+            Closure handleWriteAsModel = {
+            		backupXMLPersister = main.persister.cloneThis()
+           			if (setXmlFromFileDialog(false)) {
+                    	doOutside {
+                    		edt {setStatus "Writing XML file out ${main.persister.fileName}"}
+                    		main.writeXML()
+                    		edt {setStatus "Done writing XML file out ${main.persister.fileName}"}
+                    		main.persister = backupXMLPersister.cloneThis()
+                    	}
+           			}
+            		            		
+            }            
+            
             Closure handleWriteProperties = {
             		if (main.wasNotSetPropFile) {
-            			setPropFromFileDialog()
+            			setPropFromFileDialog(true)
             		}
             		use(StringCategory){
             			main.writeProperties()
             		}
             }
+            
+            Closure handleWriteAsProperties = {
+            		main.backupPropFile(backupPropertiesFile)
+           			if (setPropFromFileDialog(false)) {
+	            		use(StringCategory){
+	            			main.writeProperties()
+	            		}
+           			}
+            		main.restorePropFile(backupPropertiesFile)
+            }            
 
             Closure handleReadXML = {
                 doOutside {
@@ -326,6 +351,8 @@ password: ${password.text}, driver: ${drv}"""
                 action(name: "Write XML", mnemonic: 'W', closure: handleWriteXML)
                 action(name: "Read XML", mnemonic: 'e', closure: handleReadXML)
                 action(name: "Save Properties", mnemonic: 'S', closure: handleWriteProperties)
+                action(name: "Save Properties As...", mnemonic: 'P', closure: handleWriteAsProperties)
+                action(name: "Save Model As...", mnemonic: 'M', closure: handleWriteAsModel)
             }
 
             Closure handleReverseDB = {            	
@@ -644,7 +671,7 @@ password: ${password.text}, driver: ${drv}"""
 						Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR))					
 	}
 	
-	private setPropFromFileDialog() {
+	private setPropFromFileDialog(isUpdateFlag) {
 		JFileChooser fc = new JFileChooser(main.calculatePropFile())
 		CodeGenFileFilter filter = new CodeGenFileFilter(description:"Properties File")
 	    filter.addExtension("properties");
@@ -655,11 +682,14 @@ password: ${password.text}, driver: ${drv}"""
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             main.propertiesFile = fc.getSelectedFile().getAbsolutePath()
+            if (isUpdateFlag)
             main.wasNotSetPropFile = false
         }
+        
+        return (returnVal == JFileChooser.APPROVE_OPTION) ? true : false
 	}
 	
-	private setXmlFromFileDialog() {
+	private setXmlFromFileDialog(isUpdateFlag) {
 		JFileChooser fc = new JFileChooser(main.calculatePropFile())
 		CodeGenFileFilter filter = new CodeGenFileFilter(description:"XML File")
 	    filter.addExtension("xml")
@@ -672,8 +702,11 @@ password: ${password.text}, driver: ${drv}"""
             main.xmlFileName = file.getName()
             main.persister.fileName = main.xmlFileName
             main.persister.outputDir = file.getParentFile()
+            if (isUpdateFlag)
             main.wasNotSetXmlFile = false
         }
+        
+        return (returnVal == JFileChooser.APPROVE_OPTION) ? true : false
 	}	
 }
 

@@ -201,4 +201,21 @@ public class XMLPersister{
             }//relationships
 		}//classes
 	}//readRelationships
+	
+	public Object cloneThis() {
+		XMLPersister copy = new XMLPersister()
+		if (tables != null) {
+			copy.tables = new ArrayList(tables)
+		}
+		if (classes != null) {
+			copy.classes = new ArrayList(classes)
+		}
+		
+		if (outputDir != null)
+		copy.outputDir = new File(outputDir.getPath())
+		
+		copy.fileName = StringHelper.clone(fileName)
+		
+		return copy
+	}
 }

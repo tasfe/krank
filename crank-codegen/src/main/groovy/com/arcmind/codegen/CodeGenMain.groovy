@@ -305,6 +305,7 @@ public class CodeGenMain{
 		wasNotSetPropFile = (propertiesFile==null || "".equals(propertiesFile))
 		propertiesFile==null || "".equals(propertiesFile) ? new File((File) this.appConfigDirFile,"config.properties") : new File(propertiesFile)
 	}
+	
 
 	private File calculateDataSourceFile () {
 		(xmlDataSourceFileName == null || "".equals(xmlDataSourceFileName)) ? 
@@ -329,7 +330,15 @@ public class CodeGenMain{
 
 		propFile.newOutputStream().withStream{stream -> configProperties.store(stream, "prop file") }
 	}
+	
+	public backupPropFile(backupPropertiesFile) {
+		backupPropertiesFile = StringHelper.clone(propertiesFile)
+	}
 
+	public restorePropFile(backupPropertiesFile) {
+		propertiesFile = StringHelper.clone(backupPropertiesFile)
+	}
+	
 	public void copyPropsFromArgs(String[] args) {
 		actions = []
 		for (String arg : args) {

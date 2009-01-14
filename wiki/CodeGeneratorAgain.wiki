@@ -296,3 +296,9 @@ INFO: Initializing Sun's JavaServer Faces implementation (1.2_04-b10-p01) for co
 }}}
 
 It seems to startup the webapp without any catastrophic errors.
+
+I opened up the page and it looks correct to... The app works. Life is good:
+
+http://krank.googlecode.com/svn/wiki/img/codegen/archetype_success.png
+
+When things go well, I love maven.

@@ -96,3 +96,41 @@ $ pwd
 $ mv target/generated-sources/archetype ~/projects/crank-archetypes/crank-example-archetype
 
 }}}
+
+Next I need to build the archetype so I can use it (done in ~/projects/crank-archetypes/crank-example-archetype):
+
+{{{
+$ pwd 
+/Users/richardhightower/projects/crank-archetypes/crank-example-archetype
+
+$ mvn clean install
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Building crank-example-archetype
+[INFO]    task-segment: [clean, install]
+[INFO] ------------------------------------------------------------------------
+[INFO] [clean:clean]
+[INFO] Deleting directory /Users/richardhightower/projects/crank-archetypes/crank-example-archetype/target
+[INFO] [resources:resources]
+[INFO] Using default encoding to copy filtered resources.
+[INFO] [resources:testResources]
+[INFO] Using default encoding to copy filtered resources.
+[INFO] Setting property: classpath.resource.loader.class => 'org.codehaus.plexus.velocity.ContextClassLoaderResourceLoader'.
+[INFO] Setting property: velocimacro.messages.on => 'false'.
+[INFO] Setting property: resource.loader => 'classpath'.
+[INFO] Setting property: resource.manager.logwhenfound => 'false'.
+[INFO] [archetype:jar]
+[INFO] [archetype:add-archetype-metadata]
+[INFO] [archetype:integration-test]
+[INFO] [install:install]
+[INFO] Installing /Users/richardhightower/projects/crank-archetypes/crank-example-archetype/target/crank-example-archetype-1.0.4-SNAPSHOT.jar to /Users/richardhightower/.m2/repository/crank-examples/crank-example-archetype/1.0.4-SNAPSHOT/crank-example-archetype-1.0.4-SNAPSHOT.jar
+[INFO] [archetype:update-local-catalog]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 3 seconds
+[INFO] Finished at: Wed Jan 14 13:24:32 PST 2009
+[INFO] Final Memory: 18M/490M
+[INFO] ------------------------------------------------------------------------
+
+}}}

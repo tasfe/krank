@@ -24,3 +24,5 @@ You can find the code for the code generator at: https://krank.googlecode.com/sv
 {{{
 svn co https://krank.googlecode.com/svn/crank-codegen codegen
 }}}
+
+Project notes to ensue shortly...

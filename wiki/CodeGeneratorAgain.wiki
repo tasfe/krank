@@ -25,4 +25,5 @@ You can find the code for the code generator at: https://krank.googlecode.com/sv
 svn co https://krank.googlecode.com/svn/crank-codegen codegen
 }}}
 
-Project notes to ensue shortly...
+====Project notes on using maven archetype support====
+The best guide I've seen for creating a maven archetype based on a previous maven project is here: [http://ninomartinez.wordpress.com/2008/09/03/making-a-maven-archetype/ Nino Martinez' guide to making a maven archetype] 

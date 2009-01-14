@@ -22,8 +22,77 @@ The plan for today is to create an archetype, change the code generator to be aw
 You can find the code for the code generator at: https://krank.googlecode.com/svn/crank-codegen. Just check it out with svn and provide comments....
 
 {{{
-svn co https://krank.googlecode.com/svn/crank-codegen codegen
+svn co http://krank.googlecode.com/svn/crank-codegen codegen
 }}}
 
 ====Project notes on using maven archetype support====
 The best guide I've seen for creating a maven archetype based on a previous maven project is here: [http://ninomartinez.wordpress.com/2008/09/03/making-a-maven-archetype/ Nino Martinez' guide to making a maven archetype] 
+
+Here I repeat it....
+
+   * Build a project that will act as a template for the archetype
+   * run mvn archetype:create-from-project , from the project folder
+   * Edit the generated archetype ( placed in target/generated-sources/archetype ), it might not pickup on everything that needs to be substituted.
+   * From target/generated-sources/archetype of the project template run mvn install
+   * Try the archetype yourself by running mvn archetype:generate -DarchetypeCatalog=local from a fresh directory
+   * Repeat the process until satisfied
+
+Before I started this, I made crank-example (svn http://krank.googlecode.com/svn/crank-examples/crank-example) a standalone sample (it does not inherit from any crank pom). 
+
+Here is step 1:
+{{{
+richard-hightowers-macbook-pro:crank-example richardhightower$ mvn clean
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Crank :: Crud :: Master Example project
+[INFO]    task-segment: [clean]
+[INFO] ------------------------------------------------------------------------
+[INFO] [clean:clean]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1 second
+[INFO] Finished at: Wed Jan 14 13:17:45 PST 2009
+[INFO] Final Memory: 8M/490M
+[INFO] ------------------------------------------------------------------------
+richard-hightowers-macbook-pro:crank-example richardhightower$ mvn archetype:create-from-project
+[INFO] Scanning for projects...
+[INFO] Searching repository for plugin with prefix: 'archetype'.
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Crank :: Crud :: Master Example project
+[INFO]    task-segment: [archetype:create-from-project] (aggregator-style)
+[INFO] ------------------------------------------------------------------------
+[INFO] Preparing archetype:create-from-project
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Crank :: Crud :: Master Example project
+[INFO] ------------------------------------------------------------------------
+[INFO] No goals needed for project - skipping
+[INFO] Setting property: classpath.resource.loader.class => 'org.codehaus.plexus.velocity.ContextClassLoaderResourceLoader'.
+[INFO] Setting property: velocimacro.messages.on => 'false'.
+[INFO] Setting property: resource.loader => 'classpath'.
+[INFO] Setting property: resource.manager.logwhenfound => 'false'.
+[INFO] [archetype:create-from-project]
+[INFO] Setting default groupId: crank-examples
+[INFO] Setting default artifactId: crank-example
+[INFO] Setting default version: 1.0.4-SNAPSHOT
+[INFO] Setting default package: com.mycompany
+[INFO] Archetype created in target/generated-sources/archetype
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 4 seconds
+[INFO] Finished at: Wed Jan 14 13:18:03 PST 2009
+[INFO] Final Memory: 15M/490M
+[INFO] ------------------------------------------------------------------------
+richard-hightowers-macbook-pro:crank-example richardhightower$ 
+}}}
+
+Then I copy over to my archetypes folder where I can edit it and inspect it:
+
+{{{
+$ pwd
+/Users/richardhightower/projects/crank-examples/crank-example
+
+$ mv target/generated-sources/archetype ~/projects/crank-archetypes/crank-example-archetype
+
+}}}

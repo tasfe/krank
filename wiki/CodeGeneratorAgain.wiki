@@ -1,0 +1,26 @@
+#summary CodeGen Crank/Presto code generator
+
+I have been fairly steady working on the CodeGen project. Due to the wonders of open source, I have received some help in improving the Swing GUI. Thanks Alex.
+
+I had some issues creating the archetype. I had to rename the packages of the sample app (sample app is at svn https://krank.googlecode.com/svn/crank-examples/crank-example) so that they would not collide with crank package names, otherwise, the maven archetype tool mangled the living snot out of my library imports.
+
+I've created the following generators (since last I wrote about this):
+
+ * *FacesConfigCodeGen* (edits an faces-config to add entries for CRUD pages)
+ * *SpringJavaConfigCodeGen* (edits a Spring Java Config file to add CRUD controllers)
+ * *XHTMLCodeGenerator* (generates XHTML/Facelets pages for Listings and forms)
+ * *JPACodeGenerator* (Generates JPA Model classes)
+
+The above all have unit tests, but only *JPACodeGenerator* generated code and been tested in a running application. *FacesConfigCodeGen*, *SpringJavaConfigCodeGen*, and *XHTMLCodeGenerator* have not been wired into the Swing GUI yet. Each took about a day to write and test.
+
+They all work with ManyToOne, OneToMany, and ManyToMany relationships, in otherwords, they generate all the GUI needed for editing/managing these relationships. I have not added support for OneToOne (Crank/Presto2 supports it, but the generation does not).
+
+I also greatly improved the JPACodeGenerator. It took quite a few passes to get it right, but I was going for perfection. (I hate crappily generated code with a lot of spurious unused imports and weird formatting)
+
+The plan for today is to create an archetype, change the code generator to be aware of a maven project structure. Then use the archetype to create a new project. Point the code generator at the project directory. Configure the code generators programatically to handle the maven project structure. Then integration test the generated code by generating code and testing the webapp.
+
+You can find the code for the code generator at: https://krank.googlecode.com/svn/crank-codegen. Just check it out with svn and provide comments....
+
+{{{
+svn co https://krank.googlecode.com/svn/crank-codegen codegen
+}}}

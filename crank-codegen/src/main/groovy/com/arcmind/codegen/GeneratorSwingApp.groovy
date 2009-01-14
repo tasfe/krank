@@ -50,6 +50,7 @@ public class GeneratorSwingApp{
 	CodeGenMainEditSupport codeGenMainEditSupport
 	SettingsEditSupport settingsEditSupport
 	String backupPropertiesFile
+	String backupXmlFileName
 	XMLPersister backupXMLPersister
 
 	boolean debug = true
@@ -106,6 +107,13 @@ public class GeneratorSwingApp{
 	}
 
 	def modifyProperties () {
+		mainTabPane.addTab("Modify Properties", codeGenMainPane)
+		mainTabPane.setSelectedComponent(codeGenMainPane)
+		codeGenMainEditSupport.populateForm(main)
+		main.configureCollaborators()
+	}
+	def refreshProperties () {
+		mainTabPane.remove(codeGenMainPane)
 		mainTabPane.addTab("Modify Properties", codeGenMainPane)
 		mainTabPane.setSelectedComponent(codeGenMainPane)
 		codeGenMainEditSupport.populateForm(main)
@@ -298,7 +306,7 @@ password: ${password.text}, driver: ${drv}"""
 			
             Closure handleWriteXML = {
            		if (main.wasNotSetXmlFile) {
-           			setXmlFromFileDialog(true)
+           			setXmlFromFileDialog(false, true)
            		}
             	doOutside {
             		edt {setStatus "Writing XML file out ${main.persister.fileName}"}
@@ -308,21 +316,31 @@ password: ${password.text}, driver: ${drv}"""
             }
             
             Closure handleWriteAsModel = {
-            		backupXMLPersister = main.persister.cloneThis()
-           			if (setXmlFromFileDialog(false)) {
+            		backupXMLCredentials()
+           			if (setXmlFromFileDialog(false, false)) {
                     	doOutside {
                     		edt {setStatus "Writing XML file out ${main.persister.fileName}"}
                     		main.writeXML()
                     		edt {setStatus "Done writing XML file out ${main.persister.fileName}"}
-                    		main.persister = backupXMLPersister.cloneThis()
+                    		//restoreXMLCredentials()
                     	}
            			}
-            		            		
+            }     
+            
+            Closure handleOpenProperties = {
+            		main.backupPropFile(backupPropertiesFile)
+           			if (setPropFromFileDialog(true, false)) {
+	            		use(StringCategory){
+	            			main.readProperties()
+	            		}
+	            		refreshProperties()	            		
+           			}
+            		//main.restorePropFile(backupPropertiesFile)            		
             }            
             
             Closure handleWriteProperties = {
             		if (main.wasNotSetPropFile) {
-            			setPropFromFileDialog(true)
+            			setPropFromFileDialog(false, true)
             		}
             		use(StringCategory){
             			main.writeProperties()
@@ -331,12 +349,12 @@ password: ${password.text}, driver: ${drv}"""
             
             Closure handleWriteAsProperties = {
             		main.backupPropFile(backupPropertiesFile)
-           			if (setPropFromFileDialog(false)) {
+           			if (setPropFromFileDialog(false, false)) {
 	            		use(StringCategory){
 	            			main.writeProperties()
 	            		}
            			}
-            		main.restorePropFile(backupPropertiesFile)
+            		//main.restorePropFile(backupPropertiesFile)
             }            
 
             Closure handleReadXML = {
@@ -345,11 +363,26 @@ password: ${password.text}, driver: ${drv}"""
                     readXML()
                     edt {setStatus "Done reading XML file in ${main.persister.fileName}"}
                 }
-            }			
+            }
+            
+            Closure handleOpenXML = {
+            		backupXMLCredentials()
+            		if (setXmlFromFileDialog(true, false)) {
+	                    doOutside {
+	                        edt {setStatus "Reading XML file in ${main.persister.fileName}"}
+	                        readXML()
+	                        edt {setStatus "Done reading XML file in ${main.persister.fileName}"}
+	                        //restoreXMLCredentials()
+	                    }
+            		}
+                }
+            
             fileActions = actions() {
                 action(name: "Exit", mnemonic: 'X', closure: { exit() })
                 action(name: "Write XML", mnemonic: 'W', closure: handleWriteXML)
                 action(name: "Read XML", mnemonic: 'e', closure: handleReadXML)
+                action(name: "Open Properties...", mnemonic: 'O', closure: handleOpenProperties)
+                action(name: "Open Model...", mnemonic: 'L', closure: handleOpenXML)
                 action(name: "Save Properties", mnemonic: 'S', closure: handleWriteProperties)
                 action(name: "Save Properties As...", mnemonic: 'P', closure: handleWriteAsProperties)
                 action(name: "Save Model As...", mnemonic: 'M', closure: handleWriteAsModel)
@@ -577,6 +610,7 @@ password: ${password.text}, driver: ${drv}"""
                                 boxLayout(axis:BoxLayout.X_AXIS)
                                 label("XML File", preferredSize:[100,20])
                                 codeGenMainEditSupport.xmlFileName = textField(preferredSize:[200,20])
+                                button(text:"...", actionPerformed: {handleOpenXML()}, preferredSize:[30,20])
                                 label(preferredSize:[100,20])
                             }
                             panel {
@@ -589,6 +623,7 @@ password: ${password.text}, driver: ${drv}"""
                                 boxLayout(axis:BoxLayout.X_AXIS)
                                 label("Properties File", preferredSize:[100,20])
                                 codeGenMainEditSupport.propertiesFile = textField(preferredSize:[200,20])
+                                button(text:"...", actionPerformed: {handleOpenProperties()}, preferredSize:[30,20])
                                 label(preferredSize:[100,20])
                             }
                             panel {
@@ -649,6 +684,15 @@ password: ${password.text}, driver: ${drv}"""
             }//splitPane
         }//frame
 	}//buildGUI()
+	private restoreXMLCredentials() {
+		main.persister = backupXMLPersister.cloneThis()
+		main.xmlFileName = backupXmlFileName
+	}
+	
+	private backupXMLCredentials() {
+		backupXMLPersister = main.persister.cloneThis()
+		backupXmlFileName = main.xmlFileName
+	}
 	
 	private void enableMenuBar(trueOrFalse) {
 		if (trueOrFalse == false) { //Save state
@@ -671,13 +715,13 @@ password: ${password.text}, driver: ${drv}"""
 						Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR))					
 	}
 	
-	private setPropFromFileDialog(isUpdateFlag) {
+	private setPropFromFileDialog(isOpenOrSave, isUpdateFlag) {
 		JFileChooser fc = new JFileChooser(main.calculatePropFile())
 		CodeGenFileFilter filter = new CodeGenFileFilter(description:"Properties File")
 	    filter.addExtension("properties");
 	    fc.setFileFilter(filter)
 		
-        int returnVal = fc.showSaveDialog(mainFrame);
+        int returnVal = isOpenOrSave? fc.showOpenDialog(mainFrame) : fc.showSaveDialog(mainFrame)
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
@@ -689,25 +733,28 @@ password: ${password.text}, driver: ${drv}"""
         return (returnVal == JFileChooser.APPROVE_OPTION) ? true : false
 	}
 	
-	private setXmlFromFileDialog(isUpdateFlag) {
+	private setXmlFromFileDialog(isOpenOrSave, isUpdateFlag) {
 		JFileChooser fc = new JFileChooser(main.calculatePropFile())
 		CodeGenFileFilter filter = new CodeGenFileFilter(description:"XML File")
 	    filter.addExtension("xml")
 	    fc.setFileFilter(filter)
 		
-        int returnVal = fc.showSaveDialog(mainFrame);
+        int returnVal = isOpenOrSave? fc.showOpenDialog(mainFrame) : fc.showSaveDialog(mainFrame)
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            main.xmlFileName = file.getName()
-            main.persister.fileName = main.xmlFileName
-            main.persister.outputDir = file.getParentFile()
+            updateXMLCredentials(file)
             if (isUpdateFlag)
             main.wasNotSetXmlFile = false
         }
         
         return (returnVal == JFileChooser.APPROVE_OPTION) ? true : false
 	}	
+	private updateXMLCredentials(File file) {
+		main.xmlFileName = file.getName()
+		main.persister.fileName = main.xmlFileName
+		main.persister.outputDir = file.getParentFile()
+	}
 }
 
  

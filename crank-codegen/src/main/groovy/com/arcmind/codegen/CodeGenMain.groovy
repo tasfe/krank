@@ -279,7 +279,7 @@ public class CodeGenMain{
 		}
 	}
 	
-	private void readProperties() {
+	public void readProperties() {
 		configProperties = new Properties()
 		File propFile = calculatePropFile()
 		if (propFile.exists()) {

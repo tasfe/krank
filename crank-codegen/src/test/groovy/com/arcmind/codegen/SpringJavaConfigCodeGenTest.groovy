@@ -15,8 +15,8 @@ public class SpringJavaConfigCodeGenTest extends TestCase{
 		classes.add(new JavaClass(name:"Bar", packageName:"com.foo"))
 		classes.add(new JavaClass(name:"Baz", packageName:"com.foo"))
 		
-		classes[0].relationships << new Relationship(type:RelationshipType.MANY_TO_ONE, name:"bar")
-		classes[0].relationships << new Relationship(type:RelationshipType.ONE_TO_MANY, name:"baz")
+		classes[0].relationships << new Relationship(type:RelationshipType.MANY_TO_MANY, name:"bars", owner:classes[0], relatedClass:classes[1])
+		classes[0].relationships << new Relationship(type:RelationshipType.ONE_TO_MANY, name:"baz", owner:classes[0], relatedClass:classes[2])
 		classes[0].properties << new JavaProperty(javaClass:new JavaClass("String", "java.lang"), name:"firstName")
 	}
 	

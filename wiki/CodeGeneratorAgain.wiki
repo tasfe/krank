@@ -302,3 +302,17 @@ I opened up the page and it looks correct to... The app works. Life is good:
 http://krank.googlecode.com/svn/wiki/img/codegen/archetype_success.png
 
 When things go well, I love maven.
+
+==== Next steps ====
+I figured I would right down the next steps before I break for lunch:
+
+ * Edit sample app, add comments that code generator needs to edit files
+ * Recreate archetype (with new comments)
+ * Change codegen to recognize maven project structure and configure code generators accordingly
+ * Recreate sample project with needed codegen comments
+ * Point codegen to sample project folder
+ * Generate artifacts (xListing.xhtml, xForm.xhtml, entries in faces-config.xml, entries in Spring Java Config)
+ * Test app and see if it runs the generated listings
+ * Repeat as needed until codegen is beat into submission
+ 
+ 

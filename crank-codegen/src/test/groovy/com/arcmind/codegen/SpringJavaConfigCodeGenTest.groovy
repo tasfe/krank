@@ -1,0 +1,45 @@
+package com.arcmind.codegen
+
+import junit.framework.TestCase
+
+
+/**
+ * @author richardhightower
+ *
+ */
+public class SpringJavaConfigCodeGenTest extends TestCase{
+	List<JavaClass> classes = new ArrayList<JavaClass>();
+	
+	public void setUp () {
+		classes.add(new JavaClass(name:"Foo", packageName:"com.foo"))
+		classes.add(new JavaClass(name:"Bar", packageName:"com.foo"))
+		classes.add(new JavaClass(name:"Baz", packageName:"com.foo"))
+		
+		classes[0].relationships << new Relationship(type:RelationshipType.MANY_TO_ONE, name:"bar")
+		classes[0].relationships << new Relationship(type:RelationshipType.ONE_TO_MANY, name:"baz")
+		classes[0].properties << new JavaProperty(javaClass:new JavaClass("String", "java.lang"), name:"firstName")
+	}
+	
+	public void testTest () {
+		File rootDir = new File(".")
+		println rootDir.canonicalPath
+		File testFile = new File(rootDir.canonicalFile, "src/test/resources/src/main/java/org/yomama/EmployeeTaskApplicationContext.java")
+		println testFile
+		List<String> beforeChange = testFile.readLines()
+		SpringJavaConfigCodeGen codeGen = new SpringJavaConfigCodeGen(file:testFile, classes:classes)
+		use(StringCategory) { 
+			codeGen.process()
+		}
+		
+		List<String> afterChange = testFile.readLines()
+		int count = 0
+		afterChange.eachWithIndex {String line, int index ->
+			if (beforeChange[index] != afterChange[index]) {
+				count ++
+			}
+		}
+		println "COUNT for spring java config ${count}"
+
+	}
+
+}

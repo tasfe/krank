@@ -134,3 +134,165 @@ $ mvn clean install
 [INFO] ------------------------------------------------------------------------
 
 }}}
+
+Now I want to use the archetype to generate a project, and then test the project as follows: 
+
+{{{
+$ pwd
+/Users/richardhightower
+
+$ cd projects/
+$ mkdir generateprojects
+$ cd generateprojects/
+$ mvn archetype:generate -DarchetypeCatalog=local
+[INFO] Scanning for projects...
+[INFO] Searching repository for plugin with prefix: 'archetype'.
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Maven Default Project
+[INFO]    task-segment: [archetype:generate] (aggregator-style)
+[INFO] ------------------------------------------------------------------------
+[INFO] Preparing archetype:generate
+[INFO] No goals needed for project - skipping
+[INFO] Setting property: classpath.resource.loader.class => 'org.codehaus.plexus.velocity.ContextClassLoaderResourceLoader'.
+[INFO] Setting property: velocimacro.messages.on => 'false'.
+[INFO] Setting property: resource.loader => 'classpath'.
+[INFO] Setting property: resource.manager.logwhenfound => 'false'.
+[INFO] [archetype:generate]
+[INFO] Generating project in Interactive mode
+[INFO] No archetype defined. Using maven-archetype-quickstart (org.apache.maven.archetypes:maven-archetype-quickstart:1.0)
+Choose archetype:
+1: local -> crank-example-archetype (crank-example-archetype)
+Choose a number:  (1): 1
+Define value for groupId: : testingArchetype1
+Define value for artifactId: : employeeTaskTestApp
+Define value for version:  1.0-SNAPSHOT: : 
+Define value for package:  testingArchetype1: : com.somecompany.coolproject
+Confirm properties configuration:
+groupId: testingArchetype1
+artifactId: employeeTaskTestApp
+version: 1.0-SNAPSHOT
+package: com.somecompany.coolproject
+ Y: : Y
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 58 seconds
+[INFO] Finished at: Wed Jan 14 13:28:31 PST 2009
+[INFO] Final Memory: 14M/490M
+[INFO] ------------------------------------------------------------------------
+
+}}}
+
+After you run mvn archetype:generate -DarchetypeCatalog=local, maven prompts you information about the project you want to create (which you fill out via the console).
+
+Now to verify that the project is actually there and that it builds: 
+
+{{{
+$ ls
+employeeTaskTestApp
+
+$ cd employeeTaskTestApp/
+
+$ ls
+log4j.xml	pom.xml		runjetty.sh	src
+
+$ mvn clean install
+
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Crank :: Crud :: Master Example project
+[INFO]    task-segment: [clean, install]
+[INFO] ------------------------------------------------------------------------
+[INFO] [clean:clean]
+[INFO] [resources:resources]
+[INFO] Using default encoding to copy filtered resources.
+[INFO] [compiler:compile]
+[INFO] Compiling 5 source files to /Users/richardhightower/projects/generateprojects/employeeTaskTestApp/target/classes
+[INFO] [resources:testResources]
+[INFO] Using default encoding to copy filtered resources.
+[INFO] [compiler:testCompile]
+[INFO] No sources to compile
+[INFO] [surefire:test]
+[INFO] No tests to run.
+[INFO] [war:war]
+[INFO] Packaging webapp
+[INFO] Assembling webapp[employeeTaskTestApp] in [/Users/richardhightower/projects/generateprojects/employeeTaskTestApp/target/crank]
+[INFO] Processing war project
+[INFO] Webapp assembled in[2786 msecs]
+[INFO] Building war: /Users/richardhightower/projects/generateprojects/employeeTaskTestApp/target/crank.war
+[INFO] [install:install]
+[INFO] Installing /Users/richardhightower/projects/generateprojects/employeeTaskTestApp/target/crank.war to /Users/richardhightower/.m2/repository/testingArchetype1/employeeTaskTestApp/1.0-SNAPSHOT/employeeTaskTestApp-1.0-SNAPSHOT.war
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 19 seconds
+[INFO] Finished at: Wed Jan 14 13:31:58 PST 2009
+[INFO] Final Memory: 33M/490M
+[INFO] ------------------------------------------------------------------------
+
+}}}
+
+So far so good... now let's see if it will run....
+
+I've added a runjetty.sh script that uses the jetty plugin for maven as follows:
+
+{{{
+$ cat runjetty.sh 
+
+#!/bin/sh
+MAVEN_OPTS="-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009 -ea"
+export MAVEN_OPTS
+echo $MAVEN_OPTS
+mvn -Ddb=mysql -Dlog4j.configuration=file:./log4j.xml  jetty:run -o
+
+$ chmod +x runjetty.sh 
+
+$ runjetty.sh 
+
+-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009 -ea
+Listening for transport dt_socket at address: 9009
+[INFO] 
+NOTE: Maven is executing in offline mode. Any artifacts not already in your local
+repository will be inaccessible.
+
+[INFO] Scanning for projects...
+[INFO] Searching repository for plugin with prefix: 'jetty'.
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Crank :: Crud :: Master Example project
+[INFO]    task-segment: [jetty:run]
+[INFO] ------------------------------------------------------------------------
+[INFO] Preparing jetty:run
+[INFO] [resources:resources]
+[INFO] Using default encoding to copy filtered resources.
+[INFO] [compiler:compile]
+[INFO] Nothing to compile - all classes are up to date
+[INFO] [resources:testResources]
+[INFO] Using default encoding to copy filtered resources.
+[INFO] [compiler:testCompile]
+[INFO] No sources to compile
+[INFO] [jetty:run]
+[INFO] Configuring Jetty for project: Crank :: Crud :: Master Example project
+[INFO] Webapp source directory = /Users/richardhightower/projects/generateprojects/employeeTaskTestApp/src/main/webapp
+[INFO] web.xml file = /Users/richardhightower/projects/generateprojects/employeeTaskTestApp/src/main/webapp/WEB-INF/web.xml
+[INFO] Classes = /Users/richardhightower/projects/generateprojects/employeeTaskTestApp/target/classes
+2009-01-14 13:33:38.532::INFO:  Logging to STDERR via org.mortbay.log.StdErrLog
+[INFO] Context path = /employeeTaskTestApp
+[INFO] Tmp directory = /Users/richardhightower/projects/generateprojects/employeeTaskTestApp/target/work
+[INFO] Web defaults =  jetty default
+[INFO] Web overrides =  none
+[INFO] Webapp directory = /Users/richardhightower/projects/generateprojects/employeeTaskTestApp/src/main/webapp
+[INFO] Starting jetty 6.1.5 ...
+2009-01-14 13:33:38.667::INFO:  jetty-6.1.5
+log4j:WARN Continuable parsing error 109 and column 23
+log4j:WARN The content of element type "log4j:configuration" must match "(renderer*,appender*,(category|logger)*,root?,categoryFactory?)".
+2009-01-14 13:33:39.156::WARN:  Unknown realm: default
+2009-01-14 13:33:39.177::INFO:  No Transaction manager found - if your webapp requires one, please configure one.
+2009-01-14 13:33:40.884:/employeeTaskTestApp:INFO:  Initializing Spring root WebApplicationContext
+Jan 14, 2009 1:33:41 PM com.sun.faces.config.ConfigureListener contextInitialized
+INFO: Initializing Sun's JavaServer Faces implementation (1.2_04-b10-p01) for context '/employeeTaskTestApp'
+2009-01-14 13:33:45.894::INFO:  Started SelectChannelConnector@0.0.0.0:8080
+[INFO] Started Jetty Server
+
+}}}
+
+It seems to startup the webapp without any catastrophic errors.

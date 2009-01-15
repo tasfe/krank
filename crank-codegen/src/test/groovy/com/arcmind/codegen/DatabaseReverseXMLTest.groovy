@@ -78,6 +78,7 @@ CREATE TABLE ROLE_EMPLOYEE (
 	        modelGen.convertTablesToJavaClasses()
 	        
 	        codeGen.classes = modelGen.classes
+	        codeGen.rootDir = new File("./target/src/main/java")
 	        codeGen.writeClassFiles()
 	 
 	        persister.tables = reader.tables

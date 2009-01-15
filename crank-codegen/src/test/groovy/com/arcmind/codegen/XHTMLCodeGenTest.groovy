@@ -21,7 +21,7 @@ public class XHTMLCodeGenTest extends TestCase{
 	}
 	
 	public void testTest () {
-		XHTMLCodeGenerator codeGen = new XHTMLCodeGenerator(classes:classes)
+		XHTMLCodeGenerator codeGen = new XHTMLCodeGenerator(classes:classes, rootDir:new File("./target/src/main/webapp"))
 		use(StringCategory) { 
 			codeGen.process()
 		}

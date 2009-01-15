@@ -459,3 +459,20 @@ Then lastly we configure the code generator instances (as well as the code gen's
 }}}
 
 Notice that we added a new property called rootDir. This is the rootDir of the project that we are generating artifacts for.
+
+Now when we actually invoke these code generators we do it polymorphicaly as follows:
+
+{{{
+	def generateArtifacts() {
+		if (debug) println "Generating artifacts"
+		this.codeGenerators.each {CodeGenerator codeGen ->
+			/* Output the generated classes. */
+			codeGen.classes = modelGen.classes
+			if (debug) println "Generating artifacts for ${codeGen.classes} with ${codeGen.class.name}"
+			codeGen.process()
+		}
+	}
+
+}}}
+
+This should make it easy to extend the codegen utility to add additional code generators.

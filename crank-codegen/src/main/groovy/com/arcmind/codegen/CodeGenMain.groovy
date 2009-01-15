@@ -206,8 +206,12 @@ public class CodeGenMain{
 			codeGenPackage = "com.arcmind.codegen"
 			generators="FacesConfigCodeGen,JPACodeGenerator,SpringJavaConfigCodeGen,XHTMLCodeGenerator"
 		}
-		List<String> classNames = this.generators.split(",").findAll{String className -> className != ""}
-		return classNames.collect{String className-> className.contains(".") ? Class.forName(className) : Class.forName("${codeGenPackage}.${className}")}
+		List<String> classNames = this.generators.split(",").findAll{String className -> 
+			className != ""
+		}
+		return classNames.collect{String className-> 
+			className.contains(".") ? Class.forName(className) : Class.forName("${codeGenPackage}.${className}")
+		}
 	}
 	
 	public boolean configureCollaborators() {

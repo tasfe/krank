@@ -80,8 +80,8 @@ class XHTMLCodeGenerator implements CodeGenerator {
         	if (debug) println "Writing ${bean.name} listing xhtml"
             def binding = [bean:bean, formBody:generateBody(bean), propertyNames:generatePropertyNames(bean)]        
             String templateOutput = engine.createTemplate(template).make(binding).toString()
-            rootDir.mkdirs()
-            File listingFile = new File (rootDir, bean.name.unCap() + fileNameSuffix)
+            File webappRootDir = new File(rootDir, "src/main/webapp/pages/crud")
+            File listingFile = new File (webappRootDir, bean.name.unCap() + fileNameSuffix)
         	listingFile.newWriter().withWriter{BufferedWriter writer->
             	writer.write(templateOutput)
             }

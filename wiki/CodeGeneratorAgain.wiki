@@ -330,3 +330,132 @@ My Groovy is staring to look as readable as Perl.
 }}}
 
 I am enjoying writing but who is going to be able to maintain this...
+
+==== Refactoring CodeGenerators ====
+
+I decided that I need to refactor the code generators so codegen can polymorphicaly handle multiple code generators. This will also make it possible for other developers to add custom code generators.
+
+The codegen utility (code generator for crank and presto2) has the following code generators:
+
+ * *FacesConfigCodeGen* (edits an faces-config to add entries for CRUD pages)
+ * *SpringJavaConfigCodeGen* (edits a Spring Java Config file to add CRUD controllers)
+ * *XHTMLCodeGenerator* (generates XHTML/Facelets pages for Listings and forms)
+ * *JPACodeGenerator* (Generates JPA Model classes)
+
+These were changed to implement this new interface as follows:
+
+===== CodeGenerator.groovy interface =====
+{{{
+
+package com.arcmind.codegen
+
+
+public interface CodeGenerator{
+	boolean isUse()
+	void setUse(boolean use)
+	void process()
+	void setDebug(boolean debug)
+	void setClasses(List<JavaClass> classes)
+	void setRootDir(File file)
+	void setPackageName(String packageName)
+}
+
+}}}
+
+Then I changed CodeGenMain as follows: 
+
+Added a property that accepts a comma delimited list of code generator names (and a default package for code generators) as follows:
+{{{
+public class CodeGenMain{
+        ...
+	String codeGenPackage
+	String generators
+
+}}}
+
+It also has a list of code generator instances as follows:
+
+{{{
+
+public class CodeGenMain{
+        ...
+        List<CodeGenerator> codeGenerators = []
+}}}
+
+The two string properties mentioned above get populate by the command line arguments or entries in the config.properties file as follows:
+
+===== config.properties =====
+{{{
+
+codeGenPackage=com.arcmind.codegen
+# You can implement your own code generator by implementing the CodeGenerator interface
+# generators are a list of class names, if they are not fully qualified the codeGenPackage is used
+generators=FacesConfigCodeGen,JPACodeGenerator,SpringJavaConfigCodeGen,XHTMLCodeGenerator
+}}}
+
+You can see that the ones I wrote are already configured. If you wanted to add your own, it would be easy enough just to add another entry. The entry can be a fully qualified class name or just the short name if the class is in the codeGenPackage already.
+
+The *loadClassesForGenerators* method was added to CodeGenMain to load the code generators dynamically.
+
+{{{
+public class CodeGenMain{
+        ...
+
+	public List<Class> loadClassesForGenerators () {
+		if (this.generators==null || "".equals(this.generators.trim())) {
+			codeGenPackage = "com.arcmind.codegen"
+			generators="FacesConfigCodeGen,JPACodeGenerator,SpringJavaConfigCodeGen,XHTMLCodeGenerator"
+		}
+		List<String> classNames = this.generators.split(",").findAll{String className -> 
+			className != ""
+		}
+		return classNames.collect{String className-> 
+			className.contains(".") ? Class.forName(className) : Class.forName("${codeGenPackage}.${className}")
+		}
+	}
+
+}}}
+
+
+Then lastly we configure the code generator instances (as well as the code gen's classes) in the configureCollaborators as follows:
+
+{{{
+	public boolean configureCollaborators() {
+                ...
+		List<Class> codeGenClasses = loadClassesForGenerators()
+
+		if (debug) {
+                        ...
+                        /* Override the println method so its output goes to the GUI */
+			codeGenClasses.each{Class cls-> 
+                             cls.metaClass.println = printlnClosure
+                        }
+		}
+
+                ...
+		collaborators = [jdbcUtils, reader, modelGen, ...]
+                
+                /* Instantiate the instances of code generators */
+		codeGenerators = codeGenClasses.collect{Class cls -> cls.newInstance()}
+		collaborators.addAll(codeGenerators)
+		
+		
+		/* Collaborator debug configuration. */
+		for (collaborator in collaborators) {
+			collaborator.debug = debug == null ? false :Boolean.valueOf(debug)
+		}
+
+                /* Configure the actual code generators. */
+		codeGenerators.each{CodeGenerator codeGen ->
+			if (this.packageName != null) {
+				codeGen.setPackageName(this.packageName)
+			}
+			if (this.rootDir != null) {
+				codeGen.setRootDir(new File(this.rootDir))
+			}
+		}
+                ....
+
+}}}
+
+Notice that we added a new property called rootDir. This is the rootDir of the project that we are generating artifacts for.

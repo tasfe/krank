@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+    <bean class="com.somecompany.employeetask.CrudApplicationContext" />
+
+    <bean id="employeeDataSource"
+        class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close" lazy-init="true">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/presto2" />
+        <property name="username" value="presto2" />
+        <property name="password" value="presto2" />
+    </bean>
+
+    <bean id="jpaConfigProperties"
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="classpath:jpa.properties" />
+    </bean>
+
+    <bean name="jpaVendorAdapter"
+        class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="databasePlatform" value="org.hibernate.dialect.MySQLInnoDBDialect" />
+    </bean>
+
+    <bean class="org.crank.config.spring.support.CrudDAOConfig">
+        <property name="dataSource" ref="employeeDataSource" />
+        <property name="jpaProperties" ref="jpaConfigProperties" />
+    </bean>
+
+    <bean
+        class="org.springframework.config.java.process.ConfigurationPostProcessor" />
+        
+    <import resource="/validationContext.xml" />
+
+</beans>

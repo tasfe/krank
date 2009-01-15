@@ -315,4 +315,18 @@ I figured I would right down the next steps before I break for lunch:
  * Test app and see if it runs the generated listings
  * Repeat as needed until codegen is beat into submission
  
- 
+==== Random musing ====
+My Groovy is staring to look as readable as Perl.
+
+{{{
+	public List<Class> loadClassesForGenerators () {
+		if (this.generators==null || "".equals(this.generators.trim())) {
+			codeGenPackage = "com.arcmind.codegen"
+			generators="FacesConfigCodeGen,JPACodeGenerator,SpringJavaConfigCodeGen,XHTMLCodeGenerator"
+		}
+		List<String> classNames = this.generators.split(",").findAll{String className -> className != ""}
+		return classNames.collect{String className-> className.contains(".") ? Class.forName(className) : Class.forName("${codeGenPackage}.${className}")}
+	}
+}}}
+
+I am enjoying writing but who is going to be able to maintain this...

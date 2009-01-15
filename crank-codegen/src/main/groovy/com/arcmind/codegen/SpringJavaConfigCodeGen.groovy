@@ -6,10 +6,12 @@ package com.arcmind.codegen
 import groovy.text.SimpleTemplateEngine
 
 
-public class SpringJavaConfigCodeGen{
+public class SpringJavaConfigCodeGen implements CodeGenerator{
 	
 	List<JavaClass> classes
 	File file
+	File rootDir = new File(".")
+	String packageName = "com.example"
 	boolean debug
 	FileTemplateUtils templateUtil = new FileTemplateUtils()
 	SimpleTemplateEngine engine = new SimpleTemplateEngine()
@@ -18,7 +20,7 @@ public class SpringJavaConfigCodeGen{
 	ChangeSpec managedObjectsChangeSpec = new ChangeSpec(startLocationMarker:"Managed objects.", stopLocationMarker:"End Managed objects.")
 	ChangeSpec crudChangeSpec = new ChangeSpec(startLocationMarker:"Crud adapters.", stopLocationMarker:"End Crud adapters.")
 	ChangeSpec crudManyToManyChangeSpec = new ChangeSpec(startLocationMarker:"ManyToMany controllers.", stopLocationMarker:"End ManyToMany controllers.")
-	
+    boolean use
 	
 	String constantsTemplateText = '''
 	private static String ${bean.name.toUpperCase()} = "${bean.name.unCap()}";'''
@@ -116,6 +118,9 @@ public class SpringJavaConfigCodeGen{
 
 	public void process() {
 		FileTemplateUtils templateUtil = new FileTemplateUtils()
+		if (file==null) {
+			file = new File(rootDir, "src/main/java/" + packageName.replace(".", "/") +  "/CrudApplicationContext.java")
+		}		
 		templateUtil.file = file
 		constantsChangeSpec.replacementText = getConstants()
 		relationshipConstantChangeSpec.replacementText = getRelationshipConstants()

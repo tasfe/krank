@@ -6,11 +6,13 @@ package com.arcmind.codegen
 import groovy.text.SimpleTemplateEngine
 
 
-public class FacesConfigCodeGen{
+public class FacesConfigCodeGen implements CodeGenerator {
 	
 	List<JavaClass> classes
 	File file
+	File rootDir = new File(".")
 	boolean debug
+	String packageName //not used
 	FileTemplateUtils templateUtil = new FileTemplateUtils()
 	SimpleTemplateEngine engine = new SimpleTemplateEngine()
 	ChangeSpec mainPageLinksChangeSpec = new ChangeSpec(startLocationMarker:"Main Page Links (codegen)",
@@ -19,6 +21,7 @@ public class FacesConfigCodeGen{
 	stopLocationMarker:"End Navigation goals for CRUD")
 	ChangeSpec crudConverterChangeSpec = new ChangeSpec(startLocationMarker:"Crud Converters",
 	stopLocationMarker:"End Crud Converters")
+	boolean use
 	
 	
 	String mainPageLinksTemplateText = '''
@@ -75,6 +78,9 @@ public class FacesConfigCodeGen{
 	
 	public void process() {
 		FileTemplateUtils templateUtil = new FileTemplateUtils()
+		if (file==null) {
+			file = new File(rootDir, "src/main/webapp/WEB-INF/faces-config.xml")
+		}
 		templateUtil.file = file
 		mainPageLinksChangeSpec.replacementText = getPageLinks()
 		navigationCrudChangeSpec.replacementText = getCrudNavigation()

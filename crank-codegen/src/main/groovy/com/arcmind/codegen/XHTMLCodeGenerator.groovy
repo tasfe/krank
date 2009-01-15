@@ -4,12 +4,14 @@ import groovy.text.SimpleTemplateEngine
 /**
  * Generates .java files from JavaClass models objects. 
  */
-class XHTMLCodeGenerator {
+class XHTMLCodeGenerator implements CodeGenerator {
     List<JavaClass> classes
     /** The target output dir. Defaults to ./target */
-    File outputDir = new File("./target/src/main/webapp")
+    File rootDir = new File(".")
+    String packageName //not used
     boolean debug
     SimpleTemplateEngine engine = new SimpleTemplateEngine()
+    boolean use
     
     String oneToManyTemplate = '''
 					<crank:detailListing
@@ -78,15 +80,15 @@ class XHTMLCodeGenerator {
         	if (debug) println "Writing ${bean.name} listing xhtml"
             def binding = [bean:bean, formBody:generateBody(bean), propertyNames:generatePropertyNames(bean)]        
             String templateOutput = engine.createTemplate(template).make(binding).toString()
-            outputDir.mkdirs()
-            File listingFile = new File (outputDir, bean.name.unCap() + fileNameSuffix)
+            rootDir.mkdirs()
+            File listingFile = new File (rootDir, bean.name.unCap() + fileNameSuffix)
         	listingFile.newWriter().withWriter{BufferedWriter writer->
             	writer.write(templateOutput)
             }
         }
 	
 	}
-	def process() {
+	public void process() {
 		doProcess("Listing.xhtml", listingTemplate)
 		doProcess("Form.xhtml", formTemplate)
     }

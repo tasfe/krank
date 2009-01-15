@@ -402,13 +402,13 @@ password: ${password.text}, driver: ${drv}"""
 
             Closure handleGenerateJavaClasses = {
                     doOutside {
-                        edt {setStatus "Writing Java class files to ${main.codeGen.outputDir}"}
+                        edt {setStatus "Generating Artifacts to ${main.rootDir}"}
                         enableMenuBar(false)
                         modifyCursor(false)
                         use(StringCategory) {
-                        	main.generateJavaClasses()
+                        	main.generateArtifacts()
                         }
-                        edt {setStatus "Done writing Java class files to ${main.codeGen.outputDir}"}
+                        edt {setStatus "Done generating Artifacts to ${main.rootDir}"}
                         enableMenuBar(true)
                         modifyCursor(true)
                     }

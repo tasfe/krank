@@ -4,12 +4,14 @@ import groovy.text.SimpleTemplateEngine
 /**
  * Generates .java files from JavaClass models objects. 
  */
-class JPACodeGenerator {
+class JPACodeGenerator implements CodeGenerator{
     List<JavaClass> classes
     /** The target output dir. Defaults to ./target */
-    File outputDir = new File("./target")
+    File rootDir = new File(".")
+    String packageName //not used
     boolean debug
     SimpleTemplateEngine engine = new SimpleTemplateEngine()
+    boolean use
     String javaClassTemplate = '''<% import com.arcmind.codegen.RelationshipType; %>package ${bean.packageName};
 <% imports.each { imp-> %>import ${imp};
 <% } %>
@@ -247,7 +249,8 @@ public class ${bean.name} implements Serializable {
         	if (debug) println "Writing ${bean.name} class file"
             def binding = ["bean":bean, "imports":calculateImportsFromBean(bean), "queries": createQueriesString(bean)]        
             String templateOutput = engine.createTemplate(javaClassTemplate).make(binding).toString()
-            File outputFileDir = new File(outputDir, bean.packageName.replace('.','/'))
+            File javaRoot = new File(rootDir, "src/main/java")
+            File outputFileDir = new File(javaRoot, bean.packageName.replace('.','/'))
         	if (debug) println "Outputting ${bean.name} to ${outputFileDir}"
             outputFileDir.mkdirs()
             File javaFile = new File (outputFileDir, bean.name + ".java")
@@ -256,6 +259,10 @@ public class ${bean.name} implements Serializable {
             	writer.write(templateOutput)
             }
         }
+    }
+    
+    public void process() {
+    	writeClassFiles()
     }
 
 }

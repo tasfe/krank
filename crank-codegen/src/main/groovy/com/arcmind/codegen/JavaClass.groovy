@@ -28,7 +28,6 @@ class JavaClass {
     }
     
     boolean equals(Object other) {	
-    	println "equal? ${other} ${this}"
     	other.name == this.name && other.packageName == this.packageName
     }
     

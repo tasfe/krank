@@ -15,11 +15,13 @@ public class CodeGenMain{
 	String driver
 	String tableNames
 	String packageName
-	String outputDir
+	String rootDir
 	String appConfigDir
 	String xmlFileName
 	String xmlDataSourceFileName
 	String propertiesFile
+	String codeGenPackage
+	String generators
 	boolean wasNotSetPropFile
 	boolean wasNotSetXmlFile
 	boolean wasNotSetXmlDataSourceFile //todo
@@ -32,7 +34,7 @@ public class CodeGenMain{
 	DataBaseMetaDataReader reader
 	DataSourceReader dataSourceReader
 	JavaModelGenerator modelGen
-	JPACodeGenerator codeGen
+	List<CodeGenerator> codeGenerators = []
 	XMLPersister persister
 	XMLDataSourcePersister dataSourcePersister
 	List collaborators
@@ -81,7 +83,7 @@ public class CodeGenMain{
 		}
 
 		if (actions.contains("generate")) {
-			generateJavaClasses()
+			generateArtifacts()
 		}
 
 		if (actions.contains("write")) {
@@ -123,12 +125,14 @@ public class CodeGenMain{
 		dataSourceReader.settings = dataSourcePersister.jdbcSettings
 	}
 
-	def generateJavaClasses() {
-		if (debug) println "Generating Java classes"
-		/* Output the generated classes. */
-		codeGen.classes = modelGen.classes
-		if (debug) println "Generating Java classes for ${codeGen.classes}"
-		codeGen.writeClassFiles()
+	def generateArtifacts() {
+		if (debug) println "Generating artifacts"
+		this.codeGenerators.each {CodeGenerator codeGen ->
+			/* Output the generated classes. */
+			codeGen.classes = modelGen.classes
+			if (debug) println "Generating artifacts for ${codeGen.classes} with ${codeGen.class.name}"
+			codeGen.process()
+		}
 	}
 
 	def writeXML() {
@@ -197,32 +201,46 @@ public class CodeGenMain{
 		return true
 	}
 
+	public List<Class> loadClassesForGenerators () {
+		if (this.generators==null || "".equals(this.generators.trim())) {
+			codeGenPackage = "com.arcmind.codegen"
+			generators="FacesConfigCodeGen,JPACodeGenerator,SpringJavaConfigCodeGen,XHTMLCodeGenerator"
+		}
+		List<String> classNames = this.generators.split(",").findAll{String className -> className != ""}
+		return classNames.collect{String className-> className.contains(".") ? Class.forName(className) : Class.forName("${codeGenPackage}.${className}")}
+	}
+	
 	public boolean configureCollaborators() {
 		boolean invalidArgument = false
+		
+		List<Class> codeGenClasses = loadClassesForGenerators()
 
 		if (debug) {
 			DataBaseMetaDataReader.metaClass.invokeMethod = logClosure
 			JavaModelGenerator.metaClass.invokeMethod = logClosure
 			JPACodeGenerator.metaClass.invokeMethod = logClosure
-
 			JdbcUtils.metaClass.println = printlnClosure
 			DataBaseMetaDataReader.metaClass.println = printlnClosure
 			DataSourceReader.metaClass.println = printlnClosure
 			JavaModelGenerator.metaClass.println = printlnClosure
-			JPACodeGenerator.metaClass.println = printlnClosure
 			XMLPersister.metaClass.println = printlnClosure
-			XMLDataSourcePersister.metaClass.println = printlnClosure			
+			XMLDataSourcePersister.metaClass.println = printlnClosure
+			codeGenClasses.each{Class cls-> cls.metaClass.println = printlnClosure}
 		}
 
 		jdbcUtils = new JdbcUtils()
-		codeGen = new JPACodeGenerator()
 		reader = new DataBaseMetaDataReader()
 		dataSourceReader = new DataSourceReader()
 		persister = new XMLPersister()
 		dataSourcePersister = new XMLDataSourcePersister()
 		modelGen = new JavaModelGenerator()
 
-		collaborators = [jdbcUtils, reader, modelGen, codeGen, persister, dataSourcePersister]
+		collaborators = [jdbcUtils, reader, modelGen, persister, dataSourcePersister]
+		codeGenerators = codeGenClasses.collect{Class cls -> cls.newInstance()}
+		collaborators.addAll(codeGenerators)
+		
+		
+		
 
 		/* Configure related classes. */
 		jdbcUtils.url = url
@@ -248,11 +266,15 @@ public class CodeGenMain{
 
 		modelGen.packageName = packageName
 
-		/* Configure output dirs by creating dirs if they do not exist. */
-		codeGen.outputDir = outputDir == null ? new File("./target") : new File(outputDir)
-		if (!codeGen.outputDir.isDirectory()) {
-			codeGen.outputDir.mkdirs()
+		codeGenerators.each{CodeGenerator codeGen ->
+			if (this.packageName != null) {
+				codeGen.setPackageName(this.packageName)
+			}
+			if (this.rootDir != null) {
+				codeGen.setRootDir(new File(this.rootDir))
+			}
 		}
+		
 		persister.outputDir = appConfigDirFile
 		if (!persister.outputDir.isDirectory()) {
 			persister.outputDir.mkdirs()

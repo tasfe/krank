@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -9,20 +10,22 @@
 	xmlns:crank="http://www.googlecode.com/crank">
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
-		<crank:crudBreadCrumb crud="${roleCrud.controller}" />
+		<crank:crudBreadCrumb crud="#{roleCrud.controller}" />
 		<c:choose>
-			<c:when test='${roleCrud.controller.state == "ADD"}'>
-				<h:outputText value="Create Role" styleClass="pageTitle" />
+			<c:when test='#{role.controller.state == "ADD"}'>
+				<h:outputText value="Create Department" styleClass="pageTitle" />
 			</c:when>
 			<c:otherwise>
 				<h:outputText
-					value="Edit Role"
+					value="Edit Department #{roleCrud.controller.entity.name}"
 					styleClass="pageTitle" />
 			</c:otherwise>
 		</c:choose>
-		<a4j:form id="roleForm">
+		<a4j:form id="departmentForm">
 			<rich:messages errorClass="pageErrorMessage" />
-			<crank:form parentForm="roleForm" crud="#{roleCrud.controller}" propertyNames="name">				
+			<crank:form parentForm="departmentForm"
+				crud="#{roleCrud.controller}" propertyNames="name">
+				
 			</crank:form>
 		</a4j:form>
 	</ui:define>

@@ -1,4 +1,4 @@
-package src.main.java.org.yomama;
+package com.somecompany.employeetask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +20,15 @@ public abstract class CrudApplicationContext extends CrudJSFConfig {
 	private static List<CrudManagedObject> managedObjects;
 	
     /* Entity Constants. */
-	private static String FOO = "foo";
-	private static String BAR = "bar";
-	private static String BAZ = "baz";
+	private static String DEPARTMENT = "department";
+	private static String EMPLOYEE = "employee";
+	private static String ROLE = "role";
     /* End Entity Constants.  */
 	
     /* Relationship Constants. */
-	private static String FOO_BARS_RELATIONSHIP = "bars";
-	private static String FOO_BAZ_RELATIONSHIP = "baz";
+	private static String DEPARTMENT_EMPLOYEES_RELATIONSHIP = "employees";
+	private static String EMPLOYEE_ROLES_RELATIONSHIP = "roles";
+	private static String ROLE_EMPLOYEES_RELATIONSHIP = "employees";
     /* End Relationship Constants.  */
 	
     
@@ -36,32 +37,33 @@ public abstract class CrudApplicationContext extends CrudJSFConfig {
 		if (managedObjects == null) {
 			managedObjects = new ArrayList<CrudManagedObject>();
             /* Managed objects. */
-			managedObjects.add(new CrudManagedObject(Foo.class));
-			managedObjects.add(new CrudManagedObject(Bar.class));
-			managedObjects.add(new CrudManagedObject(Baz.class));
+			managedObjects.add(new CrudManagedObject(Department.class));
+			managedObjects.add(new CrudManagedObject(Employee.class));
+			managedObjects.add(new CrudManagedObject(Role.class));
             /* End Managed objects.  */
 		}
+		return managedObjects;
 	}
 	
     /* Crud adapters. */  
 	@Bean(scope = DefaultScopes.SESSION)
-	public JsfCrudAdapter<Foo, Long> fooCrud() throws Exception {
-		JsfCrudAdapter<Foo, Long> adapter = (JsfCrudAdapter<Foo, Long>) cruds().get(FOO);
+	public JsfCrudAdapter<Department, Long> departmentCrud() throws Exception {
+		JsfCrudAdapter<Department, Long> adapter = (JsfCrudAdapter<Department, Long>) cruds().get(DEPARTMENT);
 		
-		adapter.getController().addChild(FOO_BAZ_RELATIONSHIP, new JsfDetailController(Baz.class, true));
+		adapter.getController().addChild(DEPARTMENT_EMPLOYEES_RELATIONSHIP, new JsfDetailController(Employee.class, true));
 		return adapter;
 	}
   
 	@Bean(scope = DefaultScopes.SESSION)
-	public JsfCrudAdapter<Bar, Long> barCrud() throws Exception {
-		JsfCrudAdapter<Bar, Long> adapter = (JsfCrudAdapter<Bar, Long>) cruds().get(BAR);
+	public JsfCrudAdapter<Employee, Long> employeeCrud() throws Exception {
+		JsfCrudAdapter<Employee, Long> adapter = (JsfCrudAdapter<Employee, Long>) cruds().get(EMPLOYEE);
 		
 		return adapter;
 	}
   
 	@Bean(scope = DefaultScopes.SESSION)
-	public JsfCrudAdapter<Baz, Long> bazCrud() throws Exception {
-		JsfCrudAdapter<Baz, Long> adapter = (JsfCrudAdapter<Baz, Long>) cruds().get(BAZ);
+	public JsfCrudAdapter<Role, Long> roleCrud() throws Exception {
+		JsfCrudAdapter<Role, Long> adapter = (JsfCrudAdapter<Role, Long>) cruds().get(ROLE);
 		
 		return adapter;
 	}
@@ -70,14 +72,28 @@ public abstract class CrudApplicationContext extends CrudJSFConfig {
     
     /* ManyToMany controllers. */
 	@Bean(scope = DefaultScopes.SESSION)
-	public JsfSelectManyController<Bar, Long> fooTobarsController()
+	public JsfSelectManyController<Role, Long> employeeTorolesController()
 			throws Exception {
-		JsfSelectManyController<Bar, Long> controller = new JsfSelectManyController<Bar, Long>(
-				Bar.class, FOO_BARS_RELATIONSHIP, paginators().get(BAR), fooCrud()
+		JsfSelectManyController<Role, Long> controller = new JsfSelectManyController<Role, Long>(
+				Role.class, EMPLOYEE_ROLES_RELATIONSHIP, paginators().get(ROLE), employeeCrud()
+						.getController());
+		return controller;
+	}
+
+	@Bean(scope = DefaultScopes.SESSION)
+	public JsfSelectManyController<Employee, Long> roleToemployeesController()
+			throws Exception {
+		JsfSelectManyController<Employee, Long> controller = new JsfSelectManyController<Employee, Long>(
+				Employee.class, ROLE_EMPLOYEES_RELATIONSHIP, paginators().get(EMPLOYEE), roleCrud()
 						.getController());
 		return controller;
 	}
 
     /* End ManyToMany controllers.  */
+	
+	@Bean
+	public String persistenceUnitName() {
+		return "archetype-example-app";
+	}
 
 }

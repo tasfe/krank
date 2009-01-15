@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -9,23 +10,22 @@
 	xmlns:crank="http://www.googlecode.com/crank">
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
-		<crank:crudBreadCrumb crud="${employeeCrud.controller}" />
+		<crank:crudBreadCrumb crud="#{employeeCrud.controller}" />
 		<c:choose>
-			<c:when test='${employeeCrud.controller.state == "ADD"}'>
-				<h:outputText value="Create Employee" styleClass="pageTitle" />
+			<c:when test='#{employee.controller.state == "ADD"}'>
+				<h:outputText value="Create Department" styleClass="pageTitle" />
 			</c:when>
 			<c:otherwise>
 				<h:outputText
-					value="Edit Employee"
+					value="Edit Department #{employeeCrud.controller.entity.name}"
 					styleClass="pageTitle" />
 			</c:otherwise>
 		</c:choose>
-		<a4j:form id="employeeForm">
+		<a4j:form id="departmentForm">
 			<rich:messages errorClass="pageErrorMessage" />
-			<crank:form parentForm="employeeForm"
-				crud="#{employeeCrud.controller}" propertyNames="firstName,lastName,department">
-					<crank:selectMany jsfSelectManyController="${employeeToRoleController}" 
-									  propertyNames="name" parentForm="employeeForm" />				
+			<crank:form parentForm="departmentForm"
+				crud="#{employeeCrud.controller}" propertyNames="department,firstName,lastName,phone">
+				
 			</crank:form>
 		</a4j:form>
 	</ui:define>

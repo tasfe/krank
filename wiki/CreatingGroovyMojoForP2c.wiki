@@ -1,0 +1,228 @@
+#summary Notes on creating a Groovy based maven plugin
+
+The instructions to create a groovy based mojo are here: http://groovy.codehaus.org/GMaven+-+Implementing+Maven+Plugins
+
+They developed a archetype to help you generate groovy mojos as follows:
+{{{
+mvn archetype:generate -DarchetypeGroupId=org.codehaus.groovy.maven.archetypes -DarchetypeArtifactId=gmaven-archetype-mojo -DarchetypeVersion=1.0-rc-2
+
+}}}
+
+
+<<< Rick wonders what would happen if he left off the version... would he get the latest... >>>
+
+I ran it without version and got the latest (1.0-rc-3)
+{{{
+$ mvn archetype:generate -DarchetypeGroupId=org.codehaus.groovy.maven.archetypes -DarchetypeArtifactId=gmaven-archetype-mojo 
+[INFO] Scanning for projects...
+[INFO] Searching repository for plugin with prefix: 'archetype'.
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Maven Default Project
+[INFO]    task-segment: [archetype:generate] (aggregator-style)
+[INFO] ------------------------------------------------------------------------
+[INFO] Preparing archetype:generate
+[INFO] No goals needed for project - skipping
+[INFO] Setting property: classpath.resource.loader.class => 'org.codehaus.plexus.velocity.ContextClassLoaderResourceLoader'.
+[INFO] Setting property: velocimacro.messages.on => 'false'.
+[INFO] Setting property: resource.loader => 'classpath'.
+[INFO] Setting property: resource.manager.logwhenfound => 'false'.
+[INFO] [archetype:generate]
+[INFO] Generating project in Interactive mode
+[INFO] Archetype [org.codehaus.groovy.maven.archetypes:gmaven-archetype-mojo:1.0-rc-3] found in catalog internal
+Downloading: http://repo1.maven.org/maven2/org/codehaus/groovy/maven/archetypes/gmaven-archetype-mojo/1.0-rc-3/gmaven-archetype-mojo-1.0-rc-3.jar
+7K downloaded
+Define value for groupId: : 
+
+}}}
+
+<<< Rick is such a rebel for not following instructions... may he live to regret it >>>
+
+It asks a bunch of questions which I fill out as follows:
+
+{{{
+[INFO] Archetype [org.codehaus.groovy.maven.archetypes:gmaven-archetype-mojo:1.0-rc-3] found in catalog internal
+Define value for groupId: : org.crank
+Define value for artifactId: : p2c-codegen-mojo
+Define value for version:  1.0-SNAPSHOT: : 
+Define value for package:  org.crank: : 
+Confirm properties configuration:
+name: Example Maven Plugin
+groupId: org.crank
+artifactId: p2c-codegen-mojo
+version: 1.0-SNAPSHOT
+package: org.crank
+ Y: : 
+[WARNING] org.apache.velocity.runtime.exception.ReferenceException: reference : template = archetype-resources/src/main/groovy/HelloMojo.groovy [line 37,column 31] : ${message} is not a valid reference.
+[WARNING] org.apache.velocity.runtime.exception.ReferenceException: reference : template = archetype-resources/src/main/groovy/HelloMojo.groovy [line 42,column 18] : ${message} is not a valid reference.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1 minute 15 seconds
+[INFO] Finished at: Thu Jan 15 18:11:59 PST 2009
+[INFO] Final Memory: 14M/490M
+[INFO] ------------------------------------------------------------------------
+richard-hightowers-macbook-pro:crank-archetypes-mojos richardhightower$ 
+}}}
+
+Will this project that was generated build? Let's see:
+
+{{{
+$ ls
+p2c-codegen-mojo
+
+$ cd p2c-codegen-mojo/
+$ ls
+pom.xml	src
+
+$ mvn clean install
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Example Maven Plugin
+[INFO]    task-segment: [clean, install]
+[INFO] ------------------------------------------------------------------------
+[INFO] [clean:clean]
+
+<<< Many downloads ensue whilst Rick drinks his Orange and Spice tea >>>
+[INFO] [plugin:descriptor]
+[INFO] Using 2 extractors.
+[INFO] Applying extractor for language: java
+[INFO] Extractor for language: java found 1 mojo descriptors.
+[INFO] Applying extractor for language: bsh
+[INFO] Extractor for language: bsh found 0 mojo descriptors.
+[INFO] [resources:resources]
+[INFO] Using default encoding to copy filtered resources.
+[INFO] [compiler:compile]
+[INFO] Compiling 1 source file to /Users/richardhightower/projects/crank-archetypes-mojos/p2c-codegen-mojo/target/classes
+[INFO] [groovy:compile {execution: default}]
+[INFO]  Compiled 1 Groovy class
+[INFO] [groovy:generateTestStubs {execution: default}]
+[INFO]  No sources found for Java stub generation
+[INFO] [resources:testResources]
+[INFO] Using default encoding to copy filtered resources.
+[INFO] [compiler:testCompile]
+[INFO] Nothing to compile - all classes are up to date
+[INFO] [groovy:testCompile {execution: default}]
+[INFO]  No sources found to compile
+[INFO] [surefire:test]
+[INFO] No tests to run.
+[INFO] [jar:jar]
+[INFO] Building jar: /Users/richardhightower/projects/crank-archetypes-mojos/p2c-codegen-mojo/target/p2c-codegen-mojo-1.0-SNAPSHOT.jar
+[INFO] [plugin:addPluginArtifactMetadata]
+[INFO] [install:install]
+[INFO] Installing /Users/richardhightower/projects/crank-archetypes-mojos/p2c-codegen-mojo/target/p2c-codegen-mojo-1.0-SNAPSHOT.jar to /Users/richardhightower/.m2/repository/org/crank/p2c-codegen-mojo/1.0-SNAPSHOT/p2c-codegen-mojo-1.0-SNAPSHOT.jar
+[INFO] [plugin:updateRegistry]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 15 seconds
+[INFO] Finished at: Thu Jan 15 18:13:43 PST 2009
+[INFO] Final Memory: 35M/490M
+[INFO] ------------------------------------------------------------------------
+richard-hightowers-macbook-pro:p2c-codegen-mojo richardhightower$
+}}}
+
+Ok... now to open this up in IntelliJ and take a look around.
+
+I get this class 
+
+{{{
+//
+// Generated from archetype; please customize.
+//
+
+package org.crank
+
+import org.codehaus.groovy.maven.mojo.GroovyMojo
+
+/**
+ * Example Maven2 Groovy Mojo.
+ *
+ * @goal hello
+ */
+class HelloMojo
+    extends GroovyMojo
+{
+    /**
+     * The hello message to display.
+     *
+     * @parameter expression="${message}" default-value="Hello World"
+     */
+    String message
+    
+    void execute() {
+        println "${message}"
+    }
+}
+
+}}}
+
+And this pom.xml
+
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Generated from archetype; please customize.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.crank</groupId>
+    <artifactId>p2c-codegen-mojo</artifactId>
+    <name>Example Maven Plugin</name>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>maven-plugin</packaging>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.codehaus.groovy.maven</groupId>
+            <artifactId>gmaven-mojo</artifactId>
+            <version>1.0-rc-3</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.groovy.maven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <version>1.0-rc-3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generateStubs</goal>
+                            <goal>compile</goal>
+                            <goal>generateTestStubs</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+
+}}}
+
+I need to add the codegen as an dependency.
+
+Now I notice whilst installing codegen (mvn clean install) that I have a failed unit test. Mental note... fix that....
+
+It also occurs to me since I am past the prototyping stage that I need to change the package and group name of code gen to org.crank instead of com.arcmind. Mental note... fix that....
+
+Here is the current pom info for codegen
+{{{
+    <groupId>arcmind</groupId>
+    <artifactId>codegen</artifactId>
+    <version>1.0-SNAPSHOT</version>
+}}}
+

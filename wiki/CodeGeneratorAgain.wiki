@@ -509,3 +509,9 @@ I opted for the HTML version so I can "bookmark it" here.
 http://books.sonatype.com/maven-book/reference/writing-plugins.html
 
 I am going to read this as the official docs were barely a snack and since I am going to spend sometime developing this plugin... might as make sure that I am doing this right.
+
+I also read the section of using Groovy as the plugin bits.
+
+Ok... I read it... I think I am going to change my strategy a bit. I am going to write the plugin first, then configure it in the sample app, then re-generate the archetype (so I don't have to check it in twice only to wipe it out and recheck it in). 
+
+I will do this in a new page.

@@ -501,3 +501,6 @@ Ok... after reading a bit more the vision becomes clearer.
 I will build the mojo which will include the codegen project as a dependency.
 
 I will configure the sample app to use the cp2-codgen mojo then I will create an archetype based on this newly updated project. This way I can preconfigure the mojo as part of the artifact so it is completely configured.
+
+I have this book at home, but since I am sitting here drinking my third cup of coffee for the day.... Here is the maven book from Orielly (the free version)
+http://books.sonatype.com/maven-book/index.html

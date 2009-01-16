@@ -226,3 +226,134 @@ Here is the current pom info for codegen
     <version>1.0-SNAPSHOT</version>
 }}}
 
+I added codegen as a dependency and then started on the mojo, here is what I have so far...
+
+{{{
+//
+// Generated from archetype; please customize.
+//
+
+package org.crank
+
+import org.codehaus.groovy.maven.mojo.GroovyMojo
+
+/**
+ * Example Maven2 Groovy Mojo.
+ *
+ * @goal codegen
+ */
+class CodegenMojo extends GroovyMojo {
+
+    /**
+     * JDBC Url
+     *
+     * @required
+     * @parameter expression="${codegen.jdbc.url}"
+     */
+    String url
+    
+    /**
+     * JDBC User Name
+     *
+     * @required
+     * @parameter expression="${codegen.jdbc.userName}"
+     */
+    String userName
+
+    /**
+     * JDBC Password
+     *
+     * @required
+     * @parameter expression="${codegen.jdbc.password}"
+     */
+    String password
+
+    /**
+     * JDBC Driver
+     *
+     * @required
+     * @parameter expression="${codegen.jdbc.driver}"
+     */
+    String driver
+
+    /**
+     * Table names
+     *
+     * @required
+     * @parameter expression="${codegen.tableNames}"
+     */
+    String tableNames
+    
+    /**
+     * Default package name
+     *
+     * @required
+     * @parameter expression="${codegen.packageName}"
+     */
+    String packageName
+
+    /**
+     * Default package name
+     *
+     * @required
+     * @parameter expression="${codegen.packageName}" default-value="."
+     */
+    String rootDir
+
+    
+    /**
+     * App configuration directory.
+     *
+     * @required
+     * @parameter expression="${codegen.appConfigDir}" default-value="./codegen"
+     */
+    String appConfigDir
+    
+    /**
+     * xmlFileName
+     *
+     * @required
+     * @parameter expression="${codegen.xmlFileName}" default-value="codegen.xml"
+     */
+    String xmlFileName
+
+
+    /**
+     * xmlDataSourceFileName
+     *
+     * @required
+     * @parameter expression="${codegen.xmlDataSourceFileName}" default-value="datasource.xml"
+     */
+    String xmlDataSourceFileName
+
+    /**
+     * Configuration file propertiesFile
+     *
+     * @required
+     * @parameter expression="${codegen.propertiesFile}" default-value="config.properties"
+     */
+    String propertiesFile
+
+    /**
+     * @required
+     *
+     * @parameter expression="${codegen.codeGenPackage}" default-value="com.arcmind.codegen"
+     */
+    String codeGenPackage
+
+    /**
+     * @required
+     *
+     * @parameter expression="${codegen.generators}" default-value="FacesConfigCodeGen,JPACodeGenerator,SpringJavaConfigCodeGen,XHTMLCodeGenerator"
+     */
+    String generators
+
+    
+    void execute() {
+        println "${message}"
+    }
+}
+
+}}}
+
+I will start this up again after I workout, help the kids with their homework and put them to bed. I expect to get a running mojo sometime tonight or the wee hours of the morning.

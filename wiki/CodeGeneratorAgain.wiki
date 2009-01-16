@@ -504,3 +504,8 @@ I will configure the sample app to use the cp2-codgen mojo then I will create an
 
 I have this book at home, but since I am sitting here drinking my third cup of coffee for the day.... Here is the maven book from Orielly (the free version)
 http://books.sonatype.com/maven-book/index.html
+
+I opted for the HTML version so I can "bookmark it" here.
+http://books.sonatype.com/maven-book/reference/writing-plugins.html
+
+I am going to read this as the official docs were barely a snack and since I am going to spend sometime developing this plugin... might as make sure that I am doing this right.

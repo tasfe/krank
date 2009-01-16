@@ -6,7 +6,6 @@ package com.arcmind.codegen
 import javax.swing.*
 import groovy.swing.SwingBuilder
 import java.awt.BorderLayout
-import java.awt.GridLayout
 import java.awt.FlowLayout
 import java.awt.Cursor
 import javax.swing.event.TreeSelectionEvent
@@ -60,7 +59,7 @@ public class GeneratorSwingApp{
 	}
 
 	Closure printlnClosure = { String message ->
-		console.append(message + "\n")
+		console?.append(message + "\n")
 	}
 
 	public void exit() {
@@ -258,16 +257,19 @@ password: ${password.text}, driver: ${drv}"""
 		status.setText("  " + msg)
 	}
 
-	public GeneratorSwingApp() {
 
-		/* Initialize edit support for class, property and relationships. */
-		classEditSupport = new ClassEditSupport(classTreeModel:classTreeModel)
-		propertyEditSupport = new JavaPropertyEditSupport(classTreeModel:classTreeModel)
-		relationshipEditSupport = new RelationshipEditSupport(classTreeModel:classTreeModel)
-		codeGenMainEditSupport = new CodeGenMainEditSupport()
-		codeGenMainEditSupport.app = this;
-		settingsEditSupport = new SettingsEditSupport()
+    private void initEditors() {
+        /* Initialize edit support for class, property and relationships. */
+        classEditSupport = new ClassEditSupport(classTreeModel:classTreeModel)
+        propertyEditSupport = new JavaPropertyEditSupport(classTreeModel:classTreeModel)
+        relationshipEditSupport = new RelationshipEditSupport(classTreeModel:classTreeModel)
+        codeGenMainEditSupport = new CodeGenMainEditSupport()
+        codeGenMainEditSupport.app = this;
+        settingsEditSupport = new SettingsEditSupport()        
+    }
 
+    public void show () {
+        initEditors()
 		buildGUI ()
 
 		/* Initialize CodeGenMain. */
@@ -275,7 +277,7 @@ password: ${password.text}, driver: ${drv}"""
 		main = new CodeGenMain()
 		main.readProperties()
 		main.configureCollaborators()
-		
+
 		// Update DataSources Tree
 		updateJDBCTree(main.dataSourceReader.settings)
 
@@ -287,7 +289,13 @@ password: ${password.text}, driver: ${drv}"""
 		mainTabPane.remove(propertyPane)
 		mainTabPane.remove(codeGenMainPane)
 		mainTabPane.remove(settingsPane)
-
+    }
+	public GeneratorSwingApp() {
+		/* Initialize CodeGenMain. */
+		CodeGenMain.metaClass.println = printlnClosure
+		main = new CodeGenMain()
+		main.readProperties()
+		main.configureCollaborators()
 	}
 	private updateJDBCTree(param) {
 		settingsTreeModel.setSettings(param)
@@ -295,6 +303,7 @@ password: ${password.text}, driver: ${drv}"""
 
 	public static void main (String [] args) {
 		GeneratorSwingApp app = new GeneratorSwingApp()
+        app.show()
 	}
 
 	/* This method is very long, but it uses a builder to layout the complete GUI. It is layed out in a hierarchy so it is easy to read.

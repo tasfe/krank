@@ -846,3 +846,7 @@ But based on the error message that just applies to the maven properties, not th
 				</configuration>
 			</plugin>
 }}}
+
+Eureka! That did it.... It now runs the plugin. Seems like a lot of configuration, I wonder if there is a way to add that mojo meta-data as part of the build process. One of the reason I want to publish this as a plugin is so I can easily distribute it to the whole company (one day, the whole world). Hmmmm....
+
+On a side note, I am getting hungry....

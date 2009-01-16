@@ -492,3 +492,7 @@ Seems there is a site that explains how to do this...
 http://groovy.codehaus.org/GMaven+-+Implementing+Maven+Plugins
 
 Reading now....
+
+Here is the general guide to Maven MOJO (maven plugin development)
+
+http://maven.apache.org/guides/plugin/guide-java-plugin-development.html

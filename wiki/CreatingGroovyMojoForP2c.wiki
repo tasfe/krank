@@ -513,3 +513,83 @@ http://books.sonatype.com/maven-book/reference/writing-plugins-sect-plugin-prefi
 I read it a few times. Not the most clearly written part of the book. Cross my eyes. Focus. Focus. Focus. Huh?
 
 Ok I think after reading the above a few times, that all I need to do is add an entry to settings.xml....
+
+{{{
+$ pwd
+/Users/richardhightower
+$ cd .m2
+$ open settings.xml
+
+<?xml version="1.0"?>
+<settings>
+    <pluginGroups>
+       <pluginGroup>org.crank</pluginGroup>
+    </pluginGroups>
+
+}}}
+
+Let me try again....
+
+{{{
+$ mvn codegen:codegen
+[INFO] Scanning for projects...
+[INFO] Searching repository for plugin with prefix: 'codegen'.
+[INFO] org.crank: checking for updates from central
+[INFO] ------------------------------------------------------------------------
+[ERROR] BUILD ERROR
+[INFO] ------------------------------------------------------------------------
+[INFO] The plugin 'org.apache.maven.plugins:maven-codegen-plugin' does not exist or no valid version could be found
+[INFO] ------------------------------------------------------------------------
+[INFO] For more information, run Maven with the -e switch
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 15 seconds
+[INFO] Finished at: Fri Jan 16 12:22:39 PST 2009
+[INFO] Final Memory: 7M/490M
+[INFO] ------------------------------------------------------------------------
+}}}
+
+That looks vaguely familiar. Like my first girlfriend told me: "that's not it".
+
+It did mention editing some other file (here is what the books says):
+
+  "You can use the plugin prefix jar and turn that command-line into mvn jar:jar. 
+   How does Maven resolve something like jar:jar to 
+   org.apache.mven.plugins:maven-jar:2.3? Maven looks at a file in 
+   the Maven repository to obtain a list of plugins for a specific groupId. 
+   By default, Maven is configured to look for plugins in two groups:  
+   org.apache.maven.plugins and org.codehaus.mojo."
+
+How does it look in a group? 
+
+   "When you specify a new plugin prefix like mvn hibernate3:hbm2ddl, 
+   Maven is going to scan the repository metadata for the appropriate plugin prefix."
+
+Where, in the groups?
+
+   "First, Maven is going to scan the org.apache.maven.plugins group for the plugin 
+    prefix hibernate3."
+
+So there is a file inside of this group? 
+
+
+    "If it doesn't find the plugin prefix hibernate3 in the org.apache.maven.plugins 
+    group it will scan the metadata for the org.codehaus.mojo group."
+
+Ok, so what file do I have to edit to make this happen for codegen?
+
+    "When Maven scans the metadata for a particular groupId, 
+     it is retrieving an XML file from the Maven repository which captures 
+     metadata about the artifacts contained in a group." 
+
+Ah ha there is an XML file involved....
+
+     "This XML file is specific for each repository referenced, if you are not 
+     using a custom Maven repository, you will be able to see the Maven metadata 
+     for the org.apache.maven.plugins group in your local Maven repository
+     (~/.m2/repository) under org/apache/maven/plugins/maven-metadata-central.xml"
+
+Now we are cooking with bacon!
+
+     "Example 17.4, “Maven Metadata for the Maven Plugin Group” shows a 
+     snippet of the maven-metadata-central.xml file from the 
+     org.apache.maven.plugin group."

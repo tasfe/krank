@@ -593,3 +593,119 @@ Now we are cooking with bacon!
      "Example 17.4, “Maven Metadata for the Maven Plugin Group” shows a 
      snippet of the maven-metadata-central.xml file from the 
      org.apache.maven.plugin group."
+
+Based on the above....
+
+{{{
+$ pwd
+/Users/richardhightower/.m2
+
+$ find . -name "maven-metadata-central.xml"
+./repository/cache-base/cache-service/1.0-SNAPSHOT/maven-metadata-central.xml
+./repository/cache-base/cache-service-impl/1.0-SNAPSHOT/maven-metadata-central.xml
+./repository/com/lowagie/itext/maven-metadata-central.xml
+./repository/commons-collections/commons-collections/maven-metadata-central.xml
+./repository/commons-digester/commons-digester/maven-metadata-central.xml
+./repository/commons-logging/commons-logging/maven-metadata-central.xml
+./repository/eclipse/jdtcore/maven-metadata-central.xml
+./repository/jfree/jcommon/maven-metadata-central.xml
+./repository/jfree/jfreechart/maven-metadata-central.xml
+./repository/net/sf/mgp/maven-gwt-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/archetypes/maven-archetype-quickstart/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-antrun-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-archetype-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-checkstyle-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-clean-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-codegen-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-compiler-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-eclipse-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-help-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-idea-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-install-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-intellij-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-jar-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-javadoc-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-jetty-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-netbeans-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-pmd-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-release-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-resources-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-site-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-source-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-surefire-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-test-plugin/maven-metadata-central.xml
+./repository/org/apache/maven/plugins/maven-war-plugin/maven-metadata-central.xml
+./repository/org/codehaus/mojo/jboss-maven-plugin/maven-metadata-central.xml
+./repository/org/codehaus/mojo/maven-metadata-central.xml
+./repository/org/codehaus/mojo/tomcat-maven-plugin/maven-metadata-central.xml
+./repository/org/crank/crank-core/1.0.1-SNAPSHOT/maven-metadata-central.xml
+./repository/org/crank/crank-crud/1.0.1-SNAPSHOT/maven-metadata-central.xml
+./repository/org/crank/crank-jsf-support/1.0.1-SNAPSHOT/maven-metadata-central.xml
+./repository/org/crank/crank-jsf-validation/1.0.1-SNAPSHOT/maven-metadata-central.xml
+./repository/org/crank/crank-springmvc-validation/1.0.1-SNAPSHOT/maven-metadata-central.xml
+./repository/org/crank/crank-test-support/1.0.1-SNAPSHOT/maven-metadata-central.xml
+./repository/org/crank/crank-validation/1.0.1-SNAPSHOT/maven-metadata-central.xml
+./repository/org/crank/example/employee-jpa-model/1.0.1-SNAPSHOT/maven-metadata-central.xml
+./repository/org/crank/example/security-jpa-model/1.0.1-SNAPSHOT/maven-metadata-central.xml
+./repository/org/crank/maven-metadata-central.xml
+./repository/org/mortbay/jetty/maven-jetty-plugin/maven-metadata-central.xml
+}}}
+
+Ok... I was expecting one file and I got... umm, err, a lot of files.
+
+It seems like I am doing the right thing (or close):
+
+Let's just see what is in the group for this plugin:
+{{{
+$ open ./repository/org/crank/maven-metadata-central.xml
+<?xml version="1.0" encoding="UTF-8"?><metadata />
+}}}
+
+Ummm.. Err.. That file is empty so when I configured the settings to search this group. This group was empty. Nice. I thought the maven-plugin-plugin mojo that I configured would register this. Hmmm... Exactly what does the maven-plugin-plugin do?
+
+No matter let me edit this above....
+
+The example in the book is as follows:
+
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <plugins>
+    <plugin>
+      <name>Maven Clean Plugin</name>
+      <prefix>clean</prefix>
+      <artifactId>maven-clean-plugin</artifactId>
+    </plugin>
+    <plugin>
+      <name>Maven Compiler Plugin</name>
+      <prefix>compiler</prefix>
+      <artifactId>maven-compiler-plugin</artifactId>
+    </plugin>
+    <plugin>
+      <name>Maven Surefire Plugin</name>
+      <prefix>surefire</prefix>
+      <artifactId>maven-surefire-plugin</artifactId>
+    </plugin>
+    ...
+  </plugins>
+</metadata>
+}}}
+
+Based on that my guess is:
+
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <plugins>
+    <plugin>
+      <name>Codgen code generator for Crank and Presto2</name>
+      <prefix>codegen</prefix>
+      <artifactId>p2c-codegen-mojo</artifactId>
+    </plugin>
+  </plugins>
+</metadata>
+}}}
+
+
+

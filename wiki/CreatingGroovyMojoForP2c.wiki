@@ -850,3 +850,24 @@ But based on the error message that just applies to the maven properties, not th
 Eureka! That did it.... It now runs the plugin. Seems like a lot of configuration, I wonder if there is a way to add that mojo meta-data as part of the build process. One of the reason I want to publish this as a plugin is so I can easily distribute it to the whole company (one day, the whole world). Hmmmm....
 
 On a side note, I am getting hungry....
+
+I am stuck at this point now:
+
+{{{
+$ mvn codegen:codegen
+[INFO] property set as follows: debug=null
+[INFO] ------------------------------------------------------------------------
+[ERROR] FATAL ERROR
+[INFO] ------------------------------------------------------------------------
+[INFO] Cannot invoke method mkdirs() on null object
+[INFO] ------------------------------------------------------------------------
+[INFO] Trace
+java.lang.NullPointerException: Cannot invoke method mkdirs() on null objectdeAdapter.java:198)
+	at com.arcmind.codegen.CodeGenMain.writeProperties(CodeGenMain.groovy:355)
+	at com.arcmind.codegen.CodeGenMain.this$2$writeProperties(CodeGenMain.groovy)
+        at com.arcmind.codegen.CodeGenMain.run(CodeGenMain.groovy:71)
+        at com.arcmind.codegen.CodeGenMain.run(CodeGenMain.groovy:71)
+...
+}}}
+
+First food, then debugging...

@@ -496,3 +496,8 @@ Reading now....
 Here is the general guide to Maven MOJO (maven plugin development)
 
 http://maven.apache.org/guides/plugin/guide-java-plugin-development.html
+
+Ok... after reading a bit more the vision becomes clearer.
+I will build the mojo which will include the codegen project as a dependency.
+
+I will configure the sample app to use the cp2-codgen mojo then I will create an archetype based on this newly updated project. This way I can preconfigure the mojo as part of the artifact so it is completely configured.

@@ -476,3 +476,13 @@ Now when we actually invoke these code generators we do it polymorphicaly as fol
 }}}
 
 This should make it easy to extend the codegen utility to add additional code generators.
+
+==== The code generation passes integration testing ====
+
+For integration testing, I generated a project from the archetype, pointed the codegen swing app to it. Generated the artifacts and then ran the results with jetty.
+
+Now I need to do the following:
+
+ * Check the archetype into subversion
+ * Figure out how to create a maven plugin (groovy based)
+ * Get codegen to launch as a maven plugin

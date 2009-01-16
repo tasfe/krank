@@ -226,139 +226,7 @@ Here is the current pom info for codegen
     <version>1.0-SNAPSHOT</version>
 }}}
 
-I added codegen as a dependency and then started on the mojo, here is what I have so far...
-
-{{{
-//
-// Generated from archetype; please customize.
-//
-
-package org.crank
-
-import org.codehaus.groovy.maven.mojo.GroovyMojo
-
-/**
- * Example Maven2 Groovy Mojo.
- *
- * @goal codegen
- */
-class CodegenMojo extends GroovyMojo {
-
-    /**
-     * JDBC Url
-     *
-     * @required
-     * @parameter expression="${codegen.jdbc.url}"
-     */
-    String url
-    
-    /**
-     * JDBC User Name
-     *
-     * @required
-     * @parameter expression="${codegen.jdbc.userName}"
-     */
-    String userName
-
-    /**
-     * JDBC Password
-     *
-     * @required
-     * @parameter expression="${codegen.jdbc.password}"
-     */
-    String password
-
-    /**
-     * JDBC Driver
-     *
-     * @required
-     * @parameter expression="${codegen.jdbc.driver}"
-     */
-    String driver
-
-    /**
-     * Table names
-     *
-     * @required
-     * @parameter expression="${codegen.tableNames}"
-     */
-    String tableNames
-    
-    /**
-     * Default package name
-     *
-     * @required
-     * @parameter expression="${codegen.packageName}"
-     */
-    String packageName
-
-    /**
-     * Default package name
-     *
-     * @required
-     * @parameter expression="${codegen.packageName}" default-value="."
-     */
-    String rootDir
-
-    
-    /**
-     * App configuration directory.
-     *
-     * @required
-     * @parameter expression="${codegen.appConfigDir}" default-value="./codegen"
-     */
-    String appConfigDir
-    
-    /**
-     * xmlFileName
-     *
-     * @required
-     * @parameter expression="${codegen.xmlFileName}" default-value="codegen.xml"
-     */
-    String xmlFileName
-
-
-    /**
-     * xmlDataSourceFileName
-     *
-     * @required
-     * @parameter expression="${codegen.xmlDataSourceFileName}" default-value="datasource.xml"
-     */
-    String xmlDataSourceFileName
-
-    /**
-     * Configuration file propertiesFile
-     *
-     * @required
-     * @parameter expression="${codegen.propertiesFile}" default-value="config.properties"
-     */
-    String propertiesFile
-
-    /**
-     * @required
-     *
-     * @parameter expression="${codegen.codeGenPackage}" default-value="com.arcmind.codegen"
-     */
-    String codeGenPackage
-
-    /**
-     * @required
-     *
-     * @parameter expression="${codegen.generators}" default-value="FacesConfigCodeGen,JPACodeGenerator,SpringJavaConfigCodeGen,XHTMLCodeGenerator"
-     */
-    String generators
-
-    
-    void execute() {
-        println "${message}"
-    }
-}
-
-}}}
-
-I will start this up again after I workout, help the kids with their homework and put them to bed. I expect to get a running mojo sometime tonight or the wee hours of the morning.
-
-Ok... this is what I got before I went to bed.
+I added codegen as a dependency and then started on the mojo, here is what I have so far... (updated a bit)
 
 {{{
 
@@ -366,6 +234,7 @@ package org.crank
 
 import org.codehaus.groovy.maven.mojo.GroovyMojo
 import com.arcmind.codegen.*
+import org.apache.maven.project.MavenProject
 
 /**
  * Example Maven2 Groovy Mojo.
@@ -490,6 +359,17 @@ class CodegenMojo extends GroovyMojo {
      */
     String debug
 
+    /*
+     *  @parameter expression="${codegen.usePom}" default-value="true"
+     */
+    boolean usePom
+
+    /**
+     * @parameter expression="${project}"
+     * @required
+     * @readonly
+     */
+    MavenProject project
 
     /*
      * @parameter expression="${codegen.debug}" default-value="true"
@@ -499,6 +379,27 @@ class CodegenMojo extends GroovyMojo {
     private static String PROPS_TO_COPY = "url,userName,password,driver,tableNames,packageName,rootDir,appConfigDir,xmlFileName,xmlDataSourceFileName,propertiesFile,codeGenPackage,generators,debug"
 
     void execute() {
+
+        def build = project.build
+
+
+        log.info "project groupId ${project.groupId} artifactId ${artifactId}"
+        log.info "build.sourceDirectory = ${build.sourceDirectory}"
+        log.info "build.outputDirectory = ${build.outputDirectory}"
+
+        build.resources.each {
+           log.info "--------- dump resource ----------"
+           it.dump()
+        }
+
+        build.testResources  {
+            log.info "--------- test resource ----------"
+            it.dump()
+        }
+
+        log.info "DUMP BUILD"
+        build.dump()
+
 
         CodeGenMain main
         if (useGUI) {
@@ -520,8 +421,95 @@ class CodegenMojo extends GroovyMojo {
         List<String> props = PROPS_TO_COPY.split(",")
         for (String prop : props) {
             main[prop]=this[prop]
+            info.log "property set as follows: ${prop}=${main[prop]}"
         }
     }
 }
 
 }}}
+
+I'd like to make codegen more maven aware (like reading the pom/project to get that actual locations of src/main/java and src/main/webapp). Not sure 100% how to do that yet (thus the copious print statements).
+
+
+I set the goal prefix in the mojo pom as follows:
+
+{{{
+    <build>
+        <plugins>
+            ...
+            <plugin>
+              <artifactId>maven-plugin-plugin</artifactId>
+              <version>2.3</version>
+              <configuration>
+                <goalPrefix>codegen</goalPrefix>
+              </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+}}}
+
+
+I then try to configure the plugin into the sample app's pom as follows:
+{{{
+	<build>
+		<finalName>crank</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.crank</groupId>
+				<artifactId>p2c-codegen-mojo</artifactId>
+				<version>1.0-SNAPSHOT</version>
+				<configuration>
+					<codegen>
+						<usePom>true</usePom>
+						<packageName>com.somecompany.employeetask</packageName>
+						<jdbc>
+							<url>jdbc:mysql://localhost:3306/presto2</url>
+							<userName>presto2</userName>
+							<password>presto2</password>
+							<driver>com.mysql.jdbc.Driver</driver>	
+						</jdbc>
+					</codegen>
+				</configuration>
+			</plugin>
+
+}}}
+
+Then after dutifully building everything (mvn clean install), I try running the plugin:
+
+{{{
+$ mvn codegen:codegen
+[INFO] Scanning for projects...
+[INFO] Searching repository for plugin with prefix: 'codegen'.
+[INFO] ------------------------------------------------------------------------
+[ERROR] BUILD ERROR
+[INFO] ------------------------------------------------------------------------
+[INFO] The plugin 'org.apache.maven.plugins:maven-codegen-plugin' does not exist or no valid version could be found
+[INFO] ------------------------------------------------------------------------
+[INFO] For more information, run Maven with the -e switch
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: < 1 second
+[INFO] Finished at: Fri Jan 16 12:16:12 PST 2009
+[INFO] Final Memory: 6M/490M
+[INFO] ------------------------------------------------------------------------
+}}}
+
+Ummm... Err... Can't find the plugin eh. I seem to remember something about mojo registration in that maven book.
+
+Scanning for 20 minutes...
+
+
+Here it is...
+http://books.sonatype.com/maven-book/reference/writing-plugins-sect-plugin-prefix.html
+
+I read it a few times. Not the most clearly written part of the book. Cross my eyes. Focus. Focus. Focus. Huh?
+
+Ok I think after reading the above a few times, that all I need to do is add an entry to settings.xml....

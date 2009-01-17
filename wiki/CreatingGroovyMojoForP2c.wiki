@@ -889,3 +889,5 @@ mvn  codegen:codegen
 }}}
 
 http://krank.googlecode.com/svn/wiki/img/codegen/debugMojo.png
+
+Ok... the above did not quite work. I tried changing it from attach to listen. I need the gui to stop and wait for me to attach I guess. Listen ignored my breakpoint and attach is too fast for me to attach it. I will need to have it pause so I can attach. I just need to remember how.

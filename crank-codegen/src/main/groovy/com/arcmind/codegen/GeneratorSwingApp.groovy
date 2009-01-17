@@ -9,6 +9,9 @@ import java.awt.BorderLayout
 import java.awt.FlowLayout
 import java.awt.Cursor
 import javax.swing.event.TreeSelectionEvent
+import javax.swing.text.Document
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
 
 /**
  * @author richardhightower
@@ -200,6 +203,10 @@ password: ${password.text}, driver: ${drv}"""
 		updateJDBCTree(main.dataSourceReader.settings)
 	}
 	
+	public boolean isEnabledRootDir() {
+		!main.rootDir
+	}
+	
 	public void treeTableSelected(TreeSelectionEvent event) {
 		setStatus ""
 		mainTabPane.addTab("Modify Properties", codeGenMainPane)
@@ -265,13 +272,19 @@ password: ${password.text}, driver: ${drv}"""
         relationshipEditSupport = new RelationshipEditSupport(classTreeModel:classTreeModel)
         codeGenMainEditSupport = new CodeGenMainEditSupport()
         codeGenMainEditSupport.app = this;
-        settingsEditSupport = new SettingsEditSupport()        
+        settingsEditSupport = new SettingsEditSupport()
     }
+    
+    private void initListeners() {
+		codeGenMainEditSupport.rootDir.getDocument().addDocumentListener(
+				new MyDocumentListener(app:this));
+    }    	
 
     public void show () {
         initEditors()
 		buildGUI ()
-
+		initListeners()
+		
 		/* Initialize CodeGenMain. */
 		CodeGenMain.metaClass.println = printlnClosure
 		main = new CodeGenMain()
@@ -385,6 +398,10 @@ password: ${password.text}, driver: ${drv}"""
 	                    }
             		}
                 }
+            
+            Closure handlePickRootDir =  {
+            		setRootDirFromDialog(true)            		
+            }
             
             fileActions = actions() {
                 action(name: "Exit", mnemonic: 'X', closure: { exit() })
@@ -617,6 +634,14 @@ password: ${password.text}, driver: ${drv}"""
                             }
                             panel {
                                 boxLayout(axis:BoxLayout.X_AXIS)
+                                label("Root dir", preferredSize:[100,20])
+                                codeGenMainEditSupport.rootDir = 
+                                	textField(preferredSize:[200,20]) 
+                                codeGenMainEditSupport.rootDirButton = button(text:"...", actionPerformed: {handlePickRootDir()}, preferredSize:[30,20], enabled: enabledRootDir)
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
                                 label("XML File", preferredSize:[100,20])
                                 codeGenMainEditSupport.xmlFileName = textField(preferredSize:[200,20])
                                 button(text:"...", actionPerformed: {handleOpenXML()}, preferredSize:[30,20])
@@ -764,6 +789,18 @@ password: ${password.text}, driver: ${drv}"""
 		main.persister.fileName = main.xmlFileName
 		main.persister.outputDir = file.getParentFile()
 	}
+	
+	private void setRootDirFromDialog(isOpenOrSave) {
+		JFileChooser fc = new JFileChooser()
+		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		int returnVal = isOpenOrSave ? fc.showOpenDialog(mainFrame) : fc.showSaveDialog(mainFrame)
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			//todo
+			JOptionPane.showMessageDialog(mainFrame, fc.getSelectedFile().getPath());
+			codeGenMainEditSupport.rootDir.text = fc.getSelectedFile().getPath()
+			main.rootDir = codeGenMainEditSupport.rootDir.text
+		}
+	}
 }
 
  
@@ -848,10 +885,12 @@ class CodeGenMainEditSupport {
 	JTextField packageName
 	JTextField outputDir
 	JTextField appConfigDir
+	JTextField rootDir
 	JTextField xmlFileName
 	JTextField xmlDataSourceFileName
 	JTextField propertiesFile
 	JCheckBox debug
+	JButton rootDirButton
 	
 	GeneratorSwingApp app
 	
@@ -864,6 +903,7 @@ class CodeGenMainEditSupport {
 		main.packageName = packageName.text
 		main.outputDir = outputDir.text
 		main.appConfigDir = appConfigDir.text
+		main.rootDir = rootDir.text
 		main.xmlFileName = xmlFileName.text
 		main.xmlDataSourceFileName = xmlDataSourceFileName.text
 		main.propertiesFile = propertiesFile.text
@@ -884,6 +924,7 @@ class CodeGenMainEditSupport {
 		packageName.text = main.packageName
 		outputDir.text = main.outputDir
 		appConfigDir.text = main.appConfigDir
+		rootDir.text = main.rootDir
 		xmlFileName.text =  main.xmlFileName
 		xmlDataSourceFileName.text = main.xmlDataSourceFileName
 		propertiesFile.text = main.propertiesFile
@@ -919,4 +960,23 @@ class SettingsEditSupport {
 		password.text = settings.password
 		driver.text = settings.driver		
 	}
+}
+
+class MyDocumentListener implements DocumentListener {
+	GeneratorSwingApp app
+	
+    public void insertUpdate(DocumentEvent e) {
+		refreshButton()        
+    }
+    public void removeUpdate(DocumentEvent e) {
+    	refreshButton()
+    }
+    public void changedUpdate(DocumentEvent e) {
+        //Plain text components do not fire these events
+    }
+    
+    def refreshButton() {
+        app.codeGenMainEditSupport.rootDirButton.enabled = 
+        	app.codeGenMainEditSupport.rootDir.text.equals('')
+    }
 }

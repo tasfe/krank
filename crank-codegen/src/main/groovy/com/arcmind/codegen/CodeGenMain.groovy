@@ -15,6 +15,7 @@ public class CodeGenMain{
 	String driver
 	String tableNames
 	String packageName
+	String outputDir
 	String rootDir
 	String appConfigDir
 	String xmlFileName

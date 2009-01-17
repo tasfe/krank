@@ -887,3 +887,5 @@ MAVEN_OPTS="-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=n,a
 export MAVEN_OPTS
 mvn  codegen:codegen
 }}}
+
+http://krank.googlecode.com/svn/wiki/img/codegen/debugMojo.png

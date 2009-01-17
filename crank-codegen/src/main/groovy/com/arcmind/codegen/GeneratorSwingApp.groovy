@@ -796,9 +796,12 @@ password: ${password.text}, driver: ${drv}"""
 		int returnVal = isOpenOrSave ? fc.showOpenDialog(mainFrame) : fc.showSaveDialog(mainFrame)
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			//todo
-			JOptionPane.showMessageDialog(mainFrame, fc.getSelectedFile().getPath());
-			codeGenMainEditSupport.rootDir.text = fc.getSelectedFile().getPath()
-			main.rootDir = codeGenMainEditSupport.rootDir.text
+			//JOptionPane.showMessageDialog(mainFrame, fc.getSelectedFile().getPath());
+			RootDirValidator validator = new RootDirValidator(rootDir : fc.getSelectedFile().getPath());
+			if (validator.validate()){
+				codeGenMainEditSupport.rootDir.text = fc.getSelectedFile().getPath()
+				main.rootDir = codeGenMainEditSupport.rootDir.text
+			}
 		}
 	}
 }

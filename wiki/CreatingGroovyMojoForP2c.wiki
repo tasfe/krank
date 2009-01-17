@@ -871,3 +871,18 @@ java.lang.NullPointerException: Cannot invoke method mkdirs() on null objectdeAd
 }}}
 
 First food, then debugging...
+
+==== Onward and upwards ====
+
+Ok... I am past the mojo issues and now am on my own issues. The failures seem to be in my code. (My code runs standalone, but not so much inside of the mojo). Hmmmm....
+
+Time to debug....
+
+First I wrote this little script so I can connect to the mvn process running my mojo:
+
+{{{
+#!/bin/sh
+MAVEN_OPTS="-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009 -ea"
+export MAVEN_OPTS
+mvn  codegen:codegen
+}}}

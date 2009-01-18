@@ -12,6 +12,7 @@ import javax.swing.event.TreeSelectionEvent
 import javax.swing.text.Document
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
+import com.arcmind.codegen.ui.components.ListDialog
 
 /**
  * @author richardhightower
@@ -799,8 +800,30 @@ password: ${password.text}, driver: ${drv}"""
 			//JOptionPane.showMessageDialog(mainFrame, fc.getSelectedFile().getPath());
 			RootDirValidator validator = new RootDirValidator(rootDir : fc.getSelectedFile().getPath());
 			if (validator.validate()){
+				String selectedName = ListDialog.showDialog(
+                        mainFrame,
+                        null,
+                        false,//Success
+                        "Select",
+                        "Success:",
+                        "Root Dit Success",
+                        validator.data.toArray(new String[0]),
+                        null,
+                        null);				
+				
 				codeGenMainEditSupport.rootDir.text = fc.getSelectedFile().getPath()
 				main.rootDir = codeGenMainEditSupport.rootDir.text
+			} else {
+				String selectedName = ListDialog.showDialog(
+                        mainFrame,
+                        null,
+                        true,//Error
+                        "Close",
+                        "Failures:",
+                        "Root Dit Failure",
+                        validator.data.toArray(new String[0]),
+                        null,
+                        null);				
 			}
 		}
 	}

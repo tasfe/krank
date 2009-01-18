@@ -24,6 +24,7 @@ public class RootDirValidator{
 		 "/src/main/webapp/WEB-INF",
 		 "/src/main/webapp/WEB-INF/faces-config.xml"]
 	
+	
 	boolean validate(){
 		
 		int fehler = 0

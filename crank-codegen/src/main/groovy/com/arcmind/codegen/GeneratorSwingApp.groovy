@@ -371,6 +371,7 @@ password: ${password.text}, driver: ${drv}"""
             		use(StringCategory){
             			main.writeProperties()
             		}
+            		refreshProperties()
             }
             
             Closure handleWriteAsProperties = {
@@ -383,6 +384,7 @@ password: ${password.text}, driver: ${drv}"""
 	            			main.writeProperties()
 	            		}
            			}
+            		refreshProperties()
             		//main.restorePropFile(backupPropertiesFile)
             }            
 

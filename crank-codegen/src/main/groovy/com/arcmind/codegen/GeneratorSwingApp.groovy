@@ -362,6 +362,9 @@ password: ${password.text}, driver: ${drv}"""
             }            
             
             Closure handleWriteProperties = {
+            		if (!validateRootDir(main.rootDir)){
+            			return
+            		}
             		if (main.wasNotSetPropFile) {
             			setPropFromFileDialog(false, true)
             		}
@@ -371,6 +374,9 @@ password: ${password.text}, driver: ${drv}"""
             }
             
             Closure handleWriteAsProperties = {
+            		if (!validateRootDir(main.rootDir)){
+            			return
+            		}
             		main.backupPropFile(backupPropertiesFile)
            			if (setPropFromFileDialog(false, false)) {
 	            		use(StringCategory){
@@ -668,8 +674,8 @@ password: ${password.text}, driver: ${drv}"""
                                 label(preferredSize:[100,20])
                             }
                             panel {
-                                button(text:"Apply", actionPerformed: {codeGenMainEditSupport.updateObject(this.main)})
-                                button(text:"Save", actionPerformed: {codeGenMainEditSupport.updateObject(this.main); main.writeProperties()})
+                                button(text:"Apply", actionPerformed: {handleApplyProperties()})
+                                button(text:"Save", actionPerformed: {handleSaveProperties()})
                                 button(text:"Clear Tables", actionPerformed: {main.tableNames="";codeGenMainEditSupport.tableNames.text=""})
                                 button(text:"Close", actionPerformed: {mainTabPane.remove(codeGenMainPane)})
                             }
@@ -719,6 +725,19 @@ password: ${password.text}, driver: ${drv}"""
             }//splitPane
         }//frame
 	}//buildGUI()
+	private handleSaveProperties() {
+		if (!validateRootDir(codeGenMainEditSupport.rootDir.text)){
+			return
+		}
+		codeGenMainEditSupport.updateObject(this.main); 
+		main.writeProperties()
+	}
+	private handleApplyProperties() {
+		if (!validateRootDir(codeGenMainEditSupport.rootDir.text)){
+			return
+		}
+		codeGenMainEditSupport.updateObject(this.main)
+	}
 	private restoreXMLCredentials() {
 		main.persister = backupXMLPersister.cloneThis()
 		main.xmlFileName = backupXmlFileName
@@ -796,17 +815,15 @@ password: ${password.text}, driver: ${drv}"""
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		int returnVal = isOpenOrSave ? fc.showOpenDialog(mainFrame) : fc.showSaveDialog(mainFrame)
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			//todo
-			//JOptionPane.showMessageDialog(mainFrame, fc.getSelectedFile().getPath());
 			RootDirValidator validator = new RootDirValidator(rootDir : fc.getSelectedFile().getPath());
 			if (validator.validate()){
-				String selectedName = ListDialog.showDialog(
+				ListDialog.showDialog(
                         mainFrame,
                         null,
                         false,//Success
                         "Select",
                         "Success:",
-                        "Root Dit Success",
+                        "Root Dir Success",
                         validator.data.toArray(new String[0]),
                         null,
                         null);				
@@ -814,18 +831,36 @@ password: ${password.text}, driver: ${drv}"""
 				codeGenMainEditSupport.rootDir.text = fc.getSelectedFile().getPath()
 				main.rootDir = codeGenMainEditSupport.rootDir.text
 			} else {
-				String selectedName = ListDialog.showDialog(
+				ListDialog.showDialog(
                         mainFrame,
                         null,
                         true,//Error
                         "Close",
                         "Failures:",
-                        "Root Dit Failure",
+                        "Root Dir Failure",
                         validator.data.toArray(new String[0]),
                         null,
                         null);				
 			}
 		}
+	}
+	
+	private boolean validateRootDir(rootDir) {
+		RootDirValidator validator = new RootDirValidator(rootDir : rootDir);
+		if (!validator.validate()){
+			ListDialog.showDialog(
+                    mainFrame,
+                    null,
+                    true,//Error
+                    "Close",
+                    "Failures:",
+                    "Root Dir Failure",
+                    validator.data.toArray(new String[0]),
+                    null,
+                    null);
+			return false;
+		}
+		return true
 	}
 }
 

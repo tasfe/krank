@@ -76,7 +76,7 @@ public class CodeGenMain{
 		if (actions.contains("reverse")) {
 			reverseDB()
 		} else if (actions.contains("read")) {
-			readXML()
+			readModel()
 		}
 		
 		if (actions.contains("datasource")) {

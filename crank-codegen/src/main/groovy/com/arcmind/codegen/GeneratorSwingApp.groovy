@@ -36,6 +36,7 @@ public class GeneratorSwingApp{
 	JTabbedPane treeTabPane
 	JTabbedPane mainTabPane
 	JScrollPane consolePane
+	JScrollPane settingsTreePane
 	DBTableTreeModel tableTreeModel = new DBTableTreeModel()
 	JavaClassTreeModel classTreeModel = new JavaClassTreeModel()
 	SettingsTreeModel settingsTreeModel = new SettingsTreeModel()
@@ -101,7 +102,7 @@ public class GeneratorSwingApp{
 		classTreeModel.setClasses(main.modelGen.classes)
 	}
 
-	public void readXML() {
+	public void readModel() {
 		main.reader.tables=[]
 		main.modelGen.classes=[]
 		try {
@@ -149,7 +150,7 @@ public class GeneratorSwingApp{
 		relationshipEditSupport.populateForm(relationship)
 	}
 	
-	def addDataSource() {
+	def handleAddDataSource() {
 		JLabel labelUrl = new JLabel("URL");
 		JLabel labelUserName = new JLabel("Username:");
 		JLabel labelPassword = new JLabel("Password:");
@@ -169,16 +170,25 @@ password: ${password.text}, driver: ${drv}"""
 		}
 		
 		if (drv) {
-			main.dataSourceReader.settings << 
-			new JDBCSettings(
-					url: url.text,
-					userName: userName.text,
-					password: password.text,
-					driver: drv)
+			JDBCSettings newSettings = 
+				new JDBCSettings(
+						url: url.text,
+						userName: userName.text,
+						password: password.text,
+						driver: drv)
+			main.dataSourceReader.settings << newSettings 
 			main.writeDataSourceXML()
 			updateJDBCTree(main.dataSourceReader.settings)
-		}
+			showDataSourcePane(newSettings)
+			setStatus "Data source added: url:${url.text},username:${userName.text},password: ${password.text}, driver: ${drv}"
+		}		
+		
 	}
+	
+	def showDataSourcePane(settings) {
+		treeTabPane.setSelectedComponent(settingsTreePane)
+		selectDataSource(settings)
+	}	
 	
 	def selectDataSource(JDBCSettings settings) {
 		mainTabPane.addTab("JDBC Settings", settingsPane)
@@ -333,7 +343,7 @@ password: ${password.text}, driver: ${drv}"""
 		mainFrame=
         swing.frame(title:'CodeGen Code Generator', size:[1500,1000], defaultCloseOperation:JFrame.EXIT_ON_CLOSE,  show:true) {
 			
-            Closure handleWriteXML = {
+            Closure handleWriteModel = {
            		if (main.wasNotSetXmlFile) {
            			setXmlFromFileDialog(false, true)
            		}
@@ -362,7 +372,8 @@ password: ${password.text}, driver: ${drv}"""
 	            		use(StringCategory){
 	            			main.readProperties()
 	            		}
-	            		refreshProperties()	            		
+	            		refreshProperties()
+	            		edt {setStatus "Done reading properties file in ${main.propertiesFile}"}
            			}
             		//main.restorePropFile(backupPropertiesFile)            		
             }            
@@ -378,6 +389,7 @@ password: ${password.text}, driver: ${drv}"""
             			main.writeProperties()
             		}
             		refreshProperties()
+            		edt {setStatus "Done writing properties file out ${main.propertiesFile}"}
             }
             
             Closure handleWriteAsProperties = {
@@ -391,13 +403,14 @@ password: ${password.text}, driver: ${drv}"""
 	            		}
            			}
             		refreshProperties()
+            		edt {setStatus "Done writing properties file out ${main.propertiesFile}"}
             		//main.restorePropFile(backupPropertiesFile)
             }            
 
-            Closure handleReadXML = {
+            Closure handleReadModel = {
                 doOutside {
                     edt {setStatus "Reading XML file in ${main.persister.fileName}"}
-                    readXML()
+                    readModel()
                     edt {setStatus "Done reading XML file in ${main.persister.fileName}"}
                 }
             }
@@ -407,7 +420,7 @@ password: ${password.text}, driver: ${drv}"""
             		if (setXmlFromFileDialog(true, false)) {
 	                    doOutside {
 	                        edt {setStatus "Reading XML file in ${main.persister.fileName}"}
-	                        readXML()
+	                        readModel()
 	                        edt {setStatus "Done reading XML file in ${main.persister.fileName}"}
 	                        //restoreXMLCredentials()
 	                    }
@@ -420,8 +433,8 @@ password: ${password.text}, driver: ${drv}"""
             
             fileActions = actions() {
                 action(name: "Exit", mnemonic: 'X', closure: { exit() })
-                action(name: "Write XML", mnemonic: 'W', closure: handleWriteXML)
-                action(name: "Read XML", mnemonic: 'e', closure: handleReadXML)
+                action(name: "Write Model", mnemonic: 'W', closure: handleWriteModel)
+                action(name: "Read Model", mnemonic: 'e', closure: handleReadModel)
                 action(name: "Open Properties...", mnemonic: 'O', closure: handleOpenProperties)
                 action(name: "Open Model...", mnemonic: 'L', closure: handleOpenXML)
                 action(name: "Save Properties", mnemonic: 'S', closure: handleWriteProperties)
@@ -470,7 +483,7 @@ password: ${password.text}, driver: ${drv}"""
                 action(name: "Reverse DB", mnemonic: 'R', closure: handleReverseDB)
                 action(name: "Generate Code", mnemonic: 'G', closure: handleGenerateCode)
                 action(name: "Modify Properties", mnemonic: 'o', closure: { modifyProperties() })
-                action(name: "Add New Data Source", mnemonic: 'D', closure: { addDataSource() })
+                action(name: "Add New Data Source...", mnemonic: 'D', closure: { handleAddDataSource() })
             }
             viewActions = actions () {
                 viewConsole = action(name: "View Console", mnemonic: 'V', closure: { showConsole() })
@@ -503,7 +516,7 @@ password: ${password.text}, driver: ${drv}"""
                     scrollPane(title:"Classes", tabMnemonic: "C") {
                         tree(model: classTreeModel, valueChanged: {treeClassSelected(it)})
                     }                    
-                    scrollPane(title:"JDBC Settings", tabMnemonic: "J") {
+                    settingsTreePane = scrollPane(title:"JDBC Settings", tabMnemonic: "J") {
                         tree(model: settingsTreeModel, valueChanged: {treeSettingsSelected(it)})
                     }                    
                 }

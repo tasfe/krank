@@ -14,7 +14,6 @@ public class RootDirValidator{
 
 	String rootDir
 	private List <String> data = []
-	private JList dataList = new JList(data);
 	private List <String> criteria = 
 		["/pom.xml",
 		 "/src",

@@ -7,6 +7,7 @@ import javax.swing.*
 import groovy.swing.SwingBuilder
 import java.awt.BorderLayout
 import java.awt.FlowLayout
+import java.awt.Font
 import java.awt.Cursor
 import javax.swing.event.TreeSelectionEvent
 import javax.swing.text.Document
@@ -55,7 +56,8 @@ public class GeneratorSwingApp{
 	String backupPropertiesFile
 	String backupXmlFileName
 	XMLPersister backupXMLPersister
-
+	Font myFont = new Font("Tahoma", Font.PLAIN, 12)
+    Font menuFont = myFont.deriveFont(11F)
 	boolean debug = true
 
 	def println(String message) {
@@ -102,11 +104,15 @@ public class GeneratorSwingApp{
 	public void readXML() {
 		main.reader.tables=[]
 		main.modelGen.classes=[]
-		use(StringCategory) {
-			main.readXML()
+		try {
+			use(StringCategory) {
+				main.readXML()
+			}
+			tableTreeModel.setTables(main.reader.tables)
+			classTreeModel.setClasses(main.modelGen.classes)
+		} catch(Exception e){
+			setStatus e.message
 		}
-		tableTreeModel.setTables(main.reader.tables)
-		classTreeModel.setClasses(main.modelGen.classes)
 	}
 
 	def modifyProperties () {
@@ -325,7 +331,7 @@ password: ${password.text}, driver: ${drv}"""
 	 */
 	def buildGUI() {
 		mainFrame=
-        swing.frame(title:'CodeGen Code Generator', size:[1200,1000], defaultCloseOperation:JFrame.EXIT_ON_CLOSE,  show:true) {
+        swing.frame(title:'CodeGen Code Generator', size:[1500,1000], defaultCloseOperation:JFrame.EXIT_ON_CLOSE,  show:true) {
 			
             Closure handleWriteXML = {
            		if (main.wasNotSetXmlFile) {
@@ -428,30 +434,41 @@ password: ${password.text}, driver: ${drv}"""
                     edt {setStatus "Reverse engineering database please standby..."}
                     enableMenuBar(false)
                     modifyCursor(false)
-                    reverseDB()
-                    edt {setStatus "Done reverse engineering database." }
-                    enableMenuBar(true)
-                    modifyCursor(true)
+                    try {
+                    	reverseDB()
+                    	edt {setStatus "Done reverse engineering database." }
+                    } catch(Exception e) {
+                    	setStatus "${e.class.getSimpleName()} ${e.message}"
+					} finally {	
+                    	enableMenuBar(true)
+                    	modifyCursor(true)
+                    }
                 }
             }
 
-            Closure handleGenerateJavaClasses = {
+            Closure handleGenerateCode = {
                     doOutside {
                         edt {setStatus "Generating Artifacts to ${main.rootDir}"}
                         enableMenuBar(false)
                         modifyCursor(false)
-                        use(StringCategory) {
-                        	main.generateArtifacts()
+                        try {
+	                        use(StringCategory) {
+	                        	main.generateArtifacts()
+	                        }
+	                        edt {setStatus "Done generating Artifacts to ${main.rootDir}"}
+                        } catch(Exception e) {
+                        	edt {setStatus e.message}
                         }
-                        edt {setStatus "Done generating Artifacts to ${main.rootDir}"}
-                        enableMenuBar(true)
-                        modifyCursor(true)
+                        finally {
+                        	enableMenuBar(true)
+                        	modifyCursor(true)
+                        }
                     }
             }
 
             mainActions = actions() {
                 action(name: "Reverse DB", mnemonic: 'R', closure: handleReverseDB)
-                action(name: "Generate Java", mnemonic: 'G', closure: handleGenerateJavaClasses)
+                action(name: "Generate Code", mnemonic: 'G', closure: handleGenerateCode)
                 action(name: "Modify Properties", mnemonic: 'o', closure: { modifyProperties() })
                 action(name: "Add New Data Source", mnemonic: 'D', closure: { addDataSource() })
             }
@@ -461,22 +478,21 @@ password: ${password.text}, driver: ${drv}"""
                 action(name: "Clear Console", mnemonic: 'l', closure: { clearConsole() })
             }
             menuBar() {
-                menu(text: "File", mnemonic: 'F') {
-                    fileActions.each {menuItem(it)}
+                menu(text: "File", mnemonic: 'F', font: menuFont) {
+                    fileActions.each {menuItem(it, font: menuFont)}
                 }
-                menu (text: "Main", mnemonic: 'M') {
-                    mainActions.each {menuItem(it)}
+                menu (text: "Main", mnemonic: 'M', font: menuFont) {
+                    mainActions.each {menuItem(it, font: menuFont)}
                 }
-                menu (text: "Window") {
-                    viewActions.each {menuItem(it)}
-                }
+                menu (text: "Window", font: menuFont) {
+                    viewActions.each {menuItem(it, font: menuFont)}
+                }                
             }
 
             toolBar (constraints: BorderLayout.PAGE_START) {
-                fileActions.each {button(it)}
-                mainActions.each {button(it)}
-                viewActions.each {button(it)}
-                status = label(text:"  Welcome to CodeGen")
+                fileActions.each {button(it, font: menuFont, toolTipText: it.getValue("Name"))}
+                mainActions.each {button(it, font: menuFont, toolTipText: it.getValue("Name"))}
+                viewActions.each {button(it, font: menuFont, toolTipText: it.getValue("Name"))}                
             }
 
             splitPane(constraints: BorderLayout.CENTER) {
@@ -721,10 +737,12 @@ password: ${password.text}, driver: ${drv}"""
                                 button(text:"Use", actionPerformed: {useTheseSettings()})
                             }
                         }//panel
-                    }//settingsPane
-                    
+                    }//settingsPane                    
                 }//mainTabPane
             }//splitPane
+            panel (constraints: BorderLayout.PAGE_END) {
+            	status = label(text:"  Welcome to CodeGen!", font: menuFont.deriveFont(Font.BOLD,12F))
+            }
         }//frame
 	}//buildGUI()
 	private handleSaveProperties() {

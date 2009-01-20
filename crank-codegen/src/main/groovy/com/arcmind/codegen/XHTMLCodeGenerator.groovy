@@ -54,11 +54,11 @@ class XHTMLCodeGenerator implements CodeGenerator {
 		<crank:crudBreadCrumb crud="#{${bean.name.unCap()}Crud.controller}" />
 		<c:choose>
 			<c:when test='#{${bean.name.unCap()}.controller.state == "ADD"}'>
-				<h:outputText value="Create Department" styleClass="pageTitle" />
+				<h:outputText value="Create ${bean.name}" styleClass="pageTitle" />
 			</c:when>
 			<c:otherwise>
 				<h:outputText
-					value="Edit Department #{${bean.name.unCap()}Crud.controller.entity.name}"
+					value="Edit ${bean.name} #{${bean.name.unCap()}Crud.controller.entity.${descriptivePropertyName}}"
 					styleClass="pageTitle" />
 			</c:otherwise>
 		</c:choose>
@@ -78,7 +78,9 @@ class XHTMLCodeGenerator implements CodeGenerator {
         for (JavaClass bean in classes) {
         	
         	if (debug) println "Writing ${bean.name} listing xhtml"
-            def binding = [bean:bean, formBody:generateBody(bean), propertyNames:generatePropertyNames(bean)]        
+            def binding = [bean:bean, formBody:generateBody(bean),
+                    propertyNames:generatePropertyNames(bean),
+                    descriptivePropertyName:findDescriptivePropertyName(bean)]        
             String templateOutput = engine.createTemplate(template).make(binding).toString()
             File webappRootDir = new File(rootDir, "src/main/webapp/pages/crud")
             File listingFile = new File (webappRootDir, bean.name.unCap() + fileNameSuffix)
@@ -126,4 +128,23 @@ class XHTMLCodeGenerator implements CodeGenerator {
 		}
 		builder.toString()
 	}
+
+  String findDescriptivePropertyName(com.arcmind.codegen.JavaClass javaClass) {
+     JavaProperty p = javaClass.properties.find{JavaProperty jp -> jp.name=="name"}
+     if (p!=null) {
+        return "name"
+     }
+     p = javaClass.properties.find{JavaProperty jp -> jp.name=="title"}
+     if (p!=null) {
+      return "title"
+     }
+
+     for (JavaProperty pp : javaClass.properties) {
+       if (pp.name.endsWith("Name")) {
+           return pp.name;
+       }
+     }
+
+     return "id";
+  }
 }

@@ -330,7 +330,7 @@ public class CodeGenMain{
 
 	private File calculatePropFile () {
 		wasNotSetPropFile = (propertiesFile==null || "".equals(propertiesFile))
-		propertiesFile==null || "".equals(propertiesFile) ? new File((File) this.appConfigDirFile,"config.properties") : new File(propertiesFile)
+		propertiesFile==null || "".equals(propertiesFile) ? new File(this.appConfigDirFile,"config.properties") : new File(propertiesFile)
 	}
 	
 
@@ -343,6 +343,10 @@ public class CodeGenMain{
 	private void writeProperties() {
 		configProperties = new Properties()
 		File propFile = calculatePropFile()
+        /* This is a hack. I don't see how propFile can be null at this piont, but for some reason it is. */
+        if (propFile==null) {
+            propFile = new File("./codegen/config.properties")
+        }
 		for (key in this.properties.keySet()) {
 
 			Object value = this[key]
@@ -353,7 +357,7 @@ public class CodeGenMain{
 				}
 			}
 		}
-		propFile.parentFile.mkdirs()
+		propFile.getCanonicalFile().getParentFile().mkdirs()
 
 		propFile.newOutputStream().withStream{stream -> configProperties.store(stream, "prop file") }
 	}

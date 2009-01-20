@@ -1,0 +1,33 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:crank="http://www.googlecode.com/crank">
+<ui:composition template="/templates/layout.xhtml">
+	<ui:define name="content">
+		<crank:crudBreadCrumb crud="#{bazCrud.controller}" />
+		<c:choose>
+			<c:when test='#{baz.controller.state == "ADD"}'>
+				<h:outputText value="Create Department" styleClass="pageTitle" />
+			</c:when>
+			<c:otherwise>
+				<h:outputText
+					value="Edit Department #{bazCrud.controller.entity.name}"
+					styleClass="pageTitle" />
+			</c:otherwise>
+		</c:choose>
+		<a4j:form id="departmentForm">
+			<rich:messages errorClass="pageErrorMessage" />
+			<crank:form parentForm="departmentForm"
+				crud="#{bazCrud.controller}" propertyNames="">
+				
+			</crank:form>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

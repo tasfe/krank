@@ -302,12 +302,6 @@ password: ${password.text}, driver: ${drv}"""
 		buildGUI ()
 		initListeners()
 		
-		/* Initialize CodeGenMain. */
-		CodeGenMain.metaClass.println = printlnClosure
-		main = new CodeGenMain()
-		main.readProperties()
-		main.configureCollaborators()
-
 		// Update DataSources Tree
 		updateJDBCTree(main.dataSourceReader.settings)
 

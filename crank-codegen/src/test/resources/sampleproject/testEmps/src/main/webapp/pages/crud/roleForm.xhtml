@@ -13,11 +13,11 @@
 		<crank:crudBreadCrumb crud="#{roleCrud.controller}" />
 		<c:choose>
 			<c:when test='#{role.controller.state == "ADD"}'>
-				<h:outputText value="Create Department" styleClass="pageTitle" />
+				<h:outputText value="Create Role" styleClass="pageTitle" />
 			</c:when>
 			<c:otherwise>
 				<h:outputText
-					value="Edit Department #{roleCrud.controller.entity.name}"
+					value="Edit Role #{roleCrud.controller.entity.name}"
 					styleClass="pageTitle" />
 			</c:otherwise>
 		</c:choose>

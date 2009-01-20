@@ -37,7 +37,7 @@ public class CodeGenMain{
 	DataSourceReader dataSourceReader
 	JavaModelGenerator modelGen
 	List<CodeGenerator> codeGenerators = []
-	List<Boolean> codeGeneratorsUsed = []
+	private List<Boolean> codeGeneratorsUsed = [] //for exchange between string
 	XMLPersister persister
 	XMLDataSourcePersister dataSourcePersister
 	List collaborators

@@ -699,6 +699,15 @@ password: ${password.text}, driver: ${drv}"""
                                 label(preferredSize:[100,20])
                             }
                             panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
+                                label("Code generators", preferredSize:[100,20])
+                                main.codeGenerators.each {CodeGenerator cg ->
+                                	JCheckBox cgCheck = checkBox(preferredSize:[100,20],text:cg.class.simpleName)
+                                	codeGenMainEditSupport.codeGeneratorsUsed.add(cgCheck)
+                                }
+                                codeGenMainEditSupport.populateForm(main)
+                            }
+                            panel {
                                 button(text:"Apply", actionPerformed: {handleApplyProperties()})
                                 button(text:"Save", actionPerformed: {handleSaveProperties()})
                                 button(text:"Clear Tables", actionPerformed: {main.tableNames="";codeGenMainEditSupport.tableNames.text=""})
@@ -979,6 +988,7 @@ class CodeGenMainEditSupport {
 	JTextField propertiesFile
 	JCheckBox debug
 	JButton rootDirButton
+	List<JCheckBox> codeGeneratorsUsed = new ArrayList<JCheckBox>()
 	
 	GeneratorSwingApp app
 	
@@ -1020,6 +1030,13 @@ class CodeGenMainEditSupport {
 			debug.selected=false
 		} else {
 			debug.selected=true
+		}
+		main.codeGenerators.each { CodeGenerator cg ->
+			codeGeneratorsUsed.each {
+				if (it.text == cg.class.simpleName) {
+					it.selected = cg.use
+				}
+			}
 		}
 	}
 

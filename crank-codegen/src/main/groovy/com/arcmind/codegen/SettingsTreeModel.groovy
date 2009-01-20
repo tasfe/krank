@@ -75,8 +75,9 @@ public class SettingsTreeModel implements TreeModel{
      */
     public int getChildCount(Object parent) {
     	if (parent instanceof SettingsTreeModel) {
-    		return settingsHolders==null ? 0 : settingsHolders.size()
+    		return ((settingsHolders==null) ? 0 : settingsHolders.size())
     	}
+    	return 0
     }
 
     /**

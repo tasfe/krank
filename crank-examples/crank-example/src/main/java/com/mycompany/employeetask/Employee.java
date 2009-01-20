@@ -53,7 +53,7 @@ public class Employee implements Serializable {
     private String lastName;
   
   
-    @Column(length=25) 
+    @Column(length=30) 
     private String phone;
     
 

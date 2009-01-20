@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -9,9 +10,9 @@
 	xmlns:crank="http://www.googlecode.com/crank">
 <ui:composition template="/templates/layout.xhtml">
 	<ui:define name="content">
-		<crank:crudBreadCrumb crud="${cruds.employee.controller}" />
+		<crank:crudBreadCrumb crud="#{cruds.employee.controller}" />
 		<a4j:form id="employeeListForm">
-			<crank:listing propertyNames="firstName,lastName,department.name" parentForm="employeeListForm" jsfCrudAdapter="${cruds.employee}"  />
+			<crank:listing propertyNames="department,firstName,lastName,phone" parentForm="employeeListForm" jsfCrudAdapter="#{cruds.employee}"  />
 		</a4j:form>
 	</ui:define>
 </ui:composition>

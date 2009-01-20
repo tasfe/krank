@@ -35,7 +35,7 @@
   <navigation-rule>
   	<navigation-case>
   		<from-outcome>HOME</from-outcome>
-  		<to-view-id>/pages/Home.xhtml</to-view-id>
+  		<to-view-id>/pages/home.xhtml</to-view-id>
   	</navigation-case>
   </navigation-rule>
   
@@ -52,25 +52,33 @@
   		<from-outcome>ROLES</from-outcome>
   		<to-view-id>/pages/crud/roleListing.xhtml</to-view-id>
   	</navigation-case>
-  	<!-- Main Page Links (codegen) -->
-  	<!-- End of Main Page Links (codegen) -->
+    <!-- Main Page Links (codegen) -->
+    <navigation-case>
+         <from-outcome>DEPARTMENTS</from-outcome>
+         <to-view-id>/pages/crud/departmentListing.xhtml</to-view-id>
+     </navigation-case>
+
+    <navigation-case>
+         <from-outcome>EMPLOYEES</from-outcome>
+         <to-view-id>/pages/crud/employeeListing.xhtml</to-view-id>
+     </navigation-case>
+
+    <navigation-case>
+         <from-outcome>ROLES</from-outcome>
+         <to-view-id>/pages/crud/roleListing.xhtml</to-view-id>
+     </navigation-case>
+  <!-- End of Main Page Links (codegen)  -->
   </navigation-rule>
  
   
-  <!-- Navigation goals for CRUD -->
-  <!-- End Navigation goals for CRUD  -->
-  <navigation-rule>
+    <!-- Navigation goals for CRUD -->  
+<navigation-rule>
   	<from-view-id>/pages/crud/departmentListing.xhtml</from-view-id>
   	<navigation-case>
   		<from-outcome>FORM</from-outcome>
   		<to-view-id>/pages/crud/departmentForm.xhtml</to-view-id>
   	</navigation-case>  	
-  	<navigation-case>
-  		<from-outcome>EXPORT</from-outcome>
-  		<to-view-id>/pages/crud/departmentExportListing.xhtml</to-view-id>
-  	</navigation-case>  	
   </navigation-rule>
-
   <navigation-rule>
   	<from-view-id>/pages/crud/departmentForm.xhtml</from-view-id>  
   	<navigation-case>
@@ -78,20 +86,14 @@
   		<to-view-id>/pages/crud/departmentListing.xhtml</to-view-id>
   	</navigation-case>
   </navigation-rule>
-
-
-  <navigation-rule>
+	  
+<navigation-rule>
   	<from-view-id>/pages/crud/employeeListing.xhtml</from-view-id>
   	<navigation-case>
   		<from-outcome>FORM</from-outcome>
   		<to-view-id>/pages/crud/employeeForm.xhtml</to-view-id>
   	</navigation-case>  	
-  	<navigation-case>
-  		<from-outcome>EXPORT</from-outcome>
-  		<to-view-id>/pages/crud/employeeExportListing.xhtml</to-view-id>
-  	</navigation-case>  	
   </navigation-rule>
-
   <navigation-rule>
   	<from-view-id>/pages/crud/employeeForm.xhtml</from-view-id>  
   	<navigation-case>
@@ -99,20 +101,14 @@
   		<to-view-id>/pages/crud/employeeListing.xhtml</to-view-id>
   	</navigation-case>
   </navigation-rule>
-
-
-  <navigation-rule>
+	  
+<navigation-rule>
   	<from-view-id>/pages/crud/roleListing.xhtml</from-view-id>
   	<navigation-case>
   		<from-outcome>FORM</from-outcome>
   		<to-view-id>/pages/crud/roleForm.xhtml</to-view-id>
   	</navigation-case>  	
-  	<navigation-case>
-  		<from-outcome>EXPORT</from-outcome>
-  		<to-view-id>/pages/crud/roleExportListing.xhtml</to-view-id>
-  	</navigation-case>  	
   </navigation-rule>
-
   <navigation-rule>
   	<from-view-id>/pages/crud/roleForm.xhtml</from-view-id>  
   	<navigation-case>
@@ -120,11 +116,24 @@
   		<to-view-id>/pages/crud/roleListing.xhtml</to-view-id>
   	</navigation-case>
   </navigation-rule>
+	  <!-- End Navigation goals for CRUD  -->
   
+    <!-- Crud Converters -->
   <converter>
   	<converter-for-class>com.mycompany.employeetask.Department</converter-for-class>
   	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
   </converter>
+
+  <converter>
+  	<converter-for-class>com.mycompany.employeetask.Employee</converter-for-class>
+  	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
+  </converter>
+
+  <converter>
+  	<converter-for-class>com.mycompany.employeetask.Role</converter-for-class>
+  	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
+  </converter>
+  <!-- End Crud Converters  -->
   
 
 </faces-config>

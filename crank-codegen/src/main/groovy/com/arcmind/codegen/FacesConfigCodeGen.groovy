@@ -77,18 +77,20 @@ public class FacesConfigCodeGen implements CodeGenerator {
 	}
 	
 	public void process() {
-		FileTemplateUtils templateUtil = new FileTemplateUtils()
-		if (file==null) {
-			file = new File(rootDir, "src/main/webapp/WEB-INF/faces-config.xml")
+		if (use) {
+			FileTemplateUtils templateUtil = new FileTemplateUtils()
+			if (file==null) {
+				file = new File(rootDir, "src/main/webapp/WEB-INF/faces-config.xml")
+			}
+			templateUtil.file = file
+			mainPageLinksChangeSpec.replacementText = getPageLinks()
+			navigationCrudChangeSpec.replacementText = getCrudNavigation()
+			crudConverterChangeSpec.replacementText = getCrudConverter()
+			templateUtil.changeSpecs << mainPageLinksChangeSpec
+			templateUtil.changeSpecs << navigationCrudChangeSpec
+			templateUtil.changeSpecs << crudConverterChangeSpec
+			templateUtil.process()
 		}
-		templateUtil.file = file
-		mainPageLinksChangeSpec.replacementText = getPageLinks()
-		navigationCrudChangeSpec.replacementText = getCrudNavigation()
-		crudConverterChangeSpec.replacementText = getCrudConverter()
-		templateUtil.changeSpecs << mainPageLinksChangeSpec
-		templateUtil.changeSpecs << navigationCrudChangeSpec
-		templateUtil.changeSpecs << crudConverterChangeSpec
-		templateUtil.process()
 	}
 	
 	

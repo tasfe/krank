@@ -117,22 +117,24 @@ public class SpringJavaConfigCodeGen implements CodeGenerator{
 
 
 	public void process() {
-		FileTemplateUtils templateUtil = new FileTemplateUtils()
-		if (file==null) {
-			file = new File(rootDir, "src/main/java/" + packageName.replace(".", "/") +  "/CrudApplicationContext.java")
-		}		
-		templateUtil.file = file
-		constantsChangeSpec.replacementText = getConstants()
-		relationshipConstantChangeSpec.replacementText = getRelationshipConstants()
-		managedObjectsChangeSpec.replacementText = getManagedObjects()
-		crudChangeSpec.replacementText = getCrudControllers()
-		crudManyToManyChangeSpec.replacementText = getManyToManyControllers()
-		templateUtil.changeSpecs << constantsChangeSpec
-		templateUtil.changeSpecs << relationshipConstantChangeSpec
-		templateUtil.changeSpecs << managedObjectsChangeSpec
-		templateUtil.changeSpecs << crudChangeSpec
-		templateUtil.changeSpecs << crudManyToManyChangeSpec
-		templateUtil.process()
+		if (use) {
+			FileTemplateUtils templateUtil = new FileTemplateUtils()
+			if (file==null) {
+				file = new File(rootDir, "src/main/java/" + packageName.replace(".", "/") +  "/CrudApplicationContext.java")
+			}		
+			templateUtil.file = file
+			constantsChangeSpec.replacementText = getConstants()
+			relationshipConstantChangeSpec.replacementText = getRelationshipConstants()
+			managedObjectsChangeSpec.replacementText = getManagedObjects()
+			crudChangeSpec.replacementText = getCrudControllers()
+			crudManyToManyChangeSpec.replacementText = getManyToManyControllers()
+			templateUtil.changeSpecs << constantsChangeSpec
+			templateUtil.changeSpecs << relationshipConstantChangeSpec
+			templateUtil.changeSpecs << managedObjectsChangeSpec
+			templateUtil.changeSpecs << crudChangeSpec
+			templateUtil.changeSpecs << crudManyToManyChangeSpec
+			templateUtil.process()
+		}
 	}
 	
 	

@@ -91,8 +91,10 @@ class XHTMLCodeGenerator implements CodeGenerator {
 	
 	}
 	public void process() {
-		doProcess("Listing.xhtml", listingTemplate)
-		doProcess("Form.xhtml", formTemplate)
+		if (use) {
+			doProcess("Listing.xhtml", listingTemplate)
+			doProcess("Form.xhtml", formTemplate)
+		}
     }
 
 	String generatePropertyNames(JavaClass bean) {

@@ -23,6 +23,7 @@ public class CodeGenMain{
 	String propertiesFile
 	String codeGenPackage
 	String generators
+	String generatorsUsed
 	boolean wasNotSetPropFile
 	boolean wasNotSetXmlFile
 	boolean wasNotSetXmlDataSourceFile //todo
@@ -36,6 +37,7 @@ public class CodeGenMain{
 	DataSourceReader dataSourceReader
 	JavaModelGenerator modelGen
 	List<CodeGenerator> codeGenerators = []
+	List<Boolean> codeGeneratorsUsed = []
 	XMLPersister persister
 	XMLDataSourcePersister dataSourcePersister
 	List collaborators
@@ -210,9 +212,18 @@ public class CodeGenMain{
 		List<String> classNames = this.generators.split(",").findAll{String className -> 
 			className != ""
 		}
-		return classNames.collect{String className-> 
-			className.contains(".") ? Class.forName(className) : Class.forName("${codeGenPackage}.${className}")
+		if (this.generatorsUsed==null || "".equals(this.generatorsUsed.trim())) {
+			generatorsUsed="true,true,true,true"
 		}
+
+		codeGeneratorsUsed = this.generatorsUsed.split(",").collect{
+			String flag ->
+			flag == "true"? Boolean.TRUE : Boolean.FALSE
+		}
+		
+		List<Class> classes = classNames.collect{String className-> 
+		className.contains(".") ? Class.forName(className) : Class.forName("${codeGenPackage}.${className}")}
+		return classes 
 	}
 	
 	public boolean configureCollaborators() {
@@ -242,10 +253,12 @@ public class CodeGenMain{
 
 		collaborators = [jdbcUtils, reader, modelGen, persister, dataSourcePersister]
 		codeGenerators = codeGenClasses.collect{Class cls -> cls.newInstance()}
+		int i=0
+		codeGenerators.each{CodeGenerator cg ->
+			cg.setUse(codeGeneratorsUsed.get(i++))
+		}
+		
 		collaborators.addAll(codeGenerators)
-		
-		
-		
 
 		/* Configure related classes. */
 		jdbcUtils.url = url

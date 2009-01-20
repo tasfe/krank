@@ -262,7 +262,9 @@ public class ${bean.name} implements Serializable {
     }
     
     public void process() {
-    	writeClassFiles()
+    	if (use) {
+    		writeClassFiles()
+    	}
     }
 
 }

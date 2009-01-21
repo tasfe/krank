@@ -37,7 +37,6 @@ public class CodeGenMain{
 	DataSourceReader dataSourceReader
 	JavaModelGenerator modelGen
 	List<CodeGenerator> codeGenerators = []
-	private List<Boolean> codeGeneratorsUsed = [] //for exchange between string
 	XMLPersister persister
 	XMLDataSourcePersister dataSourcePersister
 	List collaborators
@@ -215,12 +214,12 @@ public class CodeGenMain{
 		if (this.generatorsUsed==null || "".equals(this.generatorsUsed.trim())) {
 			generatorsUsed="true,true,true,true"
 		}
-
-		codeGeneratorsUsed = this.generatorsUsed.split(",").collect{
-			String flag ->
-			flag == "true"? Boolean.TRUE : Boolean.FALSE
-		}
 		
+		if (!validateGeneratorsUsedString(generatorsUsed)) {
+			printlnClosure "'generatorsUsed' string is not valid: '${generatorsUsed}', using defaults!"
+			generatorsUsed="true,true,true,true"
+		}
+
 		List<Class> classes = classNames.collect{String className-> 
 		className.contains(".") ? Class.forName(className) : Class.forName("${codeGenPackage}.${className}")}
 		return classes 
@@ -253,10 +252,9 @@ public class CodeGenMain{
 
 		collaborators = [jdbcUtils, reader, modelGen, persister, dataSourcePersister]
 		codeGenerators = codeGenClasses.collect{Class cls -> cls.newInstance()}
-		int i=0
-		codeGenerators.each{CodeGenerator cg ->
-			cg.setUse(codeGeneratorsUsed.get(i++))
-		}
+
+		// Define used Code Generators
+		getUsedCodeGenerators()
 		
 		collaborators.addAll(codeGenerators)
 
@@ -354,6 +352,7 @@ public class CodeGenMain{
 	}
 	
 	private void writeProperties() {
+		updateUsedCodeGenerators()
 		configProperties = new Properties()
 		File propFile = calculatePropFile()
         /* This is a hack. I don't see how propFile can be null at this piont, but for some reason it is. */
@@ -381,6 +380,41 @@ public class CodeGenMain{
 
 	public restorePropFile(backupPropertiesFile) {
 		propertiesFile = StringHelper.clone(backupPropertiesFile)
+	}
+	
+	private boolean validateGeneratorsUsedString(str) {
+		def theRegularExpression = /(true|false),(true|false),(true|false),(true|false)/
+		str ==~ theRegularExpression
+	}
+	
+	// Updates Code Generators objects' properties 'use'
+	// with values from properties file string 'generatorsUsed'
+	private void getUsedCodeGenerators() {
+		assert generatorsUsed
+		assert codeGenerators
+		assert generatorsUsed.split(",").length == codeGenerators.size()
+		List<Boolean> codeGeneratorsUsed = []
+		codeGeneratorsUsed = this.generatorsUsed.split(",").collect{
+			String flag ->
+			flag == "true"? Boolean.TRUE : Boolean.FALSE
+		}
+		int i=0
+		codeGenerators.each{CodeGenerator cg ->
+			cg.setUse(codeGeneratorsUsed.get(i++))
+		}
+	}
+	
+	// Updates string 'generatorsUsed' with values
+	// from Code Generators objects' properties 'use'
+	public void updateUsedCodeGenerators() {
+		if (codeGenerators) {
+			List<String> codeGeneratorsUsed = []
+			codeGeneratorsUsed = codeGenerators.collect{
+				CodeGenerator cg ->
+				cg.use == true ? 'true' : 'false'
+			}
+			this.generatorsUsed = codeGeneratorsUsed.join(',')
+		}		
 	}
 	
 	public void copyPropsFromArgs(String[] args) {

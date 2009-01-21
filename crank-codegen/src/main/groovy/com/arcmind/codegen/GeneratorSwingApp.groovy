@@ -425,6 +425,10 @@ password: ${password.text}, driver: ${drv}"""
             		setRootDirFromDialog(true)            		
             }
             
+            Closure handleCodeGenCheckBoxClick = {
+            		codeGenMainEditSupport.updateObject(this.main)
+            }
+            
             fileActions = actions() {
                 action(name: "Exit", mnemonic: 'X', closure: { exit() })
                 action(name: "Write Model", mnemonic: 'W', closure: handleWriteModel)
@@ -702,7 +706,7 @@ password: ${password.text}, driver: ${drv}"""
                                 boxLayout(axis:BoxLayout.X_AXIS)
                                 label("Code generators", preferredSize:[100,20])
                                 main.codeGenerators.each {CodeGenerator cg ->
-                                	JCheckBox cgCheck = checkBox(preferredSize:[100,20],text:cg.class.simpleName)
+                                	JCheckBox cgCheck = checkBox(preferredSize:[100,20],text:cg.class.simpleName, actionPerformed: handleCodeGenCheckBoxClick)
                                 	codeGenMainEditSupport.codeGeneratorsUsed.add(cgCheck)
                                 }
                                 codeGenMainEditSupport.populateForm(main)
@@ -1010,6 +1014,15 @@ class CodeGenMainEditSupport {
 		} else {
 			main.debug = null
 		}
+		codeGeneratorsUsed.each { JCheckBox chk ->
+			main.codeGenerators.each {
+				if (it.class.simpleName == chk.text){
+					it.use = chk.selected
+				}
+			}
+		}
+		main.updateUsedCodeGenerators()
+		
 		main.configureCollaborators()
 		app.updateJDBCTree(main.dataSourceReader.settings)
 	}

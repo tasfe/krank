@@ -13,14 +13,14 @@ This is a first attempt at writing a guide on how to create a new project with c
 
 Since there is no binary release of these yet, you need to check them out and build them.
 
-1) Check out crank and build it
-2) Check out codegen and build it
-3) Check out presto2/crank mojo and build it
-4) Check out archetype build it
-5) Setup codegen mojo in local maven repo
-6) Use Archetype
-7) Use codegen maven plugin to reverse engineer a database
-8) Run webapp with jetty
+ # Check out crank and build it
+ # Check out codegen and build it
+ # Check out presto2/crank mojo and build it
+ # Check out archetype build it
+ # Setup codegen mojo in local maven repo
+ # Use Archetype
+ # Use codegen maven plugin to reverse engineer a database
+ # Run webapp with jetty
 
 Now the first 5 steps are needed because Crank does not have any recent binary distributions. When Crank gets an official release and gets added to the public maven repo then they will not be needed.
 

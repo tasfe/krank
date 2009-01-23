@@ -212,7 +212,9 @@ Before you can perform this step, you have to have a database. The first time yo
 
 Go into the directory of the project you created in step 6 and type:
 
+{{{
 $ mvn codegen:codegen
+}}}
 
 Hit the Reverse DB button.
 Hit the Generate Code button.

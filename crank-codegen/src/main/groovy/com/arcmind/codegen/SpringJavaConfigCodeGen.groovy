@@ -40,7 +40,7 @@ public class SpringJavaConfigCodeGen implements CodeGenerator{
 	
 	String crudManyToManyTemplateText = '''
 	@Bean(scope = DefaultScopes.SESSION)
-	public JsfSelectManyController<${relationship.relatedClass.name}, Long> ${relationship.owner.name.unCap()}To${relationship.name}Controller()
+	public JsfSelectManyController<${relationship.relatedClass.name}, Long> ${relationship.owner.name.unCap()}To${relationship.name.cap()}Controller()
 			throws Exception {
 		JsfSelectManyController<${relationship.relatedClass.name}, Long> controller = new JsfSelectManyController<${relationship.relatedClass.name}, Long>(
 				${relationship.relatedClass.name}.class, ${relationship.owner.name.toUpperCase()}_${relationship.name.toUpperCase()}_RELATIONSHIP, paginators().get(${relationship.relatedClass.name.toUpperCase()}), ${relationship.owner.name.unCap()}Crud()

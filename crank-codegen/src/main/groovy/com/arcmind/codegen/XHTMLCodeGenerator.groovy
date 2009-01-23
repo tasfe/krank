@@ -16,9 +16,15 @@ class XHTMLCodeGenerator implements CodeGenerator {
     String oneToManyTemplate = '''
 					<crank:detailListing
 						detailController="#{${bean.name.unCap()}Crud.controller.children.${relationship.name}}" 
-						propertyNames="firstName,lastName"
+						propertyNames="${relationship.relatedClass.simplePropertyNames.join(',')}"
 						parentForm="${bean.name.unCap()}Form"/>
 '''
+
+    String manyToManyTemplate = '''
+                    <crank:selectMany jsfSelectManyController="#{${relationship.owner.name.unCap()}To${relationship.name.cap()}Controller}"
+					    propertyNames="${relationship.relatedClass.descriptivePropertyName}" parentForm="${bean.name.unCap()}Form" />
+'''
+    
     String listingTemplate = '''
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -33,7 +39,7 @@ class XHTMLCodeGenerator implements CodeGenerator {
 	<ui:define name="content">
 		<crank:crudBreadCrumb crud="#{cruds.${bean.name.unCap()}.controller}" />
 		<a4j:form id="${bean.name.unCap()}ListForm">
-			<crank:listing propertyNames="${propertyNames}" parentForm="${bean.name.unCap()}ListForm" jsfCrudAdapter="#{cruds.${bean.name.unCap()}}"  />
+			<crank:listing propertyNames="${bean.propertyNames.join(',')}" parentForm="${bean.name.unCap()}ListForm" jsfCrudAdapter="#{cruds.${bean.name.unCap()}}"  />
 		</a4j:form>
 	</ui:define>
 </ui:composition>
@@ -58,14 +64,14 @@ class XHTMLCodeGenerator implements CodeGenerator {
 			</c:when>
 			<c:otherwise>
 				<h:outputText
-					value="Edit ${bean.name} #{${bean.name.unCap()}Crud.controller.entity.${descriptivePropertyName}}"
+					value="Edit ${bean.name} #{${bean.name.unCap()}Crud.controller.entity.${bean.descriptivePropertyName}}"
 					styleClass="pageTitle" />
 			</c:otherwise>
 		</c:choose>
-		<a4j:form id="departmentForm">
+		<a4j:form id="${bean.name.unCap()}Form">
 			<rich:messages errorClass="pageErrorMessage" />
-			<crank:form parentForm="departmentForm"
-				crud="#{${bean.name.unCap()}Crud.controller}" propertyNames="${propertyNames}">
+			<crank:form parentForm="${bean.name.unCap()}Form"
+				crud="#{${bean.name.unCap()}Crud.controller}" propertyNames="${bean.propertyNames.join(',')}">
 				${formBody}
 			</crank:form>
 		</a4j:form>
@@ -78,9 +84,7 @@ class XHTMLCodeGenerator implements CodeGenerator {
         for (JavaClass bean in classes) {
         	
         	if (debug) println "Writing ${bean.name} listing xhtml"
-            def binding = [bean:bean, formBody:generateBody(bean),
-                    propertyNames:generatePropertyNames(bean),
-                    descriptivePropertyName:findDescriptivePropertyName(bean)]        
+            def binding = [bean:bean, formBody:generateBody(bean)]
             String templateOutput = engine.createTemplate(template).make(binding).toString()
             File webappRootDir = new File(rootDir, "src/main/webapp/pages/crud")
             File listingFile = new File (webappRootDir, bean.name.unCap() + fileNameSuffix)
@@ -97,56 +101,16 @@ class XHTMLCodeGenerator implements CodeGenerator {
 		}
     }
 
-	String generatePropertyNames(JavaClass bean) {
-		List<String> builder = []
-		bean.relationships.each{Relationship relationship ->
-			switch (relationship.type) {
-				case[RelationshipType.MANY_TO_ONE, RelationshipType.ONE_TO_ONE]:
-					builder << relationship.name
-			}
-		}
-		
-		bean.properties.each {JavaProperty jp ->
-			switch (jp.javaClass) {
-				case [new JavaClass("String","java.lang"), new JavaClass("Integer","java.lang"), 
-                new JavaClass("Long","java.lang"), new JavaClass("Byte", "java.lang"), 
-                new JavaClass("Date", "java.util")]:
-				builder << jp.name
-			}
-			if (jp.javaClass.primitive) {
-				builder << jp.name
-			}
-		}
-		
-		builder.join(",")
-	}
 	
 	String generateBody(JavaClass bean) {
 		StringBuilder builder = new StringBuilder()
 		bean.relationships.each {Relationship relationship ->
 			if (relationship.type == RelationshipType.ONE_TO_MANY) {
 				builder << engine.createTemplate(oneToManyTemplate).make([bean:bean, relationship:relationship]).toString()
-			}
+			} else if (relationship.type == RelationshipType.MANY_TO_MANY) {
+                builder << engine.createTemplate(manyToManyTemplate).make([bean:bean, relationship:relationship]).toString()
+            }
 		}
 		builder.toString()
 	}
-
-  String findDescriptivePropertyName(com.arcmind.codegen.JavaClass javaClass) {
-     JavaProperty p = javaClass.properties.find{JavaProperty jp -> jp.name=="name"}
-     if (p!=null) {
-        return "name"
-     }
-     p = javaClass.properties.find{JavaProperty jp -> jp.name=="title"}
-     if (p!=null) {
-      return "title"
-     }
-
-     for (JavaProperty pp : javaClass.properties) {
-       if (pp.name.endsWith("Name")) {
-           return pp.name;
-       }
-     }
-
-     return "id";
-  }
 }

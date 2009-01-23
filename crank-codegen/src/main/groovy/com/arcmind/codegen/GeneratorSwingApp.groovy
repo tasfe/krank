@@ -165,8 +165,7 @@ public class GeneratorSwingApp{
 		String drv = JOptionPane.showInputDialog(ob);
 		
 		if (debug) {
-			printlnClosure """Data source added: url:${url.text},username:${userName.text}, 
-password: ${password.text}, driver: ${drv}"""
+			printlnClosure """Data source added: url:${url.text}, username:${userName.text}, password: ${password.text}, driver: ${drv}"""
 		}
 		
 		if (drv) {

@@ -34,6 +34,55 @@ class JavaClass {
     int hashCode() {
     	"${name}.${packageName}".hashCode()
     }
-    
+
+    String getDescriptivePropertyName() {
+     JavaProperty p = this.properties.find{JavaProperty jp -> jp.name=="name"}
+     if (p!=null) {
+        return "name"
+     }
+     p = this.properties.find{JavaProperty jp -> jp.name=="title"}
+     if (p!=null) {
+      return "title"
+     }
+
+     for (JavaProperty pp : this.properties) {
+       if (pp.name.endsWith("Name")) {
+           return pp.name;
+       }
+     }
+
+     return "id";
+    }
+
+    List<String> getSimplePropertyNames() {
+        List<String> builder = []
+
+        this.properties.each {JavaProperty jp ->
+            switch (jp.javaClass) {
+                case [new JavaClass("String","java.lang"), new JavaClass("Integer","java.lang"),
+                new JavaClass("Long","java.lang"), new JavaClass("Byte", "java.lang"),
+                new JavaClass("Date", "java.util")]:
+                builder << jp.name
+            }
+            if (jp.javaClass.primitive) {
+                builder << jp.name
+            }
+        }
+
+        return builder
+    }
+
+    List<String> getPropertyNames() {
+        List<String> builder = []
+        this.relationships.each{Relationship relationship ->
+            switch (relationship.type) {
+                case[RelationshipType.MANY_TO_ONE, RelationshipType.ONE_TO_ONE]:
+                    builder << relationship.name
+            }
+        }
+
+        builder.addAll(getSimplePropertyNames())
+        return builder
+    }
 
 }

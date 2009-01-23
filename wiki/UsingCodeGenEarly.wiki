@@ -224,7 +224,7 @@ Change the package name to the one you picked in step 6 (com.somecompany.coolpro
 				<configuration>
 					<useGUI>true</useGUI>
 					<usePom>true</usePom>
-					<packageName>com.somecompany.coolproject</packageName>
+					<packageName>com.somecompany.coolproject.employeetask</packageName>
 					<url>jdbc:mysql://localhost:3306/presto2</url>
 					<userName>presto2</userName>
 					<password>presto2</password>
@@ -234,6 +234,7 @@ Change the package name to the one you picked in step 6 (com.somecompany.coolpro
 
 }}}
 
+[There is a bug and I need to change employeetask so it does not show up in the archetype for now you have to type it. TODO This will change. It is a bug.]
 
 Go into the directory of the project you created in step 6 and type:
 
@@ -241,13 +242,15 @@ Go into the directory of the project you created in step 6 and type:
 $ mvn codegen:codegen
 }}}
 
+A swing gui will popup, click the "Modify Properties" button and ensure that the package name is correct.
+
 Hit the Reverse DB button.
 Hit the Generate Code button.
 You are done.
 
 == Step 8: Run webapp with jetty ==
 Run the webapp with the maven jetty plugin
-$ mvn -Ddb=mysql -Dlog4j.configuration=file:./log4j.xml  jetty:run -o
+$ mvn -Ddb=mysql -Dlog4j.configuration=file:./log4j.xml  jetty:run 
 
 Go to http://localhost:8080 in your browser and click the link associated with this app. Try adding employees.
 

@@ -172,13 +172,15 @@
     <version>2.0.4</version>
 </dependency>        
 
+
 <!-- Spring Security Tag Dependency -->        
+
 		<dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>el-api</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>            
-         </dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-el_1.0_spec</artifactId>
+			<version>1.0.1</version>
+			<scope>provided</scope>            
+		</dependency> 
         
         <dependency>
             <groupId>org.crank.example</groupId>

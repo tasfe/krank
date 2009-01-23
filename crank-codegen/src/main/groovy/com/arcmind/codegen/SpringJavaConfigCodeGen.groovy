@@ -20,7 +20,7 @@ public class SpringJavaConfigCodeGen implements CodeGenerator{
 	ChangeSpec managedObjectsChangeSpec = new ChangeSpec(startLocationMarker:"Managed objects.", stopLocationMarker:"End Managed objects.")
 	ChangeSpec crudChangeSpec = new ChangeSpec(startLocationMarker:"Crud adapters.", stopLocationMarker:"End Crud adapters.")
 	ChangeSpec crudManyToManyChangeSpec = new ChangeSpec(startLocationMarker:"ManyToMany controllers.", stopLocationMarker:"End ManyToMany controllers.")
-    boolean use
+    boolean use = false
 	
 	String constantsTemplateText = '''
 	private static String ${bean.name.toUpperCase()} = "${bean.name.unCap()}";'''
@@ -136,6 +136,5 @@ public class SpringJavaConfigCodeGen implements CodeGenerator{
 			templateUtil.process()
 		}
 	}
-	
 	
 }

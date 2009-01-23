@@ -11,7 +11,7 @@ class JPACodeGenerator implements CodeGenerator{
     String packageName //not used
     boolean debug
     SimpleTemplateEngine engine = new SimpleTemplateEngine()
-    boolean use
+    boolean use=false
     String javaClassTemplate = '''<% import com.arcmind.codegen.RelationshipType; %>package ${bean.packageName};
 <% imports.each { imp-> %>import ${imp};
 <% } %>

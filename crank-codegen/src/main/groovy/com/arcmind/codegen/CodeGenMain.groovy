@@ -254,7 +254,7 @@ public class CodeGenMain{
 		codeGenerators = codeGenClasses.collect{Class cls -> cls.newInstance()}
 
 		// Define used Code Generators
-		getUsedCodeGenerators()
+		setupUsedCodeGenerators()
 		
 		collaborators.addAll(codeGenerators)
 
@@ -389,19 +389,20 @@ public class CodeGenMain{
 	
 	// Updates Code Generators objects' properties 'use'
 	// with values from properties file string 'generatorsUsed'
-	private void getUsedCodeGenerators() {
+	private void setupUsedCodeGenerators() {
 		assert generatorsUsed
 		assert codeGenerators
 		assert generatorsUsed.split(",").length == codeGenerators.size()
 		List<Boolean> codeGeneratorsUsed = []
 		codeGeneratorsUsed = this.generatorsUsed.split(",").collect{
-			String flag ->
-			flag == "true"? Boolean.TRUE : Boolean.FALSE
+			String flag -> Boolean.valueOf(flag)			
 		}
-		int i=0
-		codeGenerators.each{CodeGenerator cg ->
-			cg.setUse(codeGeneratorsUsed.get(i++))
-		}
+
+		codeGenerators.eachWithIndex {CodeGenerator cg, int index ->
+            cg.use = codeGeneratorsUsed[index]
+            System.out.println("${cg.class.name} getting used? ${cg.use} ${codeGeneratorsUsed[index]}")
+        }
+
 	}
 	
 	// Updates string 'generatorsUsed' with values
@@ -410,8 +411,7 @@ public class CodeGenMain{
 		if (codeGenerators) {
 			List<String> codeGeneratorsUsed = []
 			codeGeneratorsUsed = codeGenerators.collect{
-				CodeGenerator cg ->
-				cg.use == true ? 'true' : 'false'
+				CodeGenerator cg -> cg.use.toString()
 			}
 			this.generatorsUsed = codeGeneratorsUsed.join(',')
 		}		

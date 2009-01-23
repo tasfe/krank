@@ -21,7 +21,7 @@ public class FacesConfigCodeGen implements CodeGenerator {
 	stopLocationMarker:"End Navigation goals for CRUD")
 	ChangeSpec crudConverterChangeSpec = new ChangeSpec(startLocationMarker:"Crud Converters",
 	stopLocationMarker:"End Crud Converters")
-	boolean use
+	boolean use=false
 	
 	
 	String mainPageLinksTemplateText = '''

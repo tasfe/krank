@@ -11,7 +11,7 @@ class XHTMLCodeGenerator implements CodeGenerator {
     String packageName //not used
     boolean debug
     SimpleTemplateEngine engine = new SimpleTemplateEngine()
-    boolean use
+    boolean use=false
     
     String oneToManyTemplate = '''
 					<crank:detailListing

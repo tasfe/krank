@@ -10,6 +10,11 @@ First create a user called presto2 as follows:
 CREATE USER 'presto2'@'localhost' IDENTIFIED BY 'presto2';
 }}}
 
+Assign the user some rights
+
+{{{
+GRANT ALL PRIVILEGES ON *.* TO 'presto2'@'localhost' IDENTIFIED BY 'presto2' WITH GRANT OPTION;
+}}}
 
 Second create a database called presto2 as follows:
 

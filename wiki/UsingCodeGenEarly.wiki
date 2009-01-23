@@ -210,6 +210,31 @@ package: com.somecompany.coolproject
 
 Before you can perform this step, you have to have a database. The first time you run the example, I suggest that you use the sample database that we use for testing. Currently, we have only tested codegen with MySQL using INNODB and HSQL. For instructions on how to build/create the sample DB go to CreatingSampleDatabaseForCodegenCrank.
 
+
+Edit the pom.xml. Notice that the codegen-mojo is already configured.
+Change the package name to the one you picked in step 6 (com.somecompany.coolproject).
+
+====pom.xml====
+{{{
+		<plugins>
+			<plugin>
+				<groupId>org.crank</groupId>
+				<artifactId>p2c-codegen-mojo</artifactId>
+				<version>1.0-SNAPSHOT</version>
+				<configuration>
+					<useGUI>true</useGUI>
+					<usePom>true</usePom>
+					<packageName>com.somecompany.coolproject</packageName>
+					<url>jdbc:mysql://localhost:3306/presto2</url>
+					<userName>presto2</userName>
+					<password>presto2</password>
+					<driver>com.mysql.jdbc.Driver</driver>
+				</configuration>
+			</plugin>
+
+}}}
+
+
 Go into the directory of the project you created in step 6 and type:
 
 {{{
@@ -218,10 +243,7 @@ $ mvn codegen:codegen
 
 Hit the Reverse DB button.
 Hit the Generate Code button.
-
 You are done.
-
-TBD add screen shots
 
 == Step 8: Run webapp with jetty ==
 Run the webapp with the maven jetty plugin

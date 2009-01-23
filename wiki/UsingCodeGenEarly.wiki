@@ -102,9 +102,14 @@ It seems you need to register yourself in the xml files.
 This would need to get setup in your local maven repo.
 The first step to set this up is to edit the settings.xml as follows:
 
-Mac OS:
+Mac OSX:
 {{{
 $ open ~/.m2/settings.xml
+}}}
+
+Windows:
+{{{
+$ notepad "%USERPROFILE%\.m2\settings.xml"
 }}}
 
 Add the following entry to this file:
@@ -117,14 +122,21 @@ Add the following entry to this file:
     <pluginGroups>
        <pluginGroup>org.crank</pluginGroup>
     </pluginGroups>
+    ...
+</settings>
 }}}
 
 
 Next you need to create the short name by editing the maven-metadata-central.xml file for the org.crank package as follows:
 
-Mac OS:
+Mac OSX:
 {{{
 open ~/.m2/repository/org/crank/maven-metadata-central.xml
+}}}
+
+Windows
+{{{
+notepad "%USERPROFILE%\.m2\repository\org\crank\maven-metadata-central.xml"
 }}}
 
 Edit the file

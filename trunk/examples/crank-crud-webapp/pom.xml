@@ -12,6 +12,12 @@
     <url>http://code.google.com/p/krank</url>
     <dependencies>
 		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-el_1.0_spec</artifactId>
+			<version>1.0.1</version>
+			<scope>test</scope>
+		</dependency> 
+		<dependency>
 				<groupId>org.richfaces.ui</groupId>
 				<artifactId>richfaces-ui</artifactId>
         </dependency>

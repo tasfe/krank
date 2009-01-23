@@ -266,6 +266,15 @@ public abstract class CrankCrudExampleApplicationContext extends CrudJSFConfig {
 		return controller;
 	}
 
+	@Bean(scope = DefaultScopes.SESSION, aliases="empToRole")
+	public JsfSelectManyController<Role, Long> employeeToRoleControllerDetail()
+			throws Exception {
+		JsfSelectManyController<Role, Long> controller = new JsfSelectManyController<Role, Long>(
+				Role.class, "roles", paginators().get("Role"), (CrudOperations) deptCrud().getController().getChildren().get("employees")
+						);
+		return controller;
+	}
+
 	@Bean(scope = DefaultScopes.SESSION)
 	public JsfSelectOneListingController<Specialty, Long> employeeToSpecialtyController()
 			throws Exception {

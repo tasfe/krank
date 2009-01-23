@@ -30,10 +30,16 @@
 						propertyNames="firstName,lastName,active,dob,age,numberOfPromotions"
 						parentForm="departmentForm">
 						
+						<!-- 
  						<crank:selectOneListing jsfSelectOneController="${employeeToSkillController}"
 							propertyNames="name"
 							parentForm="departmentForm"
 							/>
+							 -->
+							 
+						<crank:selectMany jsfSelectManyController="${employeeToRoleControllerDetail}" 
+							propertyNames="name" parentForm="departmentForm" />
+							
 							
 						<crank:detailListing 
 							detailController="${taskDetailController}" 

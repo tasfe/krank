@@ -10,7 +10,6 @@ import java.awt.FlowLayout
 import java.awt.Font
 import java.awt.Cursor
 import javax.swing.event.TreeSelectionEvent
-import javax.swing.text.Document
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import com.arcmind.codegen.ui.components.ListDialog
@@ -111,9 +110,14 @@ public class GeneratorSwingApp{
 			}
 			tableTreeModel.setTables(main.reader.tables)
 			classTreeModel.setClasses(main.modelGen.classes)
-		} catch(Exception e){
-			setStatus e.message
-		}
+		} catch (Exception ex) {
+            setStatus "${ex.class.simpleName} ${ex.message}"
+            ByteArrayOutputStream bos = new ByteArrayOutputStream()
+            PrintStream stream = new PrintStream(bos)
+            ex.printStackTrace(stream)
+            println bos.toString()
+
+        }
 	}
 
 	def modifyProperties () {
@@ -439,19 +443,24 @@ public class GeneratorSwingApp{
                 action(name: "Save Model As...", mnemonic: 'M', closure: handleWriteAsModel)
             }
 
-            Closure handleReverseDB = {            	
+            Closure handleReverseDB = {
                 doOutside { //Runs in a seperate thread                	
                     edt {setStatus "Reverse engineering database please standby..."}
                     enableMenuBar(false)
                     modifyCursor(false)
                     try {
-                    	reverseDB()
-                    	edt {setStatus "Done reverse engineering database." }
-                    } catch(Exception e) {
-                    	setStatus "${e.class.getSimpleName()} ${e.message}"
-					} finally {	
-                    	enableMenuBar(true)
-                    	modifyCursor(true)
+                        reverseDB()
+                        edt {setStatus "Done reverse engineering database." }
+                    } catch (Exception ex) {
+                        setStatus "${ex.class.simpleName} ${ex.message}"
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream()
+                        PrintStream stream = new PrintStream(bos)
+                        ex.printStackTrace(stream)
+                        println bos.toString()
+
+                    } finally {
+                        enableMenuBar(true)
+                        modifyCursor(true)
                     }
                 }
             }
@@ -466,8 +475,14 @@ public class GeneratorSwingApp{
 	                        	main.generateArtifacts()
 	                        }
 	                        edt {setStatus "Done generating Artifacts to ${main.rootDir}"}
-                        } catch(Exception e) {
-                        	edt {setStatus e.message}
+                        } catch(Exception ex) {
+                        	edt {
+                                setStatus "${ex.class.simpleName} ${ex.message}"
+                                ByteArrayOutputStream bos = new ByteArrayOutputStream()
+                                PrintStream stream = new PrintStream(bos)
+                                ex.printStackTrace(stream)
+                                println bos.toString()
+                            }
                         }
                         finally {
                         	enableMenuBar(true)

@@ -400,7 +400,6 @@ public class CodeGenMain{
 
 		codeGenerators.eachWithIndex {CodeGenerator cg, int index ->
             cg.use = codeGeneratorsUsed[index]
-            System.out.println("${cg.class.name} getting used? ${cg.use} ${codeGeneratorsUsed[index]}")
         }
 
 	}

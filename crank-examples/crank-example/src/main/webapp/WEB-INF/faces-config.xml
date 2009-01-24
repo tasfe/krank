@@ -122,17 +122,17 @@
 
     <!-- Crud Converters -->
   <converter>
-  	<converter-for-class>com.mycompany.employeetask.Department</converter-for-class>
+  	<converter-for-class>com.mycompany.model.Department</converter-for-class>
   	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
   </converter>
 
   <converter>
-  	<converter-for-class>com.mycompany.employeetask.Employee</converter-for-class>
+  	<converter-for-class>com.mycompany.model.Employee</converter-for-class>
   	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
   </converter>
 
   <converter>
-  	<converter-for-class>com.mycompany.employeetask.Role</converter-for-class>
+  	<converter-for-class>com.mycompany.model.Role</converter-for-class>
   	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
   </converter>
   <!-- End Crud Converters  -->

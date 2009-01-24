@@ -1,4 +1,4 @@
-package com.mycompany.employeetask;
+package com.mycompany.model;
 
 import java.util.ArrayList;
 import java.util.List;

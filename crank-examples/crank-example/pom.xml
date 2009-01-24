@@ -325,7 +325,7 @@
                                 <configuration>
 										<useGUI>true</useGUI>
                                         <usePom>true</usePom>
-                                        <packageName>com.mycompany.employeetask</packageName>
+                                        <packageName>com.mycompany.model</packageName>
                                         <url>jdbc:mysql://localhost:3306/presto2</url>
                                         <userName>presto2</userName>
                                         <password>presto2</password>

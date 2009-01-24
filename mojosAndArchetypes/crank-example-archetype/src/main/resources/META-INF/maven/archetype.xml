@@ -2,10 +2,10 @@
   <id>crank-example</id>
   <sources>
     <source>src/main/java/controller/ExcelExportControllerBean.java</source>
-    <source>src/main/java/employeetask/CrudApplicationContext.java</source>
-    <source>src/main/java/employeetask/Department.java</source>
-    <source>src/main/java/employeetask/Employee.java</source>
-    <source>src/main/java/employeetask/Role.java</source>
+    <source>src/main/java/model/CrudApplicationContext.java</source>
+    <source>src/main/java/model/Department.java</source>
+    <source>src/main/java/model/Employee.java</source>
+    <source>src/main/java/model/Role.java</source>
   </sources>
   <resources>
     <resource>src/main/resources/applicationContext.xml</resource>
@@ -96,16 +96,8 @@
     <resource>src/main/webapp/WEB-INF/faces-config.xml</resource>
     <resource>src/main/webapp/WEB-INF/tomahawk.taglib.xml</resource>
     <resource>src/main/webapp/WEB-INF/web.xml</resource>
-    <resource>.classpath</resource>
-    <resource>.project</resource>
-    <resource>.settings/.component</resource>
-    <resource>.settings/org.eclipse.jdt.core.prefs</resource>
-    <resource>.settings/org.eclipse.wst.common.project.facet.core.xml</resource>
     <resource>codegen/config.properties</resource>
     <resource>codegen/datasource.xml</resource>
-    <resource>crank-example.iml</resource>
-    <resource>crank-example.ipr</resource>
-    <resource>crank-example.iws</resource>
     <resource>log4j.xml</resource>
     <resource>rungoal.sh</resource>
     <resource>runjetty.sh</resource>

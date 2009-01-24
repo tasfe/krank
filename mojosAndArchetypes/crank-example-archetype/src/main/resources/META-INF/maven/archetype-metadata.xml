@@ -65,6 +65,7 @@
         <include>crank-example.iml</include>
         <include>crank-example.ipr</include>
         <include>crank-example.iws</include>
+        <include>createArch.sh</include>
         <include>rungoal.sh</include>
         <include>runjetty.sh</include>
       </includes>

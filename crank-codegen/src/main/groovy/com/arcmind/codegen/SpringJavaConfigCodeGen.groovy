@@ -45,6 +45,10 @@ public class SpringJavaConfigCodeGen implements CodeGenerator{
 		JsfSelectManyController<${relationship.relatedClass.name}, Long> controller = new JsfSelectManyController<${relationship.relatedClass.name}, Long>(
 				${relationship.relatedClass.name}.class, ${relationship.owner.name.toUpperCase()}_${relationship.name.toUpperCase()}_RELATIONSHIP, paginators().get(${relationship.relatedClass.name.toUpperCase()}), ${relationship.owner.name.unCap()}Crud()
 						.getController());
+
+        <% if (relationship.relatedClass.descriptivePropertyName!='name') { %>
+        controller.getManager().setLabelProperty("${relationship.relatedClass.descriptivePropertyName}");                       
+        <% } %>
 		return controller;
 	}
 '''

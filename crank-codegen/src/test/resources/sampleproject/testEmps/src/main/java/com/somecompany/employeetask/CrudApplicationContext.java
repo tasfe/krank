@@ -72,7 +72,7 @@ public abstract class CrudApplicationContext extends CrudJSFConfig {
     
     /* ManyToMany controllers. */
 	@Bean(scope = DefaultScopes.SESSION)
-	public JsfSelectManyController<Role, Long> employeeTorolesController()
+	public JsfSelectManyController<Role, Long> employeeToRolesController()
 			throws Exception {
 		JsfSelectManyController<Role, Long> controller = new JsfSelectManyController<Role, Long>(
 				Role.class, EMPLOYEE_ROLES_RELATIONSHIP, paginators().get(ROLE), employeeCrud()
@@ -81,7 +81,7 @@ public abstract class CrudApplicationContext extends CrudJSFConfig {
 	}
 
 	@Bean(scope = DefaultScopes.SESSION)
-	public JsfSelectManyController<Employee, Long> roleToemployeesController()
+	public JsfSelectManyController<Employee, Long> roleToEmployeesController()
 			throws Exception {
 		JsfSelectManyController<Employee, Long> controller = new JsfSelectManyController<Employee, Long>(
 				Employee.class, ROLE_EMPLOYEES_RELATIONSHIP, paginators().get(EMPLOYEE), roleCrud()

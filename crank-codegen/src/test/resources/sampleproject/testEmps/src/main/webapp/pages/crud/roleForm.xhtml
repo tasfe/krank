@@ -26,6 +26,9 @@
 			<crank:form parentForm="departmentForm"
 				crud="#{roleCrud.controller}" propertyNames="name">
 				
+                    <crank:selectMany jsfSelectManyController="#{roleToEmployeesController}"
+					    propertyNames="firstName" parentForm="roleForm" />
+
 			</crank:form>
 		</a4j:form>
 	</ui:define>

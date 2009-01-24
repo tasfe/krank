@@ -4,23 +4,23 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd"
     version="1.2">
 
-<!-- 
+<!--
   <lifecycle>
 		<phase-listener>org.crank.jsf.support.DebugPhaseListener</phase-listener>
   </lifecycle>
    -->
-   
+
   <application>
     <variable-resolver>org.springframework.web.jsf.DelegatingVariableResolver</variable-resolver>
     <message-bundle>messages</message-bundle>
   </application>
-  
-  
+
+
   <component>
     <component-type>org.crank.javax.faces.SelectOne</component-type>
     <component-class>org.crank.javax.faces.component.UISelectOne</component-class>
   </component>
-  
+
   <render-kit>
       <renderer>
       <component-family>javax.faces.SelectOne</component-family>
@@ -29,16 +29,16 @@
 			org.crank.javax.faces.component.ListboxRenderer
   	  </renderer-class>
     </renderer>
-  
+
   </render-kit>
-  
+
   <navigation-rule>
   	<navigation-case>
   		<from-outcome>HOME</from-outcome>
   		<to-view-id>/pages/home.xhtml</to-view-id>
   	</navigation-case>
   </navigation-rule>
-  
+
   <navigation-rule>
   	<navigation-case>
   		<from-outcome>DEPARTMENTS</from-outcome>
@@ -68,9 +68,10 @@
          <to-view-id>/pages/crud/roleListing.xhtml</to-view-id>
      </navigation-case>
   <!-- End of Main Page Links (codegen)  -->
-  </navigation-rule>
- 
-  
+
+   </navigation-rule>
+
+
     <!-- Navigation goals for CRUD -->  
 <navigation-rule>
   	<from-view-id>/pages/crud/departmentListing.xhtml</from-view-id>
@@ -117,7 +118,8 @@
   	</navigation-case>
   </navigation-rule>
 	  <!-- End Navigation goals for CRUD  -->
-  
+
+
     <!-- Crud Converters -->
   <converter>
   	<converter-for-class>com.mycompany.employeetask.Department</converter-for-class>
@@ -134,6 +136,6 @@
   	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
   </converter>
   <!-- End Crud Converters  -->
-  
+
 
 </faces-config>

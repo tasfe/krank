@@ -303,20 +303,20 @@
 			</resource>
 		</resources>
 		<plugins>
-                        <plugin>
-                                <groupId>org.crank</groupId>
-                                <artifactId>p2c-codegen-mojo</artifactId>
-                                <version>1.0-SNAPSHOT</version>
-                                <configuration>
-										<useGUI>true</useGUI>
-                                        <usePom>true</usePom>
-                                        <packageName>com.mycompany.employeetask</packageName>
-                                        <url>jdbc:mysql://localhost:3306/presto2</url>
-                                        <userName>presto2</userName>
-                                        <password>presto2</password>
-                                        <driver>com.mysql.jdbc.Driver</driver>  
-                                </configuration>
-                        </plugin>
+			<plugin>
+				<groupId>org.crank</groupId>
+				<artifactId>p2c-codegen-mojo</artifactId>
+				<version>1.0-SNAPSHOT</version>
+				<configuration>
+					<useGUI>true</useGUI>
+					<usePom>true</usePom>
+					<packageName>${package}.model</packageName>
+					<url>jdbc:mysql://localhost:3306/presto2</url>
+					<userName>presto2</userName>
+					<password>presto2</password>
+					<driver>com.mysql.jdbc.Driver</driver>  
+				</configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>

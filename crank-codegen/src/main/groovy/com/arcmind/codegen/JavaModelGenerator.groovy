@@ -54,7 +54,8 @@ public class JavaModelGenerator{
         switch (column.type) {
             case [Types.BINARY, Types.VARBINARY, Types.LONGVARBINARY]:
             return new JavaClass(name:"byte[]", packageName:"java.lang")
-            case [Types.VARCHAR, Types.CHAR, Types.LONGNVARCHAR, Types.CLOB, Types.LONGVARCHAR]:
+            //case [Types.VARCHAR, Types.CHAR, Types.LONGNVARCHAR, Types.CLOB, Types.LONGVARCHAR]:
+            case [Types.VARCHAR, Types.CHAR, Types.CLOB, Types.LONGVARCHAR]: //fix:Types.LONGNVARCHAR is missing 
             return new JavaClass(name:"String", packageName:"java.lang")
             case [Types.FLOAT, Types.DOUBLE]:
             return column.nullable ?

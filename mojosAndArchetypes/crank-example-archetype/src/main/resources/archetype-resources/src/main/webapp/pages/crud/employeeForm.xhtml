@@ -24,11 +24,14 @@
 					styleClass="pageTitle" />
 			</c:otherwise>
 		</c:choose>
-		<a4j:form id="departmentForm">
+		<a4j:form id="employeeForm">
 			<rich:messages errorClass="pageErrorMessage" />
-			<crank:form parentForm="departmentForm"
+			<crank:form parentForm="employeeForm"
 				crud="${symbol_pound}{employeeCrud.controller}" propertyNames="department,firstName,lastName,phone">
 				
+                    <crank:selectMany jsfSelectManyController="${symbol_pound}{employeeToRolesController}"
+					    propertyNames="name" parentForm="employeeForm" />
+
 			</crank:form>
 		</a4j:form>
 	</ui:define>

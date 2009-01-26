@@ -240,7 +240,9 @@ public class ${bean.name} implements Serializable {
 '''				+ " LEFT JOIN FETCH ${bean.name.unCap()}.${relationship.name.unCap()}"'''
 
     String createQueriesString(JavaClass bean) {
-
+        if (bean.relationships.size() == 0) {
+            return ""
+        }
     	
     	List<String> relationships = []
     	bean.relationships.each {Relationship relationship -> 

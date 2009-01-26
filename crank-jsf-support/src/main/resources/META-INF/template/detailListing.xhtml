@@ -95,7 +95,9 @@
 		<c:if test="${empty headerActions}">
 			<c:set var="headerActions" value="false" />
 		</c:if>
-		<c:set var="entityName" value="${detailController.relationshipManager.childCollectionProperty}" />
+		<c:if test="${empty entityName}">
+			<c:set var="entityName" value="${detailController.relationshipManager.childCollectionProperty}" />
+		</c:if>
 		<c:set var="entityNameLabel" value="${crud:createLabel(entityName)}" />
 		<c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
 		<c:if test="${empty useFormBody}">

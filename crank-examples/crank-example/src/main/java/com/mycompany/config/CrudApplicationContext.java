@@ -1,4 +1,4 @@
-package com.mycompany.model;
+package com.mycompany.config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,7 @@ import org.springframework.config.java.annotation.Bean;
 import org.springframework.config.java.annotation.Configuration;
 import org.springframework.config.java.annotation.Lazy;
 import org.springframework.config.java.util.DefaultScopes;
+import com.mycompany.model.*;
 
 @Configuration(defaultLazy = Lazy.TRUE)
 public abstract class CrudApplicationContext extends CrudJSFConfig {
@@ -76,6 +77,8 @@ public abstract class CrudApplicationContext extends CrudJSFConfig {
 	}
 
     /* End Crud adapters.  */
+
+    
     /* ManyToMany controllers. */
 	@Bean(scope = DefaultScopes.SESSION)
 	public JsfSelectManyController<Role, Long> employeeToRolesController()

@@ -14,6 +14,7 @@ public interface CodeGenerator{
 	void setUse(boolean use)
 	void process()
 	void setDebug(boolean debug)
+    void setTrace(boolean trace)
 	void setClasses(List<JavaClass> classes)
 	void setRootDir(File file)
 	void setPackageName(String packageName)

@@ -21,6 +21,7 @@ public class SpringJavaConfigCodeGen implements CodeGenerator{
 	ChangeSpec crudChangeSpec = new ChangeSpec(startLocationMarker:"Crud adapters.", stopLocationMarker:"End Crud adapters.")
 	ChangeSpec crudManyToManyChangeSpec = new ChangeSpec(startLocationMarker:"ManyToMany controllers.", stopLocationMarker:"End ManyToMany controllers.")
     boolean use = false
+    boolean trace=false
 	
 	String constantsTemplateText = '''
 	private static String ${bean.name.toUpperCase()} = "${bean.name.unCap()}";'''
@@ -124,7 +125,7 @@ public class SpringJavaConfigCodeGen implements CodeGenerator{
 		if (use) {
 			FileTemplateUtils templateUtil = new FileTemplateUtils()
 			if (file==null) {
-				file = new File(rootDir, "src/main/java/" + packageName.replace(".", "/") +  "/CrudApplicationContext.java")
+				file = new File(rootDir, "src/main/java/" + packageName.replace(".", "/") +  "/config/CrudApplicationContext.java")
 			}		
 			templateUtil.file = file
 			constantsChangeSpec.replacementText = getConstants()

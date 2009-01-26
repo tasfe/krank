@@ -8,6 +8,7 @@ class JdbcUtils {
 	String password
 	Connection connection
 	boolean debug
+    boolean trace
 	
 	def executeScript(String sql) {
 		execute {Connection con ->

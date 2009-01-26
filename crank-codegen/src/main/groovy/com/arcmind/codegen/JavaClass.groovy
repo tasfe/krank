@@ -85,4 +85,13 @@ class JavaClass {
         return builder
     }
 
+
+    def validateClassAsModel () {
+        assert this.id
+        assert this.table
+        assert this.name
+        assert this.packageName
+        this.relationships.each {Relationship relationship -> relationship.validate()}
+    }
+
 }

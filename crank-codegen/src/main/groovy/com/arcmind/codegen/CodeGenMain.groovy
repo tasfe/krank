@@ -28,6 +28,7 @@ public class CodeGenMain{
 	boolean wasNotSetXmlFile
 	boolean wasNotSetXmlDataSourceFile //todo
 	String debug
+    String trace
 	File appConfigDirFile = new File("./codegen")
 	List <String> actions = []
 	Set <String> availableActions = ["reverse", "write", "read", "generate", "all", "help", "datasource"]
@@ -110,7 +111,7 @@ public class CodeGenMain{
 		reader.processDB()
 		/* Convert the tables into JavaClasses. */
 		modelGen.tables = reader.tables
-		modelGen.convertTablesToJavaClasses()
+		modelGen.process()
 	}
 
 	def readXML() {
@@ -133,7 +134,17 @@ public class CodeGenMain{
 			/* Output the generated classes. */
 			codeGen.classes = modelGen.classes
 			if (debug) println "Generating artifacts for ${codeGen.classes} with ${codeGen.class.name}"
-			codeGen.process()
+
+            try {
+			    codeGen.process()
+            } catch (Exception ex) {
+                println "Unable to process code generator ${codeGen?.class?.name}"
+                println "Exception ${ex.message}"
+                ByteArrayOutputStream bos = new ByteArrayOutputStream()
+                PrintStream stream = new PrintStream(bos)
+                ex.printStackTrace(stream)
+                println bos.toString()                
+            }
 		}
 	}
 
@@ -267,6 +278,7 @@ public class CodeGenMain{
 		/* Collaborator debug configuration. */
 		for (collaborator in collaborators) {
 			collaborator.debug = debug == null ? false : Boolean.valueOf(debug)
+            collaborator.trace = trace == null ? false : Boolean.valueOf(trace)
 		}
 
 
@@ -464,6 +476,7 @@ public class CodeGenMain{
 	xmlFileName		XML file that contains the reversed model
 	xmlDataSourceFileName		XML file that contains datasources
 	debug			Puts the app in debug mode
+    trace           Puts the app in trace mode like debug but more
 
 	Command line parameters take precedence over what is stored in the config.properties file.
 	All command line arguments can be stored in the properties file using the saveProps action.

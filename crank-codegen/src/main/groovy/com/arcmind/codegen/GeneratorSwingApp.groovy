@@ -59,6 +59,7 @@ public class GeneratorSwingApp{
 	Font myFont = new Font("Tahoma", Font.PLAIN, 12)
     Font menuFont = myFont.deriveFont(11F)
 	boolean debug = true
+    boolean trace = true
 
 	def println(String message) {
 		console.append(message + "\n")
@@ -718,6 +719,12 @@ public class GeneratorSwingApp{
                             }
                             panel {
                                 boxLayout(axis:BoxLayout.X_AXIS)
+                                label("Trace mode", preferredSize:[100,20])
+                                codeGenMainEditSupport.trace = checkBox(preferredSize:[200,20])
+                                label(preferredSize:[100,20])
+                            }
+                            panel {
+                                boxLayout(axis:BoxLayout.X_AXIS)
                                 label("Code generators", preferredSize:[100,20])
                                 main.codeGenerators.each {CodeGenerator cg ->
                                 	JCheckBox cgCheck = checkBox(preferredSize:[100,20],text:cg.class.simpleName, actionPerformed: handleCodeGenCheckBoxClick)
@@ -1005,6 +1012,7 @@ class CodeGenMainEditSupport {
 	JTextField xmlDataSourceFileName
 	JTextField propertiesFile
 	JCheckBox debug
+    JCheckBox trace
 	JButton rootDirButton
 	List<JCheckBox> codeGeneratorsUsed = new ArrayList<JCheckBox>()
 	
@@ -1028,6 +1036,12 @@ class CodeGenMainEditSupport {
 		} else {
 			main.debug = null
 		}
+        if (trace.selected) {
+            main.trace = "true"
+        } else {
+            main.trace = null
+        }
+
 		codeGeneratorsUsed.each { JCheckBox chk ->
 			main.codeGenerators.each {
 				if (it.class.simpleName == chk.text){
@@ -1058,6 +1072,11 @@ class CodeGenMainEditSupport {
 		} else {
 			debug.selected=true
 		}
+        if (trace == null) {
+            trace.selected=false
+        } else {
+            trace.selected=true
+        }
 		main.codeGenerators.each { CodeGenerator cg ->
 			codeGeneratorsUsed.each {
 				if (it.text == cg.class.simpleName) {

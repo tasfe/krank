@@ -21,6 +21,7 @@ class DataBaseMetaDataReader {
     /* The current connection */
     private Connection connection
     boolean debug
+    boolean trace
 
 
 
@@ -93,10 +94,25 @@ class DataBaseMetaDataReader {
         { ResultSet resultSet ->
             Key key = new Key()
             key.imported = imported
-            key.foriegnKey.name = resultSet.getString ("FKCOLUMN_NAME")
-            key.foriegnKey.table = tables.find{it.name==resultSet.getString ("FKTABLE_NAME")}
-            key.primaryKey.name = resultSet.getString ("PKCOLUMN_NAME")
-            key.primaryKey.table = tables.find{it.name==resultSet.getString ("PKTABLE_NAME")}
+            String fkName = resultSet.getString ("FKCOLUMN_NAME")
+            String fkTableName = resultSet.getString ("FKTABLE_NAME")
+            String pkName =  resultSet.getString ("PKCOLUMN_NAME")
+            String pkTableName = resultSet.getString ("PKTABLE_NAME")
+
+            key.foriegnKey.name = fkName
+            key.foriegnKey.table = tables.find{it.name==fkTableName}
+            key.primaryKey.name =  pkName
+            key.primaryKey.table = tables.find{it.name==pkTableName}
+
+            if (key?.foriegnKey?.table == null || key?.primaryKey?.table == null  ||
+                key.primaryKey.name == null || key.foriegnKey.name == null ) {
+                println "WARNING: THE KEY IS NOT WELL FORMED. IT MIGHT BE THAT THE DATABASE DOES NOT SUPPORT FORIEGN KEYS---------"
+                println "fkName=${fkName} fkTableName=${fkTableName} pkName=${pkName} pkTableName=${pkTableName}"
+                println "Available table names = ${tables.collect{it.name}}"
+                println "Setting well formed to false for key"
+                key.wellFormed = false
+
+            }
             if (debug) println "${key}"
             keyList << key
         }

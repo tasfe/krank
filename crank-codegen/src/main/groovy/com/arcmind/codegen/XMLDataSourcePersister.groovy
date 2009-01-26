@@ -14,6 +14,7 @@ public class XMLDataSourcePersister{
 	File outputDir = new File("./target")
 	String fileName = "dataSource.xml"
 	boolean debug
+    boolean trace
 	
 	/* Read our data sources from XML. */
 	void read() {

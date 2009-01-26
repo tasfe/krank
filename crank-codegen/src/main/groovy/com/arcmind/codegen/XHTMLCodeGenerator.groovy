@@ -12,6 +12,7 @@ class XHTMLCodeGenerator implements CodeGenerator {
     boolean debug
     SimpleTemplateEngine engine = new SimpleTemplateEngine()
     boolean use=false
+    boolean trace=false
     
     String oneToManyTemplate = '''
 					<crank:detailListing

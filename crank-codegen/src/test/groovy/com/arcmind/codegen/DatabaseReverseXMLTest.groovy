@@ -85,6 +85,9 @@ CREATE TABLE ROLE_EMPLOYEE (
 	        persister.classes = modelGen.classes
 	        persister.persist()
 	        persister.read()
+
+            persister.classes.each {JavaClass jc -> jc.validateClassAsModel()}
+
 	        persister.fileName = "codeGenTest.xml"
 	        persister.persist()
 	        

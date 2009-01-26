@@ -14,6 +14,7 @@ public class XMLPersister{
 	File outputDir = new File("./target")
 	String fileName = "codegen.xml"
 	boolean debug
+    boolean trace
 	
 	/* Persist our classes and tables (and their hierarchy) to the XML file. */
 	void persist() {
@@ -159,10 +160,18 @@ public class XMLPersister{
 		}
 		
 		readRelationships(classMap, tableMap, codeGen)
+        marryRelationships()
+
 		
 	}//readClasses
 	
-	
+    /*
+     * This method finds the other side of the relationship.
+     */
+    def marryRelationships() {
+        JavaModelGenerator.marryRelationships(classes)
+    }
+    
 	void readRelationships(Map<String,JavaClass> classMap, Map<String,Table> tableMap, codeGen) {
 		if (debug) println "Reading relationships from classes"
 		/** Read the relationships from the XML document. */

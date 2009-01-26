@@ -23,6 +23,7 @@ public class JavaModelGenerator{
     List<Table> tables
     /** The name of the packageName that we will be using. */
     String packageName
+    String modifierPackageName="model"
     boolean debug
     boolean trace
 	
@@ -54,8 +55,7 @@ public class JavaModelGenerator{
         switch (column.type) {
             case [Types.BINARY, Types.VARBINARY, Types.LONGVARBINARY]:
             return new JavaClass(name:"byte[]", packageName:"java.lang")
-            //case [Types.VARCHAR, Types.CHAR, Types.LONGNVARCHAR, Types.CLOB, Types.LONGVARCHAR]:
-            case [Types.VARCHAR, Types.CHAR, Types.CLOB, Types.LONGVARCHAR]: //fix:Types.LONGNVARCHAR is missing 
+            case [Types.VARCHAR, Types.CHAR, Types.CLOB, Types.LONGVARCHAR]: 
             return new JavaClass(name:"String", packageName:"java.lang")
             case [Types.FLOAT, Types.DOUBLE]:
             return column.nullable ?
@@ -112,35 +112,43 @@ public class JavaModelGenerator{
         }
     	name
     }
-    
+
+
     /**
      *  This is the main entry point into this class.
-     *  Convert the Database tables into Java classes.
+     *  It convert the Database tables into Java classes, columns into Java properties and keys into Relationships.
      */
+    public void process() {
+        convertTablesToJavaClasses()
+        convertKeysIntoRelationships()
+        marryRelationships()
+    }
+
+
     def convertTablesToJavaClasses(){
         tables.each{Table table ->
             String className = generateName(table.name)
             if (!tableNames.empty && !tableNames.contains(table.name)) {
             	return;
             }
-            JavaClass javaClass = new JavaClass(name:className, packageName:packageName, table:table)
+            JavaClass javaClass = new JavaClass(name:className, packageName:"${packageName}.${modifierPackageName}", table:table)
             if (convertColumnsToJavaProperties(javaClass, table)) {
                 javaClassToTableMap[javaClass.name]=table
                 tableToJavaClassMap[table.name]=javaClass
             	classes << javaClass
             }
-            
         }
-        classes.each{JavaClass javaClass ->
-         	convertKeysToRelationships(javaClass)
-        }
-        marryRelationships()
     }
-    
+
     /*
      * This method finds the other side of the relationship.
      */
     def marryRelationships() {
+        marryRelationships(classes)
+    }
+
+
+    def static marryRelationships(List <JavaClass> classes) {
         classes.each{JavaClass javaClass ->
      		javaClass.relationships.each { Relationship  r1 ->
      			if (r1.otherSide==null) {
@@ -157,8 +165,9 @@ public class JavaModelGenerator{
      			}
      		}
         }
-    	
+
     }
+
     def processExportedKey(Key key, JavaClass javaClass) {
   		Key theKey = key
  		RelationshipType type = null
@@ -183,6 +192,14 @@ public class JavaModelGenerator{
         new Relationship(name:relationshipName, singularName: relationshipNameSingular, relatedClass:relatedClass, key:theKey, type:type, owner:javaClass)
     	 
     }
+
+
+    def convertKeysIntoRelationships() {
+        classes.each{JavaClass javaClass ->
+         	convertKeysToRelationships(javaClass)
+        }        
+    }
+
     def convertKeysToRelationships(JavaClass javaClass) {
      	/* Note: Exported keys are fkeys in other tables that are pointing to this table. */
      	javaClass.table.exportedKeys.each { Key key ->
@@ -190,7 +207,7 @@ public class JavaModelGenerator{
      			processExportedKey(key, javaClass)
      		} catch (Exception ex) {
      			if (trace) {
-	                println "UNABLE TO PROCESS KEY ${ex.message}"
+	                println "UNABLE TO PROCESS EXPORTED KEY ${ex.message}"
 	                ByteArrayOutputStream bos = new ByteArrayOutputStream()
 	                PrintStream stream = new PrintStream(bos)
 	                ex.printStackTrace(stream)
@@ -202,11 +219,33 @@ public class JavaModelGenerator{
      	 * Imported keys list the foriegn keys in this table
      	 * */
         javaClass.table.importedKeys.each { Key key ->
-        	processImportedKey(key, javaClass)
+            try {
+                processImportedKey(key, javaClass)
+            } catch (Exception ex) {
+                if (trace) {
+                   println "UNABLE TO PROCESS IMPORTED KEY ${ex.message}"
+                   ByteArrayOutputStream bos = new ByteArrayOutputStream()
+                   PrintStream stream = new PrintStream(bos)
+                   ex.printStackTrace(stream)
+                   println bos.toString()
+                }
+            }
+
      	}
     }
     
-    def processImportedKey(key, javaClass) {
+    def processImportedKey(Key key, JavaClass javaClass) {
+            if (!key.wellFormed) {
+                println "The key was not well formed and we cannot process it."
+                return
+            }
+        
+            assert key
+            assert key.foriegnKey
+            assert key.primaryKey
+            assert key.foriegnKey.table
+            assert key.primaryKey.table
+
 			JavaClass relatedClass = this.tableToJavaClassMap[key.primaryKey.table.name]
      		if (relatedClass == null) {
      			return

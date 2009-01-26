@@ -9,21 +9,25 @@ class JPACodeGenerator implements CodeGenerator{
     /** The target output dir. Defaults to ./target */
     File rootDir = new File(".")
     String packageName //not used
-    boolean debug
+    boolean debug=false
     SimpleTemplateEngine engine = new SimpleTemplateEngine()
     boolean use=false
-    String javaClassTemplate = '''<% import com.arcmind.codegen.RelationshipType; %>package ${bean.packageName};
+    boolean trace=false
+    String javaClassTemplate = '''<% log "STARTING SCRIPT" %>
+<% import com.arcmind.codegen.RelationshipType; %>package ${bean.packageName};
 <% imports.each { imp-> %>import ${imp};
 <% } %>
-@Entity <% if (!bean.namesMatch) { %> @Table(name="${bean.table.name}") <% } 
+<% log "DONE WITH IMPORTS" %>
+@Entity <% if (!bean.namesMatch) { %> @Table(name="${bean.table.name}") <% }
 %>${queries}
 public class ${bean.name} implements Serializable {
-    /** ID */
-    @Id <% if (!bean.id.namesMatch) { %>@Column(name="${bean.id.column.name.toUpperCase()}")<% } %> 
+    /** ID */<% log "STARTING ID" %>
+    @Id <% if (!bean.id.namesMatch) { %>@Column(name="${bean.id.column.name.toUpperCase()}")<% } %>
+    <% log "DONE WITH ID" %>
     @GeneratedValue( strategy = GenerationType.AUTO )
     private ${bean.id.javaClass.name} id;
 
-    /* ------- Relationships ------ */
+    /* ------- Relationships ------ */ <% log "STARTING RELATIONSHIPS" %>
    <%
    for (r in bean.relationships) {
 	    if (r.ignore) continue
@@ -43,16 +47,19 @@ public class ${bean.name} implements Serializable {
    <%
     } else if (r.type == RelationshipType.MANY_TO_MANY) {
    %>
-    
-    @ManyToMany 
+    @ManyToMany
     @JoinTable(name="${r.key.foriegnKey.table.name}",
     		joinColumns=@JoinColumn(name="${r.otherSide.key.foriegnKey.name}"),
     		inverseJoinColumns=@JoinColumn(name="${r.key.foriegnKey.name}"))	
     private Set <${r.relatedClass.name}> ${r.name} = new HashSet<${r.relatedClass.name}>();
    <% }//else if
     }//end iterate through beans %>
+   /* ------- End Relationships ------ */ <% log "DONE WITH RELATIONSHIPS" %>
 
-    /* Properties's fields */
+
+
+
+    /* Properties's fields */<% log "STARTING PROPERTY FIELD GENERATION" %>
   <% /* -----------------------------------------------------------  PROPERTY FIELD GENERATION  -------------------*/ 
     bean.properties.each { property-> %>
   <% if (!property.namesMatch && !property.column.nullable) { //names don't match and field is required %>
@@ -62,6 +69,8 @@ public class ${bean.name} implements Serializable {
     @Column(length=${property.size}) <% } //end of else if %>
     private ${property.javaClass.name} ${property.name.unCap()};
   <% }//end of iterate %>  
+    /* End of Properties's fields */<% log "ENDING PROPERTY FIELD GENERATION" %>
+
 
     public ${bean.name} () {
 
@@ -75,6 +84,7 @@ public class ${bean.name} implements Serializable {
     }
 
    <%
+   log "Processing relationship getters/setters"
    /* Iterate through the relationships */
    bean.relationships.each { r->
    		/* If the relationship is a OneToMany; generate  the getter, setter and add/remove methods. */
@@ -242,12 +252,19 @@ public class ${bean.name} implements Serializable {
     	String query = engine.createTemplate(readPopulatedTemplate).make(["bean":bean, "relationships":relationshipsStr]).toString()
     	return query
     }
-    
+
+    def log (String message) {
+        println "SCRIPT LOG: ${message}"
+    }
     def writeClassFiles() {
         for (JavaClass bean in classes) {
         	
         	if (debug) println "Writing ${bean.name} class file"
-            def binding = ["bean":bean, "imports":calculateImportsFromBean(bean), "queries": createQueriesString(bean)]        
+
+            if (debug) {
+                validateClass(bean)
+            }
+            def binding = ["bean":bean, "imports":calculateImportsFromBean(bean), "queries": createQueriesString(bean), log:this.&log]        
             String templateOutput = engine.createTemplate(javaClassTemplate).make(binding).toString()
             File javaRoot = new File(rootDir, "src/main/java")
             File outputFileDir = new File(javaRoot, bean.packageName.replace('.','/'))
@@ -259,6 +276,10 @@ public class ${bean.name} implements Serializable {
             	writer.write(templateOutput)
             }
         }
+    }
+
+    def validateClass(JavaClass bean) {
+        bean.validateClassAsModel()
     }
     
     public void process() {

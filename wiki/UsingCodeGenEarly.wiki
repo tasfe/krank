@@ -2,6 +2,8 @@
 
 = Introduction =
 
+(Hold off on this if you are using Windows. It seems to work on Mac OS and I would guess Linux, but not Windows)
+
 Crank provides a code generator that reverse engineer an existing database and create a starter project. This feature is very nascent, and we are looking for people to try it out.
 
 

@@ -310,7 +310,7 @@
 				<configuration>
 					<useGUI>true</useGUI>
 					<usePom>true</usePom>
-					<packageName>${package}.model</packageName>
+					<packageName>${package}</packageName>
 					<url>jdbc:mysql://localhost:3306/presto2</url>
 					<userName>presto2</userName>
 					<password>presto2</password>

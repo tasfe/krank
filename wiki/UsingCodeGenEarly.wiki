@@ -214,11 +214,11 @@ Before you can perform this step, you have to have a database. The first time yo
 
 
 Edit the pom.xml. Notice that the codegen-mojo is already configured.
-Change the package name to the one you picked in step 6 (com.somecompany.coolproject).
+Change the package name to the one you picked in step 6 (com.somecompany.coolproject) and make it match the following:
 
 ====pom.xml====
 {{{
-		<plugins>
+
 			<plugin>
 				<groupId>org.crank</groupId>
 				<artifactId>p2c-codegen-mojo</artifactId>
@@ -226,17 +226,21 @@ Change the package name to the one you picked in step 6 (com.somecompany.coolpro
 				<configuration>
 					<useGUI>true</useGUI>
 					<usePom>true</usePom>
-					<packageName>com.somecompany.coolproject.employeetask</packageName>
+					<packageName>com.exfoo</packageName>
 					<url>jdbc:mysql://localhost:3306/presto2</url>
 					<userName>presto2</userName>
 					<password>presto2</password>
 					<driver>com.mysql.jdbc.Driver</driver>
+					<tableNames>DEPARTMENT,EMPLOYEE,ROLE</tableNames>
+					<debug>true</debug>
+					<trace>true</trace>
+					<propertiesFile>./codegen/config.properties</propertiesFile>
+					<appConfigDir>./codegen</appConfigDir>
 				</configuration>
 			</plugin>
 
 }}}
 
-[There is a bug and I need to change employeetask so it does not show up in the archetype for now you have to type it. TODO This will change. It is a bug.]
 
 Go into the directory of the project you created in step 6 and type:
 

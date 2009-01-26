@@ -43,18 +43,9 @@
   </navigation-rule>
 
   <navigation-rule>
-  	<navigation-case>
-  		<from-outcome>DEPARTMENTS</from-outcome>
-  		<to-view-id>/pages/crud/departmentListing.xhtml</to-view-id>
-  	</navigation-case>
-  	<navigation-case>
-  		<from-outcome>EMPLOYEES</from-outcome>
-  		<to-view-id>/pages/crud/employeeListing.xhtml</to-view-id>
-  	</navigation-case>
-  	<navigation-case>
-  		<from-outcome>ROLES</from-outcome>
-  		<to-view-id>/pages/crud/roleListing.xhtml</to-view-id>
-  	</navigation-case>
+  
+  
+  
     <!-- Main Page Links (codegen) -->
     <navigation-case>
          <from-outcome>DEPARTMENTS</from-outcome>
@@ -72,7 +63,13 @@
      </navigation-case>
   <!-- End of Main Page Links (codegen)  -->
 
+
+
+
    </navigation-rule>
+
+
+
 
 
     <!-- Navigation goals for CRUD -->  
@@ -123,6 +120,9 @@
 	  <!-- End Navigation goals for CRUD  -->
 
 
+
+
+
     <!-- Crud Converters -->
   <converter>
   	<converter-for-class>${package}.model.Department</converter-for-class>
@@ -139,6 +139,9 @@
   	<converter-class>org.crank.crud.jsf.support.EntityConverter</converter-class>
   </converter>
   <!-- End Crud Converters  -->
+
+
+
 
 
 </faces-config>

@@ -1,7 +1,7 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
-package ${package}.model;
+package ${package}.config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,17 +24,22 @@ public abstract class CrudApplicationContext extends CrudJSFConfig {
 
 	private static List<CrudManagedObject> managedObjects;
 	
+	
     /* Entity Constants. */
 	private static String DEPARTMENT = "department";
 	private static String EMPLOYEE = "employee";
 	private static String ROLE = "role";
     /* End Entity Constants.  */
 	
+	
+	
     /* Relationship Constants. */
 	private static String DEPARTMENT_EMPLOYEES_RELATIONSHIP = "employees";
 	private static String EMPLOYEE_ROLES_RELATIONSHIP = "roles";
 	private static String ROLE_EMPLOYEES_RELATIONSHIP = "employees";
     /* End Relationship Constants.  */
+	
+	
 	
 
     @Bean(scope = DefaultScopes.SINGLETON)
@@ -46,14 +51,23 @@ public abstract class CrudApplicationContext extends CrudJSFConfig {
 	public List<CrudManagedObject> managedObjects() {
 		if (managedObjects == null) {
 			managedObjects = new ArrayList<CrudManagedObject>();
+			
+			
+			
             /* Managed objects. */
 			managedObjects.add(new CrudManagedObject(Department.class));
 			managedObjects.add(new CrudManagedObject(Employee.class));
 			managedObjects.add(new CrudManagedObject(Role.class));
             /* End Managed objects.  */
+			
+			
+			
         }
         return managedObjects;
     }
+    
+    
+    
     
     /* Crud adapters. */  
 	@Bean(scope = DefaultScopes.SESSION)
@@ -79,7 +93,10 @@ public abstract class CrudApplicationContext extends CrudJSFConfig {
 	}
 
     /* End Crud adapters.  */
-    /* ManyToMany controllers. */
+    
+	
+	
+	/* ManyToMany controllers. */
 	@Bean(scope = DefaultScopes.SESSION)
 	public JsfSelectManyController<Role, Long> employeeToRolesController()
 			throws Exception {
@@ -106,4 +123,7 @@ public abstract class CrudApplicationContext extends CrudJSFConfig {
 
     /* End ManyToMany controllers.  */
 
+	
+	
+	
 }

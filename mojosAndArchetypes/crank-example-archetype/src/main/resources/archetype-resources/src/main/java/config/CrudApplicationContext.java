@@ -3,6 +3,7 @@
 #set( $symbol_escape = '\' )
 package ${package}.config;
 
+import ${package}.model.*;
 import java.util.ArrayList;
 import java.util.List;
 

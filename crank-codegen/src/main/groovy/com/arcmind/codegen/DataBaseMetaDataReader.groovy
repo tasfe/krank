@@ -100,9 +100,21 @@ class DataBaseMetaDataReader {
             String pkTableName = resultSet.getString ("PKTABLE_NAME")
 
             key.foriegnKey.name = fkName
-            key.foriegnKey.table = tables.find{it.name==fkTableName}
             key.primaryKey.name =  pkName
+
+            key.foriegnKey.table = tables.find{it.name==fkTableName}
             key.primaryKey.table = tables.find{it.name==pkTableName}
+
+
+            /* The following seven lines of code compensate for a MySQL JDBC error running on Windows. */
+            if (key.foriegnKey.table==null) {
+                key.foriegnKey.table = tables.find{it.name==fkTableName.toUpperCase()}    
+            }
+
+            if (key.primaryKey.table==null) {
+                key.primaryKey.table = tables.find{it.name==pkTableName.toUpperCase()}    
+            }
+
 
             if (key?.foriegnKey?.table == null || key?.primaryKey?.table == null  ||
                 key.primaryKey.name == null || key.foriegnKey.name == null ) {

@@ -125,7 +125,7 @@ class DataBaseMetaDataReader {
                 key.wellFormed = false
 
             }
-            if (debug) println "${key}"
+            if (debug) println "processKeys(), key found: ${key}"
             keyList << key
         }
 		if (debug) println "\n"

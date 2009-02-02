@@ -12,7 +12,7 @@ class Column {
 	
 	public String toString() {
 		//"Column( name=${name} type=${type} typeName=${typeName} nullable=${nullable} table.name=${table.name})"
-		"${name} ${typeName} table.name=${table?.name})"
+		"Name: ${name}, typeName: ${typeName}, table.name=${table?.name}"
 	}
 	
 }

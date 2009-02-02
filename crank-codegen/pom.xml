@@ -51,6 +51,28 @@
 
     <build>
         <plugins>
+			<plugin>
+				<groupId>org.crank</groupId>
+				<artifactId>p2c-codegen-mojo</artifactId>
+				<version>1.0-SNAPSHOT</version>
+				<configuration>
+					<useGUI>true</useGUI>
+					<usePom>true</usePom>
+					<packageName>com.somecompany.coolproject</packageName>
+					<url>jdbc:mysql://localhost:3306/presto2</url>
+					<userName>presto2</userName>
+					<password>presto2</password>
+					<driver>com.mysql.jdbc.Driver</driver>  
+					<!--tableNames>DEPARTMENT,EMPLOYEE,ROLE</tableNames-->
+					<!-- In case it does not work with upper case letters, then try to use lowercase! -->
+					<tableNames>department,employee,role</tableNames>
+                              <debug>true</debug>
+                              <trace>true</trace>
+                              <propertiesFile>./codegen/config.properties</propertiesFile>
+                              <appConfigDir>./codegen</appConfigDir>
+				</configuration>
+			</plugin>
+
             <plugin>
 
                 <artifactId>maven-compiler-plugin</artifactId>

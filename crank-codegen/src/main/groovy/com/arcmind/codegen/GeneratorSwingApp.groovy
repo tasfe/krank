@@ -236,7 +236,8 @@ public class GeneratorSwingApp{
 		main.configureCollaborators()
 		
 		String tableName = event.path.lastPathComponent.table.name
-		List list = main.tableNames.split(',')
+
+		List list = main.tableNames!= null ? main.tableNames.split(',') : []
 		list = list - tableName
 		list = list - ""
 		list << tableName

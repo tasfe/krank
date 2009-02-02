@@ -90,46 +90,74 @@ class DataBaseMetaDataReader {
 
 	def processKeys(Table table, getKeys, List<Key> keyList, boolean imported) {
 		if (debug) println "processing keys for table ${table.name} imported=${imported}"
+        boolean flag = false
         jdbcUtils.iterate getKeys(catalog, schema, table.name),
         { ResultSet resultSet ->
-            Key key = new Key()
-            key.imported = imported
-            String fkName = resultSet.getString ("FKCOLUMN_NAME")
-            String fkTableName = resultSet.getString ("FKTABLE_NAME")
-            String pkName =  resultSet.getString ("PKCOLUMN_NAME")
-            String pkTableName = resultSet.getString ("PKTABLE_NAME")
-
-            key.foriegnKey.name = fkName
-            key.primaryKey.name =  pkName
-
-            key.foriegnKey.table = tables.find{it.name==fkTableName}
-            key.primaryKey.table = tables.find{it.name==pkTableName}
-
-
-            /* The following seven lines of code compensate for a MySQL JDBC error running on Windows. */
-            if (key.foriegnKey.table==null) {
-                key.foriegnKey.table = tables.find{it.name==fkTableName.toUpperCase()}    
-            }
-
-            if (key.primaryKey.table==null) {
-                key.primaryKey.table = tables.find{it.name==pkTableName.toUpperCase()}    
-            }
-
-
-            if (key?.foriegnKey?.table == null || key?.primaryKey?.table == null  ||
-                key.primaryKey.name == null || key.foriegnKey.name == null ) {
-                println "WARNING: THE KEY IS NOT WELL FORMED. IT MIGHT BE THAT THE DATABASE DOES NOT SUPPORT FORIEGN KEYS---------"
-                println "fkName=${fkName} fkTableName=${fkTableName} pkName=${pkName} pkTableName=${pkTableName}"
-                println "Available table names = ${tables.collect{it.name}}"
-                println "Setting well formed to false for key"
-                key.wellFormed = false
-
-            }
-            if (debug) println "processKeys(), key found: ${key}"
-            keyList << key
+            flag = true
+            processKey(keyList, debug, tables, resultSet, imported)
         }
+
+        try {
+            if (flag == false) {
+                if (debug) "There were no results from the process keys method"
+                jdbcUtils.iterate getKeys(catalog, schema, table.name.toLowerCase()),
+                { ResultSet resultSet ->
+                    flag = true
+                    processKey(keyList, debug, tables, resultSet, imported)
+                }
+            }
+
+            if (flag == false) {
+                if (debug) "There were no results from the process keys method"
+                jdbcUtils.iterate getKeys(catalog, schema, table.name.toUpperCase()),
+                { ResultSet resultSet ->
+                    flag = true
+                    processKey(keyList, debug, tables, resultSet, imported)
+                }
+            }
+        } catch (Exception ex) {
+            //do nothing... this is not a fatal error.
+             if (debug) println "Unable to process keys ${ex.message}"  
+        }
+
 		if (debug) println "\n"
 	}
+
+    private List processKey(List<Key> keyList, boolean debug, List<Table> tables, ResultSet resultSet, boolean imported) {
+        Key key = new Key()
+        key.imported = imported
+        String fkName = resultSet.getString("FKCOLUMN_NAME")
+        String fkTableName = resultSet.getString("FKTABLE_NAME")
+        String pkName = resultSet.getString("PKCOLUMN_NAME")
+        String pkTableName = resultSet.getString("PKTABLE_NAME")
+
+        key.foriegnKey.name = fkName
+        key.primaryKey.name = pkName
+
+        key.foriegnKey.table = tables.find {it.name == fkTableName}
+        key.primaryKey.table = tables.find {it.name == pkTableName}
+
+        /* The following seven lines of code compensate for a MySQL JDBC error running on Windows. */
+        if (key.foriegnKey.table == null) {
+            key.foriegnKey.table = tables.find {it.name == fkTableName.toUpperCase()}
+        }
+
+        if (key.primaryKey.table == null) {
+            key.primaryKey.table = tables.find {it.name == pkTableName.toUpperCase()}
+        }
+
+
+        if (key?.foriegnKey?.table == null || key?.primaryKey?.table == null ||
+                key.primaryKey.name == null || key.foriegnKey.name == null) {
+            println "WARNING: THE KEY IS NOT WELL FORMED. IT MIGHT BE THAT THE DATABASE DOES NOT SUPPORT FORIEGN KEYS---------"
+            println "fkName=${fkName} fkTableName=${fkTableName} pkName=${pkName} pkTableName=${pkTableName}"
+            println "Available table names = ${tables.collect {it.name}}"
+            println "Setting well formed to false for key"
+            key.wellFormed = false
+        }
+        if (debug) println "processKeys(), key found: ${key}"
+        keyList << key
+    }
 
 
 

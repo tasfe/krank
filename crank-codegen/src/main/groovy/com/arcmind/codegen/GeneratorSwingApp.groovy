@@ -470,7 +470,9 @@ public class GeneratorSwingApp{
                         enableMenuBar(false)
                         modifyCursor(false)
                         try {
-                            main.generateArtifacts()
+                            use (StringCategory,ExceptionCategory) {
+                                main.generateArtifacts()
+                            }
 	                        edt {setStatus "Done generating Artifacts to ${main.rootDir}"}
                         } catch(Exception ex) {
                         	edt {

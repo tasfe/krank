@@ -129,9 +129,12 @@ public class JavaModelGenerator{
         tables.each{Table table ->
             String className = generateName(table.name)
             println "generated className: ${className}"
-//            if (!tableNames.empty && !tableNames.contains(table.name)) {
-//            	return;
-//            }
+            if (!tableNames.empty) {
+                String name = tableNames.find{String name -> name.equalsIgnoreCase(table.name)}
+                if (name == null) {
+            	    return;
+                }
+            }
             JavaClass javaClass = new JavaClass(name:className, packageName:"${packageName}.${modifierPackageName}", table:table)
             if (convertColumnsToJavaProperties(javaClass, table)) {
                 javaClassToTableMap[javaClass.name]=table

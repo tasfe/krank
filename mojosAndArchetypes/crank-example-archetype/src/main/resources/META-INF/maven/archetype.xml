@@ -101,5 +101,6 @@
     <resource>log4j.xml</resource>
     <resource>rungoal.sh</resource>
     <resource>runjetty.sh</resource>
+	<resource>runjetty.bat</resource>
   </resources>
 </archetype>

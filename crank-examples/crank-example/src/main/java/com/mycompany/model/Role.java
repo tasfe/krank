@@ -45,7 +45,7 @@ public class Role implements Serializable {
     /* Properties's fields */
   
   
-    @Column(name="NAME", nullable=false, length=-1) 
+    @Column(name="NAME", nullable=false, length=30) 
     private String name;
     
     /* End of Properties's fields */

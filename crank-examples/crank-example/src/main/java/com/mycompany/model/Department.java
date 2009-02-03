@@ -41,7 +41,7 @@ public class Department implements Serializable {
     /* Properties's fields */
   
   
-    @Column(length=-1) 
+    @Column(length=30) 
     private String name;
     
     /* End of Properties's fields */

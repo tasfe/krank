@@ -51,15 +51,15 @@ public class Employee implements Serializable {
     /* Properties's fields */
   
   
-    @Column(nullable=false, length=-1) 
+    @Column(nullable=false, length=30) 
     private String firstName;
   
   
-    @Column(name="LAST_NAME", nullable=false, length=-1) 
+    @Column(name="LAST_NAME", nullable=false, length=30) 
     private String lastName;
   
   
-    @Column(length=-1) 
+    @Column(length=30) 
     private String phone;
     
     /* End of Properties's fields */

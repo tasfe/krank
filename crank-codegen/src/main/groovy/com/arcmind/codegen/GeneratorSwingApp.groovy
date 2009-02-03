@@ -95,7 +95,7 @@ public class GeneratorSwingApp{
 	public void reverseDB() {
 		main.reader.tables=[]
 		main.modelGen.classes=[]
-		use(StringCategory){
+		use(StringCategory, ExceptionCategory){
 			main.reverseDB()
 		}
 		tableTreeModel.setTables(main.reader.tables)
@@ -103,21 +103,17 @@ public class GeneratorSwingApp{
 	}
 
 	public void readModel() {
-		main.reader.tables=[]
-		main.modelGen.classes=[]
-		try {
-			use(StringCategory) {
-				main.readXML()
-			}
-			tableTreeModel.setTables(main.reader.tables)
-			classTreeModel.setClasses(main.modelGen.classes)
-		} catch (Exception ex) {
-            setStatus "${ex.class.simpleName} ${ex.message}"
-            ByteArrayOutputStream bos = new ByteArrayOutputStream()
-            PrintStream stream = new PrintStream(bos)
-            ex.printStackTrace(stream)
-            println bos.toString()
-
+        use(StringCategory,ExceptionCategory) {
+            main.reader.tables=[]
+            main.modelGen.classes=[]
+            try {
+                main.readXML()
+                tableTreeModel.setTables(main.reader.tables)
+                classTreeModel.setClasses(main.modelGen.classes)
+            } catch (Exception ex) {
+                setStatus "${ex.class.simpleName} ${ex.message}"
+                ex.printMe("Unable to read model", this.&println)
+            }
         }
 	}
 
@@ -368,7 +364,7 @@ public class GeneratorSwingApp{
             Closure handleOpenProperties = {
             		main.backupPropFile(backupPropertiesFile)
            			if (setPropFromFileDialog(true, false)) {
-	            		use(StringCategory){
+	            		use(StringCategory,ExceptionCategory){
 	            			main.readProperties()
 	            		}
 	            		refreshProperties()
@@ -384,7 +380,7 @@ public class GeneratorSwingApp{
             		if (main.wasNotSetPropFile) {
             			setPropFromFileDialog(false, true)
             		}
-            		use(StringCategory){
+            		use(StringCategory,ExceptionCategory){
             			main.writeProperties()
             		}
             		refreshProperties()
@@ -397,7 +393,7 @@ public class GeneratorSwingApp{
             		}
             		main.backupPropFile(backupPropertiesFile)
            			if (setPropFromFileDialog(false, false)) {
-	            		use(StringCategory){
+	            		use(StringCategory,ExceptionCategory){
 	            			main.writeProperties()
 	            		}
            			}
@@ -455,11 +451,7 @@ public class GeneratorSwingApp{
                         edt {setStatus "Done reverse engineering database." }
                     } catch (Exception ex) {
                         setStatus "${ex.class.simpleName} ${ex.message}"
-                        ByteArrayOutputStream bos = new ByteArrayOutputStream()
-                        PrintStream stream = new PrintStream(bos)
-                        ex.printStackTrace(stream)
-                        println bos.toString()
-
+                        ExceptionCategory.printMe(ex, "Problem reverse engineering db", this.&println)
                     } finally {
                         enableMenuBar(true)
                         modifyCursor(true)
@@ -470,20 +462,20 @@ public class GeneratorSwingApp{
             Closure handleGenerateCode = {
                     doOutside {
                         edt {setStatus "Generating Artifacts to ${main.rootDir}"}
+
+
+	                    use(StringCategory,ExceptionCategory) {
+
+	                        }
                         enableMenuBar(false)
                         modifyCursor(false)
                         try {
-	                        use(StringCategory) {
-	                        	main.generateArtifacts()
-	                        }
+                            main.generateArtifacts()
 	                        edt {setStatus "Done generating Artifacts to ${main.rootDir}"}
                         } catch(Exception ex) {
                         	edt {
                                 setStatus "${ex.class.simpleName} ${ex.message}"
-                                ByteArrayOutputStream bos = new ByteArrayOutputStream()
-                                PrintStream stream = new PrintStream(bos)
-                                ex.printStackTrace(stream)
-                                println bos.toString()
+                                ExceptionCategory.printMe (ex, "Unable to generate artifacts", this.&println)
                             }
                         }
                         finally {

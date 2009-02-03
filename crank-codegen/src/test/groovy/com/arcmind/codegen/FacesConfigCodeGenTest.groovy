@@ -23,7 +23,7 @@ public class FacesConfigCodeGenTest extends TestCase{
 		println testFile
 		List<String> beforeChange = testFile.readLines()
 		FacesConfigCodeGen codeGen = new FacesConfigCodeGen(file:testFile, classes:classes)
-		use(StringCategory) { 
+		use(StringCategory,ExceptionCategory) { 
 			codeGen.process()
 		}
 		

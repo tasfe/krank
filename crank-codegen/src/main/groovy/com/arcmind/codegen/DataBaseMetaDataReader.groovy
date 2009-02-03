@@ -116,8 +116,7 @@ class DataBaseMetaDataReader {
                 }
             }
         } catch (Exception ex) {
-            //do nothing... this is not a fatal error.
-             if (debug) println "Unable to process keys ${ex.message}"  
+            if (trace) ex.printMe("Unable to process keys", this.&println)
         }
 
 		if (debug) println "\n"

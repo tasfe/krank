@@ -139,12 +139,7 @@ public class CodeGenMain{
             try {
 			    codeGen.process()
             } catch (Exception ex) {
-                println "Unable to process code generator ${codeGen?.class?.name}"
-                println "Exception ${ex.message}"
-                ByteArrayOutputStream bos = new ByteArrayOutputStream()
-                PrintStream stream = new PrintStream(bos)
-                ex.printStackTrace(stream)
-                println bos.toString()                
+                ex.printMe("Unable to generate artifacts", this.&println)
             }
 		}
 	}
@@ -165,7 +160,7 @@ public class CodeGenMain{
 
 	/** This is the main entry point for this program. */
 	public static void main (String [] args) {
-		use(StringCategory) {
+		use(StringCategory,ExceptionCategory) {
 			CodeGenMain codeGenMain = new CodeGenMain()
 			if (codeGenMain.processArgs(args)) {
 				codeGenMain.run()

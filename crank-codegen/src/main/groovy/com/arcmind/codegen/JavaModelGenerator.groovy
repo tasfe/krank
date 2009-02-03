@@ -208,11 +208,7 @@ public class JavaModelGenerator{
      			processExportedKey(key, javaClass)
      		} catch (Exception ex) {
      			if (trace) {
-	                println "UNABLE TO PROCESS EXPORTED KEY ${ex.message}"
-	                ByteArrayOutputStream bos = new ByteArrayOutputStream()
-	                PrintStream stream = new PrintStream(bos)
-	                ex.printStackTrace(stream)
-	                println bos.toString()
+                    ex.printMe("Unable to process exported key", this.&pritnln)
      			}
      		}
      	}
@@ -224,11 +220,7 @@ public class JavaModelGenerator{
                 processImportedKey(key, javaClass)
             } catch (Exception ex) {
                 if (trace) {
-                   println "UNABLE TO PROCESS IMPORTED KEY ${ex.message}"
-                   ByteArrayOutputStream bos = new ByteArrayOutputStream()
-                   PrintStream stream = new PrintStream(bos)
-                   ex.printStackTrace(stream)
-                   println bos.toString()
+                    ex.printMe("Unable to process import key", this.&println)
                 }
             }
 

@@ -42,4 +42,13 @@ class JdbcUtils {
 		}
 		
 	}
+	
+	boolean isOracle() {
+		if (url) {
+			if (url.toLowerCase().contains('oracle')) {
+				return true
+			}
+		}
+		return false;
+	}
 }

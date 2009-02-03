@@ -1,5 +1,6 @@
 package com.arcmind.codegen
 
+import com.arcmind.codegen.oracle.OracleJDBCUtils;
 
 
 /**
@@ -34,6 +35,7 @@ public class CodeGenMain{
 	Set <String> availableActions = ["reverse", "write", "read", "generate", "all", "help", "datasource"]
 	Properties configProperties
 	JdbcUtils jdbcUtils
+	OracleJDBCUtils oracleJDBCUtils
 	DataBaseMetaDataReader reader
 	DataSourceReader dataSourceReader
 	JavaModelGenerator modelGen
@@ -41,6 +43,7 @@ public class CodeGenMain{
 	XMLPersister persister
 	XMLDataSourcePersister dataSourcePersister
 	List collaborators
+	String oracleNLS = 'en' //default
 
 	Closure printlnClosure = {String message ->
         println (message)
@@ -109,6 +112,14 @@ public class CodeGenMain{
 		if (debug) println "Reverse engineering the database tables"
 		/* Process the database tables */
 		reader.jdbcUtils = jdbcUtils
+		
+		/* Oracle injection */
+		if (jdbcUtils.oracle) {
+			oracleJDBCUtils = new OracleJDBCUtils(jdbcUtils, oracleNLS)
+			reader.jdbcUtils = oracleJDBCUtils
+			
+		}
+		
 		reader.processDB()
 		/* Convert the tables into JavaClasses. */
 		modelGen.tables = reader.tables
@@ -242,6 +253,7 @@ public class CodeGenMain{
 			JavaModelGenerator.metaClass.invokeMethod = logClosure
 			JPACodeGenerator.metaClass.invokeMethod = logClosure
 			JdbcUtils.metaClass.println = printlnClosure
+			OracleJDBCUtils.metaClass.println = printlnClosure
 			DataBaseMetaDataReader.metaClass.println = printlnClosure
 			DataSourceReader.metaClass.println = printlnClosure
 			JavaModelGenerator.metaClass.println = printlnClosure

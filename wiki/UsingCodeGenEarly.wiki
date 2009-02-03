@@ -2,10 +2,10 @@
 
 = Introduction =
 
-(Hold off on this if you are using Windows. It seems to work on Mac OS and I would guess Linux, but not Windows)
+Crank/Presto2 provides a code generator that reverse engineer an existing database and create a starter project. This feature is very nascent, and we are looking for people to try it out.
 
-Crank provides a code generator that reverse engineer an existing database and create a starter project. This feature is very nascent, and we are looking for people to try it out.
-
+= Status =
+It now works with Windows thanks to Alex (Oleg) and I. It was breaking due to case sensitivity issues (that were MySQL 5 and Windows specific). The next step is to get it to work with Oracle. (It currently works with MySQL and HSQL).
 
 = Details =
 
@@ -27,7 +27,6 @@ Since there is no binary release of these yet, you need to check them out and bu
 Now the first 5 steps are needed because Crank does not have any recent binary distributions. When Crank gets an official release and gets added to the public maven repo then they will not be needed.
 
 == Status of instructions ==
-(I am going to write and test these instructions on my Mac and then validate on a Windows box for correctness. Any early feedback is welcome.)
 
 
 == Step One: Check out crank and build it ==

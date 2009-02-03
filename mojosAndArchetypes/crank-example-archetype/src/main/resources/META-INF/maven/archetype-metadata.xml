@@ -68,6 +68,7 @@
         <include>createArch.sh</include>
         <include>rungoal.sh</include>
         <include>runjetty.sh</include>
+        <include>runjetty.bat</include>
       </includes>
     </fileSet>
   </fileSets>

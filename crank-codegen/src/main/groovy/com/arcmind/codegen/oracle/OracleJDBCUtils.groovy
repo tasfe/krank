@@ -20,24 +20,9 @@ class OracleJDBCUtils extends JdbcUtils {
 		this.password = parent.password
 		this.debug = parent.debug
 	    this.trace = parent.trace
-
 	    // Avoid here ORA-12705:
 		// Cannot access NLS data files or invalid environment specified
 		//Locale.default = Locale.US 
 		Locale.setDefault(new Locale(locale))
-	}
-	
-	def execute(Closure callme) {
-		
-		// Make connection
-		Class.forName(driver)
-		try {
-			connection = DriverManager.getConnection (url, userName, password)
-			callme(connection)
-		} finally {
-			connection?.close()
-			connection=null
-		}	
 	}	
-	
 }

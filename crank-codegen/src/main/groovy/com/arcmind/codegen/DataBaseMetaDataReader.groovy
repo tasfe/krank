@@ -18,6 +18,8 @@ class DataBaseMetaDataReader {
     String[] tableTypes = ["TABLE"]
     /** Utility class for managing database connection. */
     JdbcUtils jdbcUtils
+    /** List of table names to exclude. */
+    List <String> excludeTableNames = []
     /* The current connection */
     protected Connection connection
     boolean debug
@@ -33,12 +35,32 @@ class DataBaseMetaDataReader {
         jdbcUtils.iterate(connection.metaData.getTables (catalog, schema, null, tableTypes),
             { ResultSet resultSet ->
                 String tableName = resultSet.getString ("TABLE_NAME")
-                if (debug) println "DataBaseMetaDataReader: processTables() tableName=${tableName}"
-                tables << new Table(name:tableName)
+                String prefix = excludeTableNames.find{String prefix -> tableName.startsWith(prefix)}
+                if (prefix == null) {
+                  if (debug) println "DataBaseMetaDataReader: processTables() tableName=${tableName}"
+                  tables << new Table(name:tableName)
+                } else {
+                  if (trace) println "Not processing ${tableName}"
+                }
             }
         )
         if(debug) println "DataBaseMetaDataReader: Done Processing Tables " + tables
     }
+
+
+  def showTables() {
+    jdbcUtils.execute {Connection connection ->
+      println "Showing tables"
+      List<String> tableNames = []
+      jdbcUtils.iterate(connection.metaData.getTables(catalog, schema, null, tableTypes),
+              {ResultSet resultSet ->
+                String tableName = resultSet.getString("TABLE_NAME")
+                tableNames << tableName
+              }
+      )
+      println tableNames.join(",")
+    }
+  }
 
     /**
      *  Process list of columns from the list of tables. Add the columns to the table object.

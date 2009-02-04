@@ -887,33 +887,28 @@ public class GeneratorSwingApp{
 				codeGenMainEditSupport.rootDir.text = fc.getSelectedFile().getPath()
 				main.rootDir = codeGenMainEditSupport.rootDir.text
 			} else {
-				ListDialog.showDialog(
-                        mainFrame,
-                        null,
-                        true,//Error
-                        "Close",
-                        "Failures:",
-                        "Root Dir Failure",
-                        validator.data.toArray(new String[0]),
-                        null,
-                        null);				
+                showRootDirDialog(validator)
 			}
 		}
 	}
-	
-	private boolean validateRootDir(rootDir) {
+
+  private showRootDirDialog(RootDirValidator validator) {
+    ListDialog.showDialog(
+            mainFrame,
+            null,
+            true,//Error
+            "Close",
+            "Failures:",
+            "Root Dir Failure: The folllowing files have to exist in the root dir:",
+            validator.data.toArray(new String[0]),
+            null,
+            null);
+  }
+
+  private boolean validateRootDir(rootDir) {
 		RootDirValidator validator = new RootDirValidator(rootDir : rootDir);
 		if (!validator.validate()){
-			ListDialog.showDialog(
-                    mainFrame,
-                    null,
-                    true,//Error
-                    "Close",
-                    "Failures:",
-                    "Root Dir Failure",
-                    validator.data.toArray(new String[0]),
-                    null,
-                    null);
+            showRootDirDialog(validator)
 			return false;
 		}
 		return true

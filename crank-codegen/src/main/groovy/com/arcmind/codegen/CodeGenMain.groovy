@@ -378,17 +378,16 @@ public class CodeGenMain {
     }
 
     /* TODO This seems to have no effect whatsoever, the jar files have to be added
-      to IntelliJ or Eclipse.  Fix this.*/
-
+      to IntelliJ or Eclipse.  Note to self... if possible Fix this.*/
     def loadJars() {
       File libDir = new File(this.libsDir)
+      if (libDir.exists()) {
       libDir.eachFileRecurse {File file ->
         if (file.name.endsWith("*.jar")) {
           this.class.classLoader.rootLoader.addURL(file.toURL())
         }
       }
-
-      Class.forName("oracle.jdbc.driver.OracleDriver")
+      }
     }
 
     public void initDataSource() {

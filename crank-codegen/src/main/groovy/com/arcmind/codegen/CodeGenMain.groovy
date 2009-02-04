@@ -1,6 +1,7 @@
 package com.arcmind.codegen
 
 import com.arcmind.codegen.oracle.OracleJDBCUtils;
+import com.arcmind.codegen.oracle.OracleDataBaseMetaDataReader;
 
 
 /**
@@ -37,6 +38,7 @@ public class CodeGenMain{
 	JdbcUtils jdbcUtils
 	OracleJDBCUtils oracleJDBCUtils
 	DataBaseMetaDataReader reader
+	OracleDataBaseMetaDataReader oracleReader
 	DataSourceReader dataSourceReader
 	JavaModelGenerator modelGen
 	List<CodeGenerator> codeGenerators = []
@@ -120,7 +122,18 @@ public class CodeGenMain{
 			
 		}
 		
-		reader.processDB()
+		/* Oracle injection */
+		if (jdbcUtils.oracle) {
+			oracleReader = new OracleDataBaseMetaDataReader(reader)
+			oracleReader.processDB()
+			
+			// replace tables with Oracle reader tables
+			reader.tables =  oracleReader.tables 
+			
+		} else {
+			reader.processDB() //default old way
+		}
+		
 		/* Convert the tables into JavaClasses. */
 		modelGen.tables = reader.tables
 		modelGen.process()

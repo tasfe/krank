@@ -19,7 +19,7 @@ class DataBaseMetaDataReader {
     /** Utility class for managing database connection. */
     JdbcUtils jdbcUtils
     /* The current connection */
-    private Connection connection
+    protected Connection connection
     boolean debug
     boolean trace
 

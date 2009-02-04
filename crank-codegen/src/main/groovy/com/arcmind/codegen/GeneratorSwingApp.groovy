@@ -873,16 +873,16 @@ public class GeneratorSwingApp{
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			RootDirValidator validator = new RootDirValidator(rootDir : fc.getSelectedFile().getPath());
 			if (validator.validate()){
-				ListDialog.showDialog(
-                        mainFrame,
-                        null,
-                        false,//Success
-                        "Select",
-                        "Success:",
-                        "Root Dir Success",
-                        validator.data.toArray(new String[0]),
-                        null,
-                        null);				
+//				ListDialog.showDialog(
+//                        mainFrame,
+//                        null,
+//                        false,//Success
+//                        "Select",
+//                        "Success:",
+//                        "Root Dir Success",
+//                        validator.data.toArray(new String[0]),
+//                        null,
+//                        null);
 				
 				codeGenMainEditSupport.rootDir.text = fc.getSelectedFile().getPath()
 				main.rootDir = codeGenMainEditSupport.rootDir.text
@@ -898,8 +898,8 @@ public class GeneratorSwingApp{
             null,
             true,//Error
             "Close",
-            "Failures:",
-            "Root Dir Failure: The folllowing files have to exist in the root dir:",
+            "The folllowing files have to exist in the root dir:",
+            "Root Dir Failure:",
             validator.data.toArray(new String[0]),
             null,
             null);

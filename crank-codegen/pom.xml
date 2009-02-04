@@ -31,11 +31,6 @@
 			<version>1.8.0.7</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc14</artifactId>
-			<version>10.2.0.1.0</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -91,4 +86,23 @@
 			</plugin>
 		</plugins>
 	</build>
+
+    <profiles>
+        <profile>
+            <id>oracle</id>
+            <activation>
+                <property>
+                    <name>db</name>
+                    <value>oracle</value>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.oracle</groupId>
+                    <artifactId>ojdbc14</artifactId>
+                    <version>10.2.0.1.0</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>

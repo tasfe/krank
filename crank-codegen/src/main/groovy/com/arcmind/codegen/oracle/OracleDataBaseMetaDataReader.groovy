@@ -57,7 +57,7 @@ class OracleDataBaseMetaDataReader extends DataBaseMetaDataReader {
 //			                tables << new Table(name:tableName)
 //			            })
 //        	  }
-//          }
+//          }                                                                
     }
     
     // For debugging

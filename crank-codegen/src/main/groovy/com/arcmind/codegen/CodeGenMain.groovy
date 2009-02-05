@@ -139,6 +139,8 @@ public class CodeGenMain {
 //    } else {
 //      reader.processDB() //default old way
 //    }
+    reader.debug = debug == null ? false : Boolean.valueOf(debug)
+    reader.trace = trace == null ? false : Boolean.valueOf(trace)
     reader.processDB()
     /* Convert the tables into JavaClasses. */
     modelGen.tables = reader.tables
@@ -190,10 +192,12 @@ public class CodeGenMain {
         if (debug) println "Generating artifacts for ${codeGen.classes} with ${codeGen.class.name}"
 
         try {
+          codeGen.debug = debug == null ? false : Boolean.valueOf(debug)
+          codeGen.trace = trace == null ? false : Boolean.valueOf(trace)
           codeGen.process()
         } catch (Exception ex) {
           ex.printMe("Unable to generate artifacts", this.&println)
-        }
+        }                                                             
       }
     }
 

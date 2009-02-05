@@ -178,7 +178,7 @@ public class ${bean.name} implements Serializable {
         List<String> imports = bean.properties.collect { JavaProperty property ->
             if (debug) println "Calculating imports for ${property.name} of type ${property.javaClass}, is it primitive? ${property.javaClass.primitive}"
             if (!property.javaClass.primitive && !property.javaClass.packageName.startsWith("java.lang")) {
-                return "${property.javaClass.packageName}.${property.javaClass.name}"
+                return "${property.javaClass.packageName}.${property.javaClass.name}".toString()
             } else {
                 return null;
             }

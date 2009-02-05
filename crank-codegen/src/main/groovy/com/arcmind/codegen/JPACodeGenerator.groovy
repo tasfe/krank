@@ -189,6 +189,10 @@ public class ${bean.name} implements Serializable {
         imports << "javax.persistence.GeneratedValue"
         imports << "javax.persistence.GenerationType"
         imports << "javax.persistence.Id"
+
+        if (bean.needsSequence) {
+            imports << "javax.persistence.SequenceGenerator"
+        }
          
         bean.relationships.each {Relationship relationship ->
          	if (relationship.type == RelationshipType.ONE_TO_MANY) {

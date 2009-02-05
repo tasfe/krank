@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<site name="Crank Codegen" href="http://code.google.com/p/krank/source/browse/#svn/crank-codegen">
+
+  <title>Crank Codegen</title>
+  <logo href="http://krank.googlecode.com/svn/trunk/docs/images/logo.jpg">The Crank Codegen Project</logo>
+    
+  <body>
+    <navbar name="lhs">
+    <menu name="Crank Codegen">
+      <item name="Front Page"            href="/index.html"/>
+      <item name="Download"              href="/downloads.html"/>
+    </menu>
+
+    <menu name="Get Involved">
+      <item name="Overview"              href="/site/getinvolved.html"/>
+      <item name="Getting Started"       href="/site/svnindex.html"/>
+      <item name="Mailing Lists"         href="/site/mail.html"/>
+    </menu>
+
+    <menu name="Related Projects">
+      <item name="Crank"                   href="/site/crank/index.html"/>
+    </menu>
+    </navbar>
+  </body>
+
+</site>

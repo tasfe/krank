@@ -9,7 +9,13 @@
 <!-- in the project's Project Properties dialog box.-->
 <project name="codegen" default="default" basedir=".">
     <description>Builds, tests, and runs the project codegen.</description>
-    <import file="nbproject/build-impl.xml"/>
+    <!--import file="nbproject/build-impl.xml"/-->
+
+    <!-- XDOCS -->
+    <property name="docs.src" value="xdocs"/>
+    <property name="docs.dest" value="docs"/>
+
+
     <!--
 
     There exist several targets which are by default empty and which can be 
@@ -71,4 +77,24 @@
     nbproject/build-impl.xml file. 
 
     -->
+    
+        <!-- ================================================================== -->
+    <!-- XSLT   Documentation Builder                                       -->
+    <!-- ================================================================== -->
+    <target name="docs">
+        <xslt   basedir="${docs.src}"
+                destdir="${docs.dest}"
+                style="${docs.src}/stylesheets/site.xsl"
+                includes="**/*.xml"/>
+
+        <!--copy todir="${docs.dest}" filtering="no">
+            <fileset dir="${docs.src}"/>
+        </copy-->
+                
+    </target>
+    
+    <target name="clean">
+		<delete dir="${docs.dest}"/>
+    </target>
+
 </project>

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <author email="richarhightower@gmail.com">Richard Hightower</author>
+    <title>Crank Codegen</title>
+  </properties>
+
+  <body>
+    <section name="Crank Codegen">
+
+<p>
+Crank Codegen is a ...
+</p>
+
+<p>
+This package is intended to be an answer to a question we commonly hear in the 
+Java world:
+<blockquote style="padding: 5px; border: 1px solid #eee;">
+&quot;Why isn't there a decent regular expression package available for 
+Java under a BSD-Style (ie: Apache) license?&quot;
+</blockquote>
+</p>
+
+<p>
+You can:
+<ul>
+<li><a href="../site/binindex.cgi">Download</a> builds.</li>
+<li>View the list of <a href="changes.html">changes</a> between revisions.</li>
+<li>View Javadoc <a href="http://jakarta.apache.org/regexp/apidocs/">online</a>.
+It is also included in the distribution download.</li>
+</ul>
+</p>
+
+<p>
+If you would like to get involved with this project in one way or another 
+(Mailing lists, SVN, Contributions), please see the <a 
+href="../site/getinvolved.html">Getting Involved</a> section
+</p>
+
+<h3><a href="../site/whoweare.html">Contributors</a></h3>
+
+<ul>
+<li>Richard Highttower wrote the original code.</li>
+</ul>
+
+    </section>
+  </body>
+</document>

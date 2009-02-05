@@ -72,12 +72,16 @@ class DataBaseMetaDataReader {
             { ResultSet resultSet ->
                 Column column = new Column()
                 column.name = resultSet.getString ("COLUMN_NAME")
-                if (debug) println "COLUMN NAME = ${column.name} ==================================="
+                if (debug) println "COLUMN NAME = ${column.name} "
                 column.typeName = resultSet.getString ("TYPE_NAME")
                 column.type = resultSet.getInt ("DATA_TYPE")
                 column.nullable = resultSet.getString ("IS_NULLABLE") == "YES" ? true : false
                 if (column.type in [Types.VARCHAR, Types.CHAR]) {
                 	column.size = resultSet.getInt("COLUMN_SIZE")
+                }
+                if (column.type in [Types.DECIMAL]) {
+                    column.size = resultSet.getInt("COLUMN_SIZE")
+                    column.decimalDigits = resultSet.getInt("DECIMAL_DIGITS")
                 }
                 if (table.primaryKeys.contains(column.name)) {
                     column.primaryKey = true

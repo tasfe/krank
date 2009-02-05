@@ -26,6 +26,7 @@ public class JavaModelGenerator{
     String modifierPackageName="model"
     boolean debug
     boolean trace
+    boolean needsSequence
 	
     /**
      *   Convert the columns to Java properties.
@@ -52,7 +53,7 @@ public class JavaModelGenerator{
     /** Convert the column type to the equivalent Java class/type.
      */
   JavaClass convertColumnToJavaClass(Column column) {
-    if (debug) println "Converting Database column to Java class Column name = ${column.name} Column type = ${column.type}"
+    if (debug) println "Converting Database column to Java class Column name = ${column.name} Column type = ${column.type}/${column.typeName}"
     JavaClass returnValue = null
     switch (column.type) {
       case [Types.BINARY, Types.VARBINARY, Types.LONGVARBINARY, Types.BLOB]:
@@ -98,20 +99,47 @@ public class JavaModelGenerator{
       case Types.TIMESTAMP:
         returnValue = new JavaClass(name: "Timestamp", packageName: "java.sql")
         break
-      case [Types.INTEGER]:
+      case Types.INTEGER:
         returnValue = column.nullable || column.primaryKey ?
           new JavaClass(name: "Integer", packageName: "java.lang") :
           new JavaClass(name: "int", primitive: true)
         break
       default:
-        println "Unable to map type for column " + column
-        returnValue = new JavaClass(name: "Object", packageName: "java.lang")
+         returnValue = returnJavaClassBasedOnColumnTypeName(column)
     }
 
     if (column.primaryKey && ([Types.NUMERIC, Types.DECIMAL, Types.FLOAT, Types.DOUBLE] as Set).contains(column.type)) {
       returnValue = new JavaClass(name: "Long", packageName: "java.lang")
     }
+    /* This should work for Oracle and PostgreSQL style booleans. */
+    if (column.typeName == "NUMBER" && column.size==1 && column.decimalDigits == 0){
+         returnValue = column.nullable ?
+           new JavaClass(name: "Boolean", packageName: "java.lang") :
+           new JavaClass(name: "boolean", primitive: true)
+    }
+    /* It is intersting to note that typeName also hold UDT values so if a company uses UDTs
+       it might make sense to put in reading a mapping file that maps UDT to java code right here.
+     */
     returnValue
+  }
+
+  JavaClass returnJavaClassBasedOnColumnTypeName(Column column) {
+    switch (column.typeName) {
+      case "BINARY_FLOAT":
+        return column.nullable ?
+          new JavaClass(name: "Float", packageName: "java.lang") :
+          new JavaClass(name: "float", primitive: true)
+
+      case "BINARY_DOUBLE":
+        return column.nullable ?
+          new JavaClass(name: "Double", packageName: "java.lang") :
+          new JavaClass(name: "double", primitive: true)
+
+      default:
+        println "Unable to map type for column " + column
+        return new JavaClass(name: "Object", packageName: "java.lang")
+
+    }
   }
 
   String generateName(dbName) {
@@ -150,7 +178,8 @@ public class JavaModelGenerator{
             	    return;
                 }
             }
-            JavaClass javaClass = new JavaClass(name:className, packageName:"${packageName}.${modifierPackageName}", table:table)
+            JavaClass javaClass = new JavaClass(name:className, packageName:"${packageName}.${modifierPackageName}",
+                    table:table, needsSequence: needsSequence, sequenceName: table.name + "_SEQ")
             if (convertColumnsToJavaProperties(javaClass, table)) {
                 javaClassToTableMap[javaClass.name]=table
                 tableToJavaClassMap[table.name]=javaClass

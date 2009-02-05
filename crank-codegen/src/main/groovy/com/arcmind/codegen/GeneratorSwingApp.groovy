@@ -541,7 +541,7 @@ public class GeneratorSwingApp{
                             panel {
                                 boxLayout(axis:BoxLayout.X_AXIS)
                                 label("Package", preferredSize:[100,20])
-                                classEditSupport.packageName = textField(preferredSize:[200,20])
+                                classEditSupport.packageName = textField(preferredSize:[250,20])
                                 label(preferredSize:[100,20])
                             }
                             panel {
@@ -549,6 +549,12 @@ public class GeneratorSwingApp{
                                 label("Class Name", preferredSize:[100,20])
                                 classEditSupport.className = textField(preferredSize:[125,20])
                                 label(preferredSize:[100,20])
+                            }
+                            panel {
+                              boxLayout(axis:BoxLayout.X_AXIS)
+                              label("Sequence Name", preferredSize:[100,20])
+                              classEditSupport.sequenceName = textField(preferredSize:[125,20])
+                              label(preferredSize:[100,20])
                             }
                             panel {
                                 button(text:"Apply", actionPerformed: {classEditSupport.updateObject(this.currentClass)})
@@ -920,18 +926,26 @@ public class GeneratorSwingApp{
 class ClassEditSupport {
 	JTextField packageName
 	JTextField className
+    JTextField sequenceName
 	JavaClassTreeModel classTreeModel
 	GeneratorSwingApp app
+
 	def updateObject (JavaClass cls) {
 		app.println "update object was ${cls}"
 		cls.packageName = packageName.text
 		cls.name = className.text
+        cls.sequenceName = sequenceName.text
 		app.println "update object now ${cls}"
 		classTreeModel.nodeChanged(cls)
 	}
 	def populateForm (JavaClass cls) {
 		packageName.text = cls.packageName
 		className.text = cls.name
+        if (!cls.needsSequence) {
+          sequenceName.enabled = false
+        } else {
+          sequenceName.text = cls.sequenceName
+        }
 	}
 }
 

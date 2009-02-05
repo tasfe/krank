@@ -9,6 +9,7 @@ class Column {
 	Table table
 	boolean primaryKey
 	int size = -1
+    int decimalDigits
 	
 	public String toString() {
 		//"Column( name=${name} type=${type} typeName=${typeName} nullable=${nullable} table.name=${table.name})"

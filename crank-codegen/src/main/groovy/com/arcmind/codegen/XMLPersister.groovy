@@ -28,7 +28,8 @@ public class XMLPersister{
 				classes {
 					_classes.each {JavaClass c -> c.with {
                             if (debug) println "Writing class ${name}"
-						'class'(name: name, packageName: packageName, tableName: table.name) {
+						'class'(name: name, packageName: packageName, tableName: table.name,
+                                needsSequence: needsSequence, sequenceName: sequenceName) {
                                 /* Write the id for the Java class. */
 							'id'(name: id.name, column: id.column.name, className: id.javaClass.name, 
 									packageName: id.javaClass.packageName, primitive: id.javaClass.primitive)
@@ -39,7 +40,8 @@ public class XMLPersister{
                                         }}}//properties
                                 /* Write out the relationships for the Java class. */
                                 relationships { c.relationships.each {Relationship r -> r.with {
-                                            relationship (name: r.name, type: type.toString(), singularName: singularName, bidirectional: bidirectional, ignore: ignore) {
+                                            relationship (name: r.name, type: type.toString(),
+                                                    singularName: singularName, bidirectional: bidirectional, ignore: ignore) {
 									'relatedClass' (name: relatedClass.name, packageName: relatedClass.packageName)
                                                 key?.with {
 										'key'(primaryKeyColumn: primaryKey.name,
@@ -139,7 +141,8 @@ public class XMLPersister{
 		Map<String,JavaClass> classMap = [:]
 		/* Read the classes. */
 		codeGen.classes.'class'.each {cls ->
-			JavaClass clz = new JavaClass(name: cls.@name, packageName: cls.@packageName)
+			JavaClass clz = new JavaClass(name: cls.@name, packageName: cls.@packageName,
+                    sequenceName: cls.@sequenceName, needsSequence: Boolean.valueOf(cls.@needsSequence.toString()))
 			classMap[clz.name]=clz
 			classes << clz
 			clz.table = tableMap[cls.@tableName.toString()]

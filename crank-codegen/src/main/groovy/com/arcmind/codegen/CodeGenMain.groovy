@@ -142,7 +142,11 @@ public class CodeGenMain {
     reader.debug = debug == null ? false : Boolean.valueOf(debug)
     reader.trace = trace == null ? false : Boolean.valueOf(trace)
     reader.processDB()
+    
     /* Convert the tables into JavaClasses. */
+    if (reader.jdbcUtils.isOracle()) {
+      modelGen.needsSequence = true
+    }
     modelGen.tables = reader.tables
     modelGen.process()
   }

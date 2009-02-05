@@ -11,6 +11,8 @@ class JavaClass {
     List<Relationship> relationships = []
     HashMap<String, JavaProperty> columnNameToPropertyMap = [:]
     Table table
+    String sequenceName
+    boolean needsSequence
 
     public JavaClass() {
     	

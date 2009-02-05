@@ -22,9 +22,10 @@ class JPACodeGenerator implements CodeGenerator{
 %>${queries}
 public class ${bean.name} implements Serializable {
     /** ID */<% log "STARTING ID" %>
-    @Id <% if (!bean.id.namesMatch) { %>@Column(name="${bean.id.column.name.toUpperCase()}")<% } %>
-    <% log "DONE WITH ID" %>
-    @GeneratedValue( strategy = GenerationType.AUTO )
+    @Id <% if (!bean.id.namesMatch) { %>@Column(name="${bean.id.column.name.toUpperCase()}")<% } %> <% if (bean.needsSequence) { %>
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="${bean.sequenceName}")
+    @SequenceGenerator(name="${bean.sequenceName}", sequenceName="${bean.sequenceName}", allocationSize=1)<% } else { %>
+    @GeneratedValue( strategy = GenerationType.AUTO )<% } %> <% log "DONE WITH ID" %>
     private ${bean.id.javaClass.name} id;
 
     /* ------- Relationships ------ */ <% log "STARTING RELATIONSHIPS" %>

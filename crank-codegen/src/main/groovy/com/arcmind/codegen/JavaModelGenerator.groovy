@@ -55,7 +55,7 @@ public class JavaModelGenerator{
     if (debug) println "Converting Database column to Java class Column name = ${column.name} Column type = ${column.type}"
     JavaClass returnValue = null
     switch (column.type) {
-      case [Types.BINARY, Types.VARBINARY, Types.LONGVARBINARY]:
+      case [Types.BINARY, Types.VARBINARY, Types.LONGVARBINARY, Types.BLOB]:
         returnValue = new JavaClass(name: "byte[]", packageName: "java.lang")
         break
       case [Types.VARCHAR, Types.CHAR, Types.CLOB, Types.LONGVARCHAR]:
@@ -65,38 +65,44 @@ public class JavaModelGenerator{
         returnValue = column.nullable ?
           new JavaClass(name: "Float", packageName: "java.lang") :
           new JavaClass(name: "float", primitive: true)
-          break
+        break
       case Types.BIGINT:
         returnValue = column.nullable || column.primaryKey ?
           new JavaClass(name: "Long", packageName: "java.lang") :
           new JavaClass(name: "long", primitive: true)
-          break
+        break
       case Types.SMALLINT:
         returnValue = column.nullable ?
           new JavaClass(name: "Short", packageName: "java.lang") :
           new JavaClass(name: "short", primitive: true)
-          break
+        break
       case Types.TINYINT:
         returnValue = column.nullable ?
           new JavaClass(name: "Byte", packageName: "java.lang") :
           new JavaClass(name: "byte", primitive: true)
-          break
+        break
       case Types.BIT:
         returnValue = column.nullable ?
           new JavaClass(name: "Boolean", packageName: "java.lang") :
           new JavaClass(name: "boolean", primitive: true)
-          break
+        break
       case [Types.NUMERIC, Types.DECIMAL, Types.FLOAT, Types.DOUBLE]:
         returnValue = new JavaClass(name: "BigDecimal", packageName: "java.math")
         break
-      case [Types.DATE, Types.TIME, Types.TIMESTAMP]:
+      case Types.DATE:
         returnValue = new JavaClass(name: "Date", packageName: "java.util")
+        break
+      case Types.TIME:
+        returnValue = new JavaClass(name: "Time", packageName: "java.sql")
+        break
+      case Types.TIMESTAMP:
+        returnValue = new JavaClass(name: "Timestamp", packageName: "java.sql")
         break
       case [Types.INTEGER]:
         returnValue = column.nullable || column.primaryKey ?
           new JavaClass(name: "Integer", packageName: "java.lang") :
           new JavaClass(name: "int", primitive: true)
-          break
+        break
       default:
         println "Unable to map type for column " + column
         returnValue = new JavaClass(name: "Object", packageName: "java.lang")

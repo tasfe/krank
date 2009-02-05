@@ -14,12 +14,16 @@ Crank Codegen is a ...
 </p>
 
 <p>
-This package is intended to be an answer to a question we commonly hear in the 
-Java world:
+Crank/Presto2 provides a code generator that reverse engineer an existing database and create a starter project. 
+This feature is very nascent, and we are looking for people to try it out.
 <blockquote style="padding: 5px; border: 1px solid #eee;">
-&quot;Why isn't there a decent regular expression package available for 
-Java under a BSD-Style (ie: Apache) license?&quot;
+Crank is a master/detail, CRUD, and annotation driven validation framework built with JPA, JSF, Facelets and Ajax. It allows developers to quickly come up with JSF/Ajax based CRUD listings and Master/Detail forms from their JPA annotated Java objects. 
 </blockquote>
+
+<blockquote style="padding: 5px; border: 1px solid #eee;">
+Presto2 appears as a new reincarnation of Presto project
+</blockquote>
+
 </p>
 
 <p>
@@ -41,7 +45,8 @@ href="../site/getinvolved.html">Getting Involved</a> section
 <h3><a href="../site/whoweare.html">Contributors</a></h3>
 
 <ul>
-<li>Richard Highttower wrote the original code.</li>
+<li>Richard Hightower wrote the original code.</li>
+<li><a href="mailto:okotovich@gmail.com">I</a> helped him a bit:). </li>
 </ul>
 
     </section>

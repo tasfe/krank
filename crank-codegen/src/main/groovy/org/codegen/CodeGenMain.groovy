@@ -285,7 +285,7 @@ public class CodeGenMain {
 
     public List<Class> loadClassesForGenerators() {
       if (this.generators == null || "".equals(this.generators.trim())) {
-        codeGenPackage = "com.arcmind.codegen"
+        codeGenPackage =  codeGenPackage ?: "org.codegen.generator"
         generators = "FacesConfigCodeGen,JPACodeGenerator,SpringJavaConfigCodeGen,XHTMLCodeGenerator"
       }
       List<String> classNames = this.generators.split(",").findAll {String className ->

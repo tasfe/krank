@@ -110,18 +110,27 @@ public class CriteriaUtils {
 		
 		if (comparison.getValue() != null) {
 			final String sOperator = comparison.getOperator().getOperator();
-
+            if (!comparison.isCaseSensitive()) {
+                 builder.append(" UPPER( ");
+            }
 			if (!comparison.isAlias()) {
 				builder.append(" o.");
 			} else {
 				builder.append(" ");
 			}
 			builder.append(comparison.getName());
+            if (!comparison.isCaseSensitive()) {
+                 builder.append(" ) ");
+            }
+
 
 			builder.append(" ");
 			builder.append(sOperator);
 			builder.append(" ");
 
+            if (!comparison.isCaseSensitive()) {
+                 builder.append(" UPPER( ");
+            }
 			if (comparison instanceof Between
 					|| comparison instanceof VerifiedBetween) {
 				builder.append(var).append("_1");
@@ -135,6 +144,10 @@ public class CriteriaUtils {
 				builder.append(var);
 			}
 			builder.append(" ");
+            if (!comparison.isCaseSensitive()) {
+                 builder.append(" ) ");
+            }
+            
 		} else {
 			if (!comparison.isAlias()) {
 				builder.append(" o.");
@@ -151,19 +164,31 @@ public class CriteriaUtils {
 	}
 
 
-	public static String constructOrderBy(OrderBy[] orderBy) {
+	public static String constructOrderBy(OrderBy[] orderBys) {
 		StringBuilder query = new StringBuilder(100);
-		if (null != orderBy && orderBy.length > 0) {
+		if (null != orderBys && orderBys.length > 0) {
 			query.append(" ORDER BY ");
-			for (int index = 0; index < orderBy.length; index++) {
-				if (!orderBy[index].isAlias()) {
-					query.append("o." + orderBy[index].getName());
+
+			for (int index = 0; index < orderBys.length; index++) {
+
+                OrderBy cob = orderBys[index];
+                if (cob == null) {
+                    throw new IllegalStateException();
+                }
+                if (!cob.isCaseSensitive()){
+                    query.append("UPPER( " );
+                }
+				if (!cob.isAlias()) {
+					query.append("o." + cob.getName());
 				} else {
-					query.append(orderBy[index].getName());
+					query.append(cob.getName());
 				}
 				query.append(" ");
-				query.append(orderBy[index].getDirection().toString());
-				if (index + 1 < orderBy.length) {
+                if (!cob.isCaseSensitive()){
+                    query.append(") ");
+                }
+				query.append(cob.getDirection().toString());
+				if (index + 1 < orderBys.length) {
 					query.append(", ");
 				}
 			}

@@ -10,6 +10,7 @@ public class Comparison extends Criterion {
 	private boolean alias = false;
     private boolean enabled = false;
     private boolean objectIdentity;
+    private boolean caseSensitive = true;
 
 	
 	public static Comparison between (final String name, final Object value1, final Object value2 ) {
@@ -98,6 +99,7 @@ public class Comparison extends Criterion {
 		return new Comparison (name, Operator.LIKE_CONTAINS, value, alias);
 	}
 
+
 	public Comparison () {
 		
 	}
@@ -170,5 +172,14 @@ public class Comparison extends Criterion {
 	public void setObjectIdentity(boolean objectIdentity) {
 		this.objectIdentity = objectIdentity;
 	}
+
+    public boolean isCaseSensitive() {
+        return caseSensitive;
+    }
+
+    public void setCaseSensitive(boolean caseSensitive) {
+        this.caseSensitive = caseSensitive;
+    }
+    
     
 }

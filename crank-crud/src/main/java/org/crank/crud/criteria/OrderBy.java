@@ -7,6 +7,7 @@ public class OrderBy implements Serializable{
 	private OrderDirection direction;
     private boolean enabled = false;
     private Integer sequence = 0;
+    private boolean caseSensitive = true;
     private boolean alias;
 
     public boolean isAlias() {
@@ -141,5 +142,14 @@ public class OrderBy implements Serializable{
 			return false;
 		return true;
 	}
+
+    public boolean isCaseSensitive() {
+        return caseSensitive;
+    }
+
+    public void setCaseSensitive(boolean caseSensitive) {
+        this.caseSensitive = caseSensitive;
+    }
+    
 
 }

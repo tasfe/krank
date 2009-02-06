@@ -24,9 +24,8 @@ import javax.persistence.Table;
 		})
 public class Role implements Serializable {
     /** ID */
-    @Id @Column(name="ROLE_ID")
-    
-    @GeneratedValue( strategy = GenerationType.AUTO )
+    @Id @Column(name="ROLE_ID") 
+    @GeneratedValue( strategy = GenerationType.AUTO ) 
     private Long id;
 
     /* ------- Relationships ------ */ 

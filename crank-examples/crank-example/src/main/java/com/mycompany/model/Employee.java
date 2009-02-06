@@ -27,9 +27,8 @@ import javax.persistence.Table;
 		})
 public class Employee implements Serializable {
     /** ID */
-    @Id @Column(name="EMP_ID")
-    
-    @GeneratedValue( strategy = GenerationType.AUTO )
+    @Id @Column(name="EMP_ID") 
+    @GeneratedValue( strategy = GenerationType.AUTO ) 
     private Long id;
 
     /* ------- Relationships ------ */ 

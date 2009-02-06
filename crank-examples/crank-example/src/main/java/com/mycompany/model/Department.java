@@ -23,9 +23,8 @@ import javax.persistence.Table;
 		})
 public class Department implements Serializable {
     /** ID */
-    @Id @Column(name="ID")
-    
-    @GeneratedValue( strategy = GenerationType.AUTO )
+    @Id @Column(name="ID") 
+    @GeneratedValue( strategy = GenerationType.AUTO ) 
     private Long id;
 
     /* ------- Relationships ------ */ 

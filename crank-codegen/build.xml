@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Alec (SAM) -->
 <!-- You may freely edit this file. See commented blocks below for -->
 <!-- some examples of how to customize the build. -->
 <!-- (If you delete it and reopen the project it will be recreated.) -->
@@ -8,15 +9,22 @@
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
 <project name="codegen" default="default" basedir=".">
-    <description>Builds, tests, and runs the project codegen.</description>
-    <!--import file="nbproject/build-impl.xml"/-->
-
-    <!-- XDOCS -->
-    <property name="docs.src" value="xdocs"/>
-    <property name="docs.dest" value="docs"/>
-
-
-    <!--
+	<description>Builds, tests, and runs the project codegen.</description>
+	<!--import file="nbproject/build-impl.xml"/-->
+	<property environment="env"/>
+	<property name="app.dir" value="target"/>
+	<property name="app.name" value="codegen"/>
+	<property name="app.version" value="1.0-SNAPSHOT"/>
+	<property name="app.jar" value="${app.dir}/${app.name}-${app.version}.jar"/>
+	<path id="libs.path">
+		<fileset dir="${env.GROOVY_HOME}/lib" includes="groovy*.jar"/>
+		<fileset dir="${env.M2_REPO}" includes="**/asm*.jar"/>
+		<fileset dir="lib" includes="**/*.jar"/>
+	</path>
+	<!-- XDOCS -->
+	<property name="docs.src" value="xdocs"/>
+	<property name="docs.dest" value="docs"/>
+	<!--
 
     There exist several targets which are by default empty and which can be 
     used for execution of your tasks. These targets are usually executed 
@@ -77,24 +85,25 @@
     nbproject/build-impl.xml file. 
 
     -->
-    
-        <!-- ================================================================== -->
-    <!-- XSLT   Documentation Builder                                       -->
-    <!-- ================================================================== -->
-    <target name="docs">
-        <xslt   basedir="${docs.src}"
-                destdir="${docs.dest}"
-                style="${docs.src}/stylesheets/site.xsl"
-                includes="**/*.xml"/>
-
-        <!--copy todir="${docs.dest}" filtering="no">
+	<!-- ================================================================== -->
+	<!-- XSLT   Documentation Builder                                       -->
+	<!-- ================================================================== -->
+	<target name="docs">
+		<xslt basedir="${docs.src}" destdir="${docs.dest}" style="${docs.src}/stylesheets/site.xsl" includes="**/*.xml"/>
+		<!--copy todir="${docs.dest}" filtering="no">
             <fileset dir="${docs.src}"/>
         </copy-->
-                
-    </target>
-    
-    <target name="clean">
+	</target>
+	<target name="clean_docs">
 		<delete dir="${docs.dest}"/>
-    </target>
-
+	</target>
+	<target name="runStandalone">
+		<echo>${env.GROOVY_HOME}</echo>
+		<java classname="org.codegen.gui.GeneratorSwingApp" fork="true" failonerror="true" maxmemory="512m">
+			<classpath>
+				<pathelement location="${app.jar}"/>
+				<path refid="libs.path"/>
+			</classpath>
+		</java>
+	</target>
 </project>

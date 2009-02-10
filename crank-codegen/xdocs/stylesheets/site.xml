@@ -8,12 +8,13 @@
   <body>
     <navbar name="lhs">
     <menu name="Crank Codegen">
-      <item name="Front Page"            href="/index.html"/>
+	  <item name="Front Page"            href="/index.html"/>
+      <item name="Prerequisites"            href="/prerequisites.html"/>      
       <item name="Download"              href="/downloads.html"/>
     </menu>
 
     <menu name="Get Involved">
-      <item name="Overview"              href="/site/getinvolved.html"/>
+      <item name="Overview"              href="getinvolved.html"/>
       <item name="Getting Started"       href="/site/svnindex.html"/>
       <item name="Mailing Lists"         href="/site/mail.html"/>
     </menu>

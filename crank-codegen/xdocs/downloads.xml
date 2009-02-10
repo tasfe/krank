@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8"?><document>	<body>		<section name="Downloads">			<p>	Download sources from SVN repository:	<blockquote style="padding: 5px; border: 1px solid #eee;">$ svn co http://krank.googlecode.com/svn/trunk crank$ cd crank</blockquote>			</p>		</section>	</body></document>

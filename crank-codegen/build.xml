@@ -90,9 +90,9 @@
 	<!-- ================================================================== -->
 	<target name="docs">
 		<xslt basedir="${docs.src}" destdir="${docs.dest}" style="${docs.src}/stylesheets/site.xsl" includes="**/*.xml"/>
-		<!--copy todir="${docs.dest}" filtering="no">
-            <fileset dir="${docs.src}"/>
-        </copy-->
+		<copy todir="${docs.dest}/images" filtering="no">
+            <fileset dir="${docs.src}/images"/>
+        </copy>
 	</target>
 	<target name="clean_docs">
 		<delete dir="${docs.dest}"/>

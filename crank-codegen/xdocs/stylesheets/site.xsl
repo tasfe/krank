@@ -50,7 +50,7 @@
     <xsl:apply-templates select="meta"/>
     <title><xsl:value-of select="$site/title"/> - <xsl:value-of select="properties/title"/></title>
     <link rel="stylesheet">
-    <xsl:attribute name="href">/style/style.css</xsl:attribute>
+    <xsl:attribute name="href">http://jakarta.apache.org/style/style.css</xsl:attribute>
     <xsl:attribute name="type">text/css</xsl:attribute>
     </link>
     <xsl:for-each select="properties/author">
@@ -271,5 +271,22 @@
       <xsl:apply-templates select="@*|*|text()"/>
     </xsl:copy>
   </xsl:template>
+  
+    <xsl:template match="svn">
+    <div style="padding: 5px; border: 1px solid #ddd;background-color:#eee;font-family:Courier New;margin-bottom:10px;">
+        <xsl:apply-templates />
+    </div>
+  </xsl:template>
+
+    <xsl:template match="src">
+    <div style="padding: 5px; border: 1px solid #ddd;background-color:#eee;font-family:Courier New;margin-bottom:10px;text-align: left; margin: 0em 1em 0em 1em;
+    padding: 1em;
+    border: 2px solid #023264;
+    white-space: pre;
+    text-align: left;">
+        <xsl:apply-templates />
+    </div>
+  </xsl:template>
+  
 
 </xsl:stylesheet>

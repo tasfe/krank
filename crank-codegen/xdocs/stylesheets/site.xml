@@ -10,17 +10,18 @@
     <menu name="Crank Codegen">
 	  <item name="Front Page"            href="/index.html"/>
       <item name="Prerequisites"            href="/prerequisites.html"/>      
+      <item name="Installation"            href="/install.html"/>      
       <item name="Download"              href="/downloads.html"/>
     </menu>
 
     <menu name="Get Involved">
-      <item name="Overview"              href="getinvolved.html"/>
+      <item name="Overview"              href="/overview.html"/>
       <item name="Getting Started"       href="/site/svnindex.html"/>
       <item name="Mailing Lists"         href="/site/mail.html"/>
     </menu>
 
     <menu name="Related Projects">
-      <item name="Crank"                   href="/site/crank/index.html"/>
+      <item name="Crank"                   href="crank.html"/>
     </menu>
     </navbar>
   </body>

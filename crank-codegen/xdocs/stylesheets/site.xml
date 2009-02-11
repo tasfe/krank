@@ -16,7 +16,7 @@
 
     <menu name="Get Involved">
       <item name="Overview"              href="/overview.html"/>
-      <item name="Getting Started"       href="/site/svnindex.html"/>
+      <item name="Getting Started"       href="/getstarted.html"/>
       <item name="Mailing Lists"         href="/site/mail.html"/>
     </menu>
 

@@ -25,12 +25,20 @@
 
   <!-- Output method -->
 
+  <!--xsl:output method="xml"
+        omit-xml-declaration = "yes"
+            encoding="iso-8859-1"
+            doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+            doctype-system="http://www.w3.org/TR/html4/loose.dtd"            
+              indent="yes"/-->
+	
   <xsl:output method="xml"
         omit-xml-declaration = "yes"
             encoding="iso-8859-1"
             doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
-            doctype-system="http://www.w3.org/TR/html4/loose.dtd"
-              indent="yes"/>
+            doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+             indent="yes"/>
+	
 
   <!-- Defined parameters (overrideable) -->
   <xsl:param    name="relative-path" select="'.'"/>
@@ -38,11 +46,11 @@
   <!-- Defined variables (non-overrideable) -->
 
   <!-- Process an entire document into an HTML page -->
-  <xsl:template match="document">
+  <xsl:template match="document">   
     <xsl:variable name="site"
                 select="document('site.xml')/site"/>
 
-    <html>
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
 	<meta http-equiv="Content-Type">
     <xsl:attribute name="content">text/html; charset=iso-8859-1</xsl:attribute>
@@ -61,10 +69,12 @@
         <xsl:value-of select="@email"/>
       </xsl:variable>
       <meta name="author">
-      <xsl:attribute name="value"><xsl:value-of select="$name"/></xsl:attribute>
+      <xsl:attribute name="content"><xsl:value-of select="$name"/></xsl:attribute>
+      <!-- meta -->
       </meta>
       <meta name="email">
-      <xsl:attribute name="value"><xsl:value-of select="$email"/></xsl:attribute>
+      <xsl:attribute name="content"><xsl:value-of select="$email"/></xsl:attribute>
+      <!-- meta -->
       </meta>
     </xsl:for-each>
     <xsl:if test="properties/base">
@@ -163,8 +173,7 @@
     </table>
 
     </body>
-    </html>
-
+    </html>	
   </xsl:template>
 
 
@@ -285,7 +294,7 @@
     white-space: pre;
     text-align: left;">
         <xsl:apply-templates />
-    </div>
+    </div>     
   </xsl:template>
   
 

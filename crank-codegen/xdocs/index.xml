@@ -23,18 +23,17 @@ Presto2 appears as a new reincarnation of Presto project
 You can:
 <ul>
 					<li>
-						<a href="../site/binindex.cgi">Download</a> builds.</li>
-					<li>View the list of <a href="changes.html">changes</a> between revisions.</li>
-					<li>View Javadoc <a href="http://jakarta.apache.org/regexp/apidocs/">online</a>.
-It is also included in the distribution download.</li>
+					<a href="http://code.google.com/p/krank/source/browse/#svn/crank-codegen">Browse</a> sources.</li>
+					<li>View the list of <a href="http://code.google.com/p/krank/source/list">changes</a> between revisions.</li>
+					<li>View Wiki <a href="http://code.google.com/p/krank/w/list">online</a>.</li>
 				</ul>
 			</p>
 			<p>
 If you would like to get involved with this project in one way or another 
-(Mailing lists, SVN, Contributions), please see the <a href="getinvolved.html">Getting Involved</a> section
+(Mailing lists, SVN, Contributions), please see the <a href="http://code.google.com/p/krank/wiki/GettingStartedWithCrank">Getting Started With Crank</a>online intro
 </p>
 			<h3>
-				<a href="../site/whoweare.html">Contributors</a>
+				Contributors
 			</h3>
 			<ul>
 				<li>Richard Hightower wrote the original code.</li>

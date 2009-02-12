@@ -346,13 +346,16 @@ public class GeneratorSwingApp{
         swing.frame(title:'CodeGen Code Generator', size:[1500,1000], defaultCloseOperation:JFrame.EXIT_ON_CLOSE,  show:true) {
 			
             Closure handleWriteModel = {
+            	boolean forceSave = true
            		if (main.wasNotSetXmlFile) {
-           			setXmlFromFileDialog(false, true)
+           			forceSave = setXmlFromFileDialog(false, true)
            		}
+            	if (forceSave) {
             	doOutside {
             		edt {setStatus "Writing XML file out ${main.persister.fileName}"}
             		main.writeXML()
             		edt {setStatus "Done writing XML file out ${main.persister.fileName}"}
+            	}
             	}
             }
             

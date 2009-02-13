@@ -377,8 +377,8 @@ public class GeneratorSwingApp{
 	            		use(StringCategory,ExceptionCategory){
 	            			main.readProperties()
 	            		}
+	            		edt {setStatus "Done reading properties"}
 	            		refreshProperties()
-	            		edt {setStatus "Done reading properties file in ${main.propertiesFile}"}
            			}
             		//main.restorePropFile(backupPropertiesFile)            		
             }            
@@ -394,7 +394,7 @@ public class GeneratorSwingApp{
             			main.writeProperties()
             		}
             		refreshProperties()
-            		edt {setStatus "Done writing properties file out ${main.propertiesFile}"}
+            		edt {setStatus "Done writing properties"}
             }
             
             Closure handleWriteAsProperties = {

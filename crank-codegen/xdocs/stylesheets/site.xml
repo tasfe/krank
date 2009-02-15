@@ -20,11 +20,10 @@
       <item name="Plugin Mode"       href="/pluginmode.html"/>
       <item name="Configuration"       href="/conf.html"/>
       <item name="Details"       href="/details.html"/>
-      <item name="Mailing Lists"         href="/site/mail.html"/>
     </menu>
 
     <menu name="Related Projects">
-      <item name="Crank"                   href="crank.html"/>
+      <item name="Crank"                   href="/crank.html"/>
     </menu>
     </navbar>
   </body>

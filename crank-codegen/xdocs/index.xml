@@ -30,7 +30,7 @@ You can:
 			</p>
 			<p>
 If you would like to get involved with this project in one way or another 
-(Mailing lists, SVN, Contributions), please see the <a href="http://code.google.com/p/krank/wiki/GettingStartedWithCrank">Getting Started With Crank</a>online intro
+(Mailing lists, SVN, Contributions), please see the <a href="http://code.google.com/p/krank/wiki/GettingStartedWithCrank">Getting Started With Crank</a> online intro
 </p>
 			<h3>
 				Contributors
@@ -40,6 +40,9 @@ If you would like to get involved with this project in one way or another
 				<li>
 					<a href="mailto:okotovich@gmail.com">I</a> helped him a bit:). </li>
 			</ul>
+		</section>
+		<section name="Next steps">
+		Please follow the <a href="prerequisites.html">"Prerequisites"</a> and <a href="install.html">"Installation"</a> sections to start with Crank Codegen dependencies installation.
 		</section>
 	</body>
 </document>

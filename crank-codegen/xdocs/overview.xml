@@ -1,1 +1,406 @@
-<?xml version="1.0"?><document>	<properties>		<author email="richarhightower@gmail.com">Richard Hightower</author>		<title>Crank Codegen Overview</title>	</properties>	<body>		<section name="Overview">			<p>Crank Codegen is desktop application written in Swing. It is single frame SDI modeled window, separated into toolbar and menu part, left tree pane, main panel with common logical behavioral elements and status bar</p>			<p>				<div style="padding:10px">					<a href="images/codegen_main_window_big.png"><img src="images/codegen_main_window_big.png" width="400" height="310"/></a>				</div>			</p>			<p>				<section name="Application window">Main application frame consists from the following items<ul>						<li>					Menu					</li>						<li>					Toolbar					</li>						<li>					Left pane with the tree of objects					</li>						<li>					Right main panel (empty by default)					</li>						<li>					Status bar					</li>					</ul>					<subsection name="Menu">					Crank Codegen menu consists from 3 submenus: File, Main and Window:					<div>					<img src="images/codegen_menu.png" style="border: 1px solid #aaa;padding:3px"></img>					</div>					<h3>File</h3>					<ul>					<li><h4>Exit</h4></li>					<p>Exits an application</p>					<li><h4>Write Model</h4></li>					<p>Persists generated classes and tables into XML output file. When <b>xmlFileName</b> 					property was not set in <b>config.properties</b> file, "Save File As" dialog is fired					for the purpose to choose output XMl file. Default location is <b>codegen/codegen.xml</b>:					<div>					<img src="images/codegen.xml.png"/>					</div>					</p>					<p>					Note*: Please check out <a href="conf.html">Configuration</a> section to clarify meaning of <b>xmlFileName</b> key, 					its value <b>from config.properties</b> file					</p>					<li><h4>Read Model</h4></li>					<p>					Reads serialized model from default location (see <a href="conf.html">Configuration</a> section for details). 					Console panel is fulfilled with trace message during reading of XML model:					<div>					<img src="images/console_read_xml.png" style="border: 1px solid #aaa;padding:3px"/>					</div>					</p>					<p>					Note*: Please check out <a href="conf.html">Configuration</a> section to clarify how to enable/disable 					tracing and debugging					</p>										<p>					When succeded, tree with tables and classes hierarchy is filled, and status bar message is updated:										<p>					<i>Status Bar:</i>					<div>					<img src="images/statusbar_read_xml.png" style="border: 1px solid #aaa;padding:3px"/>					</div>					</p>					<p>					<i>Tables Tree:</i>					<div>					<img src="images/tables_read_xml.png" style="border: 1px solid #aaa;padding:3px"/>					</div>					</p>															<p>					<i>Classes Tree:</i>					<div>					<img src="images/classes_read_xml.png" style="border: 1px solid #aaa;padding:3px"/>					</div>					</p>										</p>										<li><h4>Open Properties...</h4>					<p>					Shows Open File Dialog, and user may select any configuration properties file. 					By default, it is <b>config.properties</b>. 					</p>										<p>					After successful properties loading, tab "Modify properties" is shown:					<div>					<a href="images/modify_properties.png">					<img src="images/modify_properties.png" width="400" height="300"/>					</a>										</div>					</p>										<p>					Note*: Please check out <a href="conf.html">Configuration</a> section for 					<b>config.properties</b> structure					</p>										</li>					<li><h4>Open Model...</h4>										<p>					Shows Open File Dialog, and user may select any serialized model in XML format. 					By default, it is <b>codegen.xml</b>. 					</p>										<p>					After successful XML serialized model loading, tabs "Tables" and "Classes" are fulfilled					with hierarchy structures of classes and tables:					<div>					<img src="images/tables_classes_read_xml.png" style="border: 1px solid #aaa;padding:3px"/>					</div>										<p>					And Status Bar is updated:					</p>										<p>					<div>					<img src="images/statusbar_read_xml.png" style="border: 1px solid #aaa;padding:3px"/>					</div>					</p>										</p>										<p>					Note*: Please check out <a href="conf.html">Configuration</a> section for 					<b>codegen.xml</b> structure:					</p>															<p>					<i>Empty codegen.xml sample:</i>					<div>					<img src="images/codegen.xml.emplty.png" style="border: 1px solid #aaa;padding:3px"/>					</div>					</p>										</li>					<li><h4>Save Properties</h4>					Saves properties to <b>config.properties</b> file (by default). Te location of properties file can be changed 					via "Save Properties As..." action. So far as an application supports SDI model, after changing					default properties file location, the updated file is used for default storing of properties.										<p>					Note*: When saving properties, a validation error may occur, as follows:					<p>					<div>					<img src="images/root_dir_failure.png" style="border: 1px solid #aaa;padding:3px"/>					</div>										This means, that default location of "Root Dir" is invalid, f.e. on Windows there is no a such path:					<p>					<div>					<img src="images/root_dir_mac.png" style="border: 1px solid #aaa;padding:3px"/>					</div>					</p>										<p>					This is Mac folder path, and it is invalid in Windows.					</p>										<p>					You have to choose valid directory in FileSave Dialog for sources generation. 					This folder must have a proper project directory and file structure.					<br></br>					 When selected successfully, properties can be saved:						<p>					<div>					<img src="images/done_wr_pr.png"  style="border: 1px solid #aaa;padding:3px"/>					</div>					</p>										</p>										<p>					Note*: Please visit <a href="details.html">Details</a> section, subsection "Root dir" for details					</p>															</p>					</p>										</li>					<li><h4>Save Properties As...</h4>					The behavior is the same when "Save Properties" is used, with the only difference that default					location is replaced with chosen .properties file path and name					</li>					<li><h4>Save Model As...</h4>					Same as "Save Model". Default					location is replaced with chosen .xml file path and name										</li>					</ul>					</subsection>				</section>			</p>		</section>	</body></document>
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<author email="richarhightower@gmail.com">Richard Hightower</author>
+		<title>Crank Codegen Overview</title>
+	</properties>
+	<body>
+		<section name="Overview">
+			<p>
+Crank Codegen is desktop application written in Swing. It is single frame SDI modeled window, separated into toolbar and menu part, left tree pane, main panel with common logical behavioral elements and status bar
+</p>
+			<p>
+				<div style="padding:10px">
+					<a href="images/codegen_main_window_big.png"><img src="images/codegen_main_window_big.png" width="400" height="310"/></a>
+				</div>
+			</p>
+			<p>
+				<section name="Application window">
+Main application frame consists from the following items
+<ul>
+						<li>
+					Menu
+					</li>
+						<li>
+					Toolbar
+					</li>
+						<li>
+					Left pane with the tree of objects
+					</li>
+						<li>
+					Right main panel (empty by default)
+					</li>
+						<li>
+					Status bar
+					</li>
+					</ul>
+					<subsection name="Menu">
+					Crank Codegen menu consists from 3 submenus: File, Main and Window:
+					<div>
+					<img src="images/codegen_menu.png" style="border: 1px solid #aaa;padding:3px"></img>
+					</div>
+					<h3>File</h3>
+					<ul>
+					<li><h4>Exit</h4></li>
+					<p>Exits an application</p>
+					<li><h4>Write Model</h4></li>
+					<p>Persists generated classes and tables into XML output file. When <b>xmlFileName</b> 
+					property was not set in <b>config.properties</b> file, "Save File As" dialog is fired
+					for the purpose to choose output XMl file. Default location is <b>codegen/codegen.xml</b>:
+					<div>
+					<img src="images/codegen.xml.png"/>
+					</div>
+					</p>
+					<p>
+					Note*: Please check out <a href="conf.html">Configuration</a> section to clarify meaning of <b>xmlFileName</b> key, 
+					its value from <b>config.properties</b> file
+					</p>
+					<li><h4>Read Model</h4></li>
+					<p>
+					Reads serialized model from default location (see <a href="conf.html">Configuration</a> section for details). 
+					Console panel is fulfilled with trace message during reading of XML model:
+					<div>
+					<img src="images/console_read_xml.png" style="border: 1px solid #aaa;padding:3px"/>
+					</div>
+					</p>
+					<p>
+					Note*: Please check out <a href="conf.html">Configuration</a> section to clarify how to enable/disable 
+					tracing and debugging
+					</p>
+					
+					<p>
+					When succeded, tree with tables and classes hierarchy is filled, and status bar message is updated:
+					
+
+					<p>
+					<i>Status Bar:</i>
+					<div>
+					<img src="images/statusbar_read_xml.png" style="border: 1px solid #aaa;padding:3px"/>
+					</div>
+					</p>
+
+					<p>
+					<i>Tables Tree:</i>
+					<div>
+					<img src="images/tables_read_xml.png" style="border: 1px solid #aaa;padding:3px"/>
+					</div>
+					</p>
+										
+					<p>
+					<i>Classes Tree:</i>
+					<div>
+					<img src="images/classes_read_xml.png" style="border: 1px solid #aaa;padding:3px"/>
+					</div>
+					</p>
+					
+					</p>
+					
+					<li><h4>Open Properties...</h4>
+					<p>
+					Shows Open File Dialog, and user may select any configuration properties file. 
+					By default, it is <b>config.properties</b>. 
+					</p>
+					
+					<p>
+					After successful properties loading, tab "Modify properties" is shown:
+					<div>
+					<a href="images/modify_properties.png">
+					<img src="images/modify_properties.png" width="400" height="300"/>
+					</a>					
+					</div>
+					</p>
+					
+					<p>
+					Note*: Please check out <a href="conf.html">Configuration</a> section for 
+					<b>config.properties</b> structure
+					</p>
+					
+					</li>
+					<li><h4>Open Model...</h4>
+					
+					<p>
+					Shows Open File Dialog, and user may select any serialized model in XML format. 
+					By default, it is <b>codegen.xml</b>. 
+					</p>
+					
+					<p>
+					After successful XML serialized model loading, tabs "Tables" and "Classes" are fulfilled
+					with hierarchy structures of classes and tables:
+					<div>
+					<img src="images/tables_classes_read_xml.png" style="border: 1px solid #aaa;padding:3px"/>
+					</div>
+					
+					<p>
+					And Status Bar is updated:
+					</p>
+					
+					<p>
+					<div>
+					<img src="images/statusbar_read_xml.png" style="border: 1px solid #aaa;padding:3px"/>
+					</div>
+					</p>
+					
+					</p>
+					
+					<p>
+					Note*: Please check out <a href="conf.html">Configuration</a> section for 
+					<b>codegen.xml</b> structure:
+					</p>					
+					
+					<p>
+					<i>Empty codegen.xml sample:</i>
+					<div>
+					<img src="images/codegen.xml.emplty.png" style="border: 1px solid #aaa;padding:3px"/>
+					</div>
+
+					</p>
+					
+					</li>
+					<li><h4>Save Properties</h4>
+					Saves properties to <b>config.properties</b> file (by default). Te location of properties file can be changed 
+					via "Save Properties As..." action. So far as an application supports SDI model, after changing
+					default properties file location, the updated file is used for default storing of properties.
+					
+					<p>
+					Note*: When saving properties, a validation error may occur, as follows:
+					<p>
+					<div>
+					<img src="images/root_dir_failure.png" style="border: 1px solid #aaa;padding:3px"/>
+					</div>
+					
+					This means, that default location of "Root Dir" is invalid, f.e. on Windows there is no a such path:
+					<p>
+					<div>
+					<img src="images/root_dir_mac.png" style="border: 1px solid #aaa;padding:3px"/>
+					</div>
+					</p>
+					
+					<p>
+					This is Mac folder path, and it is invalid in Windows.
+					</p>
+					
+					<p>
+					You have to choose valid directory in FileSave Dialog for sources generation. 
+					This folder must have a proper project directory and file structure.
+					<br></br>
+					 When selected successfully, properties can be saved:
+						<p>
+					<div>
+					<img src="images/done_wr_pr.png"  style="border: 1px solid #aaa;padding:3px"/>
+					</div>
+					</p>
+
+					
+					</p>
+					
+					<p>
+					Note*: Please visit <a href="details.html">Details</a> section, subsection "Root dir" for details
+					</p>					
+					
+
+					</p>
+					</p>
+
+					
+					</li>
+					<li><h4>Save Properties As...</h4>
+					The behavior is the same when "Save Properties" is used, with the only difference that default
+					location is replaced with chosen .properties file path and name
+					</li>
+					<li><h4>Save Model As...</h4>
+					Same as "Save Model". Default
+					location is replaced with chosen .xml file path and name					
+					</li>
+					</ul>
+					<h3>Main</h3>
+					<ul>
+					<li><h4>Reverse DB</h4>
+					<p>
+					Using selected data source, retrieves tables hierarchy from the database.
+					</p>
+					<p>
+					Reverse database engineering is one of the core functionalities of Crank Codegen.
+					During db reversing, the following operations take place:
+					<p>
+					<ul>
+					<li>Establishing JDBC connection</li>
+					<li>Iterate over tables of the given database</li>
+					<li>Processing primary keys of retrieved tables</li>
+					<li>Processing table columns</li>
+					<li>Processing and retrieving foreign keys</li>
+					</ul>
+					</p>
+					</p>
+
+					<p>
+					As a result of database reverse engineering, tree with tables, their columns, primary and
+					foreign keys is shown. 
+					</p>
+
+					<p>
+					<div>
+					<a href="images/reverse_db.png">
+					<img src="images/reverse_db.png" width="400" height="300"/>
+					</a>					
+					</div>
+					</p>
+
+					<p>
+					Note*: Please visit <a href="details.html">Details</a> section, 
+					subsections "Datasources" and "Supported RDBMS" for more details
+					</p>					
+
+					<p>
+					Note*: Please visit <a href="getstarted.html">Getting Started</a> section,
+					for obtaining useful information about required database creating and 
+					running in standalone and plugin modes
+					</p>					
+
+
+					</li>
+
+					<li><h4>Generate Code</h4>
+					<p>Takes the table hierarchy produced during database reverse engineering 
+					or read from an XML file and generates a hierarchy of 
+					classes, properties and relationship model objects.
+					</p>
+
+					<p>
+					<i>Status Bar:</i>
+					<div>
+					<img src="images/generate_code.png" style="border: 1px solid #aaa;padding:3px"/>
+					</div>
+					</p>
+
+					<p>
+					Browse filesystem on path in statusbar specified, you find there generated artifacts for
+					Department, Employee and Role entities. Please take deeper inside, you find there
+					JPA mappings for all keys and colums of the corresponding tables.
+					</p>
+
+					<p>
+					Note*: On Windows, the path /Users/... corresponds to a folder /Users in the root of the drive
+					you starting Crank Codegen
+					</p>
+
+
+					</li>
+
+					<li><h4>Modify Properties</h4>
+					<p>
+					Shows panel with all properties entries and their values. You may:
+					<p>
+					<ul>
+					<li>Apply changed values</li>
+					<li>Store values into .properties file, <b>config.properties</b> by default</li>
+					<li>Clear table names field</li>
+					<li>Close this panel</li>
+					</ul>
+					</p>
+
+					<p>
+					Note*: Please check out <a href="conf.html">Configuration</a> section to clarify properties 
+					values from <b>config.properties</b> file
+					</p>
+
+
+					</p>
+					</li>
+
+					<li><h4>Add New Data Source...</h4>
+					<p>
+					Shows modal input dialog with data source input fields:
+
+					<p>
+					<div>
+					<img src="images/add_ds.png" style="border: 1px solid #aaa;padding:3px"/>
+					</div>
+					</p>
+
+					<p>After pressing "OK", a new datasource is added into existing bundle of datasources.
+					Tree panel "JDBC Settings"is updated with newly created datasource entry and additionally,
+					this datasource is opened in main panel tab "JDBC Settings" with fullfilled field values inside, as follows:
+
+					<p>
+					<div>
+					<a href="images/jdbc_settings.png">
+					<img src="images/jdbc_settings.png" width="400" height="300"/>
+					</a>					
+					</div>
+					</p>
+
+					<p>You may:
+					<ul>
+					<li>Edit values and save them (<b>dataSource.xml</b> by default)</li>
+					<li>Close this panel</li>
+					<li>Additionally, "Use" button was introduced, to easily exchange datasources with properties
+					When pressing "Use", "Modify Properties" tab is opened, with applied fields from 
+					selected datasource, and given datasources credentials will be used for database connectivity then.
+					</li>
+					
+					</ul>
+					</p>
+
+					</p>
+
+					<p>
+					Note*: Please check <a href="conf.html">Configuration</a> and 
+					<a href="details.html">Details</a> sections to know more about datasources
+					</p>
+
+					
+
+					</p>
+					</li>
+
+
+
+					</ul>
+
+					<h3>Window</h3>
+					<ul>
+					<li><h4>View Console</h4>
+					<p>
+					Shows console tab. This menu option is disabled, when Console is already visible.
+					<p>Console pane contains textarea with debug messages inside. </p>
+					</p>
+					</li>
+					<li><h4>Hide Console</h4>
+					<p>
+					Hides console tab. This menu option is disabled, when Console is invisible.
+					</p>
+					</li>
+					<li><h4>Clear Console</h4>
+					<p>
+					Clears all debug messages from Console pane textarea with debug messages inside. 
+					Is convenient, when one tries to trace the selected procedure or a process separately.
+					</p>
+
+					<i>Regular console with messages:</i>
+					<p>
+
+					<div>
+					<a href="images/console.png">
+					<img src="images/console.png" width="300" height="300"/>
+					</a>					
+					</div>
+
+					</p>
+
+					</li>
+
+					</ul>
+
+
+					</subsection>
+				</section>
+				<section name="Get it running!">
+				<p>
+				Please follow now the <a href="getstarted.html">"Getting started"</a> section to try the above described features of Crank Codegen
+				</p>
+		
+				</section>
+			</p>
+		</section>
+	</body>
+</document>

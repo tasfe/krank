@@ -1,1 +1,82 @@
-<?xml version="1.0" encoding="UTF-8"?><document>	<properties>		<author email="richarhightower@gmail.com">Richard Hightower</author>		<title>Installation</title>	</properties>	<body>		<section name="Get Codegen running">		Assume you performed all steps from <a href="install.html">Installation section</a> and have Crank Codegen properly compiled, installed and deployed. Next step is to perform application startup.			<p>Steps to make Crank Code Generator running:</p>			<subsection name="Standalone mode">			Run the following command in command line:			<source>> ant runStandalone</source>			When all previous steps are performed correctly, you will see the main Crank Codegen window:			<div>			<a href="images/codegen_main_window_big.png"><img src="images/codegen_main_window_big.png" width="400" height="310"/></a>			</div>						</subsection>						<subsection name="Crank Codegen User Interface">			All UI elements of application above are covered in <a href="overview.html">Overview</a> section			</subsection>		</section>	</body></document>
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<author email="richarhightower@gmail.com">Richard Hightower</author>
+		<title>Getting Started</title>
+	</properties>
+	<body>
+		<section name="Get Codegen running">
+		Assume you performed all steps from <a href="install.html">Installation section</a> and have Crank Codegen properly compiled, installed and deployed. Next step is to perform application startup.
+			<p>Steps to make Crank Code Generator running:</p>
+			<subsection name="Standalone mode">
+			Run the following command in command line:
+			<source>> ant runStandalone</source>
+			When all previous steps are performed correctly, you will see the main Crank Codegen window:
+			<div>
+			<a href="images/codegen_main_window_big.png"><img src="images/codegen_main_window_big.png" width="400" height="310"/></a>
+			</div>
+			
+			<p>
+			Note*: Please note that Ant script depends on M2_REPO and GROOVY_HOME environment variables
+			(how to set up Maven2 and Groovy, check <a href="install.html">Installation</a> section)
+			</p>					
+
+			</subsection>
+			
+			<subsection name="Crank Codegen User Interface">
+			All UI elements of application above are covered in <a href="overview.html">Overview</a> section.
+			Please read this section before starting using Crank Codegen
+			</subsection>
+
+			<subsection name="Reverse DB Engineering">
+			<p>
+			For successful database reversing, you have to choose a valid datasource for your database.
+			<p>
+			Note*: Please visit <a href="details.html">Details</a> section, 
+			subsection "Datasources" for more details
+			</p>
+
+			<p>
+			Then, the database should be initialized with creation script, and 
+			corresponding user credentials should be given
+			</p>
+
+			<p>
+			Please, create a database with a user 'presto2@localhost' with the following SQL script:
+			<svn>
+			http://code.google.com/p/krank/wiki/CreatingSampleDatabaseForCodegenCrank
+			</svn>
+			</p>
+
+			<p>
+			Start Crank Codegen and check datasource entries, whether they are valid for your MySQL database:
+
+			<p>
+			<div>
+			<a href="images/modify_properties_ds.png"><img src="images/modify_properties_ds.png" width="300" height="75"/></a>
+			</div>			
+			</p>
+
+			<p>
+			Press "Reverse DB" and generate tables and classes hierarchy
+			</p>
+			<p>
+			Press "Generate Code" to generate artifacts from the given database
+			</p>
+
+			</p>
+			
+			</p>
+			</subsection>
+
+			<subsection name="Run Crank Codegen as plugin">
+			<p>
+			Follow <a href="pluginmode.html">Plugin Mode</a> section for details
+			</p>					
+
+			</subsection>
+
+		</section>
+	</body>
+</document>
+

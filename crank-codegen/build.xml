@@ -18,7 +18,8 @@
 	<property name="app.jar" value="${app.dir}/${app.name}-${app.version}.jar"/>
 	<path id="libs.path">
 		<fileset dir="${env.GROOVY_HOME}/lib" includes="groovy*.jar"/>
-		<fileset dir="${env.M2_REPO}" includes="**/asm*.jar"/>
+		<fileset dir="${env.M2_REPO}" includes="**/asm*2.2.3*.jar"/>
+		<fileset dir="${env.M2_REPO}" includes="**/antlr-2.7.6.jar"/>
 		<fileset dir="lib" includes="**/*.jar"/>
 	</path>
 	<!-- XDOCS -->

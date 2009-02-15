@@ -1,1 +1,146 @@
-<?xml version="1.0" encoding="UTF-8"?><document>	<properties>		<author email="richarhightower@gmail.com">Richard Hightower</author>		<title>Configuration</title>	</properties>	<body>	<section name="Configuration">	Here described all required configuration of Crank Codegen application. The following list of files participate in its configuration:	<ul>	<li>codegen.xml</li>	<li>config.properties</li>	<li>dataSource.xml</li>	<li>oracleExcludeTables.txt </li>	</ul>	</section>	</body></document>
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<author email="richarhightower@gmail.com">Richard Hightower</author>
+		<title>Configuration</title>
+	</properties>
+	<body>
+	<section name="Configuration">
+	Here described all required configuration of Crank Codegen application. The following list of files participate in its configuration:
+	<ul>
+	<li>codegen.xml</li>
+	<li>config.properties</li>
+	<li>dataSource.xml</li>
+	<li>oracleExcludeTables.txt</li>
+	</ul>
+
+	<subsection name="codegen.xml">
+	<p>
+	Contains serialized classes and tables lists with their attributes:names, packages, key, relationships etc.
+	</p>
+
+	<p>
+	This file is called "Model", in terms of an application, and is used by default for read/write operations 
+	concerned with model in Crank Codegen UI
+	</p>
+
+	<p>
+	<p><li>Default codegen.xml structure</li></p>
+	<a href="images/codegen.xml.structure.png"><img src="images/codegen.xml.structure.png" width="300" heigth="300"/></a>
+	</p>
+	</subsection>
+
+	<subsection name="config.properties">
+	<p>
+	Contains all properties of Crank Codegen that are used for confuguring the application
+	</p>
+
+	<p>
+	*Please note: not all properties can be edited from Codegen UI!
+	Some advanced service properties can be updated only by editing 
+	<b>config.properties</b> directly, and requires good knowledge of Codegen internals!
+	</p>
+
+	<p>
+	This file contains default properties values and can be updated via Crank Codegen UI
+	</p>
+
+	<p>
+	<p><li>Default config.properties values</li></p>
+	<a href="images/config.properties.png"><img src="images/config.properties.png" width="300" heigth="200"/></a>
+	</p>
+
+	<p>
+	<ul>
+<li>password - Database user password
+<p>Default: presto2</p>
+</li>
+<li>appConfigDir - Directory with config files (like config.properties, codegen.xml and dataSource.xml)
+<p>Default: ./codegen</p>
+</li>
+<li>oracleNLS - Specific Oracle locale namespace, if client operation system and Oracle have different locales
+<p>Default: en</p>
+</li>
+<li>url - Database URL
+<p>Default: jdbc\:mysql\://localhost\:3306/presto2</p>
+</li>
+<li>codeGenPackage - Java package with generator classes
+<p>Default: org.codegen.generator</p>
+</li>
+<li>xmlDataSourceFileName - XML file with datasources
+<p>Default: <b>dataSource.xml</b></p>
+</li>
+<li>driver - Database driver
+<p>Default: com.mysql.jdbc.Driver</p>
+</li>
+<li>userName - Database user name
+<p>Default: presto2</p>
+</li>
+<li>outputDir - Directory used for output
+<p>Default: target</p>
+</li>
+<li>rootDir - Example app exchange directiory
+<p>Default: /Users/richardhightower/projects/crank-examples/crank-example</p>
+</li>
+<li>debug - Flag for debug output
+<p>Default: true</p>
+</li>
+<li>packageName - Package prefix for code generation
+<p>Default: com.mycompany</p>
+</li>
+<li>propertiesFile - Properties file path
+<p>Default: <b>config.properties</b></p>
+</li>
+<li>tableNames - Tables names in corresponding database
+<p>Default: employee,role,department</p>
+</li>
+<li>trace - Flag for tracing
+<p>Default: true</p>
+</li>
+<li>libsDir - Directory with libraries
+<p>Default: ./lib </p>
+</li>
+<li>xmlFileName - XML filename with serialized model
+<p>Default: <b>codegen.xml</b></p>
+</li>
+<li>generators - List of comma-separated generators classes
+<p>Default: FacesConfigCodeGen,JPACodeGenerator,SpringJavaConfigCodeGen,XHTMLCodeGenerator</p>
+</li>
+<li>generatorsUsed - List of comma-separated flags for generators enabling/disabling
+<p>Default: true,true,true,true</p>
+</li>
+	</ul>
+	</p>
+	</subsection>
+
+	<subsection name="dataSource.xml">
+		<p>Crank Codegen supports multiple datasources exchange (note - the one only can be used at the same time!)
+		The list of data sources is stored in serialized form, as follows:
+		</p>
+		<p>
+		<a href="images/datasource.xml.png">
+			<img src="images/datasource.xml.png"/>
+		</a>
+		</p>
+
+	</subsection>
+
+	<subsection name="oracleExcludeTables.txt">
+	<p>When Oracle database datasource is used, this file is used to eliminate service tables from our review, and to work 
+	only with needed user tables from the given database</p>
+	<p>
+	By default, the following tables are eliminated from consideration:
+	<src>
+DR$,SYS_IOT,MGMT_,WWV_,MD$,OGIS_,SDO_,OL$,BIN$,ACCESS$,ALERT_QT,APPLY$,
+APPROLE$,AQ$_,ASSOCIATION$,ATEMPTAB$,ATTRCOL$,ATTRIBUTE$,AUDIT_ACTIONS,
+DUAL,IMPDP_STATS,KU$NOEXP_TAB,ODCI_SECOBJ$,ODCI_WARNINGS$,PLAN_TABLE$,
+PSTUBTBL,STMT_AUDIT_OPTION_MAP,SYSTEM_PRIVILEGE_MAP,TABLE_PRIVILEGE_MAP,
+WRI$_ADV_ASA_RECO_DATA,DEF$_TEMP$LOB,HELP,XDB$
+	</src>
+	</p>
+	</subsection>
+
+
+	</section>
+	</body>
+</document>

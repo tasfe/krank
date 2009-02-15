@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<author email="richarhightower@gmail.com">Richard Hightower</author>
+		<title>Plugin Mode</title>
+	</properties>
+	<body>
+		<section name="Codegen running as plugin">
+		Assume you performed all steps from <a href="install.html">Installation section</a> and have Crank Codegen 
+properly compiled, installed and deployed. Next step is to perform plugin initialization steps.
+			<p>Steps to make Crank Code Generator running:</p>
+
+			<subsection name="Next steps">
+			<p>
+			<ul>
+
+			<li>
+			<h4>Check out presto2/crank mojo and build it</h4>
+			<p>
+			
+			</p>
+			<p>
+			
+			<p>Check it out:</p>
+
+			<svn>
+$ svn co https://krank.googlecode.com/svn/mojosAndArchetypes/codegenMojo codegen-mojo
+$ cd codegen-mojo
+			</svn>
+
+			<p>Build it:</p>
+
+			<svn>$ mvn clean install</svn>
+
+			</p>
+			</li>
+
+			<li>
+			<h4>Check out archetype and build it</h4>
+			<p>
+			
+			</p>
+			<p>
+			
+			<p>Check it out:</p>
+
+			<svn>
+$ svn co https://krank.googlecode.com/svn/mojosAndArchetypes/crank-example-archetype crank-archetype
+$ cd crank-archetype
+			</svn>
+
+			<p>Build it:</p>
+
+			<svn>$ mvn clean install</svn>
+
+			</p>
+			</li>
+
+			<li>
+			<h4>Setup codegen mojo in local maven repo</h4>
+			<p>
+			Follow Step 5 instructions from <a href="http://code.google.com/p/krank/wiki/UsingCodeGenEarly">Using Codegen</a> article
+			</p>			
+
+			</li>
+
+			<li>
+			<h4>Use archetype to generate sample project</h4>
+			<p>
+			<svn>$ mvn archetype:generate -DarchetypeCatalog=local</svn>
+			</p>
+			<p>
+			Follow Step 6 instructions from <a href="http://code.google.com/p/krank/wiki/UsingCodeGenEarly">Using Codegen</a> article
+			</p>			
+
+			</li>
+
+			<li>
+			<h4>Run codegen via maven plugin</h4>
+			<p>
+			<svn>$ mvn codegen:codegen</svn>
+			</p>
+			<p>
+A swing gui will popup, click the "Modify Properties" button and ensure that the package name is correct.
+			</p>
+			<p>
+Hit the Reverse DB button. Hit the Generate Code button. You are done. 
+			</p>
+			<p>
+			Follow Step 7 instructions from <a href="http://code.google.com/p/krank/wiki/UsingCodeGenEarly">Using Codegen</a> article
+			</p>			
+
+			</li>
+
+			<li>
+			<h4>Run webapp with jetty</h4>
+			<p>
+			<svn>$ mvn -Ddb=mysql -Dlog4j.configuration=file:./log4j.xml jetty:run</svn>
+			</p>
+			<p>Go to <a href="http://localhost:8080">http://localhost:8080</a> in your browser and click the link associated with this app. Try adding employees.
+			</p>
+
+			<p>
+				<div style="padding:10px">
+					<a href="images/crank_example.png"><img src="images/crank_example.png" width="400" height="310"/></a>
+				</div>
+			</p>
+
+			<p>
+			Follow Step 8 instructions from <a href="http://code.google.com/p/krank/wiki/UsingCodeGenEarly">Using Codegen</a> article
+			</p>			
+
+			</li>
+
+
+
+
+
+			</ul>
+			</p>
+			</subsection>
+
+			<subsection name="Further description">
+			<p>
+			Follow <a href="http://code.google.com/p/krank/wiki/UsingCodeGenEarly">Using Codegen</a> article for detailed description
+			</p>			
+			</subsection>
+
+
+		</section>
+	</body>
+</document>
+

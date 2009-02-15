@@ -1,1 +1,75 @@
-<?xml version="1.0"?><document>	<properties>		<author email="richarhightower@gmail.com">Richard Hightower</author>		<title>Crank Codegen Details</title>	</properties>	<body>		<section name="Details">			<p>			Here described some features of Crank Codegen more in detail:			<subsection name="Root Dir">						</subsection>			</p>		</section>	</body></document>
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<author email="richarhightower@gmail.com">Richard Hightower</author>
+		<title>Crank Codegen Details</title>
+	</properties>
+	<body>
+		<section name="Details">
+			<p>
+			Here described some features of Crank Codegen more in detail:
+			<subsection name="Root Dir">
+			<p>
+			"Root Dir" property points to a root directory of sample application,
+			and because of it, is validated to have proper structure. The validation behavior is
+			fired against the following rules:
+			<src><![CDATA[	List <String> criteria = 
+		["/pom.xml",
+		 "/src",
+		 "/src/main",
+		 "/src/main/java",
+		 "/src/main/webapp",
+		 "/src/main/webapp/WEB-INF",
+		 "/src/main/webapp/WEB-INF/faces-config.xml"]
+]]></src>
+			</p>
+			
+			</subsection>
+			<subsection name="Datasources">
+			<p>
+			Data sources are stored in serialized way in dataSource.xml file by default:
+			<p>
+			<a href="images/datasource.xml.png">
+				<img src="images/datasource.xml.png"/>
+			</a>
+			</p>
+			<p>
+			Data sources are loaded during application startup. In "JDBC Settings" tree one may select any of them,
+			edit and update the contents of dataSource.xml from Codegen UI.	
+			</p>
+			<p>
+			The main purpose of having multiple data sources list is to use different data sources to connect to different data stores
+			with, even, different nature. 
+			</p>
+			</p>
+			
+			</subsection>
+			<subsection name="Supported RDBMS">
+			<ul>
+
+			<li>
+			<p>
+			hsqldb <a href="http://hsqldb.org/">http://hsqldb.org/</a>
+			</p>
+			</li>
+
+			<li>
+			<p>
+			MySQL <a href="http://www.mysql.com/">http://www.mysql.com/</a>
+			</p>
+			</li>
+
+			<li>
+			<p>
+			Oracle <a href="http://www.oracle.com/index.html">http://www.oracle.com/</a>
+			</p>
+			</li>
+
+			</ul>
+			
+			</subsection>
+
+			</p>
+		</section>
+	</body>
+</document>

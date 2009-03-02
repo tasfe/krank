@@ -55,6 +55,13 @@
 			<organization>Dudney.Net</organization>
 			<timezone>-6</timezone>
 		</developer>
+		<developer>
+			<id>cagatay.civici</id>
+			<name>Cagatay Civici</name>
+			<email>cagatay.civici@gmail.com</email>
+			<organization>Prime Technology</organization>
+			<timezone>0</timezone>
+		</developer>
 	</developers>
 
 	<scm>

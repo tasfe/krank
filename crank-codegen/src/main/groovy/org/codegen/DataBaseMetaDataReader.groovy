@@ -1,4 +1,5 @@
 package org.codegen
+
 import java.sql.*
 import org.codegen.model.Table
 import org.codegen.model.Key
@@ -13,18 +14,18 @@ import org.codegen.model.Column
  * connection.metaData.getImportedKeys see Java API docs for JDBC Connection for more detail.
  */
 class DataBaseMetaDataReader {
-    /** List of tables read from database. **/
-    List <Table> tables = []
-    /** Catalog for the database connection, default is null. */
+    /** List of tables read from database.  **/
+    List<Table> tables = []
+    /** Catalog for the database connection, default is null.  */
     String catalog
-    /** Schema for the database connection, default is null. */
+    /** Schema for the database connection, default is null.  */
     String schema
-    /** Tables types that we will reverse, the default is just tables (no views) */
+    /** Tables types that we will reverse, the default is just tables (no views)  */
     String[] tableTypes = ["TABLE"]
-    /** Utility class for managing database connection. */
+    /** Utility class for managing database connection.  */
     JdbcUtils jdbcUtils
-    /** List of table names to exclude. */
-    List <String> excludeTableNames = []
+    /** List of table names to exclude.  */
+    List<String> excludeTableNames = []
     /* The current connection */
     protected Connection connection
     boolean debug
@@ -36,79 +37,79 @@ class DataBaseMetaDataReader {
      * Connect to the database and read the database meta-data for a list of tables.
      */
     def processTables() {
-        if(debug) println "DataBaseMetaDataReader: Processing Tables "
-        jdbcUtils.iterate(connection.metaData.getTables (catalog, schema, null, tableTypes),
-            { ResultSet resultSet ->
-                String tableName = resultSet.getString ("TABLE_NAME")
-                String prefix = excludeTableNames.find{String prefix -> tableName.startsWith(prefix)}
-                if (prefix == null) {
-                  if (debug) println "DataBaseMetaDataReader: processTables() tableName=${tableName}"
-                  tables << new Table(name:tableName)
-                } else {
-                  if (trace) println "Not processing ${tableName}"
+        if (debug) println "DataBaseMetaDataReader: Processing Tables "
+        jdbcUtils.iterate(connection.metaData.getTables(catalog, schema, null, tableTypes),
+                {ResultSet resultSet ->
+                    String tableName = resultSet.getString("TABLE_NAME")
+                    String prefix = excludeTableNames.find {String prefix -> tableName.startsWith(prefix)}
+                    if (prefix == null) {
+                        if (debug) println "DataBaseMetaDataReader: processTables() tableName=${tableName}"
+                        tables << new Table(name: tableName)
+                    } else {
+                        if (trace) println "Not processing ${tableName}"
+                    }
                 }
-            }
         )
-        if(debug) println "DataBaseMetaDataReader: Done Processing Tables " + tables
+        if (debug) println "DataBaseMetaDataReader: Done Processing Tables " + tables
     }
 
 
-  def showTables() {
-    jdbcUtils.execute {Connection connection ->
-      println "Showing tables"
-      List<String> tableNames = []
-      jdbcUtils.iterate(connection.metaData.getTables(catalog, schema, null, tableTypes),
-              {ResultSet resultSet ->
-                String tableName = resultSet.getString("TABLE_NAME")
-                tableNames << tableName
-              }
-      )
-      println tableNames.join(",")
+    def showTables() {
+        jdbcUtils.execute {Connection connection ->
+            println "Showing tables"
+            List<String> tableNames = []
+            jdbcUtils.iterate(connection.metaData.getTables(catalog, schema, null, tableTypes),
+                    {ResultSet resultSet ->
+                        String tableName = resultSet.getString("TABLE_NAME")
+                        tableNames << tableName
+                    }
+            )
+            println tableNames.join(",")
+        }
     }
-  }
 
     /**
      *  Process list of columns from the list of tables. Add the columns to the table object.
      */
     def processColumns() {
         tables.each {Table table ->
-        	if (debug) println "reading table ${table.name} for columns"
+            if (debug) println "reading table ${table.name} for columns"
             jdbcUtils.iterate connection.metaData.getColumns(catalog, schema, table.name, null),
-            { ResultSet resultSet ->
-                Column column = new Column()
-                column.name = resultSet.getString ("COLUMN_NAME")
-                if (debug) println "COLUMN NAME = ${column.name} "
-                column.typeName = resultSet.getString ("TYPE_NAME")
-                column.type = resultSet.getInt ("DATA_TYPE")
-                column.nullable = resultSet.getString ("IS_NULLABLE") == "YES" ? true : false
-                if (column.type in [Types.VARCHAR, Types.CHAR]) {
-                	column.size = resultSet.getInt("COLUMN_SIZE")
-                }
-                if (column.type in [Types.DECIMAL]) {
-                    column.size = resultSet.getInt("COLUMN_SIZE")
-                    column.decimalDigits = resultSet.getInt("DECIMAL_DIGITS")
-                }
-                if (table.primaryKeys.contains(column.name)) {
-                    column.primaryKey = true
-                }
-                table.columns << column
-                column.table = table
-            }
-        	if (debug) "\n"
+                    {ResultSet resultSet ->
+                        Column column = new Column()
+                        column.name = resultSet.getString("COLUMN_NAME")
+                        if (debug) println "COLUMN NAME = ${column.name} "
+                        column.typeName = resultSet.getString("TYPE_NAME")
+                        column.type = resultSet.getInt("DATA_TYPE")
+                        column.nullable = resultSet.getString("IS_NULLABLE") == "YES" ? true : false
+                        if (column.type in [Types.VARCHAR, Types.CHAR]) {
+                            column.size = resultSet.getInt("COLUMN_SIZE")
+                        }
+                        if (column.type in [Types.DECIMAL]) {
+                            column.size = resultSet.getInt("COLUMN_SIZE")
+                            column.decimalDigits = resultSet.getInt("DECIMAL_DIGITS")
+                        }
+                        if (table.primaryKeys.contains(column.name)) {
+                            column.primaryKey = true
+                        }
+                        table.columns << column
+                        column.table = table
+                    }
+            if (debug) "\n"
         }
     }
-    
+
     /**
      * Find the primary keys for each table.
      */
     def processPrimaryKeys() {
         tables.each {Table table ->
             jdbcUtils.iterate connection.metaData.getPrimaryKeys(catalog, schema, table.name),
-            { ResultSet resultSet -> table.primaryKeys << resultSet.getString ("COLUMN_NAME")}
+                    {ResultSet resultSet -> table.primaryKeys << resultSet.getString("COLUMN_NAME")}
         }
     }
-    
-    
+
+
     /**
      * Process import keys and export keys
      */
@@ -119,39 +120,39 @@ class DataBaseMetaDataReader {
         }
     }
 
-	def processKeys(Table table, getKeys, List<Key> keyList, boolean imported) {
-		if (debug) println "processing keys for table ${table.name} imported=${imported}"
+    def processKeys(Table table, getKeys, List<Key> keyList, boolean imported) {
+        if (debug) println "processing keys for table ${table.name} imported=${imported}"
         boolean flag = false
         jdbcUtils.iterate getKeys(catalog, schema, table.name),
-        { ResultSet resultSet ->
-            flag = true
-            processKey(keyList, debug, tables, resultSet, imported)
-        }
+                {ResultSet resultSet ->
+                    flag = true
+                    processKey(keyList, debug, tables, resultSet, imported)
+                }
 
         try {
             if (flag == false) {
                 if (debug) "There were no results from the process keys method"
                 jdbcUtils.iterate getKeys(catalog, schema, table.name.toLowerCase()),
-                { ResultSet resultSet ->
-                    flag = true
-                    processKey(keyList, debug, tables, resultSet, imported)
-                }
+                        {ResultSet resultSet ->
+                            flag = true
+                            processKey(keyList, debug, tables, resultSet, imported)
+                        }
             }
 
             if (flag == false) {
                 if (debug) "There were no results from the process keys method"
                 jdbcUtils.iterate getKeys(catalog, schema, table.name.toUpperCase()),
-                { ResultSet resultSet ->
-                    flag = true
-                    processKey(keyList, debug, tables, resultSet, imported)
-                }
+                        {ResultSet resultSet ->
+                            flag = true
+                            processKey(keyList, debug, tables, resultSet, imported)
+                        }
             }
         } catch (Exception ex) {
             if (trace) ex.printMe("Unable to process keys", this.&println)
         }
 
-		if (debug) println "\n"
-	}
+        if (debug) println "\n"
+    }
 
     private List processKey(List<Key> keyList, boolean debug, List<Table> tables, ResultSet resultSet, boolean imported) {
         Key key = new Key()
@@ -192,15 +193,15 @@ class DataBaseMetaDataReader {
 
 
     /** Process the database pulling out tables and columns whilst creating 
-     * JavaClasses and Bean properties. */
-    def processDB(){
+     * JavaClasses and Bean properties.  */
+    def processDB() {
         jdbcUtils.execute {Connection c ->
             if (debug) println "Processing the database"
             connection = c
-         	processTables()
-         	processPrimaryKeys()
-         	processColumns()
-         	processKeys()
+            processTables()
+            processPrimaryKeys()
+            processColumns()
+            processKeys()
         }
     }
 

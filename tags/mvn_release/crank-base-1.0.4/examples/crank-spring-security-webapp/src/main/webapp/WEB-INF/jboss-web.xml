@@ -1,0 +1,11 @@
+<jboss-web>
+    <class-loading java2ClassLoadingCompliance="false">
+        <loader-repository>
+            org.crank.sample.vmc-faces:loader=vmc-faces.war
+            <loader-repository-config>java2ParentDelegation=false</loader-repository-config>
+        </loader-repository>
+    </class-loading>
+    <!--class-loading>
+        <loader-repository>org.crank.sample.vmc-faces:loader=vmc-faces.war</loader-repository>
+    </class-loading-->
+</jboss-web>

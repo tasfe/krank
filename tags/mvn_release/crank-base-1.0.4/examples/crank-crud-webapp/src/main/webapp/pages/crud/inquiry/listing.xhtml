@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:crank="http://www.googlecode.com/crank">
+<ui:composition template="/templates/layout.xhtml">
+	<ui:define name="content">
+		<h:outputText value="Lead For Pet Clinic" styleClass="pageTitle" />
+
+		<a4j:outputPanel ajaxRendered="true">
+			<h:messages infoClass="infoClass" errorClass="errorClass"
+				layout="table" globalOnly="true" />
+		</a4j:outputPanel>
+
+		<h:form id="petClinicLeadListForm">
+
+			<a4j:outputPanel ajaxRendered="true">
+				<h:panelGroup rendered="${petClinicLeadCrud.controller.showForm}">
+					<crank:form crud="${petClinicLeadCrud.controller}"
+						parentForm="petClinicLeadListForm" propertyNames="name,inquiry" ajax="${true}" />
+				</h:panelGroup>
+			</a4j:outputPanel>
+
+   				<h:selectBooleanCheckbox id="cbGrou55" value="" styleClass="imageCenter"/>
+
+			<crank:listing jsfCrudAdapter="${petClinicLeadCrud}" propertyNames="name,inquiry.anotherProp"
+				parentForm="petClinicLeadListForm" />
+		</h:form>
+		
+		<h:outputText value="Inquiry For Pet Clinic" styleClass="pageTitle" />
+
+		<h:form id="petClinicInquiryListForm">
+
+			<a4j:outputPanel ajaxRendered="true">
+				<h:panelGroup rendered="${cruds.petClinicInquiry.controller.showForm}">
+					<crank:form crud="${cruds.petClinicInquiry.controller}"
+						parentForm="petClinicInquiryListForm" propertyNames="name,anotherProp" ajax="${true}" />
+				</h:panelGroup>
+			</a4j:outputPanel>
+
+			<crank:listing jsfCrudAdapter="${cruds.petClinicInquiry}" propertyNames="name,anotherProp"
+				parentForm="petClinicInquiryListForm" />
+
+			<h:commandLink action="HOME" value="Return home"
+				styleClass="titleCommandLink" />
+		</h:form>
+		
+	</ui:define>
+</ui:composition>
+</html>

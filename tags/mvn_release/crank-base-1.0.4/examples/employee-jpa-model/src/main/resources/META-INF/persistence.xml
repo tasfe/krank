@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
+			http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+    version="1.0">
+
+    <persistence-unit name="employee-example"
+        transaction-type="RESOURCE_LOCAL">
+        <class>org.crank.crud.model.Address</class>
+        <class>org.crank.crud.model.ContactInfo</class>
+        <class>org.crank.crud.model.Country</class>
+        <class>org.crank.crud.model.Department</class>
+        <class>org.crank.crud.model.Employee</class>
+        <class>org.crank.crud.model.EmployeeRank</class>
+        <class>org.crank.crud.model.EmployeeStatus</class>
+        <class>org.crank.crud.model.Person</class>
+        <class>org.crank.crud.model.Role</class>
+        <class>org.crank.crud.model.Skill</class>
+        <class>org.crank.crud.model.Specialty</class>
+        <class>org.crank.crud.model.StateBO</class>
+        <class>org.crank.crud.model.Task</class>
+        <!-- Spring Security 2.0 Default Spec Tables
+         As defined by queries from
+         http://static.springframework.org/spring-security/site/apidocs/constant-values.html#org.springframework.security.userdetails.jdbc.JdbcDaoImpl.DEF_USERS_BY_USERNAME_QUERY
+        -->
+        <class>org.crank.crud.model.Users</class>
+        <class>org.crank.crud.model.Authorities</class>
+        <class>org.crank.crud.model.GroupAuthorities</class>
+        <class>org.crank.crud.model.Groups</class>
+        <class>org.crank.crud.model.GroupMembers</class>          
+    </persistence-unit>
+
+</persistence>

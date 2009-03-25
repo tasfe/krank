@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd"
+    version="1.2">
+    
+    <!-- 
+  <component>
+    <component-type>org.crank.javax.faces.SelectOne</component-type>
+    <component-class>org.crank.javax.faces.component.UISelectOne</component-class>
+  </component>
+  <render-kit>
+      <renderer>
+      <component-family>javax.faces.SelectOne</component-family>
+      <renderer-type>org.crank.javax.faces.Listbox</renderer-type>
+      <renderer-class>
+			org.crank.javax.faces.component.ListboxRenderer
+  	  </renderer-class>
+    </renderer>
+  </render-kit>
+   -->
+</faces-config>

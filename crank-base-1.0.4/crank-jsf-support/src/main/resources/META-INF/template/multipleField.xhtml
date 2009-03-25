@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+      xmlns:crank="http://www.googlecode.com/crank"
+      xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+      xmlns:validation="http://code.google.com/p/krank/validation"
+      xmlns:crud="http://www.googlecode.com/crank/crud"
+        >
+
+<ui:composition>
+
+    <c:if test="${empty rendered}">
+        <c:set var="rendered" value="true"/>
+    </c:if>
+
+    <c:set var="entityLabel" value="${crud:createLabel(name)}"/>
+
+    <c:if test="${empty readOnly}">
+        <c:set var="readOnly" value="false" />
+    </c:if>
+    <!-- the spacing token between each field which can be dashes commas whatever you want by default this is a dash -->
+    <c:if test="${empty token}">
+        <c:set var="token" value="-" />
+    </c:if>
+    <!-- sets the input text field size this overrides the default input text box size which is something like 40 characters you might want smaller sized field entry boxes -->
+    <c:if test="${empty renderSize}">
+        <c:set var="renderSize" value=""/>
+    </c:if>
+
+    <c:set var="pNames"
+           value="${fn:split(propertyNames, '[, ]')}" />
+
+    <!-- count the number of fields to determine the column width of the panel-->
+    <c:set var="columnCount" value="0"/>
+    <c:forEach items="${pNames}" var="property">
+        <c:set var="columnCount" value="${columnCount + 1}"/>
+    </c:forEach>
+    <c:set var="columnCount" value="${columnCount * 3}"/>
+
+     <c:if test="${empty label}">
+        <c:set var="label" value=" "/>
+    </c:if>
+
+    <h:panelGrid id="${crud.name}_${name}FieldsFormPanelGridId"
+                 columns="${columnCount}" rowClasses="formRowClass1, formRowClass2">
+        <c:set var="xCount" value="0"/>
+        <c:forEach items="${pNames}" var="property">
+            <!-- if this is the first field then don't render the token-->
+            <c:choose>
+                <c:when test="${xCount >= 1}">
+                    <crank:field entity="${entity}" type="${entity.class}" fieldName="${property}"
+                                 prefix="${name}"
+                                 disabled="${crud:isInCollection(property, readOnlyProperties)}" label="${token}" renderSize="${renderSize}"/>
+
+                </c:when>
+                <c:otherwise>
+                    <crank:field entity="${entity}" type="${entity.class}" fieldName="${property}"
+                                 prefix="${name}"
+                                 disabled="${crud:isInCollection(property, readOnlyProperties)}" label="${label}" renderSize="${renderSize}"/>
+                    <c:set var="xCount" value="${xCount + 1}"/>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
+    </h:panelGrid>
+    <ui:insert />
+</ui:composition>
+
+</html>
+

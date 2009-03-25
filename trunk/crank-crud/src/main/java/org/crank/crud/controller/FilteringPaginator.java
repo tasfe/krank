@@ -687,7 +687,7 @@ public class FilteringPaginator extends Paginator implements
 					Comparison eqc = Comparison.eq(
 							filterableProperty.getComparison().getName(), theEnumValue);
 					filterablePaginatableDataSource().group().add(eqc);
-				} else if (filterableProperty.isDate()){
+				} else if (filterableProperty.isDate()){ //Handle date comparison with a between clause.
                     Between between = (Between)filterableProperty.getComparison();
                     Date date1 = (Date)between.getValue();
                     Date date2 = (Date)between.getValue2();
@@ -695,6 +695,13 @@ public class FilteringPaginator extends Paginator implements
                         MessageManagerUtils.getCurrentInstance().addErrorMessage("Start date must be before end date for %s",
                                 MessageUtils.createLabel(between.getName()));
                     }
+                    /* Advance the hour to the last hour, the minute to the last minute, and the second to the last second. */
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(date2);
+                    calendar.set(Calendar.HOUR_OF_DAY, 23);
+                    calendar.set(Calendar.MINUTE, 59);
+                    calendar.set(Calendar.SECOND, 59);
+                    date2 = calendar.getTime();
                     filterablePaginatableDataSource().group().add(
                             filterableProperty.getComparison());
                 }  else if (!filterableProperty.isString() && filterableProperty.getComparison().getValue() instanceof String) {

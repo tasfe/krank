@@ -104,15 +104,7 @@
 			<c:set var="useFormBody" value="true" />
 		</c:if>
 
-        <c:if test="${not empty formPropertyNames}">
-            <c:set var="resetPropertyNames" value="${formPropertyNames}"/>
-            <c:if test="${not empty additionalResetPropertyNames}">
-                <c:set var="additionalResetPropertyNames" value="${crud:replace(additionalResetPropertyNames,'.','_')}" />
-                <c:set var="resetPropertyNames" value="${resetPropertyNames},${additionalResetPropertyNames}"/>
-            </c:if>
-           <c:set var="resetPropertyNamesArray" value="${fn:split(resetPropertyNames, '[, ]')}" />
-       </c:if>
-
+        
 		<c:set var="detailControllerModel" value="#{detailController.model}"/>
 		<c:if test="${debug}">
 			<h4>Debug for detailListing id=${id}</h4>
@@ -144,17 +136,20 @@
            <c:set var="pNames" value="${fn:split(propertyNames, '[, ]')}" />
 
        </c:if>
+
         <c:if test="${not empty formPropertyNames}">
+            <c:set var="resetPropertyNames" value="${formPropertyNames}"/>
+            <c:if test="${not empty additionalResetPropertyNames}">
+                <c:set var="additionalResetPropertyNames" value="${crud:replace(additionalResetPropertyNames,'.','_')}" />
+                <c:set var="resetPropertyNames" value="${resetPropertyNames},${additionalResetPropertyNames}"/>
+            </c:if>
+           <c:set var="resetPropertyNamesArray" value="${fn:split(resetPropertyNames, '[, ]')}" />
            <c:set var="formPropertyNamesArray" value="${fn:split(formPropertyNames, '[, ]')}" />
-
        </c:if>
-
-
-
-
+       
         <c:if test="${useJavaScriptReset}">
             <script type="text/javascript">
-            <ui:repeat value="${formPropertyNamesArray}" var="property">
+            <ui:repeat value="${resetPropertyNamesArray}" var="property">
                     /* Declare variables for saving form values. */
                     var ${parentForm}_${entityName}_${property} = "";
             </ui:repeat>
@@ -162,7 +157,7 @@
             <script type="text/javascript">
              function reset_${parentForm}_${entityName}() {
                 //    alert("reset_${parentForm}_${entityName}() called!");
-                <ui:repeat value="${formPropertyNamesArray}" var="property">
+                <ui:repeat value="${resetPropertyNamesArray}" var="property">
 
                        <f:attribute name="alias.element"  value="${null}"/>
                                                                 
@@ -183,7 +178,7 @@
 
              function remember_${parentForm}_${entityName}() {
                 // alert("remember_${parentForm}_${entityName}() called!!");
-                <ui:repeat value="${formPropertyNamesArray}" var="property">
+                <ui:repeat value="${resetPropertyNamesArray}" var="property">
                        <f:attribute name="alias.element"  value="${null}"/>
                         /* If the control is a checkbox restore the checked value, otherwise restore the value. */
                         if ($("${parentForm}:__${entityName}_${property}").type=='checkbox') {

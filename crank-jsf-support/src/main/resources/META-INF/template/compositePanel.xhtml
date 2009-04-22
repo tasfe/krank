@@ -27,6 +27,10 @@
     <c:if test="${empty readOnly}">
         <c:set var="readOnly" value="false" />
     </c:if>
+    
+    <c:if test="${empty entityName}">
+        <c:set var="entityName" value="${crud:getEntityName(entity.class)}"/>
+    </c:if>
 
     <c:set var="pNames"
            value="${fn:split(propertyNames, '[, ]')}" />

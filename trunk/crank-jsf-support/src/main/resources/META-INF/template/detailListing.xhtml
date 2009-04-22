@@ -103,7 +103,16 @@
 		<c:if test="${empty useFormBody}">
 			<c:set var="useFormBody" value="true" />
 		</c:if>
-		
+
+        <c:if test="${not empty formPropertyNames}">
+            <c:set var="resetPropertyNames" value="${formPropertyNames}"/>
+            <c:if test="${not empty additionalResetPropertyNames}">
+                <c:set var="additionalResetPropertyNames" value="${crud:replace(additionalResetPropertyNames,'.','_')}" />
+                <c:set var="resetPropertyNames" value="${resetPropertyNames},${additionalResetPropertyNames}"/>
+            </c:if>
+           <c:set var="resetPropertyNamesArray" value="${fn:split(resetPropertyNames, '[, ]')}" />
+       </c:if>
+
 		<c:set var="detailControllerModel" value="#{detailController.model}"/>
 		<c:if test="${debug}">
 			<h4>Debug for detailListing id=${id}</h4>

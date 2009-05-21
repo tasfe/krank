@@ -16,9 +16,9 @@ Add your content here.  Format your content with:
 <html>
   <body>
     Hello ${params.name} here is the contact
-    you asked for: &lt;br />
-    ${contact.name} &lt;br />
-    ${contact.phoneNumber} &lt;br />
+    you asked for: <br />
+    ${contact.name} <br />
+    ${contact.phoneNumber} <br />
   </body>
 </html>
 }}}

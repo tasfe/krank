@@ -46,6 +46,7 @@ Couple of things to learn about dependencies. Let's start with dependencies in t
 The first set of dependencies is for spring wiring. Spring if it is not understood is an inversion of control container. More information about it is at this link  [http://www.springframework.org/] to the Spring's website. The reason it is used in crank is it helps deal with configurations, allows loose coupling of the application. This provides the facility to use different layers of crank and wire it into some other framework, say like the requirement to use Ibatis over Hibernate, or the need to wire into Struts instead of JSF. 
 
 {{{
+  <dependencies> <!--start of dependencies -->
   <!-- spring library dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -490,6 +491,7 @@ The other library is crank-jsf-validation; this provides a number of utilities f
                 </exclusion>
             </exclusions>
         </dependency>
+      </dependencies> <!--no more dependencies-->
 }}}
 
 To make builds go by fast and see the application, the project can be run within jetty. A plugin feature in maven allows maven to start up a jetty container and runs the application. It reduces the time to compile, package the application, copy it to a application container's deploy directory, start up the application container, and then see the results. This is much faster when doing debuging than building a whole web application war and deploying it into and application container such as tomcat or jboss. 
@@ -658,7 +660,7 @@ The rest is going to be the access modifier methods which can be auto generated 
 ==Data access object (DAO)===
 To run 'queries' and select data sets, you need a data access object. In crank, this can be accomplished by extending facilities used in the crank's GenericDao interface. The GenericDao allows the basic functionality of reads, update, delete, creates of objects. The read facility allows filtering on columns for set values encapsulated in overloaded "find" methods. There is dated documentation on how the finder method's work in the GenericDao. http://code.google.com/p/krank/wiki/UsingDAO
 
-This data access object is going to be a simple, in that it will extend the GenericDao interface. The interface then allows the DAO created to make use of crank's GenericDaoJpa facilities. This code will go in the same package that the MovieBO was placed.
+This data access object is going to be a simple, in that it will extend the GenericDao interface. The interface then allows the DAO created to make use of crank's GenericDaoJpa facilities. This code will go in the same package that the MovieBO was placed. The GenericDao is set to the class followed by a comma and the primary key class type identifier. The model object is using a Long as its primary id type. The primary key could also be a String or any other type. 
 
 {{{
 package org.crank.movie;
@@ -760,7 +762,7 @@ Solution:
 
 Notice, the jpaProperties are referenced by a spring PropertiesFactoryBean and then injected into the CrudDAOConfig. 
 
-There are also a number of 'krank' properties, and these are property values that are found and replaced, when the maven build is run. These properties are fed in by the maven pom.xml file so to do this before the profile tag add properties tags. The result is this:
+There are also a number of 'krank' properties, and these are property values that are found and replaced, when the maven build is run. These properties are fed in by the maven pom.xml file so add the project specific properties to the the pom.xml.  The result is this for an example:
 
 pom.xml add modification:
 {{{
@@ -777,7 +779,7 @@ pom.xml add modification:
 . . .
 }}}
 
-If you just copied everything above, you probably missed this line:
+The last step is now to add our controller to the application context. This is a bean that is specified in applicationContext.xml. This example it will be org.crank.controller.MovieExampleApplicationContext. Further discussion on creating this controller is as follows :
 
 _<bean class="org.crank.controller.MovieExampleApplicationContext" />_
 
@@ -810,7 +812,7 @@ The jsf pages will use crank's CrudManagedObjects, which will be wrapped in a Js
 
 The next step is to wire in the datasource and persistence unit group that was changed in the applicationContext.xml and the persistence.xml. This is done as follows, specify a string return method called persistenceUnitName the returns the name of the persistence.xml unit name. 
 
-Remember, the CrudDAOConfig created above will use the dataSource property to get the access to the data base throughout the crank web application.
+Remember, the CrudDAOConfig created above will use the dataSource property to get the access to the data base throughout the crank web application. Here it is specified to the same data source declared earlier in the persistence.xml.
 {{{
   . . . 
       @Bean
@@ -822,7 +824,7 @@ Remember, the CrudDAOConfig created above will use the dataSource property to ge
    . . .
 }}}
 
-Create a simple controller that will allow one page to display a listing and another page to display a form for editing and updating a selected listing. This case the JSF controller will use the MovieBO managed crud object above. The wrapping controller is a JsfCrudAdapter. The method is going to be called 'movieCrud'. The method and controller will be scoped on requests. 
+Create a simple controller that will allow one page to display a listing and another page to display a form for editing and updating a selected listing. This case the JSF controller will use the MovieBO managed crud object above. The wrapping controller is a JsfCrudAdapter. The method is going to be called 'movieCrud'. The method and controller will be scoped on requests. It can be set to SESSION as well, which works for long running transactional events such as a form wizard. The JsfCrudAdapter plugs into the MovieDao created, and so the return on the method should follow the same typing, which is the class followed by a comma and the primary key type of the model object.
 
 Solution:
 {{{

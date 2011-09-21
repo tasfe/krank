@@ -368,12 +368,13 @@ This application is going to make use of JSF and crank's support for this. There
             </exclusions>
         </dependency>
         <!-- JSF stuff -->
-        <!-- JSF ControllerBean library depenency-->
+        <!-- excel exporter bean -->
         <dependency>
-            <groupId>poi</groupId>
+            <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>2.5.1-final-20040804</version>
+            <version>3.7</version>
         </dependency>
+        <!-- JSF ControllerBean library depenency-->
         <dependency>
             <groupId>org.htmlparser</groupId>
             <artifactId>htmlparser</artifactId>

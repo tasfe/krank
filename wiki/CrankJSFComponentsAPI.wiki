@@ -83,7 +83,7 @@ http://krank.googlecode.com/svn/wiki/img/master_detail_pic_controlle_mapping.jpg
 ||id||JSF component id which should be unique to this page||String||yes||${daoName}DetailForm||
 ||crud||Reference to the crank JsfCrudAdapter controller||Object||Yes|| ||
 ||propertyNames||The property names, comma separated, from the data object that are to be displayable and edited||String||yes||none||
-||readOnlyProperties||The property names, comma separated, which should only be displayed and not editable||String||no||none||
+||readOnlyProperties||The property names, comma separated, which should only be displayed and not editable. You must include the read only property in the propertyNames parameter as well to make the field display, but go to read-only mode.||String||no||none||
 ||daoName||Data access object name||String||yes||none||
 ||parentForm||Reference to the parent form object in this case an a4j form can also be jsf form||String||yes||${daoName}DetailFormB||
 ||reRender||Re-rendering component reference||String||yes||${reRender}||

@@ -168,7 +168,7 @@ http://krank.googlecode.com/svn/wiki/img/selectManyStep2.jpg
 || *Parameters* || *Description* || *Type* || *Required* || *Default* ||
 ||jsfSelectManyController||Used to reference the many controller object||Object||yes||none||
 ||propertyNames||The property names, comma separated, from the data object that are to be displayable and selectable||String||yes||none||
-||readOnlyProperties||The property names, comma separated, which should only be displayed and not editable||String||no||none||
+||readOnlyProperties||The property names, comma separated, which should only be displayed and not editable, You must include the read only property in the propertyNames parameter as well to make the field display, but go to read-only mode||String||no||none||
 ||autoLink||Crank can determine if a string might be a URL and will attempt to format it as a clickable link.Set to false to disable this feature.||boolean||NO||TRUE||
 ||dataTableWidth||sizes the width of the listing to the form||percentage||no||75%||
 ||readOnly||To set the fields to no editable state||boolean||no||false||

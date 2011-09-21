@@ -248,17 +248,17 @@ The last crank-validation provides annotation support for column, table validati
         <dependency>
             <groupId>org.crank</groupId>
             <artifactId>crank-core</artifactId>
-            <version>1.0RC2-SNAPSHOT</version>
+            <version>1.0.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.crank</groupId>
             <artifactId>crank-crud</artifactId>
-            <version>1.0RC2-SNAPSHOT</version>
+            <version>1.0.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.crank</groupId>
             <artifactId>crank-validation</artifactId>
-            <version>1.0RC2-SNAPSHOT</version>
+            <version>1.0.5-SNAPSHOT</version>
         </dependency>
 }}}
 
@@ -313,7 +313,7 @@ This application is going to make use of JSF and crank's support for this. There
  <dependency>
             <groupId>org.richfaces.ui</groupId>
             <artifactId>richfaces-ui</artifactId>
-            <version>3.1.4.GA</version>
+            <version>3.3.4-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>xerces</groupId>
@@ -332,7 +332,7 @@ This application is going to make use of JSF and crank's support for this. There
         <dependency>
             <groupId>org.richfaces.framework</groupId>
             <artifactId>richfaces-api</artifactId>
-            <version>3.1.4.GA</version>
+            <version>3.3.4-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>xerces</groupId>
@@ -351,7 +351,7 @@ This application is going to make use of JSF and crank's support for this. There
         <dependency>
             <groupId>org.richfaces.framework</groupId>
             <artifactId>richfaces-impl</artifactId>
-            <version>3.1.4.GA</version>
+            <version>3.3.4-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>xerces</groupId>

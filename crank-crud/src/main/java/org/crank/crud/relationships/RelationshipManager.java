@@ -299,15 +299,39 @@ public class RelationshipManager implements Serializable {
      * */
     @SuppressWarnings("unchecked")
 	private Serializable getChildFromChildrenCollectionUsingId(String indexValue, Object listTypeThing) {
-
-        /** Get the current id from the index parameter that was passed. */
-        Long id = Long.valueOf(indexValue);
-
+        
         /** Iterate through the list and grab the id of the current child, if the
          *  id of the current child is equal to the id, then this is the object
          *  we are looking for.
          */
         Collection collection = (Collection) listTypeThing;
+        Serializable child = null; //current child.
+        try
+        {
+            /** Get the current id from the index parameter that was passed. */
+            Long id = Long.valueOf(indexValue);
+            child = this.getChildByLongId(id, collection);
+        } catch (NumberFormatException nfe) {
+            /** The primary key was probably a string such as a GUID so try this**/
+            child = this.getChildByStringId(indexValue, collection);
+        }
+
+        /**
+         * This should not happen. If it does happen let the world know, send out an amber alert!
+         */
+        if (child==null) {
+            throw new RuntimeException("Unable to find child object in parent's child collection using id=" + indexValue);
+        }
+        return child;
+    }
+    /**
+     * Most cases the child element's primary key in the collection is a Long/integer
+     * as most database models use integer for primary keys.
+     * @param id As a long
+     * @param collection the selection of children objects.
+     * @return Child model object found based on the long id.
+     */
+    private Serializable getChildByLongId(Long id, Collection collection) {
         Iterator iterator = collection.iterator(); //children.
         Serializable child = null; //current child.
 
@@ -323,12 +347,32 @@ public class RelationshipManager implements Serializable {
                 break;
             }
         }
+        return child;
+    }
+    
+    /**
+     * This covers the case where the primary key is not an integer and may
+     * be instead a String GUID type of key. This iterates through the collection
+     * finding the child based on a GUID key instead.
+     * @param id String ID as primary key like a GUID
+     * @param collection Children objects to iterate through
+     * @return the child model object found based on the primary String id.
+     */
+    private Serializable getChildByStringId(String id, Collection collection) {
+        Iterator iterator = collection.iterator(); //children.
+        Serializable child = null; //current child.
 
         /**
-         * This should not happen. If it does happen let the world no, send out an amber alert!
+         * Iterate through children looking for child with id of id passed.
          */
-        if (child==null) {
-            throw new RuntimeException("Unable to find child object in parent's child collection using id=" + id);
+        while(iterator.hasNext()){
+            Object object = iterator.next();
+            BeanWrapper wrapper = new BeanWrapperImpl(object);
+            String idPropertyValue = (String) wrapper.getPropertyValue(this.idPropertyName);
+            if (id.equalsIgnoreCase(idPropertyValue)) {
+                child = (Serializable) object;
+                break;
+            }
         }
         return child;
     }

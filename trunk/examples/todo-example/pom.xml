@@ -61,7 +61,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>poi</groupId>
+            <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
         </dependency>
         <dependency>

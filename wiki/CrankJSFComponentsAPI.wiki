@@ -1,4 +1,5 @@
-#Various JSF type Crank components.
+#summary Visual explanation of crank components
+
 
 = Introduction =
 

@@ -12,7 +12,7 @@
     <url>http://code.google.com/p/krank</url>
 
     <dependencies>
-        <dependency>
+       <dependency>
             <groupId>org.richfaces.ui</groupId>
             <artifactId>richfaces-ui</artifactId>
         </dependency>

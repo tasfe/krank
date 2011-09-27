@@ -3,13 +3,13 @@
     <parent>
         <artifactId>crank-base</artifactId>
         <groupId>org.crank</groupId>
-        <version>1.0.5-SNAPSHOT</version>
+        <version>1.0.5</version>
     </parent>
 
     <groupId>org.crank</groupId>
     <artifactId>crank-test-support</artifactId>
     <name>crank-test-support</name>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.5</version>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>

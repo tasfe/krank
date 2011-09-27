@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:crank="http://www.googlecode.com/crank"
+	xmlns:validation="http://code.google.com/p/krank/validation"
+	>
+	
+<ui:composition template="/templates/layout.xhtml">
+
+	<ui:define name="content">
+		<c:set var="crud" value="${deptCrud.controller}" />
+		<c:set var="employeeDetailController" value="${crud.children.employees}" />
+		<c:set var="taskDetailController" value="${crud.children.employees.children.tasks}" />
+		<crank:crudBreadCrumb crud="${crud}"/>
+		<span class="pageTitle">Department Entry Form</span>
+		<a4j:form id="departmentForm">
+				<crank:form crud="${crud}" 
+					propertyNames="name" 
+					property.name.editor="/templates/departmentName.xhtml" 
+					property.name.showLabel="true"
+					property.name.showMessages="true">
+					
+					<crank:detailForm
+						detailController="${employeeDetailController}" 
+						propertyNames="firstName,lastName,active,dob,age,numberOfPromotions"
+						parentForm="departmentForm">
+						
+						<!-- 
+ 						<crank:selectOneListing jsfSelectOneController="${employeeToSkillController}"
+							propertyNames="name"
+							parentForm="departmentForm"
+							/>
+							 -->
+							 
+						<crank:selectMany jsfSelectManyController="${employeeToRoleControllerDetail}" 
+							propertyNames="name" parentForm="departmentForm" />
+							
+							
+						<crank:detailListing 
+							detailController="${taskDetailController}" 
+							propertyNames="name,startDate,endDate,complete"
+							parentForm="departmentForm"
+							/>
+					</crank:detailForm>
+					<crank:detailTable 
+						detailController="${employeeDetailController}" 
+						propertyNames="firstName,lastName,active,dob,age,numberOfPromotions"
+						parentForm="departmentForm"
+						>
+					</crank:detailTable>
+ 				</crank:form>
+ 				<a4j:commandLink action="#{hello.hello}" value="Say hello"/>
+		</a4j:form>
+		<!-- 					
+		 -->
+	</ui:define>
+</ui:composition>
+</html>

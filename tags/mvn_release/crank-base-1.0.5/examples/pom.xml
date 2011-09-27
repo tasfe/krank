@@ -1,0 +1,26 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>crank-base</artifactId>
+        <groupId>org.crank</groupId>
+        <version>1.0.5</version>
+    </parent>
+
+    <groupId>org.crank.example</groupId>
+    <artifactId>crank-example-base</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.5</version>
+    <name>Crank :: Example Base</name>
+
+    <modules>
+      <module>employee-jpa-model</module>
+      <module>security-jpa-model</module>
+      <module>crank-crud-webapp</module>
+      <module>crank-validation-jsf-webapp</module>
+      <module>crank-validation-springmvc-webapp</module>
+      <module>blank-project</module>
+      <module>todo-example</module>
+      <module>security-webapp</module>
+      <module>crank-spring-security-webapp</module>
+    </modules>
+</project>

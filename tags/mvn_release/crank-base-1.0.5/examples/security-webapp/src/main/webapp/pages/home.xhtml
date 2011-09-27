@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:crank="http://www.googlecode.com/crank"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:crud="http://www.googlecode.com/crank/crud">
+<ui:composition template="/templates/layout.xhtml">
+	<ui:define name="content">
+
+		<rich:tabPanel switchType="client">
+			<!-- User Tab  -->
+			<rich:tab
+				label="${crud:createLabel(cruds.securityUser.controller.name)}"
+				id="userTab">
+
+				<a4j:form id="userForm">
+					<crank:ajaxForm crud="${cruds.securityUser.controller}"
+						propertyNames="name,email">
+							<crank:selectMany jsfSelectManyController="${userToRoleController}"
+							                  propertyNames="name"
+							                  parentForm="userForm"/>	
+							<crank:selectOneListing jsfSelectOneController="${userToGroupController}"
+											propertyNames="name" parentForm="userForm" />                  					
+					</crank:ajaxForm>
+				</a4j:form>
+
+				<a4j:form id="userListing">
+					<crank:listing jsfCrudAdapter="${cruds.securityUser}"
+						propertyNames="name,email,parentGroup.name" parentForm="userListing" 
+						ajax="true"/>
+				</a4j:form>
+
+			</rich:tab>
+			<!-- Group Tab -->
+			<rich:tab
+				label="${crud:createLabel(cruds.securityGroup.controller.name)}"
+				id="groupTab">
+
+				<a4j:form id="groupForm">
+					<crank:ajaxForm crud="${cruds.securityGroup.controller}"
+						propertyNames="name" />
+				</a4j:form>
+
+				<a4j:form id="groupListing">
+					<crank:listing jsfCrudAdapter="${cruds.securityGroup}"
+						propertyNames="name" parentForm="groupListing" 
+						ajax="true"
+						/>
+				</a4j:form>
+
+			</rich:tab>
+			<rich:tab
+				label="${crud:createLabel(cruds.role.controller.name)}"
+				id="roleTab">
+
+				<a4j:form id="roleForm">
+					<crank:ajaxForm crud="${cruds.role.controller}"
+						propertyNames="name" />
+				</a4j:form>
+
+				<a4j:form id="roleListing">
+					<crank:listing jsfCrudAdapter="${cruds.role}"
+						propertyNames="name" parentForm="roleListing" ajax="true"/>
+				</a4j:form>
+
+			</rich:tab>
+		</rich:tabPanel>
+	</ui:define>
+</ui:composition>
+</html>

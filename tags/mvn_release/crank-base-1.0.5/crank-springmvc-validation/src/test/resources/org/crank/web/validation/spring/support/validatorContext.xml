@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+ | Spring configuration file for JSF validators.
+ +-->
+<beans default-autowire="byType">
+
+	<bean class="org.crank.validation.validators.TestResourceBundleLocator"/>
+	<bean id="jsfBridgeValidatorMetaDataReader" class="org.crank.validation.readers.PropertiesFileValidatorMetaDataReader" />	
+	 <bean id="jsfBridgeValidatorPropertiesUtil" 
+	       class="org.crank.core.spring.support.SpringBeanWrapperPropertiesUtil"/>
+
+	
+	<bean name="crank/validator/required" 
+	      class="org.crank.validation.validators.RequiredValidator"  
+	      singleton="false"/>
+
+	<bean name="crank/validator/range" 
+	      class="org.crank.validation.validators.LongRangeValidator"  
+	      singleton="false">
+	      <property name="min" value="10"/>
+	      <property name="max" value="100"/>
+	</bean>
+	
+	 <bean name="crank/validator/regex" 
+	      class="org.crank.validation.validators.RegexValidator"
+	      singleton="false">
+	      <property name="match" value="this gets set by the annotations you could set a default here, but why?"/>
+	 </bean>
+	
+	<bean id="dontMatchValidator" class="org.crank.validation.validators.RegexValidator">
+		<property name="negate"><value>true</value></property>
+	</bean>
+
+	<bean id="matchValidator" class="org.crank.validation.validators.RegexValidator"/>
+	
+	<bean id="noIdenticalThreeDigitsValidator" parent="dontMatchValidator">
+		<property name="match">
+			<value>222|333|444|555|666|777|888|999</value>
+		</property>
+	</bean>
+
+	<bean id="mustBeNumericValidator" parent="matchValidator">
+		<property name="match">
+			<value>^[0-9]*$</value>
+		</property>
+	</bean>
+
+	<bean id="mustBeThreeDigitNumericValidator" parent="matchValidator">
+		<property name="match">
+			<value>^[0-9]{3}$</value>
+		</property>
+	</bean>
+
+	<bean id="mustBeFourDigitNumericValidator" parent="matchValidator">
+		<property name="match">
+			<value>^[0-9]{4}$</value>
+		</property>
+	</bean>
+
+	<bean id="mustNotBeginWithZeroOrOne" parent="matchValidator">
+		<property name="match">
+			<value>^[2-9]{1}[0-9]{2}$</value>
+		</property>
+	</bean>
+
+	<bean id="alphaLettersHyphenSpaces" parent="matchValidator">
+		<property name="match">
+			<value>^([a-zA-Z]|[ -])*$</value>
+		</property>
+	</bean>
+
+	<bean id="oneLetterOneNumber" parent="matchValidator">
+		<property name="match">
+			<value>^(\d+ \w+)|(\w+ \d+)$</value>
+		</property>
+	</bean>
+	
+	<bean id="required" class="org.crank.validation.validators.RequiredValidator" />
+	<bean name="lre2FormPage:firstMortgageRateType" parent="required" />
+	<bean name="firstMortgageRateType" parent="required" />
+	
+
+	<bean name="firstName" parent="alphaLettersHyphenSpaces">
+	    <property name="parent">
+	    	<value>alphaLettersHyphenSpaces</value>
+	    </property>
+        <property name="summaryArgs">
+            <list>
+                <value>validator.lastName.label.summary</value>
+            </list>
+        </property>
+        <property name="detailArgs">
+            <list>
+                <value>validator.lastName.label.detail</value>
+            </list>
+        </property>             
+	</bean>
+
+	<bean name="lastName" parent="alphaLettersHyphenSpaces" >
+	    <property name="parent">
+	    	<value>alphaLettersHyphenSpaces</value>
+	    </property>
+        <property name="summaryArgs">
+            <list>
+                <value>validator.lastName.label.summary</value>
+            </list>
+        </property>
+        <property name="detailArgs">
+            <list>
+                <value>validator.lastName.label.detail</value>
+            </list>
+        </property>             
+	</bean>
+
+	<bean name="address" parent="oneLetterOneNumber">
+	    <property name="parent">
+	    	<value>oneLetterOneNumber</value>
+	    </property>
+        <property name="summaryArgs">
+            <list>
+                <value>validator.address.label.summary</value>
+            </list>
+        </property>
+        <property name="detailArgs">
+            <list>
+                <value>validator.address.label.detail</value>
+            </list>
+        </property>             
+	</bean>
+	
+    <bean name="areaCode" class="org.crank.validation.validators.CompositeValidator">
+        <property name="summaryArgs">
+            <list>
+                <value>validator.areaCode.label</value>
+            </list>
+        </property>
+        <property name="detailArgs">
+            <list>
+                <value>validator.areaCode.label</value>
+            </list>
+        </property>             
+    	<property name="validatorList">
+    		<list>
+	    		<ref local="mustBeThreeDigitNumericValidator" />
+	    		<ref local="noIdenticalThreeDigitsValidator" />
+	    		<ref local="mustNotBeginWithZeroOrOne" />
+    		</list>
+    	</property>
+    </bean>
+    
+    <bean name="preferredAreaCode" parent="areaCode" />
+    <bean name="alternateAreaCode" parent="areaCode" />
+    <bean name="preferredPrefix" parent="prefix" />
+    <bean name="alternatePrefix" parent="prefix" />
+    <bean name="preferredStation" parent="station" />
+    <bean name="alternateStation" parent="station" />
+    <bean name="preferredExtension" parent="mustBeNumericValidator" />
+    <bean name="alternateExtension" parent="mustBeNumericValidator" />
+
+	<bean id="city" parent="alphaLettersHyphenSpaces"/>
+	<bean id="state" parent="alphaLettersHyphenSpaces"/>
+    <bean name="street" parent="oneLetterOneNumber" /> <!--  TODO test -->
+    
+	<bean id="propertyCity" parent="city"/>
+	<bean id="propertyState" parent="state"/>
+    <bean name="propertyStreet" parent="street"/>
+
+	<bean id="zipCode" parent="matchValidator">
+		<property name="match">
+			<value>^[0-9]{5}$</value>
+		</property>
+	</bean>
+	
+	<bean name="propertyZipCode" parent="zipCode"/>
+	
+    <bean name="prefix" class="org.crank.validation.validators.CompositeValidator">
+        <property name="summaryArgs">
+            <list>
+                <value>validator.prefix.label</value>
+            </list>
+        </property>
+        <property name="detailArgs">
+            <list>
+                <value>validator.prefix.label</value>
+            </list>
+        </property>             
+    	<property name="validatorList">
+    		<list>
+	    		<ref local="mustBeThreeDigitNumericValidator"/>
+	    		<ref local="mustNotBeginWithZeroOrOne"/>
+    		</list>
+    	</property>
+    </bean>
+
+    <bean name="station" class="org.crank.validation.validators.CompositeValidator">
+        <property name="summaryArgs">
+            <list>
+                <value>validator.station.label</value>
+            </list>
+        </property>
+        <property name="detailArgs">
+            <list>
+                <value>validator.station.label</value>
+            </list>
+        </property>             
+    	<property name="validatorList">
+    		<list>
+	    		<ref local="mustBeFourDigitNumericValidator"/>
+    		</list>
+    	</property>
+    </bean>
+    
+    <bean name="daytimeAreaCode" parent="areaCode">
+		<property name="summaryArgs">
+			<list>
+				<value>validator.daytimeAreaCode.label</value>
+			</list>
+		</property>
+		<property name="detailArgs">
+			<list>
+				<value>validator.daytimeAreaCode.label</value>
+			</list>
+		</property>
+	</bean>
+
+    <bean name="daytimePrefix" parent="prefix">
+		<property name="summaryArgs">
+			<list>
+				<value>validator.daytimePrefix.label</value>
+			</list>
+		</property>
+		<property name="detailArgs">
+			<list>
+				<value>validator.daytimePrefix.label</value>
+			</list>
+		</property>
+	</bean>
+
+    <bean name="daytimeStation" parent="station">
+		<property name="summaryArgs">
+			<list>
+				<value>validator.daytimeStation.label</value>
+			</list>
+		</property>
+		<property name="detailArgs">
+			<list>
+				<value>validator.daytimeStation.label</value>
+			</list>
+		</property>
+	</bean>
+
+    <bean name="eveningAreaCode" parent="areaCode">
+		<property name="summaryArgs">
+			<list>
+				<value>validator.eveningAreaCode.label</value>
+			</list>
+		</property>
+		<property name="detailArgs">
+			<list>
+				<value>validator.eveningAreaCode.label</value>
+			</list>
+		</property>
+	</bean>
+
+    <bean name="eveningPrefix" parent="prefix">
+		<property name="summaryArgs">
+			<list>
+				<value>validator.daytimeAreaCode.label</value>
+			</list>
+		</property>
+		<property name="detailArgs">
+			<list>
+				<value>validator.daytimeAreaCode.label</value>
+			</list>
+		</property>
+	</bean>
+
+    <bean name="eveningStation" parent="station">
+		<property name="summaryArgs">
+			<list>
+				<value>validator.daytimeStation.label</value>
+			</list>
+		</property>
+		<property name="detailArgs">
+			<list>
+				<value>validator.daytimeStation.label</value>
+			</list>
+		</property>
+	</bean>
+
+        
+    <bean id="beanNameInjector" class="org.crank.core.spring.support.NameAwareNameInjectorBeanPostProcessor"/>
+
+
+</beans>

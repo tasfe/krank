@@ -4,13 +4,13 @@
 	<parent>
 		<groupId>org.crank</groupId>
 		<artifactId>crank-base</artifactId>
-		<version>1.0.5-SNAPSHOT</version>
+		<version>1.0.5</version>
 	</parent>
 
 	<groupId>org.crank</groupId>
 	<artifactId>crank-jsf-validation</artifactId>
 	<name>crank-jsf-validation</name>
-	<version>1.0.5-SNAPSHOT</version>
+	<version>1.0.5</version>
 
 	<dependencies>
 		<dependency>

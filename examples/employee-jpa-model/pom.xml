@@ -2,12 +2,12 @@
     <parent>
         <groupId>org.crank.example</groupId>
         <artifactId>crank-example-base</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.6-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>employee-jpa-model</artifactId>
     <name>Crank :: Employee JPA Model</name>
-    <version>1.0.5</version>
+    <version>1.0.6-SNAPSHOT</version>
     <url>http://code.google.com/p/krank</url>
 
     <dependencies>

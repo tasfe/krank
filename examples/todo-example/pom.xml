@@ -2,12 +2,12 @@
     <parent>
         <groupId>org.crank.example</groupId>
         <artifactId>crank-example-base</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.6-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>todo-example</artifactId>
     <name>Crank :: Crud :: Sample Webapp</name>
-    <version>1.0.5</version>
+    <version>1.0.6-SNAPSHOT</version>
     <packaging>war</packaging>
     <url>http://code.google.com/p/krank</url>
    <dependencies>

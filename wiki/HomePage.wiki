@@ -28,8 +28,10 @@ Mostly what works is the annotation driven validation.
 
 = Details =
 
-*TODO* 
-describe goals and status of krank.
+* 1.0.x releases support JSF 1.x framework, and spring IOC.
+* 2.0.x release is currently planned and will support JSF 2.x along with latest versions of JPA and spring IOC. Plans for improving support with Richfaces 4.x and Primefaces.
+
+
 
 
 [maven release]

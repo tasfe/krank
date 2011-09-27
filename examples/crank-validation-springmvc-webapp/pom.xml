@@ -2,13 +2,13 @@
     <parent>
       <groupId>org.crank.example</groupId>
       <artifactId>crank-example-base</artifactId>
-      <version>1.0.6-SNAPSHOT</version>
+      <version>2.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>crank-validation-springmvc-webapp</artifactId>
     <packaging>war</packaging>
     <name>Crank :: Spring MVC Validation :: Sample Webapp</name>
-    <version>1.0.6-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <url>http://code.google.com/p/krank</url>
 
     <build>

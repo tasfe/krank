@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+	xmlns:crud="http://www.googlecode.com/crank/crud"
+	xmlns:crank="http://www.googlecode.com/crank">
+
+<ui:composition>
+<a4j:outputPanel ajaxRendered="true">
+
+	<c:if test="${empty ajax}">
+		<c:set var="ajax" value="${true}"/>
+	</c:if>
+	<c:if test="${empty useParentForm}">
+		<c:set var="useParentForm" value="${true}"/>
+	</c:if>
+	<c:if test="${empty actionText}">
+		<c:set var="actionText" value="Select..."/>
+	</c:if>
+	<c:if test="${empty title}">
+		<c:set var="title" value="Selection"/>
+	</c:if>
+	<c:if test="${empty actionToolTip}">
+		<c:set var="actionToolTip" value="Click to select detail records..."/>
+	</c:if>
+
+	<c:set var="ajaxSingle" value="${true}"/>
+	<c:set var="reRender" value="${reRender},_modalPanel"/>
+	
+	<crank:commandLink 
+		onclick="javascript:Richfaces.showModalPanel('_modalPanel',{left:'auto', top:'auto'})"
+		immediate="true"
+		toolTipText="${actionToolTip}"
+		reRender="${reRender}"
+		styleClass="paginationPageNumberLink"
+		ajax="${ajax}">
+			<h:outputText value="${actionText}"/>
+	</crank:commandLink>							
+
+	<rich:modalPanel id="_modalPanel" reRender="${reRender}">
+        <f:facet name="header"><h:outputText value="${title}"/></f:facet>
+        <f:facet name="controls">
+            <a href="javascript:Richfaces.hideModalPanel('_modalPanel')">X</a>
+        </f:facet>
+		<ui:insert/>
+	</rich:modalPanel>
+	
+</a4j:outputPanel>
+</ui:composition>
+</html>

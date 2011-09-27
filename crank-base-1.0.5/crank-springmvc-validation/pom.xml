@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>crank-base</artifactId>
+		<groupId>org.crank</groupId>
+	<version>1.0.5</version>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.crank</groupId>
+	<artifactId>crank-springmvc-validation</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0.5</version>
+	<name>crank-springmvc-validation</name>
+	<url>http://maven.apache.org</url>
+	<dependencies>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<classifier>jdk15</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.crank</groupId>
+			<artifactId>crank-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jsp-api</artifactId>
+		</dependency>
+		<dependency>
+				<groupId>org.crank</groupId>
+				<artifactId>crank-test-support</artifactId>
+		</dependency>
+	</dependencies>
+</project>

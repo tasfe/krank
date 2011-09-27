@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+      xmlns:crank="http://www.googlecode.com/crank"
+      xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+      xmlns:validation="http://code.google.com/p/krank/validation"
+      xmlns:crud="http://www.googlecode.com/crank/crud"
+        >
+
+<ui:composition>
+
+    <c:if test="${empty rendered}">
+        <c:set var="rendered" value="true"/>
+    </c:if>
+
+    <c:if test="${empty fieldsFormPanelGridId}">
+  		<c:set var="fieldsFormPanelGridId" value="${crud.name}_${name}FieldsFormPanelGridId"/>
+  	</c:if>
+
+    <c:if test="${empty readOnly}">
+        <c:set var="readOnly" value="false" />
+    </c:if>
+    
+    <c:if test="${empty entityName}">
+        <c:set var="entityName" value="${crud:getEntityName(entity.class)}"/>
+    </c:if>
+
+    <c:set var="pNames"
+           value="${fn:split(propertyNames, '[, ]')}" />
+
+    <h:panelGrid id="${fieldsFormPanelGridId}"
+                 columns="3" rowClasses="formRowClass1, formRowClass2">
+        <c:forEach items="${pNames}" var="property">
+            <crank:field entity="${entity}" type="${entity.class}" fieldName="${property}"
+                         prefix="${name}"   entityName="${entityName}"
+                         disabled="${crud:isInCollection(property, readOnlyProperties)}"/>
+        </c:forEach>
+    </h:panelGrid>
+    <ui:insert />
+</ui:composition>
+
+</html>
+

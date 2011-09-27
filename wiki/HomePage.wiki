@@ -4,7 +4,7 @@
 
 Organic growth is so...well...natural!
 
-Crank is an open source project providing both a generic validation framework, and code generation facilities for the JSF/Spring/Hibernate stack, which is very popular in corporate America today.
+Crank is an open source project providing both a generic validation framework, and code generation facilities for the JSF/Spring/Hibernate stack, which is very popular in corporate America today. Crank is not a Grails project, although it initially was designed to provide CRUD application UI to databases. It can be further extended to a more feature rich application because it allows you to add additional JSF components to your application above and beyond just Crank. That is because it is a JSF application framework. In some ways it is similar to JBoss Seam with just a different approach.
 
 = Working Features Of Validation Framework =
 
